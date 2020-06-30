@@ -1,10 +1,7 @@
 <template>
   <div id="app">
     <transition mode="out-in"
-                type="animation"
-                appear enter-class=""
                 enter-active-class="animate__animated animate__fadeIn"
-                leave-class=""
                 leave-active-class="animate__animated animate__fadeOut">
       <router-view/>
     </transition>
@@ -24,7 +21,7 @@ export default {
 
 <style>
   .animate__animated.animate__backOutLeft, .animate__animated.animate__fadeIn, .animate__animated.animate__backOutLeft, .animate__animated.animate__fadeOut {
-    --animate-duration: 0.2s;
+    --animate-duration: 0.3s;
   }
   h1, h2, h3{
     font-family: Palanquin-Bold, sans-serif;

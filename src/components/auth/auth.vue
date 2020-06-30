@@ -1,20 +1,14 @@
 <template>
   <div id="auth">
-    <div class="row no-gutters h-100">
+    <div class="row no-gutters">
       <div class="col-lg-7" style="background-color: #ffffff">
-        <transition appear enter-class=""
-                    enter-active-class="animate__animated animate__backInLeft"
-                    leave-class=""
-                    leave-active-class="animate__animated animate__backOutRight">
-          <div id="hero-img"></div>
-        </transition>
+        <div id="hero-img"></div>
       </div>
-      <div class="col-lg-5 my-auto">
+      <div class="col-lg-5" id="form">
         <transition mode="out-in"
                     type="animation"
-                    appear enter-class=""
+                    appear
                     enter-active-class="animate__animated animate__backInRight"
-                    leave-class=""
                     leave-active-class="animate__animated animate__backOutLeft">
           <keep-alive>
             <component :is="options" @loadComponent="options= $event"></component>
@@ -71,10 +65,17 @@ export default {
     --animate-duration: 0.9s;
   }
 
+  div#form {
+    overflow: auto;
+    height: 100vh;
+    background: #fcfcfc;
+  }
+
   div#hero-img {
-    background: url("~@/assets/img/hero-img.png") no-repeat;
+    background: url("~@/assets/img/hero-img.jpg") no-repeat;
     background-position: center center;
-    background-size: 80%;
+    background-size: cover;
+    box-shadow: inset 0 0 0 1000px rgba(23, 108, 157, 0.90);
     width: 100%;
     height: 100vh;
   }
