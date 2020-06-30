@@ -1,10 +1,19 @@
 <template>
   <div id="app">
-    <router-view/>
+    <transition mode="out-in"
+                type="animation"
+                appear enter-class=""
+                enter-active-class="animate__animated animate__fadeIn"
+                leave-class=""
+                leave-active-class="animate__animated animate__fadeOut">
+      <router-view/>
+    </transition>
   </div>
 </template>
 
 <script>
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'animate.css/animate.min.css'
 import '@/assets/fonts/fonts.css'
 import '@/assets/css/reset.css'
 
@@ -14,4 +23,27 @@ export default {
 </script>
 
 <style>
+  .animate__animated.animate__backOutLeft, .animate__animated.animate__fadeIn, .animate__animated.animate__backOutLeft, .animate__animated.animate__fadeOut {
+    --animate-duration: 0.2s;
+  }
+  h1, h2, h3{
+    font-family: Palanquin-Bold, sans-serif;
+  }
+
+  h4, h5, h6 {
+    font-family: Palanquin-Regular, sans-serif;
+  }
+
+  p, a, input, select, option, label, button{
+    font-family: Palanquin-Medium, sans-serif;
+  }
+
+  a, a:hover{
+    text-decoration: none;
+  }
+
+  input, select, option {
+    box-shadow: none !important;
+    outline: 0 !important;
+  }
 </style>

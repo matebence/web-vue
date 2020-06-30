@@ -7,10 +7,17 @@ const auth = resolve => {
   }, 'auth')
 }
 
+const error = resolve => {
+  require.ensure(['@/components/error/error'], () => {
+    resolve(require('@/components/error/error'))
+  }, 'error')
+}
+
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/', component: auth }
+  {path: '/', component: auth, name: 'welcome', children: [{path: ':component', component: auth}]},
+  {path: '*', component: error, name: 'error'}
 ]
 
 export default new VueRouter({mode: 'history', routes})
