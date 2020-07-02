@@ -5,11 +5,12 @@
         <div id="hero-img"></div>
       </div>
       <div class="col-lg-5" id="form">
-        <transition mode="out-in"
-                    type="animation"
-                    appear
-                    enter-active-class="animate__animated animate__backInRight"
-                    leave-active-class="animate__animated animate__backOutLeft">
+        <transition
+          mode="out-in"
+          type="animation"
+          appear
+          enter-active-class="animate__animated animate__backInRight"
+          leave-active-class="animate__animated animate__backOutLeft">
           <keep-alive>
             <component :is="options" @loadComponent="options= $event"></component>
           </keep-alive>
@@ -29,6 +30,16 @@ export default {
   created () {
     this.navigateContent(this.$route.params.component)
   },
+  data: function () {
+    return {
+      options: null
+    }
+  },
+  components: {
+    appSignIn: signin,
+    appSignUp: signup,
+    appForgetPassword: forgetpass
+  },
   watch: {
     '$route' (to, from) {
       this.navigateContent(to.params.component)
@@ -42,16 +53,6 @@ export default {
       }
       this.options = `app-${componenet}`
     }
-  },
-  data () {
-    return {
-      options: null
-    }
-  },
-  components: {
-    appSignIn: signin,
-    appSignUp: signup,
-    appForgetPassword: forgetpass
   }
 }
 </script>

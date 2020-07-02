@@ -16,8 +16,17 @@ const error = resolve => {
 Vue.use(VueRouter)
 
 const routes = [
-  {path: '/', component: auth, name: 'welcome', children: [{path: ':component', component: auth}]},
-  {path: '*', component: error, name: 'error'}
+  {path: '/',
+    component: auth,
+    name: 'welcome',
+    children: [
+      {path: ':component', component: auth},
+      {path: ':component/account/:id/token/:key', component: auth}
+    ]},
+  {path: '*',
+    component: error,
+    name: 'error'
+  }
 ]
 
 export default new VueRouter({mode: 'history', routes})

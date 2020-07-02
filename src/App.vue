@@ -1,8 +1,9 @@
 <template>
   <div id="app">
-    <transition mode="out-in"
-                enter-active-class="animate__animated animate__fadeIn"
-                leave-active-class="animate__animated animate__fadeOut">
+    <transition
+      mode="out-in"
+      enter-active-class="animate__animated animate__fadeIn"
+      leave-active-class="animate__animated animate__fadeOut">
       <router-view/>
     </transition>
   </div>
@@ -23,6 +24,16 @@ export default {
   .animate__animated.animate__backOutLeft, .animate__animated.animate__fadeIn, .animate__animated.animate__backOutLeft, .animate__animated.animate__fadeOut {
     --animate-duration: 0.3s;
   }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
   h1, h2, h3{
     font-family: Palanquin-Bold, sans-serif;
   }
