@@ -10,51 +10,25 @@
         </div>
         <button type="submit" class="btn btn-primary" @keyup.enter="recoverPassword" @click.prevent="recoverPassword" :disabled="$v.$invalid">Odoslať</button>
       </form>
-      <transition
-        mode="out-in"
-        type="animation"
-        appear
-        enter-active-class="animate__animated animate__fadeIn"
-        leave-active-class="animate__animated animate__fadeOut">
-        <div class="alert alert-success" role="alert" v-show="account.dangerMessage === null && account.successMessage !== null">
-          <p color="text-center">{{ account.successMessage }}</p>
-        </div>
-      </transition>
-      <transition
-        mode="out-in"
-        type="animation"
-        appear
-        enter-active-class="animate__animated animate__fadeIn"
-        leave-active-class="animate__animated animate__fadeOut">
-        <div class="alert alert-danger" role="alert" v-show="account.successMessage === null && account.dangerMessage !== null">
-          <p class="text-center">{{ account.dangerMessage }}</p>
-        </div>
-      </transition>
-      <transition
-        mode="out-in"
-        type="animation"
-        appear
-        enter-active-class="animate__animated animate__fadeIn"
-        leave-active-class="animate__animated animate__fadeOut">
-        <div class="alert alert-success" role="alert" v-show="recoveredAccountProperties.dangerMessage === null && recoveredAccountProperties.successMessage !== null">
-          <p color="text-center">{{ recoveredAccountProperties.successMessage }}</p>
-        </div>
-      </transition>
-      <transition
-        mode="out-in"
-        type="animation"
-        appear
-        enter-active-class="animate__animated animate__fadeIn"
-        leave-active-class="animate__animated animate__fadeOut">
-        <div class="alert alert-danger" role="alert" v-show="recoveredAccountProperties.successMessage === null && recoveredAccountProperties.dangerMessage !== null">
-          <p class="text-center">{{ recoveredAccountProperties.dangerMessage }}</p>
-        </div>
-      </transition>
+      <app-alert
+        :alertType="[
+            recoveredAccountProperties.dangerMessage !== null || account.dangerMessage !== null ? 'alert-danger' : 'alert-success']"
+        :condition="[
+            recoveredAccountProperties.dangerMessage !== null,
+            recoveredAccountProperties.successMessage !== null,
+            account.dangerMessage !== null,
+            account.successMessage !== null]"
+        :content="[
+            recoveredAccountProperties.dangerMessage,
+            recoveredAccountProperties.successMessage,
+            account.dangerMessage,
+            account.successMessage]"/>
     </div>
   </div>
 </template>
 
 <script>
+import alert from '@/components/common/alert'
 import {required, email} from 'vuelidate/lib/validators'
 
 export default {
@@ -79,6 +53,9 @@ export default {
         successMessage: null
       }
     }
+  },
+  components: {
+    appAlert: alert
   },
   methods: {
     loadComponent ($event) {
@@ -155,22 +132,13 @@ export default {
     align-items: center;
   }
 
-  div.alert {
-    display: inline-block;
-    text-align: center;
-    position: absolute;
-    left: 50%;
-    width: 75%;
-    transform: translateX(-50%);
-  }
-
-  div h1 {
+  h1 {
     font-size: 2.3em;
     margin-top: 3rem;
     margin-left: 3rem;
   }
 
-  div a {
+  a {
     display: block;
     float: right;
     margin-top: 0.5rem;
@@ -185,7 +153,7 @@ export default {
     padding: 3rem;
   }
 
-  form button {
+  button {
     background: #fcfcfc;
     border: solid 0.09rem #176c9d;
     border-radius: 0.2rem;
@@ -193,13 +161,13 @@ export default {
     margin-top: 2rem;
   }
 
-  form button:hover {
+  button:hover {
     border-color: #7f7f7f;
     background: #176c9d;
     color: #ffffff;
   }
 
-  form button[disabled] {
+  button[disabled] {
     border-color: #7f7f7f;
     background: #176c9d;
     color: #ffffff;

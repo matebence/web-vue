@@ -58,11 +58,13 @@ export default {
 </script>
 
 <style scoped>
-  .animate__animated.animate__backOutLeft, .animate__animated.animate__backOutRight {
+  .animate__animated.animate__backOutLeft,
+  .animate__animated.animate__backOutRight {
     --animate-duration: 1s;
   }
 
-  .animate__animated.animate__backInRight, .animate__animated.animate__backInLeft {
+  .animate__animated.animate__backInRight,
+  .animate__animated.animate__backInLeft {
     --animate-duration: 0.9s;
   }
 
@@ -74,11 +76,11 @@ export default {
 
   div#hero-img {
     background: url("~@/assets/img/hero-img.jpg") no-repeat;
+    box-shadow: inset 0 0 0 1000px rgba(23, 108, 157, 0.90);
     background-position: center center;
     background-size: cover;
-    box-shadow: inset 0 0 0 1000px rgba(23, 108, 157, 0.90);
-    width: 100%;
     height: 100vh;
+    width: 100%;
   }
 
   @media (max-width: 992px) {

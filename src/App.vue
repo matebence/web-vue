@@ -21,7 +21,10 @@ export default {
 </script>
 
 <style>
-  .animate__animated.animate__backOutLeft, .animate__animated.animate__fadeIn, .animate__animated.animate__backOutLeft, .animate__animated.animate__fadeOut {
+  .animate__animated.animate__backOutLeft,
+  .animate__animated.animate__fadeIn,
+  .animate__animated.animate__backOutLeft,
+  .animate__animated.animate__fadeOut {
     --animate-duration: 0.3s;
   }
 

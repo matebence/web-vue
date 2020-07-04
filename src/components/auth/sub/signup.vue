@@ -32,53 +32,30 @@
           </select>
           <a href="#" @click.prevent="loadComponent('app-sign-in')">Späť na prihlásenie</a>
         </div>
-        <button type="submit" class="btn btn-primary" :disabled="$v.$invalid" @keyup.enter="performSignUp" @click.prevent="performSignUp">Registrovať sa</button>
+        <button type="submit" class="btn btn-primary" :disabled="$v.$invalid" @keyup.enter="performSignUp" @click.prevent="performSignUp">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-show="account.loading"></span>
+          Registrovať sa
+        </button>
       </form>
-      <transition
-        mode="out-in"
-        type="animation"
-        appear
-        enter-active-class="animate__animated animate__fadeIn"
-        leave-active-class="animate__animated animate__fadeOut">
-        <div class="alert alert-success" role="alert" v-show="account.dangerMessage === null && account.successMessage !== null">
-          <p color="text-center">{{ account.successMessage }}</p>
-        </div>
-      </transition>
-      <transition
-        mode="out-in"
-        type="animation"
-        appear
-        enter-active-class="animate__animated animate__fadeIn"
-        leave-active-class="animate__animated animate__fadeOut">
-        <div class="alert alert-danger" role="alert" v-show="account.successMessage === null && account.dangerMessage !== null">
-          <p class="text-center">{{ account.dangerMessage }}</p>
-        </div>
-      </transition>
-      <transition
-        mode="out-in"
-        type="animation"
-        appear
-        enter-active-class="animate__animated animate__fadeIn"
-        leave-active-class="animate__animated animate__fadeOut">
-        <div class="alert alert-success" role="alert" v-show="activateAccountProperties.dangerMessage === null && activateAccountProperties.successMessage !== null">
-          <p color="text-center">{{ activateAccountProperties.successMessage }}</p>
-        </div>
-      </transition>
-      <transition
-        mode="out-in"
-        type="animation"
-        appear
-        enter-active-class="animate__animated animate__fadeIn"
-        leave-active-class="animate__animated animate__fadeOut">
-        <div class="alert alert-danger" role="alert" v-show="activateAccountProperties.successMessage === null && activateAccountProperties.dangerMessage !== null">
-          <p class="text-center">{{ activateAccountProperties.dangerMessage }}</p>
-        </div>
-      </transition>
+      <app-alert
+        :alertType="[
+            activateAccountProperties.dangerMessage !== null || account.dangerMessage !== null ? 'alert-danger' : 'alert-success']"
+        :condition="[
+            activateAccountProperties.dangerMessage !== null,
+            activateAccountProperties.successMessage !== null,
+            account.dangerMessage !== null,
+            account.successMessage !== null]"
+        :content="[
+            activateAccountProperties.dangerMessage,
+            activateAccountProperties.successMessage,
+            account.dangerMessage,
+            account.successMessage]"/>
     </div>
   </div>
 </template>
 
 <script>
+import alert from '@/components/common/alert'
 import {required, email, alphaNum, sameAs} from 'vuelidate/lib/validators'
 
 export default {
@@ -105,6 +82,7 @@ export default {
             confirmPassword: ''
           }
         },
+        loading: false,
         dangerMessage: null,
         successMessage: null
       },
@@ -118,12 +96,16 @@ export default {
       }
     }
   },
+  components: {
+    appAlert: alert
+  },
   methods: {
     loadComponent ($event) {
       this.$emit('loadComponent', $event)
       this.$router.push({path: `/${$event.replace('app-', '')}`})
     },
     performSignUp () {
+      this.account.loading = true
       this.resource = this.$resource('{service}/signup', {}, {performSignUp: {method: 'POST'}})
       this.resource.performSignUp({service: 'authorization-server'}, {userName: this.account.values.userName, email: this.account.values.email, password: this.account.values.password, confirmPassword: this.account.values.confirmPassword, accountRoles: [{roles: JSON.parse(this.account.values.roles)}]})
         .then(response => {
@@ -134,6 +116,7 @@ export default {
             this.account.dangerMessage = null
             this.account.successMessage = parsed.message
             Object.keys(this.account.server.validation).forEach((e) => { this.account.server.validation[e] = null })
+            this.account.loading = false
           }
         })
         .catch(err => {
@@ -143,6 +126,7 @@ export default {
             this.account.dangerMessage = parsed.message
             if (!('reason' in parsed)) return
             this.account.server.validation = parsed.reason
+            this.account.loading = false
           })
         })
     },
@@ -179,15 +163,15 @@ export default {
           required,
           email
         },
-        password: {
-          required,
-          contains: value => new RegExp(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?:.{8}|.{30})/g).test(value)
-        },
         confirmPassword: {
           required,
           sameAs: sameAs(vm => {
             return vm.password
           })
+        },
+        password: {
+          required,
+          contains: value => new RegExp(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?:.{8}|.{30})/g).test(value)
         },
         roles: {
           required,
@@ -211,22 +195,17 @@ export default {
     align-items: center;
   }
 
-  div.alert {
-    display: inline-block;
-    text-align: center;
-    position: absolute;
-    left: 50%;
-    width: 75%;
-    transform: translateX(-50%);
+  span.spinner-border{
+    margin-bottom: 0.3rem;
   }
 
-  div h1 {
+  h1 {
     font-size: 2.3em;
     margin-top: 3rem;
     margin-left: 3rem;
   }
 
-  div a {
+  a {
     display: block;
     float: right;
     margin-top: 0.5rem;
@@ -241,12 +220,12 @@ export default {
     padding: 3rem;
   }
 
-  form a {
+  a {
     color: #176c9d;
     float: right;
   }
 
-  form button {
+  button {
     background: #fcfcfc;
     border: solid 0.09rem #176c9d;
     border-radius: 0.2rem;
@@ -254,13 +233,13 @@ export default {
     margin-top: 2rem;
   }
 
-  form button:hover {
+  button:hover {
     border-color: #7f7f7f;
     background: #176c9d;
     color: #ffffff;
   }
 
-  form button[disabled] {
+  button[disabled] {
     border-color: #7f7f7f;
     background: #176c9d;
     color: #ffffff;
@@ -278,10 +257,6 @@ export default {
     border-bottom: 0.1rem solid #dbdbdb;
   }
 
-  option {
-    background: #fcfcfc;
-  }
-
   input[type="text"], input[type="password"], input[type="email"] {
     font-size: 1.3em;
     width: 100%;
@@ -292,6 +267,10 @@ export default {
     background: transparent;
     border-radius: 0;
     border-bottom: 0.1rem solid #dbdbdb;
+  }
+
+  option {
+    background: #fcfcfc;
   }
 
   small, .text-muted {

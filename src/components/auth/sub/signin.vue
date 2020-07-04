@@ -27,9 +27,6 @@
 <script>
 export default {
   name: 'signin',
-  created: function () {
-    console.log(process.env.CLIENT_ID)
-  },
   data: function () {
     return {
       resource: null,
@@ -37,7 +34,7 @@ export default {
         values: {
           userName: '',
           password: '',
-          stayLoggedIn: false,
+          stayLoggedIn: false
         },
         dangerMessage: null,
         successMessage: null
@@ -50,30 +47,8 @@ export default {
       this.$router.push({path: $event.replace('app-', '')})
     },
     performSignIn () {
-        console.log(process.env.VUE_APP_CLIENT_ID)
-        console.log(`Basic ${btoa(process.env.CLIENT_ID + ":" + process.env.secret)}`)
-      this.resource = this.$resource('{service}/signin', {}, {performSignIn: {method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': `Basic ${btoa(process.env.CLIENT_ID + ":" + process.env.CLIENT_SECRET)}`}}})
+      this.resource = this.$resource('{service}/signin', {}, {performSignIn: {method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': `Basic ${btoa(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET)}`}}})
       this.resource.performSignIn({service: 'authorization-server'}, {grant_type: 'password', username: this.account.values.userName, password: this.account.values.password})
-        .then(response => {
-          console.log(response)
-          return response.json()
-        })
-        .then(parsed => {
-          console.log(parsed)
-          if (!parsed.error) {
-            this.account.dangerMessage = null
-            this.account.successMessage = parsed.message
-          }
-        })
-        .catch(err => {
-          console.log(err)
-          err.json().then(parsed => {
-            if (parsed.error) {
-              this.account.successMessage = null
-              this.account.dangerMessage = parsed.message
-            }
-          })
-        })
     }
   }
 }
@@ -91,21 +66,21 @@ export default {
     align-items: center;
   }
 
-  div h1 {
+  h1 {
     font-size: 2.3em;
     margin-top: 3rem;
     margin-left: 3rem;
   }
 
-  div p, div a {
+  p, a {
     display: block;
   }
 
-  div p {
+  p {
     margin-bottom: 0.3rem;
   }
 
-  div a {
+  a {
     color: #176c9d;
   }
 
@@ -117,12 +92,12 @@ export default {
     padding: 3rem;
   }
 
-  form a {
+  a {
     color: #176c9d;
     text-align: right;
   }
 
-  form button {
+  button {
     background: #fcfcfc;
     border: solid 0.09rem #176c9d;
     border-radius: 0.2rem;
@@ -130,7 +105,7 @@ export default {
     margin-top: 3rem;
   }
 
-  form button:hover {
+  button:hover {
     border-color: #7f7f7f;
     background: #176c9d;
     color: #ffffff;
