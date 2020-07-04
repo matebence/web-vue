@@ -2,8 +2,10 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+import './store'
 import './resource'
 import './vuelidate'
+
 import 'bootstrap'
 
 Vue.config.productionTip = false

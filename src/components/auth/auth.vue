@@ -1,7 +1,7 @@
 <template>
   <div id="auth">
     <div class="row no-gutters">
-      <div class="col-lg-7" style="background-color: #ffffff">
+      <div class="col-lg-7">
         <div id="hero-img"></div>
       </div>
       <div class="col-lg-5" id="form">
@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import forgetpass from '@/components/auth/forgetpass'
-import signin from '@/components/auth/signin'
-import signup from '@/components/auth/signup'
+import forgetpass from '@/components/auth/sub/forgetpass'
+import signin from '@/components/auth/sub/signin'
+import signup from '@/components/auth/sub/signup'
 
 export default {
   name: 'auth',

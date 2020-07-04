@@ -7,6 +7,12 @@ const auth = resolve => {
   }, 'auth')
 }
 
+const dashboard = resolve => {
+  require.ensure(['@/components/dashboard/dashboard'], () => {
+    resolve(require('@/components/dashboard/dashboard'))
+  }, 'dashboard')
+}
+
 const error = resolve => {
   require.ensure(['@/components/error/error'], () => {
     resolve(require('@/components/error/error'))

@@ -10,38 +10,42 @@
         </div>
         <button type="submit" class="btn btn-primary" @keyup.enter="recoverPassword" @click.prevent="recoverPassword" :disabled="$v.$invalid">Odoslať</button>
       </form>
-      <transition mode="out-in"
-                  type="animation"
-                  appear
-                  enter-active-class="animate__animated animate__fadeIn"
-                  leave-active-class="animate__animated animate__fadeOut">
+      <transition
+        mode="out-in"
+        type="animation"
+        appear
+        enter-active-class="animate__animated animate__fadeIn"
+        leave-active-class="animate__animated animate__fadeOut">
         <div class="alert alert-success" role="alert" v-show="account.dangerMessage === null && account.successMessage !== null">
           <p color="text-center">{{ account.successMessage }}</p>
         </div>
       </transition>
-      <transition mode="out-in"
-                  type="animation"
-                  appear
-                  enter-active-class="animate__animated animate__fadeIn"
-                  leave-active-class="animate__animated animate__fadeOut">
+      <transition
+        mode="out-in"
+        type="animation"
+        appear
+        enter-active-class="animate__animated animate__fadeIn"
+        leave-active-class="animate__animated animate__fadeOut">
         <div class="alert alert-danger" role="alert" v-show="account.successMessage === null && account.dangerMessage !== null">
           <p class="text-center">{{ account.dangerMessage }}</p>
         </div>
       </transition>
-      <transition mode="out-in"
-                  type="animation"
-                  appear
-                  enter-active-class="animate__animated animate__fadeIn"
-                  leave-active-class="animate__animated animate__fadeOut">
+      <transition
+        mode="out-in"
+        type="animation"
+        appear
+        enter-active-class="animate__animated animate__fadeIn"
+        leave-active-class="animate__animated animate__fadeOut">
         <div class="alert alert-success" role="alert" v-show="recoveredAccountProperties.dangerMessage === null && recoveredAccountProperties.successMessage !== null">
           <p color="text-center">{{ recoveredAccountProperties.successMessage }}</p>
         </div>
       </transition>
-      <transition mode="out-in"
-                  type="animation"
-                  appear
-                  enter-active-class="animate__animated animate__fadeIn"
-                  leave-active-class="animate__animated animate__fadeOut">
+      <transition
+        mode="out-in"
+        type="animation"
+        appear
+        enter-active-class="animate__animated animate__fadeIn"
+        leave-active-class="animate__animated animate__fadeOut">
         <div class="alert alert-danger" role="alert" v-show="recoveredAccountProperties.successMessage === null && recoveredAccountProperties.dangerMessage !== null">
           <p class="text-center">{{ recoveredAccountProperties.dangerMessage }}</p>
         </div>

@@ -42,7 +42,7 @@ export default {
     font-family: Palanquin-Regular, sans-serif;
   }
 
-  p, a, input, select, option, label, button{
+  p, a, input, select, option, label, button, small{
     font-family: Palanquin-Medium, sans-serif;
   }
 
