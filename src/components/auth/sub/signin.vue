@@ -5,18 +5,18 @@
       <form>
         <div class="form-group">
           <label for="username">Zadajte použivatelské meno</label>
-          <input type="text" class="form-control" id="username" placeholder="Použivatelské meno">
+          <input type="text" class="form-control" id="username" placeholder="Použivatelské meno" v-model="account.values.userName">
         </div>
         <div class="form-group">
           <label for="password">Zadajte heslo</label>
-          <input type="password" class="form-control" id="password" placeholder="Heslo">
+          <input type="password" class="form-control" id="password" placeholder="Heslo" v-model="account.values.password">
         </div>
         <div class="form-check">
-          <input type="checkbox" class="form-check-input" id="stayLoggedIn">
+          <input type="checkbox" class="form-check-input" id="stayLoggedIn" v-model="account.values.stayLoggedIn">
           <label class="form-check-label" for="stayLoggedIn">Zostať prihlásený</label>
         </div>
         <a href="#" @click.prevent="loadComponent('app-forget-password')">Zabudli ste heslo?</a>
-        <button type="submit" class="btn btn-primary">Prihlásiť sa</button>
+        <button type="submit" class="btn btn-primary" @keyup.enter="performSignIn" @click.prevent="performSignIn">Prihlásiť sa</button>
       </form>
       <p class="text-center">Nemáte ešte použivatelské konto?</p>
       <a class="text-center" href="#" @click.prevent="loadComponent('app-sign-up')">Zaregistrovať sa teraz</a>
@@ -27,10 +27,53 @@
 <script>
 export default {
   name: 'signin',
+  created: function () {
+    console.log(process.env.CLIENT_ID)
+  },
+  data: function () {
+    return {
+      resource: null,
+      account: {
+        values: {
+          userName: '',
+          password: '',
+          stayLoggedIn: false,
+        },
+        dangerMessage: null,
+        successMessage: null
+      }
+    }
+  },
   methods: {
     loadComponent ($event) {
       this.$emit('loadComponent', $event)
       this.$router.push({path: $event.replace('app-', '')})
+    },
+    performSignIn () {
+        console.log(process.env.VUE_APP_CLIENT_ID)
+        console.log(`Basic ${btoa(process.env.CLIENT_ID + ":" + process.env.secret)}`)
+      this.resource = this.$resource('{service}/signin', {}, {performSignIn: {method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': `Basic ${btoa(process.env.CLIENT_ID + ":" + process.env.CLIENT_SECRET)}`}}})
+      this.resource.performSignIn({service: 'authorization-server'}, {grant_type: 'password', username: this.account.values.userName, password: this.account.values.password})
+        .then(response => {
+          console.log(response)
+          return response.json()
+        })
+        .then(parsed => {
+          console.log(parsed)
+          if (!parsed.error) {
+            this.account.dangerMessage = null
+            this.account.successMessage = parsed.message
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          err.json().then(parsed => {
+            if (parsed.error) {
+              this.account.successMessage = null
+              this.account.dangerMessage = parsed.message
+            }
+          })
+        })
     }
   }
 }

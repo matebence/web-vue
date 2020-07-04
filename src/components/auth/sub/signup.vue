@@ -32,7 +32,7 @@
           </select>
           <a href="#" @click.prevent="loadComponent('app-sign-in')">Späť na prihlásenie</a>
         </div>
-        <button type="submit" class="btn btn-primary" @keyup.enter="performSignUp" @click.prevent="performSignUp">Registrovať sa</button>
+        <button type="submit" class="btn btn-primary" :disabled="$v.$invalid" @keyup.enter="performSignUp" @click.prevent="performSignUp">Registrovať sa</button>
       </form>
       <transition
         mode="out-in"
@@ -255,6 +255,12 @@ export default {
   }
 
   form button:hover {
+    border-color: #7f7f7f;
+    background: #176c9d;
+    color: #ffffff;
+  }
+
+  form button[disabled] {
     border-color: #7f7f7f;
     background: #176c9d;
     color: #ffffff;

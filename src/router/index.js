@@ -29,6 +29,10 @@ const routes = [
       {path: ':component', component: auth},
       {path: ':component/account/:id/token/:key', component: auth}
     ]},
+  {path: '/',
+    component: dashboard,
+    name: 'dashboard'
+  },
   {path: '*',
     component: error,
     name: 'error'
