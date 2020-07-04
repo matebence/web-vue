@@ -5,18 +5,18 @@
       <form>
         <div class="form-group">
           <label for="email">Zadajte Vašu emailová adresu</label>
-          <input type="email" class="form-control" id="email" placeholder="Emailová adresa" v-model="email.value" @focus="clearMessages" @input="$v.email.$touch()" :class="{valid: !$v.email.$error && $v.email.$dirty, invalid: $v.email.$error}">
+          <input type="email" class="form-control" id="email" placeholder="Emailová adresa" v-model="account.value" @focus="clearMessages" @input="$v.account.$touch()" :class="{valid: !$v.account.$error && $v.account.$dirty, invalid: $v.account.$error}">
           <a href="#" @click.prevent="loadComponent('app-sign-in')">Späť na prihlásenie</a>
         </div>
-        <button type="submit" class="btn btn-primary" @click.prevent="send" :disabled="$v.$invalid">Odoslať</button>
+        <button type="submit" class="btn btn-primary" @keyup.enter="recoverPassword" @click.prevent="recoverPassword" :disabled="$v.$invalid">Odoslať</button>
       </form>
       <transition mode="out-in"
                   type="animation"
                   appear
                   enter-active-class="animate__animated animate__fadeIn"
                   leave-active-class="animate__animated animate__fadeOut">
-        <div class="alert alert-success" role="alert" v-show="email.dangerMessage === null && email.successMessage !== null">
-          <p color="text-center">{{ email.successMessage }}</p>
+        <div class="alert alert-success" role="alert" v-show="account.dangerMessage === null && account.successMessage !== null">
+          <p color="text-center">{{ account.successMessage }}</p>
         </div>
       </transition>
       <transition mode="out-in"
@@ -24,8 +24,8 @@
                   appear
                   enter-active-class="animate__animated animate__fadeIn"
                   leave-active-class="animate__animated animate__fadeOut">
-        <div class="alert alert-danger" role="alert" v-show="email.successMessage === null && email.dangerMessage !== null">
-          <p class="text-center">{{ email.dangerMessage }}</p>
+        <div class="alert alert-danger" role="alert" v-show="account.successMessage === null && account.dangerMessage !== null">
+          <p class="text-center">{{ account.dangerMessage }}</p>
         </div>
       </transition>
       <transition mode="out-in"
@@ -55,27 +55,22 @@ import {required, email} from 'vuelidate/lib/validators'
 
 export default {
   name: 'forgetpass',
-  beforeMount: function () {
-    if (this.$route.params.key) this.recoverAccount()
-  },
   created: function () {
-    this.resource = this.$resource('{service}/forgetpassword/{account}/{id}/{token}/{key}', {},
-      {
-        recoverPassword: {method: 'POST'},
-        verifyRecoverToken: {method: 'GET'}
-      })
+    if (this.$route.params.key) this.verifyRecoverToken()
   },
   data: function () {
     return {
       resource: null,
-      email: {
+      account: {
         value: '',
         dangerMessage: null,
         successMessage: null
       },
       recoveredAccountProperties: {
-        token: this.$route.params.key,
-        account: this.$route.params.id,
+        values: {
+          token: this.$route.params.key,
+          account: this.$route.params.id
+        },
         dangerMessage: null,
         successMessage: null
       }
@@ -84,14 +79,15 @@ export default {
   methods: {
     loadComponent ($event) {
       this.$emit('loadComponent', $event)
-      this.$router.push({path: $event.replace('app-', '')})
+      this.$router.push({path: `/${$event.replace('app-', '')}`})
     },
     clearMessages () {
-      this.email.dangerMessage = null
-      this.email.successMessage = null
+      this.account.dangerMessage = null
+      this.account.successMessage = null
     },
-    recoverAccount () {
-      this.resource.verifyRecoverToken({service: 'authorization-server', account: 'account', id: this.recoveredAccountProperties.account, token: 'token', key: this.recoveredAccountProperties.token}, {email: this.email.value})
+    verifyRecoverToken () {
+      this.resource = this.$resource('{service}/forgetpassword/{account}/{id}/{token}/{key}', {}, {verifyRecoverToken: {method: 'GET'}})
+      this.resource.verifyRecoverToken({service: 'authorization-server', account: 'account', id: this.recoveredAccountProperties.values.account, token: 'token', key: this.recoveredAccountProperties.values.token})
         .then(response => {
           return response.json()
         })
@@ -110,29 +106,30 @@ export default {
           })
         })
     },
-    send () {
-      this.resource.recoverPassword({service: 'authorization-server', account: '', id: '', token: '', key: ''}, {email: this.email.value})
+    recoverPassword () {
+      this.resource = this.$resource('{service}/forgetpassword', {}, {recoverPassword: {method: 'POST'}})
+      this.resource.recoverPassword({service: 'authorization-server'}, {email: this.account.value})
         .then(response => {
           return response.json()
         })
         .then(parsed => {
           if (!parsed.error) {
-            this.email.dangerMessage = null
-            this.email.successMessage = parsed.message
+            this.account.dangerMessage = null
+            this.account.successMessage = parsed.message
           }
         })
         .catch(err => {
           err.json().then(parsed => {
             if (parsed.error) {
-              this.email.successMessage = null
-              this.email.dangerMessage = parsed.message
+              this.account.successMessage = null
+              this.account.dangerMessage = parsed.message
             }
           })
         })
     }
   },
   validations: {
-    email: {
+    account: {
       value: {
         required,
         email
@@ -229,6 +226,12 @@ export default {
   @media (max-width: 1200px) {
     input[type="email"] {
       font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 992px) {
+    div#forgetpass {
+      height: auto;
     }
   }
 </style>

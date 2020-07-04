@@ -1,41 +1,32 @@
 <template>
-  <div id="signup">
+  <div id="signin">
     <div id="wrapper">
-      <h1>Registrácia</h1>
+      <h1>Prihlásenie</h1>
       <form>
         <div class="form-group">
           <label for="username">Zadajte použivatelské meno</label>
           <input type="text" class="form-control" id="username" placeholder="Použivatelské meno">
         </div>
         <div class="form-group">
-          <label for="email">Zadajte emailovú adresu</label>
-          <input type="password" class="form-control" id="email" placeholder="Emailová adresa">
-        </div>
-        <div class="form-group">
           <label for="password">Zadajte heslo</label>
           <input type="password" class="form-control" id="password" placeholder="Heslo">
         </div>
-        <div class="form-group">
-          <label for="confirmPassword">Potvrďte heslo</label>
-          <input type="password" class="form-control" id="confirmPassword" placeholder="Potvrdenie hesla">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="stayLoggedIn">
+          <label class="form-check-label" for="stayLoggedIn">Zostať prihlásený</label>
         </div>
-        <div class="form-group">
-          <label for="confirmPassword">Chcem sa stať</label>
-          <select class="form-control">
-            <option>Klientom</option>
-            <option>Kuriérom</option>
-          </select>
-          <a href="#" @click.prevent="loadComponent('app-sign-in')">Späť na prihlásenie</a>
-        </div>
-        <button type="submit" class="btn btn-primary">Registrovať sa</button>
+        <a href="#" @click.prevent="loadComponent('app-forget-password')">Zabudli ste heslo?</a>
+        <button type="submit" class="btn btn-primary">Prihlásiť sa</button>
       </form>
+      <p class="text-center">Nemáte ešte použivatelské konto?</p>
+      <a class="text-center" href="#" @click.prevent="loadComponent('app-sign-up')">Zaregistrovať sa teraz</a>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'signup',
+  name: 'signin',
   methods: {
     loadComponent ($event) {
       this.$emit('loadComponent', $event)
@@ -50,7 +41,7 @@ export default {
     width: 100%;
   }
 
-  div#signup {
+  div#signin {
     padding: 2rem;
     height: 100vh;
     display: flex;
@@ -63,10 +54,15 @@ export default {
     margin-left: 3rem;
   }
 
-  div a {
+  div p, div a {
     display: block;
-    float: right;
-    margin-top: 0.5rem;
+  }
+
+  div p {
+    margin-bottom: 0.3rem;
+  }
+
+  div a {
     color: #176c9d;
   }
 
@@ -80,7 +76,7 @@ export default {
 
   form a {
     color: #176c9d;
-    float: right;
+    text-align: right;
   }
 
   form button {
@@ -88,7 +84,7 @@ export default {
     border: solid 0.09rem #176c9d;
     border-radius: 0.2rem;
     color: #176c9d;
-    margin-top: 2rem;
+    margin-top: 3rem;
   }
 
   form button:hover {
@@ -97,28 +93,14 @@ export default {
     color: #ffffff;
   }
 
-  select {
-    background: #fcfcfc;
-    font-size: 1.3em;
-    width: 100%;
-    height: 3rem;
-    display: block;
-    border: none;
-    border-radius: 0;
-    color: #6c757d;
-    border-bottom: 0.1rem solid #dbdbdb;
-  }
-
-  option {
-    background: #fcfcfc;
-  }
-
   input[type="text"], input[type="password"] {
     font-size: 1.3em;
     width: 100%;
     height: 3rem;
     display: block;
+    box-shadow: none;
     border: none;
+    outline: 0;
     color: #555555;
     background: transparent;
     border-radius: 0;
@@ -126,8 +108,14 @@ export default {
   }
 
   @media (max-width: 1200px) {
-    input[type="text"], input[type="password"], select {
+    input[type="text"], input[type="password"] {
       font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 992px) {
+    div#signin {
+      height: auto;
     }
   }
 </style>
