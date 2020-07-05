@@ -6,7 +6,7 @@
       appear
       enter-active-class="animate__animated animate__fadeIn"
       leave-active-class="animate__animated animate__fadeOut">
-      <div :class="getAlertType.pop()" class="alert" role="alert" v-show="getCondition">
+      <div :class="getType.pop()" class="alert" role="alert" v-show="getCondition">
         <p class="text-center">{{ getContent.pop() }}</p>
       </div>
     </transition>
@@ -15,7 +15,7 @@
 <script>
 export default {
   name: 'alert',
-  props: ['alertType', 'condition', 'content'],
+  props: ['type', 'condition', 'content'],
   computed: {
     getCondition: function () {
       return this.condition.some(e => e === true)
@@ -23,8 +23,8 @@ export default {
     getContent: function () {
       return this.content.filter(e => e !== null)
     },
-    getAlertType: function () {
-      return this.alertType.filter(e => e !== null)
+    getType: function () {
+      return this.type.filter(e => e !== null)
     }
   }
 }

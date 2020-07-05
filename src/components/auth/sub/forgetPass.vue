@@ -5,116 +5,80 @@
       <form>
         <div class="form-group">
           <label for="email">Zadajte Vašu emailová adresu</label>
-          <input type="email" class="form-control" id="email" placeholder="Emailová adresa" v-model="account.value" @focus="clearMessages" @input="$v.account.$touch()" :class="{valid: !$v.account.$error && $v.account.$dirty, invalid: $v.account.$error}">
+          <input type="email" class="form-control" id="email" placeholder="Emailová adresa" v-model="form.values.email" @input="$v.form.values.email.$touch()" :class="{valid: !$v.form.values.email.$error && $v.form.values.email.$dirty, invalid: $v.form.values.email.$error}">
           <a href="#" @click.prevent="loadComponent('app-sign-in')">Späť na prihlásenie</a>
         </div>
-        <button type="submit" class="btn btn-primary" @keyup.enter="recoverPassword" @click.prevent="recoverPassword" :disabled="$v.$invalid">Odoslať</button>
+        <button type="submit" class="btn btn-primary" @keyup.enter="onSend" @click.prevent="onSend" :disabled="$v.$invalid">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-show="!forgetPassword.done"></span>
+          Odoslať
+        </button>
       </form>
       <app-alert
-        :alertType="[
-            recoveredAccountProperties.dangerMessage !== null || account.dangerMessage !== null ? 'alert-danger' : 'alert-success']"
-        :condition="[
-            recoveredAccountProperties.dangerMessage !== null,
-            recoveredAccountProperties.successMessage !== null,
-            account.dangerMessage !== null,
-            account.successMessage !== null]"
-        :content="[
-            recoveredAccountProperties.dangerMessage,
-            recoveredAccountProperties.successMessage,
-            account.dangerMessage,
-            account.successMessage]"/>
+        :type="[forgetPassword.error.is || recoverToken.error.is ? 'alert-danger' : 'alert-success']"
+        :condition="[forgetPassword.error.message !== null, recoverToken.error.message !== null]"
+        :content="[forgetPassword.error.message, recoverToken.error.message]"/>
     </div>
   </div>
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+import * as types from '@/store/types'
 import alert from '@/components/common/alert'
 import {required, email} from 'vuelidate/lib/validators'
 
 export default {
   name: 'forgetpass',
   created: function () {
-    if (this.$route.params.key) this.verifyRecoverToken()
+    if (this.$route.params.key) this.onPageLoad()
   },
   data: function () {
     return {
-      resource: null,
-      account: {
-        value: '',
-        dangerMessage: null,
-        successMessage: null
-      },
-      recoveredAccountProperties: {
+      form: {
         values: {
-          token: this.$route.params.key,
-          account: this.$route.params.id
-        },
-        dangerMessage: null,
-        successMessage: null
+          email: ''
+        }
+      },
+      url: {
+        values: {
+          id: this.$route.params.id,
+          key: this.$route.params.key
+        }
+      }
+    }
+  },
+  validations: {
+    form: {
+      values: {
+        email: {
+          required,
+          email
+        }
       }
     }
   },
   components: {
     appAlert: alert
   },
+  computed: {
+    ...mapGetters({
+      forgetPassword: types.GETTER_FORGET_PASSWORD_DEFAULT,
+      recoverToken: types.GETTER_ACCOUNT_RECOVER_DEFAULT
+    })
+  },
   methods: {
     loadComponent ($event) {
       this.$emit('loadComponent', $event)
       this.$router.push({path: `/${$event.replace('app-', '')}`})
     },
-    clearMessages () {
-      this.account.dangerMessage = null
-      this.account.successMessage = null
+    onPageLoad () {
+      this.$store.dispatch(types.ACTION_ACCOUNT_RECOVER, {
+        id: this.url.values.id,
+        key: this.url.values.key})
     },
-    verifyRecoverToken () {
-      this.resource = this.$resource('{service}/forgetpassword/{account}/{id}/{token}/{key}', {}, {verifyRecoverToken: {method: 'GET'}})
-      this.resource.verifyRecoverToken({service: 'authorization-server', account: 'account', id: this.recoveredAccountProperties.values.account, token: 'token', key: this.recoveredAccountProperties.values.token})
-        .then(response => {
-          return response.json()
-        })
-        .then(parsed => {
-          if (!parsed.error) {
-            this.recoveredAccountProperties.dangerMessage = null
-            this.recoveredAccountProperties.successMessage = parsed.message
-          }
-        })
-        .catch(err => {
-          err.json().then(parsed => {
-            if (parsed.error) {
-              this.recoveredAccountProperties.successMessage = null
-              this.recoveredAccountProperties.dangerMessage = parsed.message
-            }
-          })
-        })
-    },
-    recoverPassword () {
-      this.resource = this.$resource('{service}/forgetpassword', {}, {recoverPassword: {method: 'POST'}})
-      this.resource.recoverPassword({service: 'authorization-server'}, {email: this.account.value})
-        .then(response => {
-          return response.json()
-        })
-        .then(parsed => {
-          if (!parsed.error) {
-            this.account.dangerMessage = null
-            this.account.successMessage = parsed.message
-          }
-        })
-        .catch(err => {
-          err.json().then(parsed => {
-            if (parsed.error) {
-              this.account.successMessage = null
-              this.account.dangerMessage = parsed.message
-            }
-          })
-        })
-    }
-  },
-  validations: {
-    account: {
-      value: {
-        required,
-        email
-      }
+    onSend () {
+      this.$store.dispatch(types.ACTION_FORGET_PASSWORD, {
+        email: this.form.values.email})
     }
   }
 }

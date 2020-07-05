@@ -11,6 +11,7 @@
 
 <script>
 import 'bootstrap/dist/css/bootstrap.min.css'
+import * as types from '@/store/types'
 import 'animate.css/animate.min.css'
 import '@/assets/fonts/fonts.css'
 import '@/assets/css/reset.css'
@@ -56,5 +57,9 @@ export default {
   input, select, option {
     box-shadow: none !important;
     outline: 0 !important;
+  }
+
+  span.spinner-border{
+    margin-bottom: 0.3rem;
   }
 </style>

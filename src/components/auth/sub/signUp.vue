@@ -5,155 +5,135 @@
       <form>
         <div class="form-group">
           <label for="username">Zadajte použivatelské meno</label>
-          <input aria-describedby="userNameInvalid" type="text" class="form-control" id="username" v-model="account.values.userName" placeholder="Použivatelské meno" @input="$v.account.values.userName.$touch()" :class="{valid: !$v.account.values.userName.$error && $v.account.values.userName.$dirty, invalid: $v.account.values.userName.$error}">
-          <small id="userNameInvalid" class="form-text text-muted" v-show="account.server.validation.userName !== null">{{account.server.validation.userName}}</small>
+          <input
+            aria-describedby="userNameInvalid"
+            type="text" class="form-control"
+            id="username"
+            v-model="form.values.userName"
+            placeholder="Použivatelské meno"
+            @input="$v.form.values.userName.$touch()"
+            :class="{
+               valid: !$v.form.values.userName.$error && $v.form.values.userName.$dirty,
+               invalid: $v.form.values.userName.$error}">
+          <small
+            id="userNameInvalid"
+            class="form-text text-muted"
+            v-show="signUp.error.reason.userName !== null">{{signUp.error.reason.userName}}</small>
         </div>
         <div class="form-group">
           <label for="email">Zadajte emailovú adresu</label>
-          <input aria-describedby="emailInvalid" type="email" class="form-control" id="email" v-model="account.values.email" placeholder="Emailová adresa" @input="$v.account.values.email.$touch()" :class="{valid: !$v.account.values.email.$error && $v.account.values.email.$dirty, invalid: $v.account.values.email.$error}">
-          <small id="emailInvalid" class="form-text text-muted" v-show="account.server.validation.email !== null">{{account.server.validation.email}}</small>
+          <input
+            aria-describedby="emailInvalid"
+            type="email" class="form-control"
+            id="email"
+            v-model="form.values.email"
+            placeholder="Emailová adresa"
+            @input="$v.form.values.email.$touch()"
+            :class="{
+                valid: !$v.form.values.email.$error && $v.form.values.email.$dirty,
+                invalid: $v.form.values.email.$error}">
+          <small
+            id="emailInvalid"
+            class="form-text text-muted"
+            v-show="signUp.error.reason.email !== null">{{signUp.error.reason.email}}</small>
         </div>
         <div class="form-group">
           <label for="password">Zadajte heslo</label>
-          <input aria-describedby="passwordInvalid" type="password" class="form-control" id="password" v-model="account.values.password" placeholder="Heslo" @input="$v.account.values.password.$touch()" :class="{valid: !$v.account.values.password.$error && $v.account.values.password.$dirty, invalid: $v.account.values.password.$error}">
-          <small id="passwordInvalid" class="form-text text-muted" v-show="account.server.validation.password !== null">{{account.server.validation.password}}</small>
+          <input
+            aria-describedby="passwordInvalid"
+            type="password"
+            class="form-control"
+            id="password"
+            v-model="form.values.password"
+            placeholder="Heslo"
+            @input="$v.form.values.password.$touch()"
+            :class="{
+                valid: !$v.form.values.password.$error && $v.form.values.password.$dirty,
+                invalid: $v.form.values.password.$error}">
+          <small
+            id="passwordInvalid"
+            class="form-text text-muted"
+            v-show="signUp.error.reason.password !== null">{{signUp.error.reason.password}}</small>
         </div>
         <div class="form-group">
           <label for="confirmPassword">Potvrďte heslo</label>
-          <input aria-describedby="confirmPasswordInvalid" type="password" class="form-control" id="confirmPassword" v-model="account.values.confirmPassword" placeholder="Potvrdenie hesla" @input="$v.account.values.confirmPassword.$touch()" :class="{valid: !$v.account.values.confirmPassword.$error && $v.account.values.confirmPassword.$dirty, invalid: $v.account.values.confirmPassword.$error}">
-          <small id="confirmPasswordInvalid" class="form-text text-muted" v-show="account.server.validation.password !== null">{{account.server.validation.password}}</small>
+          <input
+            aria-describedby="confirmPasswordInvalid"
+            type="password"
+            class="form-control"
+            id="confirmPassword"
+            v-model="form.values.confirmPassword"
+            placeholder="Potvrdenie hesla"
+            @input="$v.form.values.confirmPassword.$touch()"
+            :class="{
+                valid: !$v.form.values.confirmPassword.$error && $v.form.values.confirmPassword.$dirty,
+                invalid: $v.form.values.confirmPassword.$error}">
+          <small
+            id="confirmPasswordInvalid"
+            class="form-text text-muted"
+            v-show="signUp.error.reason.password !== null">{{signUp.error.reason.password}}</small>
         </div>
         <div class="form-group">
           <label for="confirmPassword">Chcem sa stať</label>
-          <select class="form-control" v-model="account.values.roles" id="selectedRole" @change="$v.account.values.roles.$touch()" :class="{valid: !$v.account.values.roles.$error && $v.account.values.roles.$dirty, invalid: $v.account.values.roles.$error}">
+          <select
+            class="form-control"
+            v-model="form.values.roles"
+            id="selectedRole"
+            @change="$v.form.values.roles.$touch()"
+            :class="{
+                valid: !$v.form.values.roles.$error && $v.form.values.roles.$dirty,
+               invalid: $v.form.values.roles.$error}">
             <option value="{}" disabled selected>Vyberte z možností</option>
             <option value='{"roleId": 3, "name": "ROLE_CLIENT"}'>Klientom</option>
             <option value='{"roleId": 4, "name": "ROLE_COURIER"}'>Kuriérom</option>
           </select>
           <a href="#" @click.prevent="loadComponent('app-sign-in')">Späť na prihlásenie</a>
         </div>
-        <button type="submit" class="btn btn-primary" :disabled="$v.$invalid" @keyup.enter="performSignUp" @click.prevent="performSignUp">
-          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-show="account.loading"></span>
+        <button type="submit" class="btn btn-primary" :disabled="$v.$invalid" @keyup.enter="onSignUp" @click.prevent="onSignUp">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-show="!signUp.done"></span>
           Registrovať sa
         </button>
       </form>
       <app-alert
-        :alertType="[
-            activateAccountProperties.dangerMessage !== null || account.dangerMessage !== null ? 'alert-danger' : 'alert-success']"
-        :condition="[
-            activateAccountProperties.dangerMessage !== null,
-            activateAccountProperties.successMessage !== null,
-            account.dangerMessage !== null,
-            account.successMessage !== null]"
-        :content="[
-            activateAccountProperties.dangerMessage,
-            activateAccountProperties.successMessage,
-            account.dangerMessage,
-            account.successMessage]"/>
+        :type="[signUp.error.is || activationToken.error.is ? 'alert-danger' : 'alert-success']"
+        :condition="[signUp.error.message !== null, activationToken.error.message !== null]"
+        :content="[signUp.error.message, activationToken.error.message]"/>
     </div>
   </div>
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+import * as types from '@/store/types'
 import alert from '@/components/common/alert'
 import {required, email, alphaNum, sameAs} from 'vuelidate/lib/validators'
 
 export default {
   name: 'signup',
   created: function () {
-    if (this.$route.params.key) this.verifyActivationToken()
+    if (this.$route.params.key) this.onPageLoad()
   },
   data: function () {
     return {
-      resource: null,
-      account: {
+      form: {
         values: {
           userName: '',
           email: '',
           password: '',
           confirmPassword: '',
           roles: '{}'
-        },
-        server: {
-          validation: {
-            userName: '',
-            email: '',
-            password: '',
-            confirmPassword: ''
-          }
-        },
-        loading: false,
-        dangerMessage: null,
-        successMessage: null
+        }
       },
-      activateAccountProperties: {
+      url: {
         values: {
-          token: this.$route.params.key,
-          account: this.$route.params.id
-        },
-        dangerMessage: null,
-        successMessage: null
+          id: this.$route.params.id,
+          key: this.$route.params.key
+        }
       }
     }
   },
-  components: {
-    appAlert: alert
-  },
-  methods: {
-    loadComponent ($event) {
-      this.$emit('loadComponent', $event)
-      this.$router.push({path: `/${$event.replace('app-', '')}`})
-    },
-    performSignUp () {
-      this.account.loading = true
-      this.resource = this.$resource('{service}/signup', {}, {performSignUp: {method: 'POST'}})
-      this.resource.performSignUp({service: 'authorization-server'}, {userName: this.account.values.userName, email: this.account.values.email, password: this.account.values.password, confirmPassword: this.account.values.confirmPassword, accountRoles: [{roles: JSON.parse(this.account.values.roles)}]})
-        .then(response => {
-          return response.json()
-        })
-        .then(parsed => {
-          if (!parsed.error) {
-            this.account.dangerMessage = null
-            this.account.successMessage = parsed.message
-            Object.keys(this.account.server.validation).forEach((e) => { this.account.server.validation[e] = null })
-            this.account.loading = false
-          }
-        })
-        .catch(err => {
-          err.json().then(parsed => {
-            if (!parsed.error) return
-            this.account.successMessage = null
-            this.account.dangerMessage = parsed.message
-            if (!('reason' in parsed)) return
-            this.account.server.validation = parsed.reason
-            this.account.loading = false
-          })
-        })
-    },
-    verifyActivationToken () {
-      this.resource = this.$resource('{service}/signup/{account}/{id}/{token}/{key}', {}, {verifyActivationToken: {method: 'GET'}})
-      this.resource.verifyActivationToken({service: 'authorization-server', account: 'account', id: this.activateAccountProperties.values.account, token: 'token', key: this.activateAccountProperties.values.token})
-        .then(response => {
-          return response.json()
-        })
-        .then(parsed => {
-          if (!parsed.error) {
-            this.activateAccountProperties.dangerMessage = null
-            this.activateAccountProperties.successMessage = parsed.message
-          }
-        })
-        .catch(err => {
-          err.json().then(parsed => {
-            if (parsed.error) {
-              this.activateAccountProperties.successMessage = null
-              this.activateAccountProperties.dangerMessage = parsed.message
-            }
-          })
-        })
-    }
-  },
   validations: {
-    account: {
+    form: {
       values: {
         userName: {
           required,
@@ -179,6 +159,37 @@ export default {
         }
       }
     }
+  },
+  components: {
+    appAlert: alert
+  },
+  computed: {
+    ...mapGetters({
+      signUp: types.GETTER_SIGN_UP_DEFAULT,
+      activationToken: types.GETTER_ACCOUNT_ACTIVATION_DEFAULT
+    })
+  },
+  methods: {
+    loadComponent ($event) {
+      this.$emit('loadComponent', $event)
+      this.$router.push({path: `/${$event.replace('app-', '')}`})
+    },
+    onPageLoad () {
+      this.$store.dispatch(types.ACTION_ACCOUNT_ACTIVATION, {
+        id: this.url.values.id,
+        key: this.url.values.key})
+    },
+    onSignUp () {
+      this.signUp.error.message = this.activationToken.error.message = null
+      this.signUp.error.is = this.activationToken.error.is = false
+
+      this.$store.dispatch(types.ACTION_SIGN_UP, {
+        userName: this.form.values.userName,
+        email: this.form.values.email,
+        password: this.form.values.password,
+        confirmPassword: this.form.values.confirmPassword,
+        roles: JSON.parse(this.form.values.roles)})
+    }
   }
 }
 </script>
@@ -193,10 +204,6 @@ export default {
     height: 100vh;
     display: flex;
     align-items: center;
-  }
-
-  span.spinner-border{
-    margin-bottom: 0.3rem;
   }
 
   h1 {
@@ -255,6 +262,10 @@ export default {
     border-radius: 0;
     color: #6c757d;
     border-bottom: 0.1rem solid #dbdbdb;
+  }
+
+  select:focus {
+    background: #fcfcfc;
   }
 
   input[type="text"], input[type="password"], input[type="email"] {

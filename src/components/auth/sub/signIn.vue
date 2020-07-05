@@ -5,50 +5,98 @@
       <form>
         <div class="form-group">
           <label for="username">Zadajte použivatelské meno</label>
-          <input type="text" class="form-control" id="username" placeholder="Použivatelské meno" v-model="account.values.userName">
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            placeholder="Použivatelské meno"
+            v-model="form.values.userName">
         </div>
         <div class="form-group">
           <label for="password">Zadajte heslo</label>
-          <input type="password" class="form-control" id="password" placeholder="Heslo" v-model="account.values.password">
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            placeholder="Heslo"
+            v-model="form.values.password">
         </div>
         <div class="form-check">
-          <input type="checkbox" class="form-check-input" id="stayLoggedIn" v-model="account.values.stayLoggedIn">
+          <input type="checkbox" class="form-check-input" id="stayLoggedIn" v-model="form.values.stayLoggedIn">
           <label class="form-check-label" for="stayLoggedIn">Zostať prihlásený</label>
         </div>
         <a href="#" @click.prevent="loadComponent('app-forget-password')">Zabudli ste heslo?</a>
-        <button type="submit" class="btn btn-primary" @keyup.enter="performSignIn" @click.prevent="performSignIn">Prihlásiť sa</button>
+        <button type="submit" class="btn btn-primary" :disabled="$v.$invalid" @keyup.enter="onSignIn" @click.prevent="onSignIn">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-show="!signIn.done"></span>
+          Prihlásiť sa
+        </button>
       </form>
       <p class="text-center">Nemáte ešte použivatelské konto?</p>
-      <a class="text-center" href="#" @click.prevent="loadComponent('app-sign-up')">Zaregistrovať sa teraz</a>
+      <a class="text-center signup" href="#" @click.prevent="loadComponent('app-sign-up')">Zaregistrovať sa teraz</a>
+      <app-alert
+        :type="[signIn.error.is ? 'alert-danger' : 'alert-success']"
+        :condition="[signIn.error.message !== null]"
+        :content="[signIn.error.message]"/>
     </div>
   </div>
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+import * as types from '@/store/types'
+import alert from '@/components/common/alert'
+import {required} from 'vuelidate/lib/validators'
+
 export default {
   name: 'signin',
+  created: function () {
+    this.$store.dispatch(types.ACTION_AUTO_SIGN_IN)
+  },
   data: function () {
     return {
-      resource: null,
-      account: {
+      form: {
         values: {
           userName: '',
           password: '',
           stayLoggedIn: false
-        },
-        dangerMessage: null,
-        successMessage: null
+        }
       }
     }
+  },
+  validations: {
+    form: {
+      values: {
+        userName: {
+          required
+        },
+        password: {
+          required
+        }
+      }
+    }
+  },
+  components: {
+    appAlert: alert
+  },
+  computed: {
+    ...mapGetters({
+      signIn: types.GETTER_SIGN_IN_DEFAULT
+    })
   },
   methods: {
     loadComponent ($event) {
       this.$emit('loadComponent', $event)
       this.$router.push({path: $event.replace('app-', '')})
     },
-    performSignIn () {
-      this.resource = this.$resource('{service}/signin', {}, {performSignIn: {method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': `Basic ${btoa(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET)}`}}})
-      this.resource.performSignIn({service: 'authorization-server'}, {grant_type: 'password', username: this.account.values.userName, password: this.account.values.password})
+    onSignIn () {
+      this.signIn.error.message = null
+      this.signIn.error.is = false
+
+      this.$store.dispatch(types.ACTION_SIGN_IN, {
+        grantType: process.env.GRANT_TYPE,
+        userName: this.form.values.userName,
+        password: this.form.values.password,
+        stayLoggedIn: this.form.values.stayLoggedIn})
     }
   }
 }
@@ -84,6 +132,10 @@ export default {
     color: #176c9d;
   }
 
+  a.signup {
+    margin-bottom: 1rem;
+  }
+
   a:hover {
     color: #1796dc;
   }
@@ -106,6 +158,12 @@ export default {
   }
 
   button:hover {
+    border-color: #7f7f7f;
+    background: #176c9d;
+    color: #ffffff;
+  }
+
+  button[disabled] {
     border-color: #7f7f7f;
     background: #176c9d;
     color: #ffffff;

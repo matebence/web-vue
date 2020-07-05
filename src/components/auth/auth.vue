@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import forgetpass from '@/components/auth/sub/forgetpass'
-import signin from '@/components/auth/sub/signin'
-import signup from '@/components/auth/sub/signup'
+import forgetPass from '@/components/auth/sub/forgetPass'
+import signIn from '@/components/auth/sub/signIn'
+import signUp from '@/components/auth/sub/signUp'
 
 export default {
   name: 'auth',
@@ -36,9 +36,9 @@ export default {
     }
   },
   components: {
-    appSignIn: signin,
-    appSignUp: signup,
-    appForgetPassword: forgetpass
+    appForgetPassword: forgetPass,
+    appSignIn: signIn,
+    appSignUp: signUp
   },
   watch: {
     '$route' (to, from) {
