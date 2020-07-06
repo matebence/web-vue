@@ -10,8 +10,8 @@
 </template>
 
 <script>
+import 'font-awesome/css/font-awesome.min.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import * as types from '@/store/types'
 import 'animate.css/animate.min.css'
 import '@/assets/fonts/fonts.css'
 import '@/assets/css/reset.css'

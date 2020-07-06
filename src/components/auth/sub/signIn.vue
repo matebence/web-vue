@@ -34,9 +34,9 @@
       <p class="text-center">Nemáte ešte použivatelské konto?</p>
       <a class="text-center signup" href="#" @click.prevent="loadComponent('app-sign-up')">Zaregistrovať sa teraz</a>
       <app-alert
-        :type="[signIn.error.is ? 'alert-danger' : 'alert-success']"
-        :condition="[signIn.error.message !== null]"
-        :content="[signIn.error.message]"/>
+        :type="[signIn.error.is || signOut.error.is ? 'alert-danger' : 'alert-success']"
+        :condition="[signIn.error.message !== null, signOut.error.message !== null]"
+        :content="[signIn.error.message, signOut.error.message]"/>
     </div>
   </div>
 </template>
@@ -80,7 +80,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      signIn: types.GETTER_SIGN_IN_DEFAULT
+      signIn: types.GETTER_SIGN_IN_DEFAULT,
+      signOut: types.GETTER_SIGN_OUT_DEFAULT
     })
   },
   methods: {
@@ -93,7 +94,7 @@ export default {
       this.signIn.error.is = false
 
       this.$store.dispatch(types.ACTION_SIGN_IN, {
-        grantType: process.env.GRANT_TYPE,
+        grantType: process.env.GRANT_TYPE_PASSWORD,
         userName: this.form.values.userName,
         password: this.form.values.password,
         stayLoggedIn: this.form.values.stayLoggedIn})

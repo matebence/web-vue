@@ -1,4 +1,5 @@
 export const MUTATIONS_SIGN_IN_DATA = 'sign-in-mutation-data'
+export const MUTATIONS_CLEAR_SIGN_IN_DATA = 'sign-in-mutation-clear-data'
 export const ACTION_AUTO_SIGN_IN = 'sign-in-action-auto-sign-in'
 export const ACTION_SIGN_IN = 'sign-in-action-default'
 export const ACTION_START_AUTH_TIMER = 'sign-in-actions-timer'

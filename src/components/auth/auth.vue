@@ -46,7 +46,7 @@ export default {
     }
   },
   methods: {
-    navigateContent (componenet) {
+    navigateContent (componenet = 'sign-in') {
       if (!['sign-in', 'sign-up', 'forget-password'].includes(componenet)) {
         this.$router.push({name: 'error'})
         return

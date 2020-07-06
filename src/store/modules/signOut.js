@@ -1,4 +1,5 @@
 import * as types from '@/store/types'
+import router from '@/router'
 
 const state = {
   payload: {
@@ -23,7 +24,6 @@ const mutations = {
 
 const actions = {
   [types.ACTION_SIGN_OUT]: function ({commit, dispatch, state}, payload) {
-    commit(types.MUTATION_SIGN_OUT_DATA, { done: false })
     const resource = this._vm.$resource('{service}/signout', {}, {
       performSignOut: {method: 'DELETE', headers: {'Authorization': `Bearer ${payload.accessToken}`}}})
     resource.performSignOut({service: 'authorization-server'}).then(response => {
@@ -36,6 +36,7 @@ const actions = {
         },
         done: true
       })
+      router.push({path: '/sign-in'})
     }).catch(err => {
       err.json().then(parsed => {
         commit(types.MUTATION_SIGN_OUT_DATA, {
