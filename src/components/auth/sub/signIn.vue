@@ -24,8 +24,8 @@
         <div class="form-check">
           <input type="checkbox" class="form-check-input" id="stayLoggedIn" v-model="form.values.stayLoggedIn">
           <label class="form-check-label" for="stayLoggedIn">Zostať prihlásený</label>
+          <a href="#" @click.prevent="loadComponent('app-forget-password')" id="forgetPassword">Zabudli ste heslo?</a>
         </div>
-        <a href="#" @click.prevent="loadComponent('app-forget-password')">Zabudli ste heslo?</a>
         <button type="submit" class="btn btn-primary" :disabled="$v.$invalid" @keyup.enter="onSignIn" @click.prevent="onSignIn">
           <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-show="!signIn.done"></span>
           Prihlásiť sa
@@ -133,6 +133,11 @@ export default {
     color: #176c9d;
   }
 
+  a#forgetPassword{
+    display: inline;
+    float: right;
+  }
+
   a.signup {
     margin-bottom: 1rem;
   }
@@ -191,8 +196,24 @@ export default {
   }
 
   @media (max-width: 992px) {
-    div#signin {
+    div#wrapper {
       height: auto;
+    }
+
+    div#signin {
+      height: 100vh;
+    }
+  }
+
+  @media (max-width: 576px) {
+    div#signin {
+      padding: 0;
+    }
+
+    a#forgetPassword {
+      display: flex;
+      float: none;
+      margin-top: 0.5rem;
     }
   }
 </style>

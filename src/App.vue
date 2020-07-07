@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import 'font-awesome/css/font-awesome.min.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'animate.css/animate.min.css'
 import '@/assets/fonts/fonts.css'
@@ -27,6 +26,10 @@ export default {
   .animate__animated.animate__backOutLeft,
   .animate__animated.animate__fadeOut {
     --animate-duration: 0.3s;
+  }
+
+  span.spinner-border{
+    margin-bottom: 0.3rem;
   }
 
   html {
@@ -57,9 +60,5 @@ export default {
   input, select, option {
     box-shadow: none !important;
     outline: 0 !important;
-  }
-
-  span.spinner-border{
-    margin-bottom: 0.3rem;
   }
 </style>

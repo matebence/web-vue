@@ -166,8 +166,18 @@ export default {
   }
 
   @media (max-width: 992px) {
-    div#forgetpass {
+    div#wrapper {
       height: auto;
+    }
+
+    div#forgetpass {
+      height: 100vh;
+    }
+  }
+
+  @media (max-width: 576px) {
+    div#forgetpass {
+      padding: 0;
     }
   }
 </style>

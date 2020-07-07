@@ -3,10 +3,10 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+import 'bootstrap'
+
 import './resource'
 import './vuelidate'
-
-import 'bootstrap'
 
 Vue.config.productionTip = false
 

@@ -303,8 +303,18 @@ export default {
   }
 
   @media (max-width: 992px) {
-    div#signup {
+    div#wrapper {
       height: auto;
+    }
+
+    div#signup {
+      height: 100vh;
+    }
+  }
+
+  @media (max-width: 576px) {
+    div#signup {
+      padding: 0;
     }
   }
 </style>
