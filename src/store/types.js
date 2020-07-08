@@ -6,6 +6,7 @@ export const ACTION_START_AUTH_TIMER = 'sign-in-actions-timer'
 export const ACTION_REFRESH_AUTH = 'sign-in-actions-refresh'
 export const GETTER_SIGN_IN_DEFAULT = 'sign-in-getter-default'
 export const GETTER_SIGN_IN_IS_AUTH = 'sign-in-getter-is-authenticated'
+export const GETTER_SIGN_IN_GET_ROLE = 'sign-in-getter-get-role'
 
 export const MUTATION_SIGN_OUT_DATA = 'sign-out-mutation-data'
 export const ACTION_SIGN_OUT = 'sign-out-action-default'

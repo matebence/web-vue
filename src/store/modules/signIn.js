@@ -1,3 +1,4 @@
+import VueJwtDecode from 'vue-jwt-decode'
 import * as types from '@/store/types'
 import router from '@/router'
 
@@ -8,6 +9,7 @@ const state = {
       refreshToken: null,
       expiresIn: null,
       userName: null,
+      authorities: [],
       accountId: 0,
       loginId: 0,
       stayLoggedIn: false
@@ -35,6 +37,7 @@ const mutations = {
         refreshToken: null,
         expiresIn: null,
         userName: null,
+        authorities: [],
         accountId: 0,
         loginId: 0,
         stayLoggedIn: false
@@ -91,11 +94,13 @@ const actions = {
     resource.performSignIn({service: 'authorization-server'}, {grant_type: payload.grantType, username: payload.userName, password: payload.password}).then(response => {
       return response.json()
     }).then(parsed => {
+      const jwt = VueJwtDecode.decode(parsed.access_token)
       const accountData = {
         accessToken: parsed.access_token,
         refreshToken: parsed.refresh_token,
         expiresIn: parsed.expires_in,
         userName: parsed.user_name,
+        authorities: jwt.authorities,
         accountId: parsed.account_id,
         loginId: parsed.login_id,
         stayLoggedIn: payload.stayLoggedIn
@@ -132,11 +137,13 @@ const actions = {
     resource.refreshAuthorizationToken({service: 'authorization-server'}, {grant_type: payload.grantType, refresh_token: payload.refreshToken}).then(response => {
       return response.json()
     }).then(parsed => {
+      const jwt = VueJwtDecode.decode(parsed.access_token)
       const accountData = {
         accessToken: parsed.access_token,
         refreshToken: state.payload.data.refreshToken,
         expiresIn: parsed.expires_in,
         userName: parsed.user_name,
+        authorities: jwt.authorities,
         accountId: parsed.account_id,
         loginId: parsed.login_id,
         stayLoggedIn: state.payload.data.stayLoggedIn
@@ -174,6 +181,10 @@ const getters = {
 
   [types.GETTER_SIGN_IN_IS_AUTH]: function (state) {
     return state.payload.data.accessToken !== null
+  },
+
+  [types.GETTER_SIGN_IN_GET_ROLE]: function (state) {
+    return state.payload.data.authorities
   }
 }
 
