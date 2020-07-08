@@ -38,5 +38,7 @@ export default {
     left: 50%;
     width: 75%;
     transform: translateX(-50%);
+    border: 1rem white solid;
+    border-radius: 2rem;
   }
 </style>

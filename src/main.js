@@ -7,6 +7,7 @@ import 'bootstrap'
 
 import './resource'
 import './vuelidate'
+import './vueawesome'
 
 Vue.config.productionTip = false
 

@@ -100,11 +100,13 @@ export default {
     right: 0;
     z-index: 999;
     width: 35vw;
-    height: 96%;
+    height: 98vh;
     transform: translate(0%, -50%);
     border-top-left-radius: 5rem;
     border-bottom-left-radius: 5rem;
     background: #ffffff;
+    max-height: 100vh;
+    overflow: auto;
   }
 
   @media (max-width: 1230px) {

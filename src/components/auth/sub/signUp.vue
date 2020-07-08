@@ -201,7 +201,7 @@ export default {
 
   div#signup {
     padding: 2rem;
-    height: 100vh;
+    height: 98vh;
     display: flex;
     align-items: center;
   }
