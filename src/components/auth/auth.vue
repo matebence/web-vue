@@ -48,7 +48,7 @@ export default {
   methods: {
     navigateContent (componenet = 'sign-in') {
       if (!['sign-in', 'sign-up', 'forget-password'].includes(componenet)) {
-        this.$rwrapper.push({name: 'error'})
+        this.$router.push({name: 'error'})
         return
       }
       this.options = `app-${componenet}`

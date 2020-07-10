@@ -21,15 +21,17 @@ export default {
 </script>
 
 <style>
-  .animate__animated.animate__backOutLeft,
-  .animate__animated.animate__fadeIn,
-  .animate__animated.animate__backOutLeft,
-  .animate__animated.animate__fadeOut {
-    --animate-duration: 0.3s;
+  ::-webkit-scrollbar {
+    width: 0.2rem;
+    height: 0.2rem;
   }
 
-  span.spinner-border{
-    margin-bottom: 0.3rem;
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #176c9d;
   }
 
   html {
@@ -49,7 +51,7 @@ export default {
     font-family: Palanquin-Regular, sans-serif;
   }
 
-  p, a, input, select, option, label, button, small{
+  p, a, li, input, select, option, label, button, small{
     font-family: Palanquin-Medium, sans-serif;
   }
 
@@ -60,5 +62,16 @@ export default {
   input, select, option {
     box-shadow: none !important;
     outline: 0 !important;
+  }
+
+  .animate__animated.animate__backOutLeft,
+  .animate__animated.animate__fadeIn,
+  .animate__animated.animate__backOutLeft,
+  .animate__animated.animate__fadeOut {
+    --animate-duration: 0.3s;
+  }
+
+  span.spinner-border{
+    margin-bottom: 0.3rem;
   }
 </style>
