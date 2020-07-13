@@ -52,7 +52,7 @@ const mutations = {
 }
 
 const actions = {
-  [types.ACTION_START_AUTH_TIMER]: function ({commit, dispatch, state}, payload) {
+  [types.ACTION_START_AUTH_TIMER]: function ({commit, dispatch, state, rootState}, payload) {
     setTimeout(function () {
       if (state.payload.data.stayLoggedIn) {
         dispatch(types.ACTION_REFRESH_AUTH, {
@@ -63,14 +63,11 @@ const actions = {
         dispatch(types.ACTION_SIGN_OUT, {
           accessToken: state.payload.data.accessToken
         })
-        commit(types.MUTATIONS_CLEAR_SIGN_IN_DATA, {})
-        localStorage.removeItem('accountData')
-        localStorage.removeItem('expirationDate')
       }
     }, payload.expirationTime * 1000)
   },
 
-  [types.ACTION_AUTO_SIGN_IN]: function ({commit, dispatch, state}, payload) {
+  [types.ACTION_AUTO_SIGN_IN]: function ({commit, dispatch, state, rootState}, payload) {
     const data = localStorage.getItem('accountData')
     if (!data) return
 
@@ -87,7 +84,7 @@ const actions = {
     router.push({path: '/dashboard'})
   },
 
-  [types.ACTION_SIGN_IN]: function ({commit, dispatch, state}, payload) {
+  [types.ACTION_SIGN_IN]: function ({commit, dispatch, state, rootState}, payload) {
     commit(types.MUTATIONS_SIGN_IN_DATA, {done: false})
     const resource = this._vm.$resource('{service}/signin', {}, {
       performSignIn: {method: 'POST', headers: {'Authorization': `Basic ${btoa(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET)}`}}}, {emulateJSON: true})
@@ -131,7 +128,7 @@ const actions = {
     })
   },
 
-  [types.ACTION_REFRESH_AUTH]: function ({commit, dispatch, state}, payload) {
+  [types.ACTION_REFRESH_AUTH]: function ({commit, dispatch, state, rootState}, payload) {
     const resource = this._vm.$resource('{service}/signin', {}, {
       refreshAuthorizationToken: {method: 'POST', headers: {'Authorization': `Basic ${btoa(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET)}`}}}, {emulateJSON: true})
     resource.refreshAuthorizationToken({service: 'authorization-server'}, {grant_type: payload.grantType, refresh_token: payload.refreshToken}).then(response => {

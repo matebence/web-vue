@@ -9,8 +9,7 @@
           <a href="#" @click.prevent="loadComponent('app-sign-in')">Späť na prihlásenie</a>
         </div>
         <button type="submit" class="btn btn-primary" @keyup.enter="onSend" @click.prevent="onSend" :disabled="$v.$invalid">
-          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-show="!forgetPassword.done"></span>
-          Odoslať
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-show="!forgetPassword.done"></span>&nbsp;Odoslať
         </button>
       </form>
       <app-alert
@@ -36,7 +35,7 @@ export default {
     return {
       form: {
         values: {
-          email: ''
+          email: null
         }
       },
       url: {

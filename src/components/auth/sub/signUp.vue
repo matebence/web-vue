@@ -74,7 +74,7 @@
             v-show="signUp.error.reason.password !== null">{{signUp.error.reason.password}}</small>
         </div>
         <div class="form-group">
-          <label for="confirmPassword">Chcem sa stať</label>
+          <label for="selectedRole">Chcem sa stať</label>
           <select
             class="form-control"
             v-model="form.values.roles"
@@ -90,8 +90,7 @@
           <a href="#" @click.prevent="loadComponent('app-sign-in')">Späť na prihlásenie</a>
         </div>
         <button type="submit" class="btn btn-primary" :disabled="$v.$invalid" @keyup.enter="onSignUp" @click.prevent="onSignUp">
-          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-show="!signUp.done"></span>
-          Registrovať sa
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-show="!signUp.done"></span>&nbsp;Registrovať sa
         </button>
       </form>
       <app-alert
@@ -117,10 +116,10 @@ export default {
     return {
       form: {
         values: {
-          userName: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
+          userName: null,
+          email: null,
+          password: null,
+          confirmPassword: null,
           roles: '{}'
         }
       },

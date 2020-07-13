@@ -27,8 +27,7 @@
           <a href="#" @click.prevent="loadComponent('app-forget-password')" id="forgetPassword">Zabudli ste heslo?</a>
         </div>
         <button type="submit" class="btn btn-primary" :disabled="$v.$invalid" @keyup.enter="onSignIn" @click.prevent="onSignIn">
-          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-show="!signIn.done"></span>
-          Prihlásiť sa
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-show="!signIn.done"></span>&nbsp;Prihlásiť sa
         </button>
       </form>
       <p class="text-center">Nemáte ešte použivatelské konto?</p>
@@ -56,8 +55,8 @@ export default {
     return {
       form: {
         values: {
-          userName: '',
-          password: '',
+          userName: null,
+          password: null,
           stayLoggedIn: false
         }
       }

@@ -21,7 +21,7 @@ const mutations = {
 }
 
 const actions = {
-  [types.ACTION_ACCOUNT_ACTIVATION]: function ({commit, dispatch, state}, payload) {
+  [types.ACTION_ACCOUNT_ACTIVATION]: function ({commit, dispatch, state, rootState}, payload) {
     const resource = this._vm.$resource('{service}/signup/{account}/{id}/{token}/{key}', {}, {
       verifyActivationToken: { method: 'GET' }})
     resource.verifyActivationToken({service: 'authorization-server', account: 'account', id: payload.id, token: 'token', key: payload.key}).then(response => {

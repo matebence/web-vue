@@ -27,3 +27,11 @@ export const GETTER_ACCOUNT_ACTIVATION_DEFAULT = 'activation-token-getter-defaul
 export const MUTATION_ACCOUNT_RECOVER_DATA = 'recover-token-mutation-data'
 export const ACTION_ACCOUNT_RECOVER = 'recover-token-action-default'
 export const GETTER_ACCOUNT_RECOVER_DEFAULT = 'recover-token-getter-default'
+
+export const MUTATION_PARCEL_DATA = 'parcel-mutation-data'
+export const ACTION_PARCEL = 'parcel-action-default'
+export const GETTER_PARCEL_DEFAULT = 'parcel-getter-default'
+
+export const MUTATION_CATEGORY_DATA = 'category-mutation-data'
+export const ACTION_CATEGORY = 'category-action-default'
+export const GETTER_CATEGORY_DEFAULT = 'category-getter-default'

@@ -11,7 +11,7 @@
             enter-active-class="animate__animated animate__fadeIn"
             leave-active-class="animate__animated animate__fadeOut">
             <keep-alive>
-              <component :is="options" @loadComponent="options= $event"></component>
+              <component :is="component" @loadComponent="component= $event"></component>
             </keep-alive>
           </transition>
         </div>
@@ -32,7 +32,7 @@ export default {
   },
   data: function () {
     return {
-      options: null
+      component: null
     }
   },
   components: {
@@ -51,7 +51,7 @@ export default {
         this.$router.push({name: 'error'})
         return
       }
-      this.options = `app-${componenet}`
+      this.component = `app-${componenet}`
     }
   }
 }

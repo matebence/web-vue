@@ -51,7 +51,7 @@ export default {
     font-family: Palanquin-Regular, sans-serif;
   }
 
-  p, a, li, input, select, option, label, button, small{
+  p, a, li, input, select, option, textarea, label, button, small{
     font-family: Palanquin-Medium, sans-serif;
   }
 
@@ -59,7 +59,7 @@ export default {
     text-decoration: none;
   }
 
-  input, select, option {
+  input, select, option, textarea {
     box-shadow: none !important;
     outline: 0 !important;
   }

@@ -26,7 +26,7 @@ const mutations = {
 }
 
 const actions = {
-  [types.ACTION_SIGN_UP]: function ({commit, dispatch, state}, payload) {
+  [types.ACTION_SIGN_UP]: function ({commit, dispatch, state, rootState}, payload) {
     commit(types.MUTATION_SIGN_UP_DATA, {done: false})
     const resource = this._vm.$resource('{service}/signup', {}, {performSignUp: {method: 'POST'}})
     resource.performSignUp({service: 'authorization-server'}, {userName: payload.userName, email: payload.email, password: payload.password, confirmPassword: payload.confirmPassword, accountRoles: [{roles: payload.roles}]

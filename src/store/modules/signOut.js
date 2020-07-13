@@ -23,12 +23,16 @@ const mutations = {
 }
 
 const actions = {
-  [types.ACTION_SIGN_OUT]: function ({commit, dispatch, state}, payload) {
+  [types.ACTION_SIGN_OUT]: function ({commit, dispatch, state, rootState}, payload) {
     const resource = this._vm.$resource('{service}/signout', {}, {
-      performSignOut: {method: 'DELETE', headers: {'Authorization': `Bearer ${payload.accessToken}`}}})
+      performSignOut: {method: 'DELETE', headers: {'Authorization': `Bearer ${rootState.signIn.payload.data.accessToken}`}}})
     resource.performSignOut({service: 'authorization-server'}).then(response => {
       return response.json()
     }).then(parsed => {
+      localStorage.removeItem('accountData')
+      localStorage.removeItem('expirationDate')
+
+      commit(types.MUTATIONS_CLEAR_SIGN_IN_DATA, {})
       commit(types.MUTATION_SIGN_OUT_DATA, {
         error: {
           is: parsed.error,

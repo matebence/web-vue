@@ -21,7 +21,7 @@ const mutations = {
 }
 
 const actions = {
-  [types.ACTION_ACCOUNT_RECOVER]: function ({commit, dispatch, state}, payload) {
+  [types.ACTION_ACCOUNT_RECOVER]: function ({commit, dispatch, state, rootState}, payload) {
     const resource = this._vm.$resource('{service}/forgetpassword/{account}/{id}/{token}/{key}', {}, {
       verifyRecoverToken: {method: 'GET'}})
     resource.verifyRecoverToken({service: 'authorization-server', account: 'account', id: payload.id, token: 'token', key: payload.key}).then(response => {
