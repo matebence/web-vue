@@ -6,22 +6,40 @@
       </a>
       <ul class="items">
         <li class="active">
-          <a href="#"><font-awesome-icon :icon="['fas', 'box-open']"/><p>Balíky</p></a>
+          <a href="#">
+            <font-awesome-icon :icon="['fas', 'box-open']"/>
+            <p>Balíky</p>
+          </a>
         </li>
         <li>
-          <a href="#"><font-awesome-icon :icon="['fas', 'shipping-fast']"/><p>Zásielky</p></a>
+          <a href="#">
+            <font-awesome-icon :icon="['fas', 'shipping-fast']"/>
+            <p>Zásielky</p>
+          </a>
         </li>
         <li>
-          <a href="#"><font-awesome-icon :icon="['fas', 'car']"/><p>Vozidlá</p></a>
+          <a href="#">
+            <font-awesome-icon :icon="['fas', 'car']"/>
+            <p>Vozidlá</p>
+          </a>
         </li>
         <li>
-          <a href="#"><font-awesome-icon :icon="['fas', 'comment-dots']"/><p>Správy&nbsp;<span class="badge badge-pill badge-danger">Nové</span></p></a>
+          <a href="#">
+            <font-awesome-icon :icon="['fas', 'comment-dots']"/>
+            <p>Správy&nbsp;<span class="badge badge-pill badge-danger">Nové</span></p>
+          </a>
         </li>
         <li class="settings">
-          <a href="#"><font-awesome-icon :icon="['fas', 'cog']"/><p>Nastavenia</p></a>
+          <a href="#">
+            <font-awesome-icon :icon="['fas', 'cog']"/>
+            <p>Nastavenia</p>
+          </a>
         </li>
         <li>
-          <a @click.prevent="onSignOut" href="/sign-out"><font-awesome-icon :icon="['fas', 'sign-out-alt']"/><p>Odhlásiť sa</p></a>
+          <a @click.prevent="onSignOut" href="/sign-out">
+            <font-awesome-icon :icon="['fas', 'sign-out-alt']"/>
+            <p>Odhlásiť sa</p>
+          </a>
         </li>
       </ul>
       <ul class="sub-items">
@@ -29,7 +47,10 @@
           <a href="#" data-letters="PV"></a>
         </li>
         <li class="settings">
-          <a href="#"><font-awesome-icon :icon="['fas', 'cog']"/><p>Nastavenia</p></a>
+          <a href="#">
+            <font-awesome-icon :icon="['fas', 'cog']"/>
+            <p>Nastavenia</p>
+          </a>
         </li>
       </ul>
     </nav>

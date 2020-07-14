@@ -1,5 +1,4 @@
 import * as types from '@/store/types'
-import router from '@/router'
 
 const state = {
   payload: {
@@ -32,29 +31,52 @@ const mutations = {
     }
   },
 
+  [types.MUTATIONS_CLEAR_PARCEL_DATA]: function (state, data) {
+    state.payload.parcel = {
+      data: {
+      },
+      error: {
+        is: false,
+        message: null
+      },
+      done: true
+    }
+  },
+
   [types.MUTATION_CATEGORY_DATA]: function (state, data) {
     state.payload.category = {
       ...state.payload.category,
       ...data
     }
+  },
+
+  [types.MUTATIONS_CLEAR_CATEGORY_DATA]: function (state, data) {
+    state.payload.category = {
+      data: {
+      },
+      error: {
+        is: false,
+        message: null
+      },
+      done: true
+    }
   }
 }
 
 const actions = {
-  [types.ACTION_PARCEL]: function ({commit, dispatch, state, rootState}, payload) {
-    const resource = this._vm.$resource('{service}/signout', {}, {
-      performSignOut: {method: 'DELETE', headers: {'Authorization': `Bearer ${payload.accessToken}`}}})
-    resource.performSignOut({service: 'authorization-server'}).then(response => {
+  [types.ACTION_PARCEL_CREATE]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_PARCEL_DATA, {done: false})
+    const resource = this._vm.$resource('{service}/api/parcels', {}, {
+      create: {method: 'POST', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
+    resource.create({service: 'parcel-service'}).then(response => {
       return response.json()
     }).then(parsed => {
       commit(types.MUTATION_PARCEL_DATA, {
-        error: {
-          is: parsed.error,
-          message: parsed.message
+        data: {
+          ...parsed.data
         },
         done: true
       })
-      router.push({path: '/sign-in'})
     }).catch(err => {
       err.json().then(parsed => {
         commit(types.MUTATION_PARCEL_DATA, {
@@ -68,7 +90,7 @@ const actions = {
     })
   },
 
-  [types.ACTION_CATEGORY]: function ({commit, dispatch, state, rootState}, payload) {
+  [types.ACTION_CATEGORY_GET_ALL]: function ({commit, dispatch, state, rootState}, payload) {
     const resource = this._vm.$resource('{service}/api/categories/page/{page}/limit/{limit}', {}, {
       getAll: {method: 'GET', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
     resource.getAll({service: 'parcel-service', page: 1, limit: 10}).then(response => {

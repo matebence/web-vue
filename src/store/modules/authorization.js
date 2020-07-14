@@ -109,10 +109,39 @@ const mutations = {
     }
   },
 
+  [types.MUTATIONS_CLEAR_SIGN_UP_DATA]: function (state, data) {
+    state.payload.signUp = {
+      data: {
+      },
+      error: {
+        is: false,
+        message: null,
+        reason: {
+          userName: null,
+          email: null,
+          password: null
+        }
+      },
+      done: true
+    }
+  },
+
   [types.MUTATION_SIGN_OUT_DATA]: function (state, data) {
     state.payload.signOut = {
       ...state.payload.signOut,
       ...data
+    }
+  },
+
+  [types.MUTATIONS_CLEAR_SIGN_OUT_DATA]: function (state, data) {
+    state.payload.signOut = {
+      data: {
+      },
+      error: {
+        is: false,
+        message: null
+      },
+      done: true
     }
   },
 
@@ -123,6 +152,18 @@ const mutations = {
     }
   },
 
+  [types.MUTATIONS_CLEAR_FORGET_PASSWORD_DATA]: function (state, data) {
+    state.payload.forgetPassword = {
+      data: {
+      },
+      error: {
+        is: false,
+        message: null
+      },
+      done: true
+    }
+  },
+
   [types.MUTATION_ACCOUNT_RECOVER_DATA]: function (state, data) {
     state.payload.recoverToken = {
       ...state.payload.recoverToken,
@@ -130,10 +171,34 @@ const mutations = {
     }
   },
 
+  [types.MUTATIONS_CLEAR_ACCOUNT_RECOVER_DATA]: function (state, data) {
+    state.payload.recoverToken = {
+      data: {
+      },
+      error: {
+        is: false,
+        message: null
+      },
+      done: true
+    }
+  },
+
   [types.MUTATION_ACCOUNT_ACTIVATION_DATA]: function (state, data) {
     state.payload.activationToken = {
       ...state.payload.activationToken,
       ...data
+    }
+  },
+
+  [types.MUTATIONS_CLEAR_ACCOUNT_ACTIVATION_DATA]: function (state, data) {
+    state.payload.activationToken = {
+      data: {
+      },
+      error: {
+        is: false,
+        message: null
+      },
+      done: true
     }
   }
 }

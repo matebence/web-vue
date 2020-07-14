@@ -1,10 +1,16 @@
 <template>
-  <div id="signup">
-    <div id="wrapper">
+  <div
+    id="signup">
+    <div
+      id="wrapper">
       <h1>Registrácia</h1>
       <form>
-        <div class="form-group">
-          <label for="username">Zadajte použivatelské meno</label>
+        <div
+          class="form-group">
+          <label
+            for="username">
+            Zadajte použivatelské meno
+          </label>
           <input
             aria-describedby="userNameInvalid"
             type="text" class="form-control"
@@ -12,16 +18,18 @@
             v-model="form.values.userName"
             placeholder="Použivatelské meno"
             @input="$v.form.values.userName.$touch()"
-            :class="{
-               valid: !$v.form.values.userName.$error && $v.form.values.userName.$dirty,
-               invalid: $v.form.values.userName.$error}">
+            :class="{valid: !$v.form.values.userName.$error && $v.form.values.userName.$dirty, invalid: $v.form.values.userName.$error}">
           <small
             id="userNameInvalid"
             class="form-text text-muted"
             v-show="signUp.error.reason.userName !== null">{{signUp.error.reason.userName}}</small>
         </div>
-        <div class="form-group">
-          <label for="email">Zadajte emailovú adresu</label>
+        <div
+          class="form-group">
+          <label
+            for="email">
+            Zadajte emailovú adresu
+          </label>
           <input
             aria-describedby="emailInvalid"
             type="email" class="form-control"
@@ -29,16 +37,18 @@
             v-model="form.values.email"
             placeholder="Emailová adresa"
             @input="$v.form.values.email.$touch()"
-            :class="{
-                valid: !$v.form.values.email.$error && $v.form.values.email.$dirty,
-                invalid: $v.form.values.email.$error}">
+            :class="{valid: !$v.form.values.email.$error && $v.form.values.email.$dirty, invalid: $v.form.values.email.$error}">
           <small
             id="emailInvalid"
             class="form-text text-muted"
             v-show="signUp.error.reason.email !== null">{{signUp.error.reason.email}}</small>
         </div>
-        <div class="form-group">
-          <label for="password">Zadajte heslo</label>
+        <div
+          class="form-group">
+          <label
+            for="password">
+            Zadajte heslo
+          </label>
           <input
             aria-describedby="passwordInvalid"
             type="password"
@@ -47,16 +57,16 @@
             v-model="form.values.password"
             placeholder="Heslo"
             @input="$v.form.values.password.$touch()"
-            :class="{
-                valid: !$v.form.values.password.$error && $v.form.values.password.$dirty,
-                invalid: $v.form.values.password.$error}">
+            :class="{valid: !$v.form.values.password.$error && $v.form.values.password.$dirty, invalid: $v.form.values.password.$error}">
           <small
             id="passwordInvalid"
             class="form-text text-muted"
             v-show="signUp.error.reason.password !== null">{{signUp.error.reason.password}}</small>
         </div>
-        <div class="form-group">
-          <label for="confirmPassword">Potvrďte heslo</label>
+        <div
+          class="form-group">
+          <label
+            for="confirmPassword">Potvrďte heslo</label>
           <input
             aria-describedby="confirmPasswordInvalid"
             type="password"
@@ -74,23 +84,38 @@
             v-show="signUp.error.reason.password !== null">{{signUp.error.reason.password}}</small>
         </div>
         <div class="form-group">
-          <label for="selectedRole">Chcem sa stať</label>
+          <label
+            for="selectedRole">
+            Chcem sa stať
+          </label>
           <select
             class="form-control"
             v-model="form.values.roles"
             id="selectedRole"
             @change="$v.form.values.roles.$touch()"
-            :class="{
-                valid: !$v.form.values.roles.$error && $v.form.values.roles.$dirty,
-               invalid: $v.form.values.roles.$error}">
+            :class="{valid: !$v.form.values.roles.$error && $v.form.values.roles.$dirty, invalid: $v.form.values.roles.$error}">
             <option value="{}" disabled selected>Vyberte z možností</option>
             <option value='{"roleId": 3, "name": "ROLE_CLIENT"}'>Klientom</option>
             <option value='{"roleId": 4, "name": "ROLE_COURIER"}'>Kuriérom</option>
           </select>
-          <a href="#" @click.prevent="loadComponent('app-sign-in')">Späť na prihlásenie</a>
+          <a
+            href="#"
+            @click.prevent="loadComponent('app-sign-in')">
+            Späť na prihlásenie
+          </a>
         </div>
-        <button type="submit" class="btn btn-primary" :disabled="$v.$invalid" @keyup.enter="onSignUp" @click.prevent="onSignUp">
-          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-show="!signUp.done"></span>&nbsp;Registrovať sa
+        <button
+          type="submit"
+          class="btn btn-primary"
+          :disabled="$v.$invalid"
+          @keyup.enter="onSignUp"
+          @click.prevent="onSignUp">
+          <span
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+            v-show="!signUp.done">
+          </span>&nbsp;Registrovať sa
         </button>
       </form>
       <app-alert

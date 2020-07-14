@@ -1,42 +1,59 @@
 <template>
-  <div id="create">
+  <div
+    id="create">
     <form>
-      <div class="form-group">
-        <label for="receiver">Zadajte meno príjemcu</label>
+      <div
+        class="form-group">
+        <label
+          for="receiver">
+          Zadajte meno príjemcu
+        </label>
         <input
           aria-describedby="receiverInvalid"
-          type="text" class="form-control"
+          type="text"
+          class="form-control"
           id="receiver"
           v-model="form.values.receiver"
           placeholder="Meno príjemca"
-          @input="$v.form.values.receiver.$touch()"
-          :class="{
-               valid: !$v.form.values.receiver.$error && $v.form.values.receiver.$dirty,
-               invalid: $v.form.values.receiver.$error}">
+          @change="$v.form.values.receiver.$touch()"
+          @input="autoCompleteReceiver($event.target.value)"
+          :class="{valid: !$v.form.values.receiver.$error && $v.form.values.receiver.$dirty, invalid: $v.form.values.receiver.$error}">
+        <div id="autocomplete">
+          <ul>
+            <li v-for="user in users.data" v-bind:key="user.userId">{{user.firstName}} {{user.lastName}}</li>
+          </ul>
+        </div>
         <small
           id="receiverInvalid"
-          class="form-text text-muted"></small>
+          class="form-text text-muted">
+        </small>
       </div>
-      <div class="form-group">
-        <label for="category">Vyberte kategóriu</label>
+      <div
+        class="form-group">
+        <label
+          for="category">
+          Vyberte kategóriu
+        </label>
         <select
           aria-describedby="categoryInvalid"
           class="form-control"
           id="category"
           v-model="form.values.category"
           @change="$v.form.values.category.$touch()"
-          :class="{
-               valid: !$v.form.values.category.$error && $v.form.values.category.$dirty,
-               invalid: $v.form.values.category.$error}">
-          <option value="null" disabled selected>Vyberte z možností</option>
+          :class="{valid: !$v.form.values.category.$error && $v.form.values.category.$dirty, invalid: $v.form.values.category.$error}">
+          <option value="null" disabled selected >Vyberte z možností</option>
           <option v-for="category in categories.data" :value="category.id" v-bind:key="category.id">{{category.name}}</option>
         </select>
         <small
           id="categoryInvalid"
-          class="form-text text-muted"></small>
+          class="form-text text-muted">
+        </small>
       </div>
       <div class="form-group">
-        <label for="size">Zadajte dľžku balíka</label>
+        <label
+          for="size">
+          Zadajte dľžku balíka
+        </label>
         <input
           aria-describedby="sizeInvalid"
           type="text" class="form-control"
@@ -44,15 +61,18 @@
           v-model="form.values.size"
           placeholder="Dľžka balíka"
           @input="$v.form.values.size.$touch()"
-          :class="{
-               valid: !$v.form.values.size.$error && $v.form.values.size.$dirty,
-               invalid: $v.form.values.size.$error}">
+          :class="{valid: !$v.form.values.size.$error && $v.form.values.size.$dirty, invalid: $v.form.values.size.$error}">
         <small
           id="sizeInvalid"
-          class="form-text text-muted"></small>
+          class="form-text text-muted">
+        </small>
       </div>
-      <div class="form-group">
-        <label for="width">Zadajte šírku balíka</label>
+      <div
+        class="form-group">
+        <label
+          for="width">
+          Zadajte šírku balíka
+        </label>
         <input
           aria-describedby="widthInvalid"
           type="text" class="form-control"
@@ -60,15 +80,18 @@
           v-model="form.values.width"
           placeholder="Šírka balíka"
           @input="$v.form.values.width.$touch()"
-          :class="{
-               valid: !$v.form.values.width.$error && $v.form.values.width.$dirty,
-               invalid: $v.form.values.width.$error}">
+          :class="{valid: !$v.form.values.width.$error && $v.form.values.width.$dirty, invalid: $v.form.values.width.$error}">
         <small
           id="widthInvalid"
-          class="form-text text-muted"></small>
+          class="form-text text-muted">
+        </small>
       </div>
-      <div class="form-group">
-        <label for="height">Zadajte výšku balíka</label>
+      <div
+        class="form-group">
+        <label
+          for="height">
+          Zadajte výšku balíka
+        </label>
         <input
           aria-describedby="heightInvalid"
           type="text" class="form-control"
@@ -76,15 +99,18 @@
           v-model="form.values.height"
           placeholder="Výška balíka"
           @input="$v.form.values.height.$touch()"
-          :class="{
-               valid: !$v.form.values.height.$error && $v.form.values.height.$dirty,
-               invalid: $v.form.values.height.$error}">
+          :class="{valid: !$v.form.values.height.$error && $v.form.values.height.$dirty, invalid: $v.form.values.height.$error}">
         <small
           id="heightInvalid"
-          class="form-text text-muted"></small>
+          class="form-text text-muted">
+        </small>
       </div>
-      <div class="form-group">
-        <label for="weight">Zadajte hmotnosť balíka</label>
+      <div
+        class="form-group">
+        <label
+          for="weight">
+          Zadajte hmotnosť balíka
+        </label>
         <input
           aria-describedby="weightInvalid"
           type="text" class="form-control"
@@ -92,15 +118,17 @@
           v-model="form.values.weight"
           placeholder="Hmotnosť balíka"
           @input="$v.form.values.weight.$touch()"
-          :class="{
-               valid: !$v.form.values.weight.$error && $v.form.values.weight.$dirty,
-               invalid: $v.form.values.weight.$error}">
+          :class="{valid: !$v.form.values.weight.$error && $v.form.values.weight.$dirty, invalid: $v.form.values.weight.$error}">
         <small
           id="weightInvalid"
-          class="form-text text-muted"></small>
+          class="form-text text-muted">
+        </small>
       </div>
       <div class="form-group">
-        <label for="note">Zadajte poznámku</label>
+        <label
+          for="note">
+          Zadajte poznámku
+        </label>
         <textarea
           aria-describedby="noteInvalid"
           class="form-control"
@@ -109,15 +137,24 @@
           v-model="form.values.note"
           placeholder="Vaša poznámka"
           @input="$v.form.values.note.$touch()"
-          :class="{
-               valid: !$v.form.values.note.$error && $v.form.values.note.$dirty,
-               invalid: $v.form.values.note.$error}"></textarea>
+          :class="{valid: !$v.form.values.note.$error && $v.form.values.note.$dirty, invalid: $v.form.values.note.$error}">
+        </textarea>
         <small
           id="noteInvalid"
-          class="form-text text-muted"></small>
+          class="form-text text-muted">
+        </small>
       </div>
-      <button type="submit" class="btn btn-primary">
-        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp;Vytvoriť
+      <button
+        type="submit"
+        class="btn btn-primary"
+        :disabled="$v.$invalid"
+        @keyup.enter="onCreate"
+        @click.prevent="onCreate">
+        <span
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+          v-show="!parcel.done"></span>&nbsp;Vytvoriť
       </button>
     </form>
   </div>
@@ -131,7 +168,7 @@ import {required, alphaNum, numeric} from 'vuelidate/lib/validators'
 export default {
   name: 'create',
   created: function () {
-    this.$store.dispatch(types.ACTION_CATEGORY, {})
+    this.$store.dispatch(types.ACTION_CATEGORY_GET_ALL, {})
   },
   data: function () {
     return {
@@ -184,8 +221,17 @@ export default {
   },
   computed: {
     ...mapGetters({
-      categories: types.GETTER_CATEGORY_DEFAULT
+      categories: types.GETTER_CATEGORY_DEFAULT,
+      parcel: types.GETTER_PARCEL_DEFAULT,
+      users: types.GETTER_USER_DEFAULT
     })
+  },
+  methods: {
+    autoCompleteReceiver ($event) {
+      this.$store.dispatch(types.ACTION_USER_SEARCH, {firstName: $event})
+    },
+    onCreate () {
+    }
   }
 }
 </script>
@@ -249,6 +295,27 @@ export default {
     background: transparent;
     border-radius: 0;
     border-bottom: 0.1rem solid #dbdbdb;
+  }
+
+  div#create div #autocomplete {
+    width: 100%;
+    position: relative;
+  }
+
+  div#create div #autocomplete ul {
+    position: absolute;
+    width: calc(100%);
+    background: #ffffff;
+  }
+
+  div#create div#autocomplete ul li {
+    font-size: 1em;
+    padding: 0.8rem;
+    border: solid 0.01rem #dbdbdb;
+  }
+  div#create div#autocomplete ul li:hover {
+    cursor: pointer;
+    background: #f1f1f1;
   }
 
   div#create textarea {

@@ -11,7 +11,10 @@
             enter-active-class="animate__animated animate__fadeIn"
             leave-active-class="animate__animated animate__fadeOut">
             <keep-alive>
-              <component :is="component" @loadComponent="component= $event"></component>
+              <component
+                :is="component"
+                @loadComponent="component=$event">
+              </component>
             </keep-alive>
           </transition>
         </div>

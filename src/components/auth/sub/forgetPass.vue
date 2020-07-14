@@ -1,15 +1,41 @@
 <template>
-  <div id="forgetpass">
-    <div id="wrapper">
+  <div
+    d="forgetpass">
+    <div
+      id="wrapper">
       <h1>Zabudnuté heslo</h1>
       <form>
-        <div class="form-group">
-          <label for="email">Zadajte Vašu emailová adresu</label>
-          <input type="email" class="form-control" id="email" placeholder="Emailová adresa" v-model="form.values.email" @input="$v.form.values.email.$touch()" :class="{valid: !$v.form.values.email.$error && $v.form.values.email.$dirty, invalid: $v.form.values.email.$error}">
-          <a href="#" @click.prevent="loadComponent('app-sign-in')">Späť na prihlásenie</a>
+        <div
+          class="form-group">
+          <label
+            for="email">
+            Zadajte Vašu emailová adresu
+          </label>
+          <input
+            type="email"
+            class="form-control" id="email"
+            placeholder="Emailová adresa"
+            v-model="form.values.email"
+            @input="$v.form.values.email.$touch()"
+            :class="{valid: !$v.form.values.email.$error && $v.form.values.email.$dirty, invalid: $v.form.values.email.$error}">
+          <a
+            href="#"
+            @click.prevent="loadComponent('app-sign-in')">
+            Späť na prihlásenie
+          </a>
         </div>
-        <button type="submit" class="btn btn-primary" @keyup.enter="onSend" @click.prevent="onSend" :disabled="$v.$invalid">
-          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-show="!forgetPassword.done"></span>&nbsp;Odoslať
+        <button
+          type="submit"
+          class="btn btn-primary"
+          @keyup.enter="onSend"
+          @click.prevent="onSend"
+          :disabled="$v.$invalid">
+          <span
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+            v-show="!forgetPassword.done">
+          </span>&nbsp;Odoslať
         </button>
       </form>
       <app-alert

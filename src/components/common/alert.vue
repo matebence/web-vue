@@ -6,8 +6,13 @@
       appear
       enter-active-class="animate__animated animate__fadeIn"
       leave-active-class="animate__animated animate__fadeOut">
-      <div :class="getType.pop()" class="alert" role="alert" v-show="getCondition">
-        <p class="text-center">{{ getContent.pop() }}</p>
+      <div
+        :class="getType.pop()"
+        class="alert" role="alert"
+        v-show="getCondition">
+        <p class="text-center">
+          {{ getContent.pop() }}
+        </p>
       </div>
     </transition>
   </div>

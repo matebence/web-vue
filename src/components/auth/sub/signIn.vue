@@ -1,10 +1,16 @@
 <template>
-  <div id="signin">
-    <div id="wrapper">
+  <div
+    id="signin">
+    <div
+      id="wrapper">
       <h1>Prihlásenie</h1>
       <form>
-        <div class="form-group">
-          <label for="username">Zadajte použivatelské meno</label>
+        <div
+          class="form-group">
+          <label
+            for="username">
+            Zadajte použivatelské meno
+          </label>
           <input
             type="text"
             class="form-control"
@@ -12,8 +18,11 @@
             placeholder="Použivatelské meno"
             v-model="form.values.userName">
         </div>
-        <div class="form-group">
-          <label for="password">Zadajte heslo</label>
+        <div
+          class="form-group">
+          <label for="password">
+            Zadajte heslo
+          </label>
           <input
             type="password"
             class="form-control"
@@ -21,17 +30,49 @@
             placeholder="Heslo"
             v-model="form.values.password">
         </div>
-        <div class="form-check">
-          <input type="checkbox" class="form-check-input" id="stayLoggedIn" v-model="form.values.stayLoggedIn">
-          <label class="form-check-label" for="stayLoggedIn">Zostať prihlásený</label>
-          <a href="#" @click.prevent="loadComponent('app-forget-password')" id="forgetPassword">Zabudli ste heslo?</a>
+        <div
+          class="form-check">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="stayLoggedIn"
+            v-model="form.values.stayLoggedIn">
+          <label
+            class="form-check-label"
+            for="stayLoggedIn">
+            Zostať prihlásený
+          </label>
+          <a
+            href="#"
+            @click.prevent="loadComponent('app-forget-password')"
+            id="forgetPassword">
+            Zabudli ste heslo?
+          </a>
         </div>
-        <button type="submit" class="btn btn-primary" :disabled="$v.$invalid" @keyup.enter="onSignIn" @click.prevent="onSignIn">
-          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-show="!signIn.done"></span>&nbsp;Prihlásiť sa
+        <button
+          type="submit"
+          class="btn btn-primary"
+          :disabled="$v.$invalid"
+          @keyup.enter="onSignIn"
+          @click.prevent="onSignIn">
+          <span
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+            v-show="!signIn.done">
+          </span>&nbsp;Prihlásiť sa
         </button>
       </form>
-      <p class="text-center">Nemáte ešte použivatelské konto?</p>
-      <a class="text-center signup" href="#" @click.prevent="loadComponent('app-sign-up')">Zaregistrovať sa teraz</a>
+      <p
+        class="text-center">
+        Nemáte ešte použivatelské konto?
+      </p>
+      <a
+        class="text-center signup"
+        href="#"
+        @click.prevent="loadComponent('app-sign-up')">
+        Zaregistrovať sa teraz
+      </a>
       <app-alert
         :type="[signIn.error.is || signOut.error.is ? 'alert-danger' : 'alert-success']"
         :condition="[signIn.error.message !== null, signOut.error.message !== null]"
