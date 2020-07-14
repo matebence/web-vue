@@ -287,7 +287,7 @@ export default {
     color: #ff0000 !important;
   }
 
-  div input.invalid {
+  div input.invalid, div select.invalid {
     border-bottom: 0.1rem solid #ff0000;
   }
 

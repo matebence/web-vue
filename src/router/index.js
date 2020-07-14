@@ -27,7 +27,7 @@ const routes = [
     component: dashboard,
     name: 'dashboard',
     beforeEnter: function (to, from, next) {
-      if (store.state.signIn.payload.data.accessToken) return next()
+      if (store.state.authorization.payload.signIn.data.accessToken) return next()
       next('/sign-in')
     },
     children: []},
