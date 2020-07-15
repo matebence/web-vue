@@ -7,7 +7,18 @@ const state = {
       },
       error: {
         is: false,
-        message: null
+        message: null,
+        reason: {
+          sender: null,
+          receiver: null,
+          categoryId: null,
+          length: null,
+          width: null,
+          height: null,
+          weight: null,
+          note: null,
+          canceled: null
+        }
       },
       done: true
     },
@@ -37,7 +48,18 @@ const mutations = {
       },
       error: {
         is: false,
-        message: null
+        message: null,
+        reason: {
+          sender: null,
+          receiver: null,
+          categoryId: null,
+          length: null,
+          width: null,
+          height: null,
+          weight: null,
+          note: null,
+          canceled: null
+        }
       },
       done: true
     }
@@ -68,7 +90,7 @@ const actions = {
     commit(types.MUTATION_PARCEL_DATA, {done: false})
     const resource = this._vm.$resource('{service}/api/parcels', {}, {
       create: {method: 'POST', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
-    resource.create({service: 'parcel-service'}).then(response => {
+    resource.create({service: 'parcel-service'}, {canceled: false, ...payload}).then(response => {
       return response.json()
     }).then(parsed => {
       commit(types.MUTATION_PARCEL_DATA, {
@@ -79,10 +101,16 @@ const actions = {
       })
     }).catch(err => {
       err.json().then(parsed => {
+        let validations = {}
+        parsed.validations.forEach(e => { validations[e.param] = e.msg })
+
         commit(types.MUTATION_PARCEL_DATA, {
           error: {
             is: parsed.error,
-            message: parsed.message
+            message: parsed.message,
+            reason: {
+              ...validations
+            }
           },
           done: true
         })

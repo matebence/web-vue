@@ -1,6 +1,6 @@
 <template>
   <div
-    d="forgetpass">
+    id="forgetpass">
     <div
       id="wrapper">
       <h1>Zabudnuté heslo</h1>

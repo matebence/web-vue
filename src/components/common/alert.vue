@@ -43,7 +43,11 @@ export default {
     left: 50%;
     width: 75%;
     transform: translateX(-50%);
-    border: 1rem white solid;
+    border: 0.5rem white solid;
     border-radius: 2rem;
+  }
+
+  .alert p {
+    font-size: 0.9em;
   }
 </style>

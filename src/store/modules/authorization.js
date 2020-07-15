@@ -12,7 +12,6 @@ const state = {
         userName: null,
         authorities: [],
         accountId: 0,
-        loginId: 0,
         stayLoggedIn: false
       },
       error: {

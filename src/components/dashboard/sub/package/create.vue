@@ -13,20 +13,20 @@
           type="text"
           class="form-control"
           id="receiver"
-          v-model="form.values.receiver"
+          v-model="form.values.receiver.name"
           placeholder="Meno príjemca"
-          @change="$v.form.values.receiver.$touch()"
+          @change="$v.form.values.receiver.name.$touch()"
           @input="autoCompleteReceiver($event.target.value)"
-          :class="{valid: !$v.form.values.receiver.$error && $v.form.values.receiver.$dirty, invalid: $v.form.values.receiver.$error}">
+          :class="{valid: !$v.form.values.receiver.name.$error && $v.form.values.receiver.name.$dirty, invalid: $v.form.values.receiver.name.$error}">
         <div id="autocomplete">
           <ul>
-            <li v-for="user in users.data" v-bind:key="user.userId">{{user.firstName}} {{user.lastName}}</li>
+            <li v-for="user in users.data" v-bind:key="user.userId" :data-userId="user.userId" @click="autoCompletedSelected($event.target)">{{user.firstName}} {{user.lastName}}</li>
           </ul>
         </div>
         <small
-          id="receiverInvalid"
-          class="form-text text-muted">
-        </small>
+          id="confirmPasswordInvalid"
+          class="form-text text-muted"
+          v-show="parcel.error.reason.receiver !== null">{{parcel.error.reason.receiver}}</small>
       </div>
       <div
         class="form-group">
@@ -46,8 +46,8 @@
         </select>
         <small
           id="categoryInvalid"
-          class="form-text text-muted">
-        </small>
+          class="form-text text-muted"
+          v-show="parcel.error.reason.categoryId !== null">{{parcel.error.reason.categoryId}}</small>
       </div>
       <div class="form-group">
         <label
@@ -64,8 +64,8 @@
           :class="{valid: !$v.form.values.size.$error && $v.form.values.size.$dirty, invalid: $v.form.values.size.$error}">
         <small
           id="sizeInvalid"
-          class="form-text text-muted">
-        </small>
+          class="form-text text-muted"
+          v-show="parcel.error.reason.length !== null">{{parcel.error.reason.length}}</small>
       </div>
       <div
         class="form-group">
@@ -83,8 +83,8 @@
           :class="{valid: !$v.form.values.width.$error && $v.form.values.width.$dirty, invalid: $v.form.values.width.$error}">
         <small
           id="widthInvalid"
-          class="form-text text-muted">
-        </small>
+          class="form-text text-muted"
+          v-show="parcel.error.reason.width !== null">{{parcel.error.reason.width}}</small>
       </div>
       <div
         class="form-group">
@@ -102,8 +102,8 @@
           :class="{valid: !$v.form.values.height.$error && $v.form.values.height.$dirty, invalid: $v.form.values.height.$error}">
         <small
           id="heightInvalid"
-          class="form-text text-muted">
-        </small>
+          class="form-text text-muted"
+          v-show="parcel.error.reason.height !== null">{{parcel.error.reason.height}}</small>
       </div>
       <div
         class="form-group">
@@ -121,8 +121,8 @@
           :class="{valid: !$v.form.values.weight.$error && $v.form.values.weight.$dirty, invalid: $v.form.values.weight.$error}">
         <small
           id="weightInvalid"
-          class="form-text text-muted">
-        </small>
+          class="form-text text-muted"
+          v-show="parcel.error.reason.weight !== null">{{parcel.error.reason.weight}}</small>
       </div>
       <div class="form-group">
         <label
@@ -141,8 +141,8 @@
         </textarea>
         <small
           id="noteInvalid"
-          class="form-text text-muted">
-        </small>
+          class="form-text text-muted"
+          v-show="parcel.error.reason.note !== null">{{parcel.error.reason.note}}</small>
       </div>
       <button
         type="submit"
@@ -157,12 +157,17 @@
           v-show="!parcel.done"></span>&nbsp;Vytvoriť
       </button>
     </form>
+    <app-alert
+      :type="[parcel.error.is ? 'alert-danger' : 'alert-success']"
+      :condition="[parcel.error.message !== null]"
+      :content="[parcel.error.message]"/>
   </div>
 </template>
 
 <script>
 import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
+import alert from '@/components/common/alert'
 import {required, alphaNum, numeric} from 'vuelidate/lib/validators'
 
 export default {
@@ -174,7 +179,10 @@ export default {
     return {
       form: {
         values: {
-          receiver: null,
+          receiver: {
+            name: null,
+            userId: null
+          },
           category: null,
           note: null,
           size: null,
@@ -189,8 +197,14 @@ export default {
     form: {
       values: {
         receiver: {
-          required,
-          numeric
+          name: {
+            required,
+            alpha: value => value.match(/^[\D ]+$/)
+          },
+          userId: {
+            required,
+            numeric
+          }
         },
         category: {
           required,
@@ -219,18 +233,41 @@ export default {
       }
     }
   },
+  components: {
+    appAlert: alert
+  },
   computed: {
     ...mapGetters({
       categories: types.GETTER_CATEGORY_DEFAULT,
       parcel: types.GETTER_PARCEL_DEFAULT,
+      signIn: types.GETTER_SIGN_IN_DEFAULT,
       users: types.GETTER_USER_DEFAULT
     })
   },
   methods: {
     autoCompleteReceiver ($event) {
-      this.$store.dispatch(types.ACTION_USER_SEARCH, {firstName: $event})
+      if ($event.length < 3) return
+      this.$store.dispatch(types.ACTION_USER_SEARCH, {firstName: $event, roles: process.env.APP_ROLE_CLIENT})
+    },
+    autoCompletedSelected ($event) {
+      this.form.values.receiver.userId = $event.dataset.userid
+      this.form.values.receiver.name = $event.textContent
+      this.$store.commit(types.MUTATIONS_CLEAR_USER_DATA, {})
     },
     onCreate () {
+      this.parcel.error.message = null
+      this.parcel.error.is = false
+
+      this.$store.dispatch(types.ACTION_PARCEL_CREATE, {
+        sender: this.signIn.data.accountId,
+        receiver: this.form.values.receiver.userId,
+        categoryId: this.form.values.category,
+        length: this.form.values.size,
+        width: this.form.values.width,
+        height: this.form.values.height,
+        weight: this.form.values.weight,
+        note: this.form.values.note
+      })
     }
   }
 }
@@ -240,6 +277,11 @@ export default {
   div#create form {
     margin-top: 1rem;
     padding: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  div#create label {
+    font-size: 0.9em;
   }
 
   div#create button {
@@ -267,7 +309,7 @@ export default {
 
   div#create select {
     background: #ffffff;
-    font-size: 1em;
+    font-size: 0.9em;
     width: 100%;
     height: 3rem;
     display: block;
@@ -286,7 +328,7 @@ export default {
   }
 
   div#create input[type="text"] {
-    font-size: 1em;
+    font-size: 0.9em;
     width: 100%;
     height: 3rem;
     display: block;
@@ -326,6 +368,7 @@ export default {
   }
 
   div#create small, .text-muted {
+    font-size: 0.8em;
     color: #ff0000 !important;
   }
 
