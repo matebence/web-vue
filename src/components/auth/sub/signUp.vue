@@ -1,12 +1,9 @@
 <template>
-  <div
-    id="signup">
-    <div
-      id="wrapper">
+  <div id="signup">
+    <div id="wrapper">
       <h1>Registrácia</h1>
       <form>
-        <div
-          class="form-group">
+        <div class="form-group">
           <label
             for="username">
             Zadajte použivatelské meno
@@ -24,8 +21,7 @@
             class="form-text text-muted"
             v-show="signUp.error.reason.userName !== null">{{signUp.error.reason.userName}}</small>
         </div>
-        <div
-          class="form-group">
+        <div class="form-group">
           <label
             for="email">
             Zadajte emailovú adresu
@@ -43,8 +39,7 @@
             class="form-text text-muted"
             v-show="signUp.error.reason.email !== null">{{signUp.error.reason.email}}</small>
         </div>
-        <div
-          class="form-group">
+        <div class="form-group">
           <label
             for="password">
             Zadajte heslo
@@ -63,8 +58,7 @@
             class="form-text text-muted"
             v-show="signUp.error.reason.password !== null">{{signUp.error.reason.password}}</small>
         </div>
-        <div
-          class="form-group">
+        <div class="form-group">
           <label
             for="confirmPassword">Potvrďte heslo</label>
           <input
@@ -194,16 +188,16 @@ export default {
     })
   },
   methods: {
-    loadComponent ($event) {
+    loadComponent: function ($event) {
       this.$emit('loadComponent', $event)
       this.$router.push({path: `/${$event.replace('app-', '')}`})
     },
-    onPageLoad () {
+    onPageLoad: function () {
       this.$store.dispatch(types.ACTION_ACCOUNT_ACTIVATION, {
         id: this.url.values.id,
         key: this.url.values.key})
     },
-    onSignUp () {
+    onSignUp: function () {
       this.signUp.error.message = this.activationToken.error.message = null
       this.signUp.error.is = this.activationToken.error.is = false
 
@@ -219,10 +213,6 @@ export default {
 </script>
 
 <style scoped>
-  div#wrapper {
-    width: 100%;
-  }
-
   div#signup {
     padding: 2rem;
     height: 98vh;
@@ -230,33 +220,37 @@ export default {
     align-items: center;
   }
 
-  h1 {
+  div#signup div#wrapper {
+    width: 100%;
+  }
+
+  div#signup h1 {
     font-size: 2.3em;
     margin-top: 3rem;
     margin-left: 3rem;
   }
 
-  a {
+  div#signup a {
     display: block;
     float: right;
     margin-top: 0.5rem;
     color: #176c9d;
   }
 
-  a:hover {
+  div#signup a:hover {
     color: #1796dc;
   }
 
-  form {
+  div#signup form {
     padding: 3rem;
   }
 
-  a {
+  div#signup a {
     color: #176c9d;
     float: right;
   }
 
-  button {
+  div#signup button {
     background: #fcfcfc;
     border: solid 0.09rem #176c9d;
     border-radius: 0.2rem;
@@ -264,19 +258,19 @@ export default {
     margin-top: 2rem;
   }
 
-  button:hover {
+  div#signup button:hover {
     border-color: #7f7f7f;
     background: #176c9d;
     color: #ffffff;
   }
 
-  button[disabled] {
+  div#signup button[disabled] {
     border-color: #7f7f7f;
     background: #176c9d;
     color: #ffffff;
   }
 
-  select {
+  div#signup select {
     background: #fcfcfc;
     font-size: 1.3em;
     width: 100%;
@@ -288,11 +282,11 @@ export default {
     border-bottom: 0.1rem solid #dbdbdb;
   }
 
-  select:focus {
+  div#signup select:focus {
     background: #fcfcfc;
   }
 
-  input[type="text"], input[type="password"], input[type="email"] {
+  div#signup input[type="text"], div#signup input[type="password"], div#signup input[type="email"] {
     font-size: 1.3em;
     width: 100%;
     height: 3rem;
@@ -304,30 +298,30 @@ export default {
     border-bottom: 0.1rem solid #dbdbdb;
   }
 
-  option {
+  div#signup option {
     background: #fcfcfc;
   }
 
-  small, .text-muted {
+  div#signup small, .text-muted {
     color: #ff0000 !important;
   }
 
-  div input.invalid, div select.invalid {
+  div#signup div input.invalid, div#signup div select.invalid {
     border-bottom: 0.1rem solid #ff0000;
   }
 
-  div input.valid, div select.valid  {
+  div#signup div input.valid, div#signup div select.valid  {
     border-bottom: 0.1rem solid #008000;
   }
 
   @media (max-width: 1200px) {
-    input[type="text"], input[type="password"], select {
+    div#signup input[type="text"], div#signup input[type="password"], div#signup select {
       font-size: 1.2rem;
     }
   }
 
   @media (max-width: 992px) {
-    div#wrapper {
+    div#signup div#wrapper {
       height: auto;
     }
 

@@ -1,9 +1,7 @@
 <template>
-  <div
-    id="create">
+  <div id="create">
     <form>
-      <div
-        class="form-group">
+      <div class="form-group">
         <label
           for="receiver">
           Zadajte meno príjemcu
@@ -28,8 +26,7 @@
           class="form-text text-muted"
           v-show="parcel.error.reason.receiver !== null">{{parcel.error.reason.receiver}}</small>
       </div>
-      <div
-        class="form-group">
+      <div class="form-group">
         <label
           for="category">
           Vyberte kategóriu
@@ -42,87 +39,12 @@
           @change="$v.form.values.category.$touch()"
           :class="{valid: !$v.form.values.category.$error && $v.form.values.category.$dirty, invalid: $v.form.values.category.$error}">
           <option value="null" disabled selected >Vyberte z možností</option>
-          <option v-for="category in categories.data" :value="category.id" v-bind:key="category.id">{{category.name}}</option>
+          <option v-for="category in categories.data" :value="category" v-bind:key="category.id">{{category.name}}</option>
         </select>
         <small
           id="categoryInvalid"
           class="form-text text-muted"
           v-show="parcel.error.reason.categoryId !== null">{{parcel.error.reason.categoryId}}</small>
-      </div>
-      <div class="form-group">
-        <label
-          for="size">
-          Zadajte dľžku balíka
-        </label>
-        <input
-          aria-describedby="sizeInvalid"
-          type="text" class="form-control"
-          id="size"
-          v-model="form.values.size"
-          placeholder="Dľžka balíka"
-          @input="$v.form.values.size.$touch()"
-          :class="{valid: !$v.form.values.size.$error && $v.form.values.size.$dirty, invalid: $v.form.values.size.$error}">
-        <small
-          id="sizeInvalid"
-          class="form-text text-muted"
-          v-show="parcel.error.reason.length !== null">{{parcel.error.reason.length}}</small>
-      </div>
-      <div
-        class="form-group">
-        <label
-          for="width">
-          Zadajte šírku balíka
-        </label>
-        <input
-          aria-describedby="widthInvalid"
-          type="text" class="form-control"
-          id="width"
-          v-model="form.values.width"
-          placeholder="Šírka balíka"
-          @input="$v.form.values.width.$touch()"
-          :class="{valid: !$v.form.values.width.$error && $v.form.values.width.$dirty, invalid: $v.form.values.width.$error}">
-        <small
-          id="widthInvalid"
-          class="form-text text-muted"
-          v-show="parcel.error.reason.width !== null">{{parcel.error.reason.width}}</small>
-      </div>
-      <div
-        class="form-group">
-        <label
-          for="height">
-          Zadajte výšku balíka
-        </label>
-        <input
-          aria-describedby="heightInvalid"
-          type="text" class="form-control"
-          id="height"
-          v-model="form.values.height"
-          placeholder="Výška balíka"
-          @input="$v.form.values.height.$touch()"
-          :class="{valid: !$v.form.values.height.$error && $v.form.values.height.$dirty, invalid: $v.form.values.height.$error}">
-        <small
-          id="heightInvalid"
-          class="form-text text-muted"
-          v-show="parcel.error.reason.height !== null">{{parcel.error.reason.height}}</small>
-      </div>
-      <div
-        class="form-group">
-        <label
-          for="weight">
-          Zadajte hmotnosť balíka
-        </label>
-        <input
-          aria-describedby="weightInvalid"
-          type="text" class="form-control"
-          id="weight"
-          v-model="form.values.weight"
-          placeholder="Hmotnosť balíka"
-          @input="$v.form.values.weight.$touch()"
-          :class="{valid: !$v.form.values.weight.$error && $v.form.values.weight.$dirty, invalid: $v.form.values.weight.$error}">
-        <small
-          id="weightInvalid"
-          class="form-text text-muted"
-          v-show="parcel.error.reason.weight !== null">{{parcel.error.reason.weight}}</small>
       </div>
       <div class="form-group">
         <label
@@ -143,6 +65,78 @@
           id="noteInvalid"
           class="form-text text-muted"
           v-show="parcel.error.reason.note !== null">{{parcel.error.reason.note}}</small>
+      </div>
+      <div class="form-group">
+        <label
+          for="size">
+          Zadajte dľžku balíka
+        </label>
+        <input
+          aria-describedby="sizeInvalid"
+          type="text" class="form-control"
+          id="size"
+          v-model="form.values.size"
+          placeholder="Dľžka balíka"
+          @input="$v.form.values.size.$touch()"
+          :class="{valid: !$v.form.values.size.$error && $v.form.values.size.$dirty, invalid: $v.form.values.size.$error}">
+        <small
+          id="sizeInvalid"
+          class="form-text text-muted"
+          v-show="parcel.error.reason.length !== null">{{parcel.error.reason.length}}</small>
+      </div>
+      <div class="form-group">
+        <label
+          for="width">
+          Zadajte šírku balíka
+        </label>
+        <input
+          aria-describedby="widthInvalid"
+          type="text" class="form-control"
+          id="width"
+          v-model="form.values.width"
+          placeholder="Šírka balíka"
+          @input="$v.form.values.width.$touch()"
+          :class="{valid: !$v.form.values.width.$error && $v.form.values.width.$dirty, invalid: $v.form.values.width.$error}">
+        <small
+          id="widthInvalid"
+          class="form-text text-muted"
+          v-show="parcel.error.reason.width !== null">{{parcel.error.reason.width}}</small>
+      </div>
+      <div class="form-group">
+        <label
+          for="height">
+          Zadajte výšku balíka
+        </label>
+        <input
+          aria-describedby="heightInvalid"
+          type="text" class="form-control"
+          id="height"
+          v-model="form.values.height"
+          placeholder="Výška balíka"
+          @input="$v.form.values.height.$touch()"
+          :class="{valid: !$v.form.values.height.$error && $v.form.values.height.$dirty, invalid: $v.form.values.height.$error}">
+        <small
+          id="heightInvalid"
+          class="form-text text-muted"
+          v-show="parcel.error.reason.height !== null">{{parcel.error.reason.height}}</small>
+      </div>
+      <div class="form-group">
+        <label
+          for="weight">
+          Zadajte hmotnosť balíka
+        </label>
+        <input
+          aria-describedby="weightInvalid"
+          type="text" class="form-control"
+          id="weight"
+          v-model="form.values.weight"
+          placeholder="Hmotnosť balíka"
+          @input="$v.form.values.weight.$touch()"
+          :class="{valid: !$v.form.values.weight.$error && $v.form.values.weight.$dirty, invalid: $v.form.values.weight.$error}">
+        <small
+          id="weightInvalid"
+          class="form-text text-muted"
+          v-show="parcel.error.reason.weight !== null">{{parcel.error.reason.weight}}</small>
       </div>
       <button
         type="submit"
@@ -207,8 +201,10 @@ export default {
           }
         },
         category: {
-          required,
-          numeric
+          id: {
+            required,
+            numeric
+          }
         },
         note: {
           required,
@@ -245,29 +241,32 @@ export default {
     })
   },
   methods: {
-    autoCompleteReceiver ($event) {
+    autoCompleteReceiver: function ($event) {
       if ($event.length < 3) return
       this.$store.dispatch(types.ACTION_USER_SEARCH, {firstName: $event, roles: process.env.APP_ROLE_CLIENT})
     },
-    autoCompletedSelected ($event) {
+    autoCompletedSelected: function ($event) {
       this.form.values.receiver.userId = $event.dataset.userid
       this.form.values.receiver.name = $event.textContent
       this.$store.commit(types.MUTATIONS_CLEAR_USER_DATA, {})
     },
-    onCreate () {
+    onCreate: function () {
       this.parcel.error.message = null
       this.parcel.error.is = false
 
-      this.$store.dispatch(types.ACTION_PARCEL_CREATE, {
-        sender: this.signIn.data.accountId,
-        receiver: this.form.values.receiver.userId,
-        categoryId: this.form.values.category,
-        length: this.form.values.size,
-        width: this.form.values.width,
-        height: this.form.values.height,
-        weight: this.form.values.weight,
-        note: this.form.values.note
+      this.$store.commit(types.MUTATION_PARCEL_DATA, {
+        data: {
+          sender: this.signIn.data.accountId,
+          receiver: this.form.values.receiver,
+          categoryId: this.form.values.category,
+          length: this.form.values.size,
+          width: this.form.values.width,
+          height: this.form.values.height,
+          weight: this.form.values.weight,
+          note: this.form.values.note
+        }
       })
+      this.$emit('parcelCreated', {component: 'app-list', icon: 'plus'})
     }
   }
 }

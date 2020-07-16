@@ -22,13 +22,13 @@ export default {
   name: 'alert',
   props: ['type', 'condition', 'content'],
   computed: {
-    getCondition: function () {
+    getCondition () {
       return this.condition.some(e => e === true)
     },
-    getContent: function () {
+    getContent () {
       return this.content.filter(e => e !== null)
     },
-    getType: function () {
+    getType () {
       return this.type.filter(e => e !== null)
     }
   }
@@ -36,7 +36,7 @@ export default {
 </script>
 
 <style scoped>
-  .alert {
+  div#alert .alert {
     display: inline-block;
     text-align: center;
     position: absolute;
@@ -47,7 +47,7 @@ export default {
     border-radius: 2rem;
   }
 
-  .alert p {
+  div#alert .alert p {
     font-size: 0.9em;
   }
 </style>

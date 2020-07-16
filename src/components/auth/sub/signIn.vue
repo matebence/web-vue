@@ -1,12 +1,9 @@
 <template>
-  <div
-    id="signin">
-    <div
-      id="wrapper">
+  <div id="signin">
+    <div id="wrapper">
       <h1>Prihlásenie</h1>
       <form>
-        <div
-          class="form-group">
+        <div class="form-group">
           <label
             for="username">
             Zadajte použivatelské meno
@@ -18,8 +15,7 @@
             placeholder="Použivatelské meno"
             v-model="form.values.userName">
         </div>
-        <div
-          class="form-group">
+        <div class="form-group">
           <label for="password">
             Zadajte heslo
           </label>
@@ -30,18 +26,17 @@
             placeholder="Heslo"
             v-model="form.values.password">
         </div>
-        <div
-          class="form-check">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            id="stayLoggedIn"
-            v-model="form.values.stayLoggedIn">
+        <div class="form-group">
           <label
             class="form-check-label"
             for="stayLoggedIn">
             Zostať prihlásený
           </label>
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="stayLoggedIn"
+            v-model="form.values.stayLoggedIn">
           <a
             href="#"
             @click.prevent="loadComponent('app-forget-password')"
@@ -125,11 +120,11 @@ export default {
     })
   },
   methods: {
-    loadComponent ($event) {
+    loadComponent: function ($event) {
       this.$emit('loadComponent', $event)
       this.$router.push({path: $event.replace('app-', '')})
     },
-    onSignIn () {
+    onSignIn: function () {
       this.signIn.error.message = null
       this.signIn.error.is = false
 
@@ -144,10 +139,6 @@ export default {
 </script>
 
 <style scoped>
-  div#wrapper {
-    width: 100%;
-  }
-
   div#signin {
     padding: 2rem;
     height: 98vh;
@@ -155,47 +146,51 @@ export default {
     align-items: center;
   }
 
-  h1 {
+  div#signin div#wrapper {
+    width: 100%;
+  }
+
+  div#signin h1 {
     font-size: 2.3em;
     margin-top: 3rem;
     margin-left: 3rem;
   }
 
-  p, a {
+  div#signin p, div#signin a {
     display: block;
   }
 
-  p {
+  div#signin p {
     margin-bottom: 0.3rem;
   }
 
-  a {
+  div#signin a {
     color: #176c9d;
   }
 
-  a#forgetPassword{
+  div#signin a#forgetPassword{
     display: inline;
     float: right;
   }
 
-  a.signup {
+  div#signin a.signup {
     margin-bottom: 1rem;
   }
 
-  a:hover {
+  div#signin a:hover {
     color: #1796dc;
   }
 
-  form {
+  div#signin form {
     padding: 3rem;
   }
 
-  a {
+  div#signin a {
     color: #176c9d;
     text-align: right;
   }
 
-  button {
+  div#signin button {
     background: #fcfcfc;
     border: solid 0.09rem #176c9d;
     border-radius: 0.2rem;
@@ -203,19 +198,19 @@ export default {
     margin-top: 3rem;
   }
 
-  button:hover {
+  div#signin button:hover {
     border-color: #7f7f7f;
     background: #176c9d;
     color: #ffffff;
   }
 
-  button[disabled] {
+  div#signin button[disabled] {
     border-color: #7f7f7f;
     background: #176c9d;
     color: #ffffff;
   }
 
-  input[type="text"], input[type="password"] {
+  div#signin input[type="text"], div#signin input[type="password"] {
     font-size: 1.3em;
     width: 100%;
     height: 3rem;
@@ -229,28 +224,34 @@ export default {
     border-bottom: 0.1rem solid #dbdbdb;
   }
 
+  div#signin input[type="checkbox"].form-check-input {
+    position: relative;
+    display: inline;
+    margin-left: 0.3rem;
+  }
+
   @media (max-width: 1200px) {
-    input[type="text"], input[type="password"] {
+    div#signin input[type="text"], div#signin input[type="password"] {
       font-size: 1.2rem;
     }
   }
 
   @media (max-width: 992px) {
-    div#wrapper {
+    div#signin div#wrapper {
       height: auto;
     }
 
-    div#signin {
+    div#signin div#signin {
       height: 100vh;
     }
   }
 
-  @media (max-width: 576px) {
-    div#signin {
+  @media (max-width: 600px) {
+    div#signin div#signin {
       padding: 0;
     }
 
-    a#forgetPassword {
+    div#signin a#forgetPassword {
       display: flex;
       float: none;
       margin-top: 0.5rem;

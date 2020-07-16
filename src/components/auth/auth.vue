@@ -49,7 +49,7 @@ export default {
     }
   },
   methods: {
-    navigateContent (componenet = 'sign-in') {
+    navigateContent: function (componenet = 'sign-in') {
       if (!['sign-in', 'sign-up', 'forget-password'].includes(componenet)) {
         this.$router.push({name: 'error'})
         return
@@ -126,7 +126,7 @@ export default {
 
   @media (max-width: 992px) {
     div#auth div#form {
-      height: auto;
+      height: inherit;
       padding-left: 7rem;
       padding-right: 7rem;
     }

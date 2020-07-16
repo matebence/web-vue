@@ -1,12 +1,9 @@
 <template>
-  <div
-    id="forgetpass">
-    <div
-      id="wrapper">
+  <div id="forgetpass">
+    <div id="wrapper">
       <h1>Zabudnuté heslo</h1>
       <form>
-        <div
-          class="form-group">
+        <div class="form-group">
           <label
             for="email">
             Zadajte Vašu emailová adresu
@@ -92,16 +89,16 @@ export default {
     })
   },
   methods: {
-    loadComponent ($event) {
+    loadComponent: function ($event) {
       this.$emit('loadComponent', $event)
       this.$router.push({path: `/${$event.replace('app-', '')}`})
     },
-    onPageLoad () {
+    onPageLoad: function () {
       this.$store.dispatch(types.ACTION_ACCOUNT_RECOVER, {
         id: this.url.values.id,
         key: this.url.values.key})
     },
-    onSend () {
+    onSend: function () {
       this.$store.dispatch(types.ACTION_FORGET_PASSWORD, {
         email: this.form.values.email})
     }
@@ -110,10 +107,6 @@ export default {
 </script>
 
 <style scoped>
-  div#wrapper {
-    width: 100%;
-  }
-
   div#forgetpass {
     padding: 2rem;
     height: 98vh;
@@ -121,28 +114,32 @@ export default {
     align-items: center;
   }
 
-  h1 {
+  div#forgetpass div#wrapper {
+    width: 100%;
+  }
+
+  div#forgetpass h1 {
     font-size: 2.3em;
     margin-top: 3rem;
     margin-left: 3rem;
   }
 
-  a {
+  div#forgetpass a {
     display: block;
     float: right;
     margin-top: 0.5rem;
     color: #176c9d;
   }
 
-  a:hover {
+  div#forgetpass a:hover {
     color: #1796dc;
   }
 
-  form {
+  div#forgetpass form {
     padding: 3rem;
   }
 
-  button {
+  div#forgetpass button {
     background: #fcfcfc;
     border: solid 0.09rem #176c9d;
     border-radius: 0.2rem;
@@ -150,19 +147,19 @@ export default {
     margin-top: 2rem;
   }
 
-  button:hover {
+  div#forgetpass button:hover {
     border-color: #7f7f7f;
     background: #176c9d;
     color: #ffffff;
   }
 
-  button[disabled] {
+  div#forgetpass button[disabled] {
     border-color: #7f7f7f;
     background: #176c9d;
     color: #ffffff;
   }
 
-  input[type="email"] {
+  div#forgetpass input[type="email"] {
     font-size: 1.3em;
     width: 100%;
     height: 3rem;
@@ -176,32 +173,32 @@ export default {
     border-bottom: 0.1rem solid #dbdbdb;
   }
 
-  div input.invalid {
+  div#forgetpass div input.invalid {
     border-bottom: 0.1rem solid #ff0000;
   }
 
-  div input.valid {
+  div#forgetpass div input.valid {
     border-bottom: 0.1rem solid #008000;
   }
 
   @media (max-width: 1200px) {
-    input[type="email"] {
+    div#forgetpass input[type="email"] {
       font-size: 1.2rem;
     }
   }
 
   @media (max-width: 992px) {
-    div#wrapper {
+    div#forgetpass div#wrapper {
       height: auto;
     }
 
-    div#forgetpass {
+    div#forgetpass div#forgetpass {
       height: 100vh;
     }
   }
 
   @media (max-width: 576px) {
-    div#forgetpass {
+    div#forgetpass div#forgetpass {
       padding: 0;
     }
   }

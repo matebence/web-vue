@@ -1,11 +1,18 @@
 <template>
   <div id="parcel">
     <h1>Balíky</h1>
-    <button @click.prevent="component = 'app-create'">
-      <font-awesome-icon :icon="['fas', 'plus']"/>
+    <button
+      @click="selectedComponent = manageComponenets()">
+      <font-awesome-icon
+        :icon="['fas', selectedIcon]"/>
     </button>
     <keep-alive>
-      <component :is="component"></component>
+      <component
+        :is="selectedComponent"
+        @parcelCreated="
+          selectedComponent = $event.component;
+          selectedIcon = $event.icon"
+      ></component>
     </keep-alive>
   </div>
 </template>
@@ -18,12 +25,35 @@ export default {
   name: 'parcel',
   data: function () {
     return {
-      component: 'app-list'
+      selectedComponent: 'app-list',
+      selectedIcon: 'plus',
+      components: {
+        appList: {
+          name: 'app-list',
+          icon: 'plus'
+        },
+        appCreate: {
+          name: 'app-create',
+          icon: 'angle-left'
+        }
+      }
     }
   },
   components: {
     appCreate: create,
     appList: list
+  },
+  methods: {
+    manageComponenets: function () {
+      if (this.selectedComponent === this.components.appCreate.name) {
+        this.selectedIcon = this.components.appList.icon
+        return this.components.appList.name
+      }
+      if (this.selectedComponent === this.components.appList.name) {
+        this.selectedIcon = this.components.appCreate.icon
+        return this.components.appCreate.name
+      }
+    }
   }
 }
 </script>

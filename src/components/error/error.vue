@@ -25,7 +25,7 @@ export default {
     background: #176c9d;
   }
 
-  .outer {
+  div#error .outer {
     display: table;
     position: absolute;
     top: 0;
@@ -34,32 +34,32 @@ export default {
     width: 100vw;
   }
 
-  .middle {
+  div#error .middle {
     display: table-cell;
     vertical-align: middle;
   }
 
-  .inner {
+  div#error .inner {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
     width: 100vw;
   }
 
-  .inner h1 {
+  div#error .inner h1 {
     font-size: 20em;
     line-height: 0;
     color: #ffffff;
     margin: 10rem;
   }
 
-  .inner p {
+  div#error .inner p {
     font-size: 2em;
     color: #ffffff;
     margin: 3rem;
   }
 
-  .inner a {
+  div#error .inner a {
     font-weight: 900;
     font-size: 1.3em;
     border: solid 0.1rem #ffffff;
@@ -72,90 +72,90 @@ export default {
     margin: 0;
   }
 
-  .inner > a:hover {
+  div#error .inner > a:hover {
     background-color: #176c9d;
     color: #ffffff;
   }
 
   @media (max-width: 992px) {
-    .inner h1 {
+    div#error .inner h1 {
       font-size: 15em;
       margin: 7rem;
     }
 
-    .inner p {
+    div#error .inner p {
       font-size: 1.8em;
     }
 
-    .inner a {
+    div#error .inner a {
       font-size: 1.1em;
     }
   }
 
   @media (max-width: 768px) {
-    .inner h1 {
+    div#error .inner h1 {
       font-size: 10em;
       margin: 5rem;
     }
 
-    .inner p {
+    div#error .inner p {
       font-size: 1.2em;
     }
 
-    .inner a {
+    div#error .inner a {
       font-size: 1em;
     }
   }
 
   @media (max-width: 576px) {
-    .inner h1 {
+    div#error .inner h1 {
       font-size: 7em;
       margin: 4rem;
     }
 
-    .inner p {
+    div#error .inner p {
       font-size: 1em;
     }
 
-    .inner a {
+    div#error .inner a {
       font-size: 0.8em;
     }
   }
 
   @media (max-width: 350px) {
-    .inner h1 {
+    div#error .inner h1 {
       font-size: 4em;
       margin: 3rem;
     }
 
-    .inner p {
+    div#error .inner p {
       font-size: 1em;
     }
 
-    .inner a {
+    div#error .inner a {
       font-size: 0.9em;
       padding: 0.2rem 0.5rem;
     }
   }
 
   @media (max-width: 210px) {
-    .inner h1 {
+    div#error .inner h1 {
       font-size: 2em;
       margin: 1.5rem;
     }
 
-    .inner p {
+    div#error .inner p {
       font-size: 0.7em;
     }
 
-    .inner a {
+    div#error .inner a {
       font-size: 0.5em;
       padding: 0.2rem 0.5rem;
     }
   }
 
   @media (max-width: 120px) {
-    .inner a, .inner h1 {
+    div#error .inner a, div#error .inner h1 {
       display: none;
     }
   }

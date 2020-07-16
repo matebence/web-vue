@@ -1,9 +1,7 @@
 <template>
   <div id="list">
     <ul class="tabs">
-      <li class="active">Pridelené</li>
-      <li>Nepridelené</li>
-      <li>Všetky</li>
+      <li @click="selectedOption(option.id); option.load()" :class="{active: options.activeEl === option.id}" v-bind:key="option.id" v-for="option in options.list">{{option.value}}</li>
     </ul>
     <ul class="parcels">
       <li class="active">
@@ -107,8 +105,48 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+import * as types from '@/store/types'
+
 export default {
-  name: 'list'
+  name: 'list',
+  data: function () {
+    return {
+      options: {
+        list: [
+          {
+            id: 1,
+            value: 'Pridelené',
+            load: function () {
+            }
+          },
+          {
+            id: 2,
+            value: 'Nepridelené',
+            load: function () {
+            }
+          },
+          {
+            id: 3,
+            value: 'Všetky',
+            load: function () {
+            }
+          }
+        ],
+        activeEl: 1
+      }
+    }
+  },
+  computed: {
+    ...mapGetters({
+      parcel: types.GETTER_PARCEL_DEFAULT
+    })
+  },
+  methods: {
+    selectedOption: function (el) {
+      this.options.activeEl = el
+    }
+  }
 }
 </script>
 
