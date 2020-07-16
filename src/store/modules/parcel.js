@@ -4,30 +4,47 @@ const state = {
   payload: {
     parcel: {
       data: {
+        create: {
+        },
+        update: {
+        },
+        remove: {
+        },
+        get: {
+        },
+        getAll: {
+        },
+        search: {
+        }
       },
       error: {
         is: false,
         message: null,
         reason: {
-          sender: null,
-          receiver: null,
-          categoryId: null,
-          length: null,
-          width: null,
-          height: null,
-          weight: null,
-          note: null,
-          canceled: null
         }
       },
       done: true
     },
     category: {
       data: {
+        create: {
+        },
+        update: {
+        },
+        remove: {
+        },
+        get: {
+        },
+        getAll: {
+        },
+        search: {
+        }
       },
       error: {
         is: false,
-        message: null
+        message: null,
+        reason: {
+        }
       },
       done: true
     }
@@ -45,20 +62,23 @@ const mutations = {
   [types.MUTATIONS_CLEAR_PARCEL_DATA]: function (state, data) {
     state.payload.parcel = {
       data: {
+        create: {
+        },
+        update: {
+        },
+        remove: {
+        },
+        get: {
+        },
+        getAll: {
+        },
+        search: {
+        }
       },
       error: {
         is: false,
         message: null,
         reason: {
-          sender: null,
-          receiver: null,
-          categoryId: null,
-          length: null,
-          width: null,
-          height: null,
-          weight: null,
-          note: null,
-          canceled: null
         }
       },
       done: true
@@ -75,10 +95,24 @@ const mutations = {
   [types.MUTATIONS_CLEAR_CATEGORY_DATA]: function (state, data) {
     state.payload.category = {
       data: {
+        create: {
+        },
+        update: {
+        },
+        remove: {
+        },
+        get: {
+        },
+        getAll: {
+        },
+        search: {
+        }
       },
       error: {
         is: false,
-        message: null
+        message: null,
+        reason: {
+        }
       },
       done: true
     }
@@ -95,7 +129,9 @@ const actions = {
     }).then(parsed => {
       commit(types.MUTATION_PARCEL_DATA, {
         data: {
-          ...parsed.data
+          create: {
+            ...parsed.data
+          }
         },
         done: true
       })
@@ -118,6 +154,42 @@ const actions = {
     })
   },
 
+  [types.ACTION_PARCEL_SEARCH]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_PARCEL_DATA, {done: false})
+    const resource = this._vm.$resource('{service}/api/parcels/search', {}, {
+      search: {method: 'POST', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
+    resource.search({service: 'parcel-service'}, {
+      pagination: {
+        pageNumber: 0,
+        pageSize: 4
+      },
+      search: {
+        sender: payload.sender
+      }
+    }).then(response => {
+      return response.json()
+    }).then(parsed => {
+      commit(types.MUTATION_PARCEL_DATA, {
+        data: {
+          search: {
+            ...parsed.data
+          }
+        },
+        done: true
+      })
+    }).catch(err => {
+      err.json().then(parsed => {
+        commit(types.MUTATION_PARCEL_DATA, {
+          error: {
+            is: parsed.error,
+            message: parsed.message
+          },
+          done: true
+        })
+      })
+    })
+  },
+
   [types.ACTION_CATEGORY_GET_ALL]: function ({commit, dispatch, state, rootState}, payload) {
     const resource = this._vm.$resource('{service}/api/categories/page/{page}/limit/{limit}', {}, {
       getAll: {method: 'GET', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
@@ -126,7 +198,9 @@ const actions = {
     }).then(parsed => {
       commit(types.MUTATION_CATEGORY_DATA, {
         data: {
-          ...parsed.data
+          getAll: {
+            ...parsed.data
+          }
         },
         done: true
       })

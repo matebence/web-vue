@@ -18,7 +18,7 @@
           :class="{valid: !$v.form.values.receiver.name.$error && $v.form.values.receiver.name.$dirty, invalid: $v.form.values.receiver.name.$error}">
         <div id="autocomplete">
           <ul>
-            <li v-for="user in users.data" v-bind:key="user.userId" :data-userId="user.userId" @click="autoCompletedSelected($event.target)">{{user.firstName}} {{user.lastName}}</li>
+            <li v-for="user in users.data.search" v-bind:key="user.userId" :data-userId="user.userId" @click="autoCompletedSelected($event.target)">{{user.firstName}} {{user.lastName}}</li>
           </ul>
         </div>
         <small
@@ -39,7 +39,7 @@
           @change="$v.form.values.category.$touch()"
           :class="{valid: !$v.form.values.category.$error && $v.form.values.category.$dirty, invalid: $v.form.values.category.$error}">
           <option value="null" disabled selected >Vyberte z možností</option>
-          <option v-for="category in categories.data" :value="category" v-bind:key="category.id">{{category.name}}</option>
+          <option v-for="category in categories.data.getAll" :value="category" v-bind:key="category.id">{{category.name}}</option>
         </select>
         <small
           id="categoryInvalid"
@@ -256,9 +256,9 @@ export default {
 
       this.$store.commit(types.MUTATION_PARCEL_DATA, {
         data: {
-          sender: this.signIn.data.accountId,
-          receiver: this.form.values.receiver,
-          categoryId: this.form.values.category,
+          sender: {senderId: this.signIn.data.accountId},
+          receiver: {receiverId: this.form.values.receiver},
+          category: this.form.values.category,
           length: this.form.values.size,
           width: this.form.values.width,
           height: this.form.values.height,

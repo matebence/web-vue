@@ -36,6 +36,7 @@ export const GETTER_ACCOUNT_ACTIVATION_DEFAULT = 'activation-token-getter-defaul
 export const MUTATION_PARCEL_DATA = 'parcel-mutation-data'
 export const MUTATIONS_CLEAR_PARCEL_DATA = 'parcel-mutation-clear-data'
 export const ACTION_PARCEL_CREATE = 'parcel-action-create'
+export const ACTION_PARCEL_SEARCH = 'parcel-action-search'
 export const GETTER_PARCEL_DEFAULT = 'parcel-getter-default'
 
 export const MUTATION_CATEGORY_DATA = 'category-mutation-data'

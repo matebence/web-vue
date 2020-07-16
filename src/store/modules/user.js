@@ -4,10 +4,24 @@ const state = {
   payload: {
     user: {
       data: {
+        create: {
+        },
+        update: {
+        },
+        remove: {
+        },
+        get: {
+        },
+        getAll: {
+        },
+        search: {
+        }
       },
       error: {
         is: false,
-        message: null
+        message: null,
+        reason: {
+        }
       },
       done: true
     }
@@ -25,10 +39,24 @@ const mutations = {
   [types.MUTATIONS_CLEAR_USER_DATA]: function (state, data) {
     state.payload.user = {
       data: {
+        create: {
+        },
+        update: {
+        },
+        remove: {
+        },
+        get: {
+        },
+        getAll: {
+        },
+        search: {
+        }
       },
       error: {
         is: false,
-        message: null
+        message: null,
+        reason: {
+        }
       },
       done: true
     }
@@ -58,7 +86,9 @@ const actions = {
       const users = parsed._embedded.usersList.filter(e => e.accountId !== rootState.authorization.payload.signIn.data.accountId)
       commit(types.MUTATION_USER_DATA, {
         data: {
-          ...users
+          search: {
+            ...users
+          }
         },
         done: true
       })

@@ -1,102 +1,31 @@
 <template>
   <div id="list">
     <ul class="tabs">
-      <li @click="selectedOption(option.id); option.load()" :class="{active: options.activeEl === option.id}" v-bind:key="option.id" v-for="option in options.list">{{option.value}}</li>
+      <li
+        v-bind:key="option.id"
+        @click="selectedOption(option)"
+        v-for="option in navigation.tabs"
+        :class="{active: navigation.activeEl.tabs.id === option.id}">{{option.value}}</li>
     </ul>
     <ul class="parcels">
-      <li class="active">
+      <li
+        v-bind:key="item.id"
+        @click="selectedParcel(item)"
+        v-for="item in parcel.data.search"
+        v-show="navigation.activeEl.tabs.value === navigation.tabs[0].value"
+        :class="{active: navigation.activeEl.parcels.id === item.id}">
         <ul class="parcel">
           <li class="image">
-            <font-awesome-icon :icon="['fas', 'box']"/>
+            <font-awesome-icon :icon="['fas', formatIcon(navigation.tabs[0].value)]"/>
           </li>
           <li>
             <ul>
-              <li class="number">#1</li>
-              <li class="created">13/07/2020<br>12:25</li>
+              <li class="number">#{{item.id}}</li>
+              <li class="created">{{formatDate(item.createdAt)}}<br>{{formatTime(item.createdAt)}}</li>
             </ul>
           </li>
           <li class="category">
-            <font-awesome-icon :icon="['fas', 'utensils']"/>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <ul class="parcel">
-          <li class="image">
-            <font-awesome-icon :icon="['fas', 'box']"/>
-          </li>
-          <li>
-            <ul>
-              <li class="number">#2</li>
-              <li class="created">13/07/2020<br>13:00</li>
-            </ul>
-          </li>
-          <li class="category">
-            <font-awesome-icon :icon="['fas', 'tshirt']"/>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <ul class="parcel">
-          <li class="image">
-            <font-awesome-icon :icon="['fas', 'box']"/>
-          </li>
-          <li>
-            <ul>
-              <li class="number">#3</li>
-              <li class="created">13/07/2020<br>13:00</li>
-            </ul>
-          </li>
-          <li class="category">
-            <font-awesome-icon :icon="['fas', 'plug']"/>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <ul class="parcel">
-          <li class="image">
-            <font-awesome-icon :icon="['fas', 'box']"/>
-          </li>
-          <li>
-            <ul>
-              <li class="number">#4</li>
-              <li class="created">13/07/2020<br>13:00</li>
-            </ul>
-          </li>
-          <li class="category">
-            <font-awesome-icon :icon="['fas', 'file']"/>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <ul class="parcel">
-          <li class="image">
-            <font-awesome-icon :icon="['fas', 'box']"/>
-          </li>
-          <li>
-            <ul>
-              <li class="number">#5</li>
-              <li class="created">13/07/2020<br>13:00</li>
-            </ul>
-          </li>
-          <li class="category">
-            <font-awesome-icon :icon="['fas', 'spray-can']"/>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <ul class="parcel">
-          <li class="image">
-            <font-awesome-icon :icon="['fas', 'box']"/>
-          </li>
-          <li>
-            <ul>
-              <li class="number">#6</li>
-              <li class="created">13/07/2020<br>13:00</li>
-            </ul>
-          </li>
-          <li class="category">
-            <font-awesome-icon :icon="['fas', 'question-circle']"/>
+            <font-awesome-icon :icon="['fas', formatIcon(item.category.name)]"/>
           </li>
         </ul>
       </li>
@@ -110,41 +39,81 @@ import * as types from '@/store/types'
 
 export default {
   name: 'list',
+  created: function () {
+    this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.data.accountId})
+  },
   data: function () {
     return {
-      options: {
-        list: [
+      navigation: {
+        tabs: [
           {
             id: 1,
-            value: 'Pridelené',
-            load: function () {
-            }
+            value: 'Pridelené'
           },
           {
             id: 2,
-            value: 'Nepridelené',
-            load: function () {
-            }
+            value: 'Nepridelené'
           },
           {
             id: 3,
-            value: 'Všetky',
-            load: function () {
-            }
+            value: 'Všetky'
           }
         ],
-        activeEl: 1
+        activeEl: {
+          tabs: {
+            id: 1,
+            value: 'Pridelené'
+          },
+          parcels: {
+            id: 0
+          }
+        }
       }
     }
   },
   computed: {
     ...mapGetters({
+      signIn: types.GETTER_SIGN_IN_DEFAULT,
       parcel: types.GETTER_PARCEL_DEFAULT
     })
   },
   methods: {
     selectedOption: function (el) {
-      this.options.activeEl = el
+      this.navigation.activeEl.tabs.id = el.id
+      this.navigation.activeEl.tabs.value = el.value
+
+      if (this.navigation.activeEl.tabs.value === this.navigation.tabs[0].value) {
+        this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.data.accountId})
+      }
+    },
+    selectedParcel: function (el) {
+      this.navigation.activeEl.parcels.id = el.id
+    },
+    formatDate: function (timestamp) {
+      const date = new Date(timestamp)
+      return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+    },
+    formatTime: function (timestamp) {
+      const time = new Date(timestamp)
+      return `${time.getHours()}:${time.getMinutes()}`
+    },
+    formatIcon: function (icon) {
+      switch (icon) {
+        case 'Dokumenty':
+          return 'file'
+        case 'Drogéria':
+          return 'spray-can'
+        case 'Elektronika':
+          return 'plug'
+        case 'Iné':
+          return 'question-circle'
+        case 'Oblečenie':
+          return 'tshirt'
+        case 'Potraviny':
+          return 'utensils'
+        case 'Pridelené':
+          return 'box'
+      }
     }
   }
 }

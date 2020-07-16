@@ -6,30 +6,22 @@ const state = {
   payload: {
     signIn: {
       data: {
-        accessToken: null,
-        refreshToken: null,
-        expiresIn: null,
-        userName: null,
-        authorities: [],
-        accountId: 0,
-        stayLoggedIn: false
       },
       error: {
         is: false,
-        message: null
+        message: null,
+        reason: {
+        }
       },
       done: true
     },
-    singUp: {
+    signUp: {
       data: {
       },
       error: {
         is: false,
         message: null,
         reason: {
-          userName: null,
-          email: null,
-          password: null
         }
       },
       done: true
@@ -39,7 +31,9 @@ const state = {
       },
       error: {
         is: false,
-        message: null
+        message: null,
+        reason: {
+        }
       },
       done: true
     },
@@ -48,7 +42,9 @@ const state = {
       },
       error: {
         is: false,
-        message: null
+        message: null,
+        reason: {
+        }
       },
       done: true
     },
@@ -57,7 +53,9 @@ const state = {
       },
       error: {
         is: false,
-        message: null
+        message: null,
+        reason: {
+        }
       },
       done: true
     },
@@ -66,7 +64,9 @@ const state = {
       },
       error: {
         is: false,
-        message: null
+        message: null,
+        reason: {
+        }
       },
       done: true
     }
@@ -84,18 +84,12 @@ const mutations = {
   [types.MUTATIONS_CLEAR_SIGN_IN_DATA]: function (state, data) {
     state.payload.signIn = {
       data: {
-        accessToken: null,
-        refreshToken: null,
-        expiresIn: null,
-        userName: null,
-        authorities: [],
-        accountId: 0,
-        loginId: 0,
-        stayLoggedIn: false
       },
       error: {
         is: false,
-        message: null
+        message: null,
+        reason: {
+        }
       },
       done: true
     }
@@ -116,9 +110,6 @@ const mutations = {
         is: false,
         message: null,
         reason: {
-          userName: null,
-          email: null,
-          password: null
         }
       },
       done: true
@@ -138,7 +129,9 @@ const mutations = {
       },
       error: {
         is: false,
-        message: null
+        message: null,
+        reason: {
+        }
       },
       done: true
     }
@@ -157,7 +150,9 @@ const mutations = {
       },
       error: {
         is: false,
-        message: null
+        message: null,
+        reason: {
+        }
       },
       done: true
     }
@@ -176,7 +171,9 @@ const mutations = {
       },
       error: {
         is: false,
-        message: null
+        message: null,
+        reason: {
+        }
       },
       done: true
     }
@@ -345,8 +342,8 @@ const actions = {
         commit(types.MUTATION_SIGN_UP_DATA, {
           error: {
             is: parsed.error,
-            reason: parsed.reason,
-            message: parsed.message
+            message: parsed.message,
+            reason: parsed.reason
           },
           done: true
         })
@@ -475,7 +472,7 @@ const getters = {
   },
 
   [types.GETTER_SIGN_UP_DEFAULT]: function (state) {
-    return state.payload.singUp
+    return state.payload.signUp
   },
 
   [types.GETTER_SIGN_OUT_DEFAULT]: function (state) {
