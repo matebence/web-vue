@@ -5,7 +5,7 @@
       v-show="!isSelected"
       id="new">
       <button
-        @click="selectedComponent = manageComponenets()">
+        @click.prevent="selectedComponent = manageComponenets()">
         <font-awesome-icon
           :icon="['fas', selectedIcon]"/>
       </button>
@@ -14,17 +14,17 @@
       v-show="isSelected"
       id="modify">
       <button
-        @click="selectedComponent = manageComponenets()">
+        @click.prevent="deselectParcel()">
         <font-awesome-icon
           :icon="['fas', 'ban']"/>
       </button>
       <button
-        @click="selectedComponent = manageComponenets()">
+        @click.prevent="editParcel()">
         <font-awesome-icon
           :icon="['fas', 'pen']"/>
       </button>
       <button
-        @click="selectedComponent = manageComponenets()">
+        @click.prevent="removeParcel()">
         <font-awesome-icon
           :icon="['fas', 'trash']"/>
       </button>
@@ -37,13 +37,22 @@
           selectedComponent = $event.component;
           selectedIcon = $event.icon;
           navigation.activeEl.tabs.id = $event.nav.id;
-          navigation.activeEl.tabs.value = $event.nav.value;"
-      ></component>
+          navigation.activeEl.tabs.value = $event.nav.value;">
+      </component>
     </keep-alive>
+    <app-modal
+      :id="'modalAlert'"
+      :text="components.appModal.text"
+      :title="components.appModal.title"
+      :button="components.appModal.button">
+    </app-modal>
   </div>
 </template>
 
 <script>
+import bootstrap from 'jquery'
+
+import modal from '@/components/common/modal'
 import list from '@/components/dashboard/sub/package/list'
 import create from '@/components/dashboard/sub/package/create'
 
@@ -61,6 +70,11 @@ export default {
         appCreate: {
           name: 'app-create',
           icon: 'angle-left'
+        },
+        appModal: {
+          text: null,
+          title: null,
+          button: null
         }
       },
       navigation: {
@@ -76,14 +90,15 @@ export default {
       }
     }
   },
-  computed: {
-    isSelected () {
-      return this.navigation.activeEl.parcels.id > 0
-    }
-  },
   components: {
     appCreate: create,
+    appModal: modal,
     appList: list
+  },
+  computed: {
+    isSelected () {
+      return this.navigation.activeEl.parcels.id !== 0
+    }
   },
   methods: {
     manageComponenets: function () {
@@ -94,6 +109,25 @@ export default {
       if (this.selectedComponent === this.components.appList.name) {
         this.selectedIcon = this.components.appCreate.icon
         return this.components.appCreate.name
+      }
+    },
+    deselectParcel: function () {
+      this.navigation.activeEl.parcels.id = 0
+    },
+    editParcel: function () {
+      if (this.navigation.activeEl.parcels.id > 0) {
+        this.components.appModal.title = 'Editovanie'
+        this.components.appModal.text = 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné editovať'
+        this.components.appModal.button = 'Zatvoriť'
+        return bootstrap('#modalAlert').modal('show')
+      }
+    },
+    removeParcel: function () {
+      if (this.navigation.activeEl.parcels.id > 0) {
+        this.components.appModal.title = 'Odstránenie'
+        this.components.appModal.text = 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné odstrániť'
+        this.components.appModal.button = 'Zatvoriť'
+        return bootstrap('#modalAlert').modal('show')
       }
     }
   }

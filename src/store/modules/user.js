@@ -74,21 +74,16 @@ const actions = {
         pageSize: 4
       },
       search: {
-        firstName: payload.firstName,
-        roles: payload.roles
-      },
-      orderBy: {
-        firstName: 'asc'
+        ...payload
       }
     }).then(response => {
       return response.json()
     }).then(parsed => {
-      const users = parsed._embedded.usersList.filter(e => e.accountId !== rootState.authorization.payload.signIn.data.accountId)
       commit(types.MUTATION_USER_DATA, {
         data: {
           ...state.payload.user.data,
           search: {
-            ...users
+            ...parsed._embedded.usersList
           }
         },
         done: true

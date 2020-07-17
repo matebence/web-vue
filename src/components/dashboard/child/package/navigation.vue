@@ -5,46 +5,23 @@
         <img src="@/assets/img/blesk-default-logo.png" alt="Blesk logo">
       </a>
       <ul class="items">
-        <li class="active">
+        <li
+          v-bind:key="nav.id"
+          v-for="nav in navigation.items"
+          @click.prevent="selectedNav(nav)"
+          :class="{active: navigation.activeEl.item.id === nav.id}">
           <a href="#">
-            <font-awesome-icon :icon="['fas', 'box-open']"/>
-            <p>Balíky</p>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <font-awesome-icon :icon="['fas', 'shipping-fast']"/>
-            <p>Zásielky</p>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <font-awesome-icon :icon="['fas', 'car']"/>
-            <p>Vozidlá</p>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <font-awesome-icon :icon="['fas', 'comment-dots']"/>
-            <p>Správy&nbsp;<span class="badge badge-pill badge-danger">Nové</span></p>
-          </a>
-        </li>
-        <li class="settings">
-          <a href="#">
-            <font-awesome-icon :icon="['fas', 'cog']"/>
-            <p>Nastavenia</p>
-          </a>
-        </li>
-        <li>
-          <a @click.prevent="onSignOut" href="/sign-out">
-            <font-awesome-icon :icon="['fas', 'sign-out-alt']"/>
-            <p>Odhlásiť sa</p>
+            <font-awesome-icon :icon="['fas', nav.optional.icon]"/>
+            <p>
+              {{nav.value}}&nbsp;
+              <span class="badge badge-pill badge-danger">{{nav.optional.badge}}</span>
+            </p>
           </a>
         </li>
       </ul>
       <ul class="sub-items">
         <li>
-          <a href="#" data-letters="PV"></a>
+          <a href="#" :data-letters="navigation.loggedAccount.avatar"></a>
         </li>
         <li class="settings">
           <a href="#">
@@ -63,16 +40,93 @@ import * as types from '@/store/types'
 
 export default {
   name: 'navigation',
+  created: function () {
+    this.$store.dispatch(types.ACTION_USER_SEARCH, {accountId: this.signIn.data.accountId})
+    return this.setupAvatar()
+  },
+  data: function () {
+    return {
+      navigation: {
+        items: [
+          {
+            id: 1,
+            value: 'Balíky',
+            optional: {
+              icon: 'box-open',
+              badge: ''
+            }
+          },
+          {
+            id: 2,
+            value: 'Zásielky',
+            optional: {
+              icon: 'shipping-fast',
+              badge: ''
+            }
+          },
+          {
+            id: 3,
+            value: 'Vozidlá',
+            optional: {
+              icon: 'car',
+              badge: ''
+            }
+          },
+          {
+            id: 4,
+            value: 'Správy',
+            optional: {
+              icon: 'comment-dots',
+              badge: 'Nové'
+            }
+          },
+          {
+            id: 5,
+            value: 'Odhlásiť sa',
+            optional: {
+              icon: 'sign-out-alt',
+              badge: ''
+            }
+          }
+        ],
+        activeEl: {
+          item: {
+            id: 1,
+            value: 'Balíky'
+          }
+        },
+        loggedAccount: {
+          avatar: ''
+        }
+      }
+    }
+  },
   computed: {
     ...mapGetters({
-      signIn: types.GETTER_SIGN_IN_DEFAULT
+      signIn: types.GETTER_SIGN_IN_DEFAULT,
+      user: types.GETTER_USER_DEFAULT
     })
   },
   methods: {
-    onSignOut: function () {
-      this.$store.dispatch(types.ACTION_SIGN_OUT, {
-        accessToken: this.signIn.data.accessToken
-      })
+    selectedNav: function (el) {
+      this.navigation.activeEl.item.id = el.id
+      this.navigation.activeEl.item.value = el.value
+
+      if (this.navigation.activeEl.item.value === this.navigation.items[4].value) {
+        return this.$store.dispatch(types.ACTION_SIGN_OUT, {
+          accessToken: this.signIn.data.accessToken
+        })
+      }
+    },
+    setupAvatar: function () {
+      if (localStorage.getItem('avatar') === null) {
+        const user = this.user.data.search[0]
+        const firstName = user.firstName
+        const lastName = user.lastName
+
+        localStorage.setItem('avatar', `${firstName.substr(0, 1)}${lastName.substr(0, 1)}`)
+      }
+      this.navigation.loggedAccount.avatar = localStorage.getItem('avatar')
     }
   }
 }

@@ -85,7 +85,7 @@ import {required} from 'vuelidate/lib/validators'
 export default {
   name: 'signin',
   created: function () {
-    this.$store.dispatch(types.ACTION_AUTO_SIGN_IN)
+    return this.$store.dispatch(types.ACTION_AUTO_SIGN_IN)
   },
   data: function () {
     return {
@@ -122,13 +122,13 @@ export default {
   methods: {
     loadComponent: function ($event) {
       this.$emit('loadComponent', $event)
-      this.$router.push({path: $event.replace('app-', '')})
+      return this.$router.push({path: $event.replace('app-', '')})
     },
     onSignIn: function () {
       this.signIn.error.message = null
       this.signIn.error.is = false
 
-      this.$store.dispatch(types.ACTION_SIGN_IN, {
+      return this.$store.dispatch(types.ACTION_SIGN_IN, {
         grantType: process.env.GRANT_TYPE_PASSWORD,
         userName: this.form.values.userName,
         password: this.form.values.password,

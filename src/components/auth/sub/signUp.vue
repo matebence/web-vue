@@ -129,7 +129,7 @@ import {required, email, alphaNum, sameAs} from 'vuelidate/lib/validators'
 export default {
   name: 'signup',
   created: function () {
-    if (this.$route.params.key) this.onPageLoad()
+    if (this.$route.params.key) return this.onPageLoad()
   },
   data: function () {
     return {
@@ -190,10 +190,10 @@ export default {
   methods: {
     loadComponent: function ($event) {
       this.$emit('loadComponent', $event)
-      this.$router.push({path: `/${$event.replace('app-', '')}`})
+      return this.$router.push({path: `/${$event.replace('app-', '')}`})
     },
     onPageLoad: function () {
-      this.$store.dispatch(types.ACTION_ACCOUNT_ACTIVATION, {
+      return this.$store.dispatch(types.ACTION_ACCOUNT_ACTIVATION, {
         id: this.url.values.id,
         key: this.url.values.key})
     },
@@ -201,7 +201,7 @@ export default {
       this.signUp.error.message = this.activationToken.error.message = null
       this.signUp.error.is = this.activationToken.error.is = false
 
-      this.$store.dispatch(types.ACTION_SIGN_UP, {
+      return this.$store.dispatch(types.ACTION_SIGN_UP, {
         userName: this.form.values.userName,
         email: this.form.values.email,
         password: this.form.values.password,

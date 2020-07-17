@@ -18,7 +18,7 @@
           :class="{valid: !$v.form.values.receiver.name.$error && $v.form.values.receiver.name.$dirty, invalid: $v.form.values.receiver.name.$error}">
         <div id="autocomplete">
           <ul>
-            <li v-for="user in users.data.search" v-bind:key="user.userId" :data-userId="user.userId" @click="autoCompletedSelected($event.target)">{{user.firstName}} {{user.lastName}}</li>
+            <li v-for="user in users.data.search" v-bind:key="user.userId" v-if="user.accountId !== signIn.data.accountId" :data-userId="user.userId" @click.prevent="autoCompletedSelected($event.target)">{{user.firstName}} {{user.lastName}}</li>
           </ul>
         </div>
         <small
@@ -167,7 +167,7 @@ import {required, alphaNum, numeric} from 'vuelidate/lib/validators'
 export default {
   name: 'create',
   created: function () {
-    this.$store.dispatch(types.ACTION_CATEGORY_GET_ALL, {})
+    return this.$store.dispatch(types.ACTION_CATEGORY_GET_ALL, {})
   },
   data: function () {
     return {
@@ -243,12 +243,12 @@ export default {
   methods: {
     autoCompleteReceiver: function ($event) {
       if ($event.length < 3) return
-      this.$store.dispatch(types.ACTION_USER_SEARCH, {firstName: $event, roles: process.env.APP_ROLE_CLIENT})
+      return this.$store.dispatch(types.ACTION_USER_SEARCH, {firstName: $event, roles: process.env.APP_ROLE_CLIENT})
     },
     autoCompletedSelected: function ($event) {
       this.form.values.receiver.userId = $event.dataset.userid
       this.form.values.receiver.name = $event.textContent
-      this.$store.commit(types.MUTATIONS_CLEAR_USER_DATA, {})
+      return this.$store.commit(types.MUTATIONS_CLEAR_USER_DATA, {})
     },
     onCreate: function () {
       this.parcel.error.message = null
@@ -258,6 +258,7 @@ export default {
         data: {
           ...this.parcel.data,
           create: [{
+            id: Date.now() * -1,
             sender: {senderId: this.signIn.data.accountId},
             receiver: {receiverId: this.form.values.receiver.userId},
             category: this.form.values.category,
@@ -269,7 +270,7 @@ export default {
           }]
         }
       })
-      this.$emit('parcelCreated', {component: 'app-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
+      return this.$emit('parcelCreated', {component: 'app-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
     }
   }
 }

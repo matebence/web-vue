@@ -31,7 +31,7 @@ import signUp from '@/components/auth/sub/signUp'
 export default {
   name: 'auth',
   created () {
-    this.navigateContent(this.$route.params.component)
+    return this.navigateContent(this.$route.params.component)
   },
   data: function () {
     return {
@@ -45,7 +45,7 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      this.navigateContent(to.params.component)
+      return this.navigateContent(to.params.component)
     }
   },
   methods: {

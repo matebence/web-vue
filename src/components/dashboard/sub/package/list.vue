@@ -3,14 +3,14 @@
     <ul class="tabs">
       <li
         v-bind:key="option.id"
-        @click="selectedOption(option)"
+        @click.prevent="selectedOption(option)"
         v-for="option in tabs"
         :class="{active: navigation.activeEl.tabs.id === option.id}">{{option.value}}</li>
     </ul>
     <ul class="parcels">
       <li
         v-bind:key="item.id"
-        @click="selectedParcel(item)"
+        @click.prevent="selectedParcel(item)"
         v-for="item in parcel.data.search"
         v-show="navigation.activeEl.tabs.value === tabs[0].value || navigation.activeEl.tabs.value === tabs[2].value"
         :class="{active: navigation.activeEl.parcels.id === item.id}">
@@ -29,9 +29,10 @@
           </li>
         </ul>
       </li>
+
       <li
         v-bind:key="item.id"
-        @click="selectedParcel(item)"
+        @click.prevent="selectedParcel(item)"
         v-for="item in parcel.data.create"
         v-show="navigation.activeEl.tabs.value === tabs[1].value || navigation.activeEl.tabs.value === tabs[2].value"
         :class="{active: navigation.activeEl.parcels.id === item.id}">
@@ -60,10 +61,10 @@ import * as types from '@/store/types'
 
 export default {
   name: 'list',
-  created: function () {
-    this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.data.accountId})
-  },
   props: ['navigation'],
+  created: function () {
+    return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.data.accountId})
+  },
   data: function () {
     return {
       tabs: [
@@ -94,7 +95,7 @@ export default {
       this.navigation.activeEl.tabs.value = el.value
 
       if (this.navigation.activeEl.tabs.value === this.tabs[0].value) {
-        this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.data.accountId})
+        return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.data.accountId})
       }
     },
     selectedParcel: function (el) {

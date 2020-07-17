@@ -52,7 +52,7 @@ import {required, email} from 'vuelidate/lib/validators'
 export default {
   name: 'forgetpass',
   created: function () {
-    if (this.$route.params.key) this.onPageLoad()
+    if (this.$route.params.key) return this.onPageLoad()
   },
   data: function () {
     return {
@@ -91,15 +91,15 @@ export default {
   methods: {
     loadComponent: function ($event) {
       this.$emit('loadComponent', $event)
-      this.$router.push({path: `/${$event.replace('app-', '')}`})
+      return this.$router.push({path: `/${$event.replace('app-', '')}`})
     },
     onPageLoad: function () {
-      this.$store.dispatch(types.ACTION_ACCOUNT_RECOVER, {
+      return this.$store.dispatch(types.ACTION_ACCOUNT_RECOVER, {
         id: this.url.values.id,
         key: this.url.values.key})
     },
     onSend: function () {
-      this.$store.dispatch(types.ACTION_FORGET_PASSWORD, {
+      return this.$store.dispatch(types.ACTION_FORGET_PASSWORD, {
         email: this.form.values.email})
     }
   }

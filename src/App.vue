@@ -71,7 +71,7 @@ export default {
     --animate-duration: 0.3s;
   }
 
-  span.spinner-border{
+  .spinner-border{
     margin-bottom: 0.3rem;
   }
 </style>
