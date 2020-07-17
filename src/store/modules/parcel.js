@@ -129,6 +129,7 @@ const actions = {
     }).then(parsed => {
       commit(types.MUTATION_PARCEL_DATA, {
         data: {
+          ...state.payload.parcel.data,
           create: {
             ...parsed.data
           }
@@ -171,6 +172,7 @@ const actions = {
     }).then(parsed => {
       commit(types.MUTATION_PARCEL_DATA, {
         data: {
+          ...state.payload.parcel.data,
           search: {
             ...parsed.data
           }
@@ -198,6 +200,7 @@ const actions = {
     }).then(parsed => {
       commit(types.MUTATION_CATEGORY_DATA, {
         data: {
+          ...state.payload.parcel.data,
           getAll: {
             ...parsed.data
           }

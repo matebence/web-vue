@@ -4,7 +4,7 @@
       <li
         v-bind:key="option.id"
         @click="selectedOption(option)"
-        v-for="option in navigation.tabs"
+        v-for="option in tabs"
         :class="{active: navigation.activeEl.tabs.id === option.id}">{{option.value}}</li>
     </ul>
     <ul class="parcels">
@@ -12,16 +12,37 @@
         v-bind:key="item.id"
         @click="selectedParcel(item)"
         v-for="item in parcel.data.search"
-        v-show="navigation.activeEl.tabs.value === navigation.tabs[0].value"
+        v-show="navigation.activeEl.tabs.value === tabs[0].value || navigation.activeEl.tabs.value === tabs[2].value"
         :class="{active: navigation.activeEl.parcels.id === item.id}">
         <ul class="parcel">
           <li class="image">
-            <font-awesome-icon :icon="['fas', formatIcon(navigation.tabs[0].value)]"/>
+            <font-awesome-icon :icon="['fas', formatIcon(tabs[0].value)]"/>
           </li>
           <li>
             <ul>
               <li class="number">#{{item.id}}</li>
               <li class="created">{{formatDate(item.createdAt)}}<br>{{formatTime(item.createdAt)}}</li>
+            </ul>
+          </li>
+          <li class="category">
+            <font-awesome-icon :icon="['fas', formatIcon(item.category.name)]"/>
+          </li>
+        </ul>
+      </li>
+      <li
+        v-bind:key="item.id"
+        @click="selectedParcel(item)"
+        v-for="item in parcel.data.create"
+        v-show="navigation.activeEl.tabs.value === tabs[1].value || navigation.activeEl.tabs.value === tabs[2].value"
+        :class="{active: navigation.activeEl.parcels.id === item.id}">
+        <ul class="parcel">
+          <li class="image">
+            <font-awesome-icon :icon="['fas', formatIcon(tabs[1].value)]"/>
+          </li>
+          <li>
+            <ul>
+              <li class="number">#Bez poradia</li>
+              <li class="created">Balík nebol podaný</li>
             </ul>
           </li>
           <li class="category">
@@ -42,33 +63,23 @@ export default {
   created: function () {
     this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.data.accountId})
   },
+  props: ['navigation'],
   data: function () {
     return {
-      navigation: {
-        tabs: [
-          {
-            id: 1,
-            value: 'Pridelené'
-          },
-          {
-            id: 2,
-            value: 'Nepridelené'
-          },
-          {
-            id: 3,
-            value: 'Všetky'
-          }
-        ],
-        activeEl: {
-          tabs: {
-            id: 1,
-            value: 'Pridelené'
-          },
-          parcels: {
-            id: 0
-          }
+      tabs: [
+        {
+          id: 1,
+          value: 'Pridelené'
+        },
+        {
+          id: 2,
+          value: 'Nepridelené'
+        },
+        {
+          id: 3,
+          value: 'Všetky'
         }
-      }
+      ]
     }
   },
   computed: {
@@ -82,7 +93,7 @@ export default {
       this.navigation.activeEl.tabs.id = el.id
       this.navigation.activeEl.tabs.value = el.value
 
-      if (this.navigation.activeEl.tabs.value === this.navigation.tabs[0].value) {
+      if (this.navigation.activeEl.tabs.value === this.tabs[0].value) {
         this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.data.accountId})
       }
     },
@@ -113,6 +124,8 @@ export default {
           return 'utensils'
         case 'Pridelené':
           return 'box'
+        case 'Nepridelené':
+          return 'box-open'
       }
     }
   }

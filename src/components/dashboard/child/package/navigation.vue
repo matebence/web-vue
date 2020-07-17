@@ -199,7 +199,7 @@ export default {
   @media (max-width: 1200px) {
     div#navigation nav > a img {
       transform: rotate(-90deg);
-      left: -2.3rem;
+      left: -2.9rem;
       top: 5%;
     }
 
@@ -218,7 +218,8 @@ export default {
     }
 
     div#navigation nav ul.items li.active {
-      width: 4rem;
+      width: 3rem;
+      height: 3rem;
     }
 
     div#navigation nav ul.items li.settings {
@@ -232,11 +233,11 @@ export default {
     div#navigation nav ul.items li a svg {
       margin: 0;
       padding: 0;
-      font-size: 1.5em;
+      font-size: 1.3em;
     }
 
     div#navigation nav ul.items li a {
-      width: 2rem;
+      width: 1rem;
       display: flex;
       justify-content: space-around;
     }
@@ -267,6 +268,7 @@ export default {
     div#navigation nav ul.items li.active,
     div#navigation nav ul.sub-items li [data-letters]:before {
       width: 60vw;
+      height: unset;
       text-align: center;
       border-radius: 10rem;
     }

@@ -256,17 +256,20 @@ export default {
 
       this.$store.commit(types.MUTATION_PARCEL_DATA, {
         data: {
-          sender: {senderId: this.signIn.data.accountId},
-          receiver: {receiverId: this.form.values.receiver},
-          category: this.form.values.category,
-          length: this.form.values.size,
-          width: this.form.values.width,
-          height: this.form.values.height,
-          weight: this.form.values.weight,
-          note: this.form.values.note
+          ...this.parcel.data,
+          create: [{
+            sender: {senderId: this.signIn.data.accountId},
+            receiver: {receiverId: this.form.values.receiver.userId},
+            category: this.form.values.category,
+            length: this.form.values.size,
+            width: this.form.values.width,
+            height: this.form.values.height,
+            weight: this.form.values.weight,
+            note: this.form.values.note
+          }]
         }
       })
-      this.$emit('parcelCreated', {component: 'app-list', icon: 'plus'})
+      this.$emit('parcelCreated', {component: 'app-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
     }
   }
 }
@@ -275,7 +278,7 @@ export default {
 <style scoped>
   div#create form {
     margin-top: 1rem;
-    padding: 1rem;
+    padding: 0.5rem;
     margin-bottom: 3rem;
   }
 

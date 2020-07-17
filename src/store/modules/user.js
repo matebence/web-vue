@@ -86,6 +86,7 @@ const actions = {
       const users = parsed._embedded.usersList.filter(e => e.accountId !== rootState.authorization.payload.signIn.data.accountId)
       commit(types.MUTATION_USER_DATA, {
         data: {
+          ...state.payload.user.data,
           search: {
             ...users
           }
