@@ -6,14 +6,7 @@
           <app-navigation></app-navigation>
         </div>
         <div class="col-lg-11 col-xl-10" id="wrapper">
-          <div class="row">
-            <div class="col-lg-4 col-xl-3" id="content">
-              <app-parcel></app-parcel>
-            </div>
-            <div class="col-lg-8 col-xl-9" id="main-content">
-              <app-courier></app-courier>
-            </div>
-          </div>
+          <router-view/>
         </div>
       </div>
     </div>
@@ -22,15 +15,11 @@
 
 <script>
 import navigation from '@/components/dashboard/child/navigation'
-import courier from '@/components/dashboard/child/parcel/courier'
-import parcel from '@/components/dashboard/child/parcel'
 
 export default {
   name: 'dashboard',
   components: {
-    appNavigation: navigation,
-    appCourier: courier,
-    appParcel: parcel
+    appNavigation: navigation
   }
 }
 </script>
@@ -45,44 +34,18 @@ export default {
     overflow: hidden;
   }
 
-  div#dashboard div#main-content,
-  div#dashboard div#navigation,
-  div#dashboard div#content {
-    width: 100%;
-    height: 98vh;
-  }
-
-  div#dashboard div#navigation {
-    background: #176c9d;
-  }
-
   div#dashboard div#wrapper {
     border: 0.3rem #176c9d solid;
     border-radius: 3rem;
     background: #f1f1f1;
   }
 
-  div#dashboard div#content {
-    border-radius: 3rem;
-    border: 0.5rem #f1f1f1 solid;
-    background: #ffffff;
+  div#dashboard div#navigation {
+    width: 100%;
     height: 98vh;
-    overflow: auto;
   }
 
-  div#dashboard div#main-content {
-    border-top-left-radius: 3rem;
-    border-bottom-left-radius: 3rem;
-    border: 0.5rem #f1f1f1 solid;
-    background: #ffffff;
-  }
-
-  @media (max-width: 992px) {
-    div#dashboard div#main-content {
-      border-top-left-radius: 3rem;
-      border-top-right-radius: 3rem;
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-    }
+  div#dashboard div#navigation {
+    background: #176c9d;
   }
 </style>

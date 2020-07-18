@@ -307,7 +307,7 @@ const actions = {
       },
       done: true
     })
-    router.push({path: '/dashboard'})
+    router.push({path: '/dashboard/parcel'})
   },
 
   [types.ACTION_SIGN_IN]: function ({commit, dispatch, state, rootState}, payload) {
@@ -341,7 +341,7 @@ const actions = {
       dispatch(types.ACTION_START_AUTH_TIMER, {expirationTime: parsed.expires_in})
       dispatch(types.ACTION_USER_SEARCH, {accountId: accountData.accountId})
 
-      router.push({path: '/dashboard'})
+      router.push({path: '/dashboard/parcel'})
     }).catch(err => {
       err.json().then(parsed => {
         commit(types.MUTATIONS_SIGN_IN_DATA, {

@@ -10,13 +10,13 @@
           v-for="nav in navigation.items"
           @click.prevent="selectedNav(nav)"
           :class="{active: navigation.activeEl.nav.id === nav.id}">
-          <a href="#">
+          <router-link :to="`${nav.route}`">
             <font-awesome-icon :icon="['fas', nav.optional.icon]"/>
             <p>
               {{nav.value}}&nbsp;
               <span class="badge badge-pill badge-danger">{{nav.optional.badge}}</span>
             </p>
-          </a>
+          </router-link>
         </li>
       </ul>
       <ul class="sub-items">
@@ -50,6 +50,7 @@ export default {
           {
             id: 1,
             value: 'Balíky',
+            route: 'parcel',
             optional: {
               icon: 'box-open',
               badge: ''
@@ -58,6 +59,7 @@ export default {
           {
             id: 2,
             value: 'Zásielky',
+            route: '',
             optional: {
               icon: 'shipping-fast',
               badge: ''
@@ -66,6 +68,7 @@ export default {
           {
             id: 3,
             value: 'Vozidlá',
+            route: '',
             optional: {
               icon: 'car',
               badge: ''
@@ -74,6 +77,7 @@ export default {
           {
             id: 4,
             value: 'Správy',
+            route: '',
             optional: {
               icon: 'comment-dots',
               badge: 'Nové'
@@ -82,6 +86,7 @@ export default {
           {
             id: 5,
             value: 'Odhlásiť sa',
+            route: '',
             optional: {
               icon: 'sign-out-alt',
               badge: ''

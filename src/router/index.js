@@ -10,6 +10,12 @@ const dashboard = resolve => {
   }, 'dashboard')
 }
 
+const parcel = resolve => {
+  require.ensure(['@/components/dashboard/child/parcel'], () => {
+    resolve(require('@/components/dashboard/child/parcel'))
+  }, 'parcel')
+}
+
 const auth = resolve => {
   require.ensure(['@/components/auth/auth'], () => {
     resolve(require('@/components/auth/auth'))
@@ -28,9 +34,10 @@ const routes = [
     name: 'dashboard',
     beforeEnter: function (to, from, next) {
       if (store.state.authorization.payload.signIn.data.accessToken) return next()
-      next('/sign-in')
+      return next('/sign-in')
     },
-    children: []},
+    children: [
+      {path: 'parcel', name: 'parcel', component: parcel}]},
 
   {path: '/',
     component: auth,
