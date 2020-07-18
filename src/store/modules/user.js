@@ -20,6 +20,7 @@ const state = {
       error: {
         is: false,
         message: null,
+        from: '',
         reason: {
         }
       },
@@ -55,6 +56,21 @@ const mutations = {
       error: {
         is: false,
         message: null,
+        from: '',
+        reason: {
+        }
+      },
+      done: true
+    }
+  },
+
+  [types.MUTATIONS_CLEAR_NAVIGATION_ERRORS]: function (state, data) {
+    state.payload.user = {
+      ...state.payload.user,
+      error: {
+        is: false,
+        message: null,
+        from: '',
         reason: {
         }
       },
@@ -93,7 +109,10 @@ const actions = {
         commit(types.MUTATION_USER_DATA, {
           error: {
             is: parsed.error,
-            message: parsed.message
+            message: parsed.message,
+            from: 'search',
+            reason: {
+            }
           },
           done: true
         })

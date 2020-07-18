@@ -4,19 +4,19 @@
       <li
         v-bind:key="option.id"
         @click.prevent="selectedOption(option)"
-        v-for="option in tabs"
-        :class="{active: navigation.activeEl.tabs.id === option.id}">{{option.value}}</li>
+        v-for="option in tab.items"
+        :class="{active: activeEl.tabs.id === option.id}">{{option.value}}</li>
     </ul>
     <ul class="parcels">
       <li
         v-bind:key="item.id"
         @click.prevent="selectedParcel(item)"
         v-for="item in parcel.data.search"
-        v-show="navigation.activeEl.tabs.value === tabs[0].value || navigation.activeEl.tabs.value === tabs[2].value"
-        :class="{active: navigation.activeEl.parcels.id === item.id}">
+        v-show="activeEl.tabs.value === tab.items[0].value || activeEl.tabs.value === tab.items[2].value"
+        :class="{active: activeEl.parcels.id === item.id}">
         <ul class="parcel">
           <li class="image">
-            <font-awesome-icon :icon="['fas', formatIcon(tabs[0].value)]"/>
+            <font-awesome-icon :icon="['fas', formatIcon(tab.items[0].value)]"/>
           </li>
           <li>
             <ul>
@@ -34,11 +34,11 @@
         v-bind:key="item.id"
         @click.prevent="selectedParcel(item)"
         v-for="item in parcel.data.create"
-        v-show="navigation.activeEl.tabs.value === tabs[1].value || navigation.activeEl.tabs.value === tabs[2].value"
-        :class="{active: navigation.activeEl.parcels.id === item.id}">
+        v-show="activeEl.tabs.value === tab.items[1].value || activeEl.tabs.value === tab.items[2].value"
+        :class="{active: activeEl.parcels.id === item.id}">
         <ul class="parcel">
           <li class="image">
-            <font-awesome-icon :icon="['fas', formatIcon(tabs[1].value)]"/>
+            <font-awesome-icon :icon="['fas', formatIcon(tab.items[1].value)]"/>
           </li>
           <li>
             <ul>
@@ -61,26 +61,31 @@ import * as types from '@/store/types'
 
 export default {
   name: 'list',
-  props: ['navigation'],
+  props: ['activeEl'],
   created: function () {
     return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.data.accountId})
   },
+  beforeMount: function () {
+    return this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
+  },
   data: function () {
     return {
-      tabs: [
-        {
-          id: 1,
-          value: 'Pridelené'
-        },
-        {
-          id: 2,
-          value: 'Nepridelené'
-        },
-        {
-          id: 3,
-          value: 'Všetky'
-        }
-      ]
+      tab: {
+        items: [
+          {
+            id: 1,
+            value: 'Pridelené'
+          },
+          {
+            id: 2,
+            value: 'Nepridelené'
+          },
+          {
+            id: 3,
+            value: 'Všetky'
+          }
+        ]
+      }
     }
   },
   computed: {
@@ -91,15 +96,16 @@ export default {
   },
   methods: {
     selectedOption: function (el) {
-      this.navigation.activeEl.tabs.id = el.id
-      this.navigation.activeEl.tabs.value = el.value
+      this.activeEl.parcels.id = 0
+      this.activeEl.tabs.id = el.id
+      this.activeEl.tabs.value = el.value
 
-      if (this.navigation.activeEl.tabs.value === this.tabs[0].value) {
+      if (this.activeEl.tabs.value === this.tab.items[0].value) {
         return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.data.accountId})
       }
     },
     selectedParcel: function (el) {
-      this.navigation.activeEl.parcels.id = el.id
+      this.activeEl.parcels.id = el.id
     },
     formatDate: function (timestamp) {
       const date = new Date(timestamp)

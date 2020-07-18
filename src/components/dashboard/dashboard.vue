@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import navigation from '@/components/dashboard/child/package/navigation'
-import courier from '@/components/dashboard/child/package/courier'
-import parcel from '@/components/dashboard/child/package/parcel'
+import navigation from '@/components/dashboard/child/navigation'
+import courier from '@/components/dashboard/child/parcel/courier'
+import parcel from '@/components/dashboard/child/parcel'
 
 export default {
   name: 'dashboard',

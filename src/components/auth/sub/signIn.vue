@@ -48,7 +48,6 @@
           type="submit"
           class="btn btn-primary"
           :disabled="$v.$invalid"
-          @keyup.enter="onSignIn"
           @click.prevent="onSignIn">
           <span
             class="spinner-border spinner-border-sm"
@@ -86,6 +85,9 @@ export default {
   name: 'signin',
   created: function () {
     return this.$store.dispatch(types.ACTION_AUTO_SIGN_IN)
+  },
+  beforeMount: function () {
+    return this.$store.commit(types.MUTATIONS_CLEAR_SIGN_IN_ERRORS, {})
   },
   data: function () {
     return {

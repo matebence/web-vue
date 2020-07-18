@@ -20,6 +20,7 @@ const state = {
       error: {
         is: false,
         message: null,
+        from: '',
         reason: {
         }
       },
@@ -43,6 +44,7 @@ const state = {
       error: {
         is: false,
         message: null,
+        from: '',
         reason: {
         }
       },
@@ -56,6 +58,20 @@ const mutations = {
     state.payload.parcel = {
       ...state.payload.parcel,
       ...data
+    }
+  },
+
+  [types.MUTATIONS_CLEAR_PARCEL_ERRORS]: function (state, data) {
+    state.payload.parcel = {
+      ...state.payload.parcel,
+      error: {
+        is: false,
+        message: null,
+        from: '',
+        reason: {
+        }
+      },
+      done: true
     }
   },
 
@@ -78,6 +94,7 @@ const mutations = {
       error: {
         is: false,
         message: null,
+        from: '',
         reason: {
         }
       },
@@ -89,6 +106,20 @@ const mutations = {
     state.payload.category = {
       ...state.payload.category,
       ...data
+    }
+  },
+
+  [types.MUTATIONS_CLEAR_CATEGORY_ERRORS]: function (state, data) {
+    state.payload.category = {
+      ...state.payload.category,
+      error: {
+        is: false,
+        message: null,
+        from: '',
+        reason: {
+        }
+      },
+      done: true
     }
   },
 
@@ -111,6 +142,7 @@ const mutations = {
       error: {
         is: false,
         message: null,
+        from: '',
         reason: {
         }
       },
@@ -145,6 +177,7 @@ const actions = {
           error: {
             is: parsed.error,
             message: parsed.message,
+            from: 'create',
             reason: {
               ...validations
             }
@@ -184,7 +217,10 @@ const actions = {
         commit(types.MUTATION_PARCEL_DATA, {
           error: {
             is: parsed.error,
-            message: parsed.message
+            message: parsed.message,
+            from: 'search',
+            reason: {
+            }
           },
           done: true
         })
@@ -212,7 +248,10 @@ const actions = {
         commit(types.MUTATION_CATEGORY_DATA, {
           error: {
             is: parsed.error,
-            message: parsed.message
+            message: parsed.message,
+            from: 'getAll',
+            reason: {
+            }
           },
           done: true
         })

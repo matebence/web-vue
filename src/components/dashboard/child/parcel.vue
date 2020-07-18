@@ -24,7 +24,7 @@
           :icon="['fas', 'pen']"/>
       </button>
       <button
-        @click.prevent="removeParcel()">
+        @click.prevent="removeParcel(false)">
         <font-awesome-icon
           :icon="['fas', 'trash']"/>
       </button>
@@ -32,13 +32,13 @@
     <keep-alive>
       <component
         :is="selectedComponent"
-        :navigation="navigation"
+        :activeEl="components.activeEl"
         :form="components.appCreate.form"
         @parcelCreated="
           selectedComponent = $event.component;
           selectedIcon = $event.icon;
-          navigation.activeEl.tabs.id = $event.nav.id;
-          navigation.activeEl.tabs.value = $event.nav.value;">
+          components.activeEl.tabs.id = $event.nav.id;
+          components.activeEl.tabs.value = $event.nav.value;">
       </component>
     </keep-alive>
     <app-modal
@@ -47,6 +47,14 @@
       :title="components.appModal.title"
       :button="components.appModal.button">
     </app-modal>
+    <app-confirm
+      @confirmed="removeParcel($event)"
+      :id="'modalConfirm'"
+      :text="components.appConfirm.text"
+      :title="components.appConfirm.title"
+      :positiveButton="components.appConfirm.positiveButton"
+      :negativeButton="components.appConfirm.negativeButton">
+    </app-confirm>
   </div>
 </template>
 
@@ -56,8 +64,9 @@ import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
 
 import modal from '@/components/common/modal'
-import list from '@/components/dashboard/sub/package/list'
-import create from '@/components/dashboard/sub/package/create'
+import confirm from '@/components/common/confirm'
+import list from '@/components/dashboard/sub/parcel/list'
+import create from '@/components/dashboard/sub/parcel/create'
 
 export default {
   name: 'parcel',
@@ -92,9 +101,13 @@ export default {
           text: null,
           title: null,
           button: null
-        }
-      },
-      navigation: {
+        },
+        appConfirm: {
+          text: null,
+          title: null,
+          positiveButton: null,
+          negativeButton: null
+        },
         activeEl: {
           tabs: {
             id: 1,
@@ -108,13 +121,14 @@ export default {
     }
   },
   components: {
+    appConfirm: confirm,
     appCreate: create,
     appModal: modal,
     appList: list
   },
   computed: {
     isSelected () {
-      return this.navigation.activeEl.parcels.id !== 0
+      return this.components.activeEl.parcels.id !== 0
     },
     ...mapGetters({
       parcel: types.GETTER_PARCEL_DEFAULT
@@ -132,36 +146,48 @@ export default {
         return this.components.appCreate.name
       }
     },
+    showAlertModal: function (title, text, button) {
+      this.components.appModal.title = title
+      this.components.appModal.text = text
+      this.components.appModal.button = button
+      return bootstrap('#modalAlert').modal('show')
+    },
+    showConfirmModal: function (title, text) {
+      this.components.appConfirm.title = title
+      this.components.appConfirm.text = text
+      this.components.appConfirm.positiveButton = 'Áno'
+      this.components.appConfirm.negativeButton = 'Nie'
+      return bootstrap('#modalConfirm').modal('show')
+    },
     deselectParcel: function () {
-      this.navigation.activeEl.parcels.id = 0
+      this.components.activeEl.parcels.id = 0
     },
     editParcel: function () {
-      if (this.navigation.activeEl.parcels.id > 0) {
-        this.components.appModal.title = 'Editovanie'
-        this.components.appModal.text = 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné editovať.'
-        this.components.appModal.button = 'Zatvoriť'
-        return bootstrap('#modalAlert').modal('show')
+      if (this.components.activeEl.parcels.id > 0) {
+        return this.showAlertModal('Editovanie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné editovať.', 'Zatvoriť')
+      } else {
+        const data = this.parcel.data.create.filter(e => e.id === this.components.activeEl.parcels.id)
+        this.selectedComponent = this.manageComponenets()
+        this.deselectParcel()
+        return this.components.appCreate.form.values = {...data.pop()}
       }
-      const data = this.parcel.data.create.filter(e => e.id === this.navigation.activeEl.parcels.id)
-      this.selectedComponent = this.manageComponenets()
-      this.deselectParcel()
-      this.components.appCreate.form.values = {...data.pop()}
     },
-    removeParcel: function () {
-      if (this.navigation.activeEl.parcels.id > 0) {
-        this.components.appModal.title = 'Odstránenie'
-        this.components.appModal.text = 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné odstrániť.'
-        this.components.appModal.button = 'Zatvoriť'
-        return bootstrap('#modalAlert').modal('show')
-      }
-      const data = this.parcel.data.create.filter(e => e.id !== this.navigation.activeEl.parcels.id)
-      this.$store.commit(types.MUTATION_PARCEL_DATA, {
-        data: {
-          ...this.parcel.data,
-          create: [...data]
+    removeParcel: function (confirmed) {
+      if (this.components.activeEl.parcels.id > 0) {
+        return this.showAlertModal('Odstránenie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné odstrániť.', 'Zatvoriť')
+      } else {
+        if (confirmed) {
+          const data = this.parcel.data.create.filter(e => e.id !== this.components.activeEl.parcels.id)
+          this.$store.commit(types.MUTATION_PARCEL_DATA, {
+            data: {
+              ...this.parcel.data,
+              create: [...data]
+            }
+          })
+          return this.deselectParcel()
         }
-      })
-      this.deselectParcel()
+        return this.showConfirmModal('Odstránenie', 'Naozaj chcete odstrániť balík?')
+      }
     }
   }
 }

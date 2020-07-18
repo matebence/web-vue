@@ -165,7 +165,7 @@
     </form>
     <app-alert
       :type="[parcel.error.is ? 'alert-danger' : 'alert-success']"
-      :condition="[parcel.error.message !== null]"
+      :condition="[(parcel.error.message !== null && parcel.error.from === 'create')]"
       :content="[parcel.error.message]"/>
   </div>
 </template>
@@ -181,6 +181,9 @@ export default {
   props: ['form'],
   created: function () {
     return this.$store.dispatch(types.ACTION_CATEGORY_GET_ALL, {})
+  },
+  beforeMount: function () {
+    return this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
   },
   validations: {
     form: {

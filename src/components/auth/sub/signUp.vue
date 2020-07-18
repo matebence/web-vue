@@ -102,7 +102,6 @@
           type="submit"
           class="btn btn-primary"
           :disabled="$v.$invalid"
-          @keyup.enter="onSignUp"
           @click.prevent="onSignUp">
           <span
             class="spinner-border spinner-border-sm"
@@ -130,6 +129,9 @@ export default {
   name: 'signup',
   created: function () {
     if (this.$route.params.key) return this.onPageLoad()
+  },
+  beforeMount: function () {
+    return this.$store.commit(types.MUTATIONS_CLEAR_SIGN_UP_ERRORS, {})
   },
   data: function () {
     return {

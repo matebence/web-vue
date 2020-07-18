@@ -24,7 +24,6 @@
         <button
           type="submit"
           class="btn btn-primary"
-          @keyup.enter="onSend"
           @click.prevent="onSend"
           :disabled="$v.$invalid">
           <span
@@ -53,6 +52,9 @@ export default {
   name: 'forgetpass',
   created: function () {
     if (this.$route.params.key) return this.onPageLoad()
+  },
+  beforeMount: function () {
+    return this.$store.commit(types.MUTATIONS_CLEAR_FORGET_PASSWORD_ERRORS, {})
   },
   data: function () {
     return {

@@ -9,7 +9,7 @@
           v-bind:key="nav.id"
           v-for="nav in navigation.items"
           @click.prevent="selectedNav(nav)"
-          :class="{active: navigation.activeEl.item.id === nav.id}">
+          :class="{active: navigation.activeEl.nav.id === nav.id}">
           <a href="#">
             <font-awesome-icon :icon="['fas', nav.optional.icon]"/>
             <p>
@@ -21,7 +21,7 @@
       </ul>
       <ul class="sub-items">
         <li>
-          <a href="#" :data-letters="navigation.loggedAccount.avatar"></a>
+          <a href="#" :data-letters="nav.data.loggedAccount.avatar"></a>
         </li>
         <li class="settings">
           <a href="#">
@@ -41,14 +41,7 @@ import * as types from '@/store/types'
 export default {
   name: 'navigation',
   created: function () {
-    if (localStorage.getItem('avatar') === null) {
-      const user = this.user.data.search[0]
-      const firstName = user.firstName
-      const lastName = user.lastName
-
-      localStorage.setItem('avatar', `${firstName.substr(0, 1)}${lastName.substr(0, 1)}`)
-    }
-    this.navigation.loggedAccount.avatar = localStorage.getItem('avatar')
+    return this.$store.dispatch(types.ACTION_NAVIGATION_AVATAR, {})
   },
   data: function () {
     return {
@@ -96,13 +89,10 @@ export default {
           }
         ],
         activeEl: {
-          item: {
+          nav: {
             id: 1,
             value: 'Balíky'
           }
-        },
-        loggedAccount: {
-          avatar: ''
         }
       }
     }
@@ -110,15 +100,16 @@ export default {
   computed: {
     ...mapGetters({
       signIn: types.GETTER_SIGN_IN_DEFAULT,
-      user: types.GETTER_USER_DEFAULT
+      user: types.GETTER_USER_DEFAULT,
+      nav: types.GETTER_NAVIGATION_DEFAULT
     })
   },
   methods: {
     selectedNav: function (el) {
-      this.navigation.activeEl.item.id = el.id
-      this.navigation.activeEl.item.value = el.value
+      this.navigation.activeEl.nav.id = el.id
+      this.navigation.activeEl.nav.value = el.value
 
-      if (this.navigation.activeEl.item.value === this.navigation.items[4].value) {
+      if (this.navigation.activeEl.nav.value === this.navigation.items[4].value) {
         return this.$store.dispatch(types.ACTION_SIGN_OUT, {
           accessToken: this.signIn.data.accessToken
         })

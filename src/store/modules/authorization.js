@@ -81,6 +81,19 @@ const mutations = {
     }
   },
 
+  [types.MUTATIONS_CLEAR_SIGN_IN_ERRORS]: function (state, data) {
+    state.payload.signIn = {
+      ...state.payload.signIn,
+      error: {
+        is: false,
+        message: null,
+        reason: {
+        }
+      },
+      done: true
+    }
+  },
+
   [types.MUTATIONS_CLEAR_SIGN_IN_DATA]: function (state, data) {
     state.payload.signIn = {
       data: {
@@ -99,6 +112,19 @@ const mutations = {
     state.payload.signUp = {
       ...state.payload.signUp,
       ...data
+    }
+  },
+
+  [types.MUTATIONS_CLEAR_SIGN_UP_ERRORS]: function (state, data) {
+    state.payload.signUp = {
+      ...state.payload.signUp,
+      error: {
+        is: false,
+        message: null,
+        reason: {
+        }
+      },
+      done: true
     }
   },
 
@@ -123,6 +149,19 @@ const mutations = {
     }
   },
 
+  [types.MUTATIONS_CLEAR_SIGN_OUT_ERRORS]: function (state, data) {
+    state.payload.signOut = {
+      ...state.payload.signOut,
+      error: {
+        is: false,
+        message: null,
+        reason: {
+        }
+      },
+      done: true
+    }
+  },
+
   [types.MUTATIONS_CLEAR_SIGN_OUT_DATA]: function (state, data) {
     state.payload.signOut = {
       data: {
@@ -141,6 +180,19 @@ const mutations = {
     state.payload.forgetPassword = {
       ...state.payload.forgetPassword,
       ...data
+    }
+  },
+
+  [types.MUTATIONS_CLEAR_FORGET_PASSWORD_ERRORS]: function (state, data) {
+    state.payload.forgetPassword = {
+      ...state.payload.forgetPassword,
+      error: {
+        is: false,
+        message: null,
+        reason: {
+        }
+      },
+      done: true
     }
   },
 
@@ -165,6 +217,19 @@ const mutations = {
     }
   },
 
+  [types.MUTATIONS_CLEAR_ACCOUNT_RECOVER_ERRORS]: function (state, data) {
+    state.payload.recoverToken = {
+      ...state.payload.recoverToken,
+      error: {
+        is: false,
+        message: null,
+        reason: {
+        }
+      },
+      done: true
+    }
+  },
+
   [types.MUTATIONS_CLEAR_ACCOUNT_RECOVER_DATA]: function (state, data) {
     state.payload.recoverToken = {
       data: {
@@ -183,6 +248,19 @@ const mutations = {
     state.payload.activationToken = {
       ...state.payload.activationToken,
       ...data
+    }
+  },
+
+  [types.MUTATIONS_CLEAR_ACCOUNT_ACTIVATION_ERRORS]: function (state, data) {
+    state.payload.activationToken = {
+      ...state.payload.activationToken,
+      error: {
+        is: false,
+        message: null,
+        reason: {
+        }
+      },
+      done: true
     }
   },
 
@@ -247,7 +325,6 @@ const actions = {
         userName: parsed.user_name,
         authorities: jwt.authorities,
         accountId: parsed.account_id,
-        loginId: parsed.login_id,
         stayLoggedIn: payload.stayLoggedIn
       }
 
@@ -262,13 +339,17 @@ const actions = {
       localStorage.setItem('expirationDate', new Date(new Date().getTime() + parsed.expires_in * 1000))
 
       dispatch(types.ACTION_START_AUTH_TIMER, {expirationTime: parsed.expires_in})
+      dispatch(types.ACTION_USER_SEARCH, {accountId: accountData.accountId})
+
       router.push({path: '/dashboard'})
     }).catch(err => {
       err.json().then(parsed => {
         commit(types.MUTATIONS_SIGN_IN_DATA, {
           error: {
             is: parsed.error,
-            message: parsed.message
+            message: parsed.message,
+            reason: {
+            }
           },
           done: true
         })
@@ -310,7 +391,9 @@ const actions = {
         commit(types.MUTATIONS_SIGN_IN_DATA, {
           error: {
             is: parsed.error,
-            message: parsed.message
+            message: parsed.message,
+            reason: {
+            }
           },
           done: true
         })
@@ -357,10 +440,14 @@ const actions = {
     resource.performSignOut({service: 'authorization-server'}).then(response => {
       return response.json()
     }).then(parsed => {
+      localStorage.removeItem('avatar')
       localStorage.removeItem('accountData')
       localStorage.removeItem('expirationDate')
 
+      commit(types.MUTATIONS_CLEAR_USER_DATA, {})
+      commit(types.MUTATIONS_CLEAR_PARCEL_DATA, {})
       commit(types.MUTATIONS_CLEAR_SIGN_IN_DATA, {})
+
       commit(types.MUTATION_SIGN_OUT_DATA, {
         error: {
           is: parsed.error,
@@ -374,7 +461,9 @@ const actions = {
         commit(types.MUTATION_SIGN_OUT_DATA, {
           error: {
             is: parsed.error,
-            message: parsed.message
+            message: parsed.message,
+            reason: {
+            }
           },
           done: true
         })
@@ -401,7 +490,9 @@ const actions = {
         commit(types.MUTATION_FORGET_PASSWORD_DATA, {
           error: {
             is: parsed.error,
-            message: parsed.message
+            message: parsed.message,
+            reason: {
+            }
           },
           done: true
         })
@@ -426,7 +517,9 @@ const actions = {
         commit(types.MUTATION_ACCOUNT_RECOVER_DATA, {
           error: {
             is: parsed.error,
-            message: parsed.message
+            message: parsed.message,
+            reason: {
+            }
           }
         })
       })
@@ -450,7 +543,9 @@ const actions = {
         commit(types.MUTATION_ACCOUNT_ACTIVATION_DATA, {
           error: {
             is: parsed.error,
-            message: parsed.message
+            message: parsed.message,
+            reason: {
+            }
           }
         })
       })
