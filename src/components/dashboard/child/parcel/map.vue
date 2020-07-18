@@ -4,9 +4,9 @@
 </template>
 
 <script>
-  export default {
-    name: 'map'
-  }
+export default {
+  name: 'map'
+}
 </script>
 
 <style scoped>

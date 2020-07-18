@@ -41,8 +41,14 @@ import * as types from '@/store/types'
 export default {
   name: 'navigation',
   created: function () {
-    this.$store.dispatch(types.ACTION_USER_SEARCH, {accountId: this.signIn.data.accountId})
-    return this.setupAvatar()
+    if (localStorage.getItem('avatar') === null) {
+      const user = this.user.data.search[0]
+      const firstName = user.firstName
+      const lastName = user.lastName
+
+      localStorage.setItem('avatar', `${firstName.substr(0, 1)}${lastName.substr(0, 1)}`)
+    }
+    this.navigation.loggedAccount.avatar = localStorage.getItem('avatar')
   },
   data: function () {
     return {
@@ -117,16 +123,6 @@ export default {
           accessToken: this.signIn.data.accessToken
         })
       }
-    },
-    setupAvatar: function () {
-      if (localStorage.getItem('avatar') === null) {
-        const user = this.user.data.search[0]
-        const firstName = user.firstName
-        const lastName = user.lastName
-
-        localStorage.setItem('avatar', `${firstName.substr(0, 1)}${lastName.substr(0, 1)}`)
-      }
-      this.navigation.loggedAccount.avatar = localStorage.getItem('avatar')
     }
   }
 }

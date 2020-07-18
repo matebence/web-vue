@@ -68,19 +68,19 @@
       </div>
       <div class="form-group">
         <label
-          for="size">
+          for="length">
           Zadajte dľžku balíka
         </label>
         <input
-          aria-describedby="sizeInvalid"
+          aria-describedby="lengthInvalid"
           type="text" class="form-control"
-          id="size"
-          v-model="form.values.size"
+          id="length"
+          v-model="form.values.length"
           placeholder="Dľžka balíka"
-          @input="$v.form.values.size.$touch()"
-          :class="{valid: !$v.form.values.size.$error && $v.form.values.size.$dirty, invalid: $v.form.values.size.$error}">
+          @input="$v.form.values.length.$touch()"
+          :class="{valid: !$v.form.values.length.$error && $v.form.values.length.$dirty, invalid: $v.form.values.length.$error}">
         <small
-          id="sizeInvalid"
+          id="lengthInvalid"
           class="form-text text-muted"
           v-show="parcel.error.reason.length !== null">{{parcel.error.reason.length}}</small>
       </div>
@@ -142,13 +142,25 @@
         type="submit"
         class="btn btn-primary"
         :disabled="$v.$invalid"
-        @keyup.enter="onCreate"
-        @click.prevent="onCreate">
+        @click.prevent="onCreate"
+        v-show="form.values.id === undefined">
         <span
           class="spinner-border spinner-border-sm"
           role="status"
           aria-hidden="true"
           v-show="!parcel.done"></span>&nbsp;Vytvoriť
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        :disabled="$v.$invalid"
+        @click.prevent="onUpdate"
+        v-show="form.values.id !== undefined">
+        <span
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+          v-show="!parcel.done"></span>&nbsp;Aktualizovať
       </button>
     </form>
     <app-alert
@@ -166,26 +178,9 @@ import {required, alphaNum, numeric} from 'vuelidate/lib/validators'
 
 export default {
   name: 'create',
+  props: ['form'],
   created: function () {
     return this.$store.dispatch(types.ACTION_CATEGORY_GET_ALL, {})
-  },
-  data: function () {
-    return {
-      form: {
-        values: {
-          receiver: {
-            name: null,
-            userId: null
-          },
-          category: null,
-          note: null,
-          size: null,
-          width: null,
-          height: null,
-          weight: null
-        }
-      }
-    }
   },
   validations: {
     form: {
@@ -210,7 +205,7 @@ export default {
           required,
           alphaNum
         },
-        size: {
+        length: {
           required,
           numeric
         },
@@ -251,26 +246,39 @@ export default {
       return this.$store.commit(types.MUTATIONS_CLEAR_USER_DATA, {})
     },
     onCreate: function () {
-      this.parcel.error.message = null
-      this.parcel.error.is = false
+      if (this.form.values.id === undefined) {
+        this.parcel.error.message = null
+        this.parcel.error.is = false
 
-      this.$store.commit(types.MUTATION_PARCEL_DATA, {
-        data: {
-          ...this.parcel.data,
-          create: [{
-            id: Date.now() * -1,
-            sender: {senderId: this.signIn.data.accountId},
-            receiver: {receiverId: this.form.values.receiver.userId},
-            category: this.form.values.category,
-            length: this.form.values.size,
-            width: this.form.values.width,
-            height: this.form.values.height,
-            weight: this.form.values.weight,
-            note: this.form.values.note
-          }]
-        }
-      })
-      return this.$emit('parcelCreated', {component: 'app-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
+        this.$store.commit(types.MUTATION_PARCEL_DATA, {
+          data: {
+            ...this.parcel.data,
+            create: [...this.parcel.data.create, {
+              ...this.form.values,
+              sender: {senderId: this.signIn.data.accountId},
+              id: Date.now() * -1
+            }]
+          }
+        })
+        return this.$emit('parcelCreated', {component: 'app-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
+      }
+    },
+    onUpdate: function () {
+      if (this.form.values.id !== undefined) {
+        this.parcel.error.message = null
+        this.parcel.error.is = false
+
+        const data = this.parcel.data.create.filter(e => e.id !== this.form.values.id)
+        this.$store.commit(types.MUTATION_PARCEL_DATA, {
+          data: {
+            ...this.parcel.data,
+            create: [...data, {
+              ...this.form.values
+            }]
+          }
+        })
+        return this.$emit('parcelCreated', {component: 'app-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
+      }
     }
   }
 }

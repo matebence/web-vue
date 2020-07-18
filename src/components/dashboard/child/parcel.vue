@@ -33,6 +33,7 @@
       <component
         :is="selectedComponent"
         :navigation="navigation"
+        :form="components.appCreate.form"
         @parcelCreated="
           selectedComponent = $event.component;
           selectedIcon = $event.icon;
@@ -51,6 +52,8 @@
 
 <script>
 import bootstrap from 'jquery'
+import {mapGetters} from 'vuex'
+import * as types from '@/store/types'
 
 import modal from '@/components/common/modal'
 import list from '@/components/dashboard/sub/package/list'
@@ -69,7 +72,21 @@ export default {
         },
         appCreate: {
           name: 'app-create',
-          icon: 'angle-left'
+          icon: 'angle-left',
+          form: {
+            values: {
+              receiver: {
+                name: null,
+                userId: null
+              },
+              category: null,
+              note: null,
+              length: null,
+              width: null,
+              height: null,
+              weight: null
+            }
+          }
         },
         appModal: {
           text: null,
@@ -98,7 +115,10 @@ export default {
   computed: {
     isSelected () {
       return this.navigation.activeEl.parcels.id !== 0
-    }
+    },
+    ...mapGetters({
+      parcel: types.GETTER_PARCEL_DEFAULT
+    })
   },
   methods: {
     manageComponenets: function () {
@@ -108,6 +128,7 @@ export default {
       }
       if (this.selectedComponent === this.components.appList.name) {
         this.selectedIcon = this.components.appCreate.icon
+        this.components.appCreate.form.values.id = undefined
         return this.components.appCreate.name
       }
     },
@@ -117,18 +138,30 @@ export default {
     editParcel: function () {
       if (this.navigation.activeEl.parcels.id > 0) {
         this.components.appModal.title = 'Editovanie'
-        this.components.appModal.text = 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné editovať'
+        this.components.appModal.text = 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné editovať.'
         this.components.appModal.button = 'Zatvoriť'
         return bootstrap('#modalAlert').modal('show')
       }
+      const data = this.parcel.data.create.filter(e => e.id === this.navigation.activeEl.parcels.id)
+      this.selectedComponent = this.manageComponenets()
+      this.deselectParcel()
+      this.components.appCreate.form.values = {...data.pop()}
     },
     removeParcel: function () {
       if (this.navigation.activeEl.parcels.id > 0) {
         this.components.appModal.title = 'Odstránenie'
-        this.components.appModal.text = 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné odstrániť'
+        this.components.appModal.text = 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné odstrániť.'
         this.components.appModal.button = 'Zatvoriť'
         return bootstrap('#modalAlert').modal('show')
       }
+      const data = this.parcel.data.create.filter(e => e.id !== this.navigation.activeEl.parcels.id)
+      this.$store.commit(types.MUTATION_PARCEL_DATA, {
+        data: {
+          ...this.parcel.data,
+          create: [...data]
+        }
+      })
+      this.deselectParcel()
     }
   }
 }
