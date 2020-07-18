@@ -169,7 +169,7 @@ export default {
         const data = this.parcel.data.create.filter(e => e.id === this.components.activeEl.parcels.id)
         this.selectedComponent = this.manageComponenets()
         this.deselectParcel()
-        return this.components.appCreate.form.values = {...data.pop()}
+        this.components.appCreate.form.values = {...data.pop()}
       }
     },
     removeParcel: function (confirmed) {
