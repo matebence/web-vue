@@ -314,7 +314,7 @@ const actions = {
     commit(types.MUTATIONS_SIGN_IN_DATA, {done: false})
     const resource = this._vm.$resource('{service}/signin', {}, {
       performSignIn: {method: 'POST', headers: {'Authorization': `Basic ${btoa(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET)}`}}}, {emulateJSON: true})
-    resource.performSignIn({service: 'authorization-server'}, {grant_type: payload.grantType, username: payload.userName, password: payload.password}).then(response => {
+    return resource.performSignIn({service: 'authorization-server'}, {grant_type: payload.grantType, username: payload.userName, password: payload.password}).then(response => {
       return response.json()
     }).then(parsed => {
       const jwt = VueJwtDecode.decode(parsed.access_token)
@@ -339,9 +339,8 @@ const actions = {
       localStorage.setItem('expirationDate', new Date(new Date().getTime() + parsed.expires_in * 1000))
 
       dispatch(types.ACTION_START_AUTH_TIMER, {expirationTime: parsed.expires_in})
-      dispatch(types.ACTION_USER_SEARCH, {accountId: accountData.accountId})
-
       router.push({path: '/dashboard/parcel'})
+      return state.payload.signIn.data
     }).catch(err => {
       err.json().then(parsed => {
         commit(types.MUTATIONS_SIGN_IN_DATA, {
@@ -360,7 +359,7 @@ const actions = {
   [types.ACTION_REFRESH_AUTH]: function ({commit, dispatch, state, rootState}, payload) {
     const resource = this._vm.$resource('{service}/signin', {}, {
       refreshAuthorizationToken: {method: 'POST', headers: {'Authorization': `Basic ${btoa(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET)}`}}}, {emulateJSON: true})
-    resource.refreshAuthorizationToken({service: 'authorization-server'}, {grant_type: payload.grantType, refresh_token: payload.refreshToken}).then(response => {
+    return resource.refreshAuthorizationToken({service: 'authorization-server'}, {grant_type: payload.grantType, refresh_token: payload.refreshToken}).then(response => {
       return response.json()
     }).then(parsed => {
       const jwt = VueJwtDecode.decode(parsed.access_token)
@@ -371,7 +370,6 @@ const actions = {
         userName: parsed.user_name,
         authorities: jwt.authorities,
         accountId: parsed.account_id,
-        loginId: parsed.login_id,
         stayLoggedIn: state.payload.data.stayLoggedIn
       }
 
@@ -386,6 +384,7 @@ const actions = {
       localStorage.setItem('expirationDate', new Date(new Date().getTime() + parsed.expires_in * 1000))
 
       dispatch(types.ACTION_START_AUTH_TIMER, {expirationTime: parsed.expires_in})
+      return state.payload.signIn.data
     }).catch(err => {
       err.json().then(parsed => {
         commit(types.MUTATIONS_SIGN_IN_DATA, {
@@ -404,7 +403,7 @@ const actions = {
   [types.ACTION_SIGN_UP]: function ({commit, dispatch, state, rootState}, payload) {
     commit(types.MUTATION_SIGN_UP_DATA, {done: false})
     const resource = this._vm.$resource('{service}/signup', {}, {performSignUp: {method: 'POST'}})
-    resource.performSignUp({service: 'authorization-server'}, {userName: payload.userName, email: payload.email, password: payload.password, confirmPassword: payload.confirmPassword, accountRoles: [{roles: payload.roles}]
+    return resource.performSignUp({service: 'authorization-server'}, {userName: payload.userName, email: payload.email, password: payload.password, confirmPassword: payload.confirmPassword, accountRoles: [{roles: payload.roles}]
     }).then(response => {
       return response.json()
     }).then(parsed => {
@@ -420,6 +419,7 @@ const actions = {
         },
         done: true
       })
+      return state.payload.signUp.data
     }).catch(err => {
       err.json().then(parsed => {
         commit(types.MUTATION_SIGN_UP_DATA, {
@@ -437,7 +437,7 @@ const actions = {
   [types.ACTION_SIGN_OUT]: function ({commit, dispatch, state, rootState}, payload) {
     const resource = this._vm.$resource('{service}/signout', {}, {
       performSignOut: {method: 'DELETE', headers: {'Authorization': `Bearer ${state.payload.signIn.data.accessToken}`}}})
-    resource.performSignOut({service: 'authorization-server'}).then(response => {
+    return resource.performSignOut({service: 'authorization-server'}).then(response => {
       return response.json()
     }).then(parsed => {
       localStorage.removeItem('avatar')
@@ -456,6 +456,7 @@ const actions = {
         done: true
       })
       router.push({path: '/sign-in'})
+      return state.payload.signOut.data
     }).catch(err => {
       err.json().then(parsed => {
         commit(types.MUTATION_SIGN_OUT_DATA, {
@@ -475,7 +476,7 @@ const actions = {
     commit(types.MUTATION_FORGET_PASSWORD_DATA, { done: false })
     const resource = this._vm.$resource('{service}/forgetpassword', {}, {
       recoverPassword: {method: 'POST'}})
-    resource.recoverPassword({service: 'authorization-server'}, {email: payload.email}).then(response => {
+    return resource.recoverPassword({service: 'authorization-server'}, {email: payload.email}).then(response => {
       return response.json()
     }).then(parsed => {
       commit(types.MUTATION_FORGET_PASSWORD_DATA, {
@@ -485,6 +486,7 @@ const actions = {
         },
         done: true
       })
+      return state.payload.forgetPassword.data
     }).catch(err => {
       err.json().then(parsed => {
         commit(types.MUTATION_FORGET_PASSWORD_DATA, {
@@ -503,7 +505,7 @@ const actions = {
   [types.ACTION_ACCOUNT_RECOVER]: function ({commit, dispatch, state, rootState}, payload) {
     const resource = this._vm.$resource('{service}/forgetpassword/{account}/{id}/{token}/{key}', {}, {
       verifyRecoverToken: {method: 'GET'}})
-    resource.verifyRecoverToken({service: 'authorization-server', account: 'account', id: payload.id, token: 'token', key: payload.key}).then(response => {
+    return resource.verifyRecoverToken({service: 'authorization-server', account: 'account', id: payload.id, token: 'token', key: payload.key}).then(response => {
       return response.json()
     }).then(parsed => {
       commit(types.MUTATION_ACCOUNT_RECOVER_DATA, {
@@ -512,6 +514,7 @@ const actions = {
           message: parsed.message
         }
       })
+      return state.payload.recoverToken.data
     }).catch(err => {
       err.json().then(parsed => {
         commit(types.MUTATION_ACCOUNT_RECOVER_DATA, {
@@ -529,7 +532,7 @@ const actions = {
   [types.ACTION_ACCOUNT_ACTIVATION]: function ({commit, dispatch, state, rootState}, payload) {
     const resource = this._vm.$resource('{service}/signup/{account}/{id}/{token}/{key}', {}, {
       verifyActivationToken: { method: 'GET' }})
-    resource.verifyActivationToken({service: 'authorization-server', account: 'account', id: payload.id, token: 'token', key: payload.key}).then(response => {
+    return resource.verifyActivationToken({service: 'authorization-server', account: 'account', id: payload.id, token: 'token', key: payload.key}).then(response => {
       return response.json()
     }).then(parsed => {
       commit(types.MUTATION_ACCOUNT_ACTIVATION_DATA, {
@@ -538,6 +541,7 @@ const actions = {
           message: parsed.message
         }
       })
+      return state.payload.activationToken.data
     }).catch(err => {
       err.json().then(parsed => {
         commit(types.MUTATION_ACCOUNT_ACTIVATION_DATA, {

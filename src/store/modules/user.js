@@ -84,7 +84,7 @@ const actions = {
     commit(types.MUTATION_USER_DATA, {done: false})
     const resource = this._vm.$resource('{service}/api/users/search', {}, {
       search: {method: 'POST', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
-    resource.search({service: 'user-service'}, {
+    return resource.search({service: 'user-service'}, {
       pagination: {
         pageNumber: 0,
         pageSize: 4
@@ -104,6 +104,7 @@ const actions = {
         },
         done: true
       })
+      return state.payload.user.data.search
     }).catch(err => {
       err.json().then(parsed => {
         commit(types.MUTATION_USER_DATA, {
@@ -111,8 +112,7 @@ const actions = {
             is: parsed.error,
             message: parsed.message,
             from: 'search',
-            reason: {
-            }
+            reason: {}
           },
           done: true
         })

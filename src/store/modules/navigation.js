@@ -60,21 +60,23 @@ const mutations = {
 
 const actions = {
   [types.ACTION_NAVIGATION_AVATAR]: function ({commit, dispatch, state, rootState}, payload) {
-    if (localStorage.getItem('avatar') === null) {
-      const user = rootState.user.payload.user.data.search[0]
-      const firstName = user.firstName
-      const lastName = user.lastName
+    dispatch(types.ACTION_USER_SEARCH, {accountId: rootState.authorization.payload.signIn.data.accountId}).then(result => {
+      if (localStorage.getItem('avatar') === null) {
+        const user = result[0]
+        const firstName = user.firstName
+        const lastName = user.lastName
 
-      localStorage.setItem('avatar', `${firstName.substr(0, 1)}${lastName.substr(0, 1)}`)
-    }
-    commit(types.MUTATION_NAVIGATION_DATA, {
-      data: {
-        ...state.payload.navigation.data,
-        loggedAccount: {
-          avatar: localStorage.getItem('avatar')
-        }
-      },
-      done: true
+        localStorage.setItem('avatar', `${firstName.substr(0, 1)}${lastName.substr(0, 1)}`)
+      }
+      commit(types.MUTATION_NAVIGATION_DATA, {
+        data: {
+          ...state.payload.navigation.data,
+          loggedAccount: {
+            avatar: localStorage.getItem('avatar')
+          }
+        },
+        done: true
+      })
     })
   }
 }

@@ -156,7 +156,7 @@ const actions = {
     commit(types.MUTATION_PARCEL_DATA, {done: false})
     const resource = this._vm.$resource('{service}/api/parcels', {}, {
       create: {method: 'POST', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
-    resource.create({service: 'parcel-service'}, {canceled: false, ...payload}).then(response => {
+    return resource.create({service: 'parcel-service'}, {canceled: false, ...payload}).then(response => {
       return response.json()
     }).then(parsed => {
       commit(types.MUTATION_PARCEL_DATA, {
@@ -168,6 +168,7 @@ const actions = {
         },
         done: true
       })
+      return state.payload.parcel.data.create
     }).catch(err => {
       err.json().then(parsed => {
         let validations = {}
@@ -192,7 +193,7 @@ const actions = {
     commit(types.MUTATION_PARCEL_DATA, {done: false})
     const resource = this._vm.$resource('{service}/api/parcels/search', {}, {
       search: {method: 'POST', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
-    resource.search({service: 'parcel-service'}, {
+    return resource.search({service: 'parcel-service'}, {
       pagination: {
         pageNumber: 0,
         pageSize: 4
@@ -212,6 +213,7 @@ const actions = {
         },
         done: true
       })
+      return state.payload.parcel.data.search
     }).catch(err => {
       err.json().then(parsed => {
         commit(types.MUTATION_PARCEL_DATA, {
@@ -231,7 +233,7 @@ const actions = {
   [types.ACTION_CATEGORY_GET_ALL]: function ({commit, dispatch, state, rootState}, payload) {
     const resource = this._vm.$resource('{service}/api/categories/page/{page}/limit/{limit}', {}, {
       getAll: {method: 'GET', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
-    resource.getAll({service: 'parcel-service', page: 1, limit: 10}).then(response => {
+    return resource.getAll({service: 'parcel-service', page: 1, limit: 10}).then(response => {
       return response.json()
     }).then(parsed => {
       commit(types.MUTATION_CATEGORY_DATA, {
@@ -243,6 +245,7 @@ const actions = {
         },
         done: true
       })
+      return state.payload.parcel.data.getAll
     }).catch(err => {
       err.json().then(parsed => {
         commit(types.MUTATION_CATEGORY_DATA, {
