@@ -22,13 +22,13 @@ export default {
   name: 'alert',
   props: ['type', 'condition', 'content'],
   computed: {
-    getCondition () {
+    getCondition: function () {
       return this.condition.some(e => e === true)
     },
-    getContent () {
+    getContent: function () {
       return this.content.filter(e => e !== null)
     },
-    getType () {
+    getType: function () {
       return this.type.filter(e => e !== null)
     }
   }

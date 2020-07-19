@@ -1,6 +1,6 @@
 <template>
   <div id="confirm">
-    <div class="modal fade" :id="id" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal fade" :id="confirmId" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -28,7 +28,7 @@
 <script>
 export default {
   name: 'confirm',
-  props: ['id', 'title', 'text', 'positiveButton', 'negativeButton'],
+  props: ['confirmId', 'title', 'text', 'positiveButton', 'negativeButton'],
   methods: {
     confirmed: function () {
       return this.$emit('confirmed', true)

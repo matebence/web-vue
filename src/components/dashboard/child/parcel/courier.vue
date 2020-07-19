@@ -2,25 +2,65 @@
   <div id="courier">
     <h1>Kuriéry</h1>
     <form class="search">
-      <input type="text" class="searchTerm" placeholder="Meno kuriéra">
+      <input
+        type="text"
+        class="searchTerm"
+        placeholder="Meno kuriéra"
+        v-model="components.search.name"
+        @input="autoCompleteCourier($event.target.value)">
       <button type="submit" class="searchButton">
         <i class="fa fa-search"></i>
       </button>
     </form>
-    <ul class="couriers">
-      <li class="active">
-        <ul class="courier">
-          <li><i data-letters="MV"></i></li>
-          <li><p>Michal Veľký</p></li>
-        </ul>
-      </li>
-    </ul>
+    <app-courier-list
+      :search="components.search"
+      :selectedParcelId="selectedParcelId">
+    </app-courier-list>
   </div>
 </template>
 
 <script>
+import * as types from '@/store/types'
+import courierList from '@/components/dashboard/sub/parcel/courierList'
+
 export default {
-  name: 'courier'
+  name: 'courier',
+  props: ['selectedParcelId'],
+  created: function () {
+    return this.searchCourier({roles: process.env.APP_ROLE_COURIER})
+  },
+  beforeMount: function () {
+    return this.$store.commit(types.MUTATIONS_CLEAR_USER_ERRORS, {})
+  },
+  data: function () {
+    return {
+      components: {
+        search: {
+          courier: {
+          },
+          activeEl: {
+            courierId: 0
+          }
+        }
+      }
+    }
+  },
+  components: {
+    appCourierList: courierList
+  },
+  methods: {
+    autoCompleteCourier: function ($event) {
+      this.components.search.activeEl.courierId = 0
+      if ($event.length === 0) return this.searchCourier({roles: process.env.APP_ROLE_COURIER})
+      if ($event.length < 3) return
+      return this.searchCourier({firstName: $event, roles: process.env.APP_ROLE_COURIER})
+    },
+    searchCourier: function (obj) {
+      return this.$store.dispatch(types.ACTION_USER_SEARCH, {...obj}).then(result => {
+        this.components.search.courier = result
+      })
+    }
+  }
 }
 </script>
 
@@ -69,47 +109,6 @@ export default {
 
   div#courier form.search .searchButton:hover {
     background: #187fb1;
-  }
-
-  div#courier ul.couriers {
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: row;
-    text-align: center;
-    width: 100%;
-    overflow: auto;
-    height: 7rem;
-  }
-
-  div#courier ul.couriers li {
-    margin-right: 0.3rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-left: 0.3rem;
-    padding-right: 0.3rem;
-    padding-bottom: 0.3rem;
-  }
-
-  div#courier ul.couriers li:hover, #dashboard ul.couriers li.active {
-    background: #f1f1f1;
-    border-radius: 0.5rem;
-    cursor: pointer;
-  }
-
-  div#courier ul.couriers li ul.courier li [data-letters]:before {
-    content: attr(data-letters);
-    border: solid 0.1rem #ffffff;
-    display: inline-block;
-    font-size: 1.3em;
-    width: 3.5rem;
-    height: 3.5rem;
-    line-height: 3.3rem;
-    text-align: center;
-    border-radius: 50%;
-    border: solid 0.1rem #176c9d;
-    background: transparent;
-    color: #176c9d;
   }
 
   @media (max-width: 370px) {

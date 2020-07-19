@@ -6,10 +6,10 @@
       </a>
       <ul class="items">
         <li
-          v-bind:key="nav.id"
+          v-bind:key="nav.itemId"
           v-for="nav in navigation.items"
           @click.prevent="selectedNav(nav)"
-          :class="{active: navigation.activeEl.nav.id === nav.id}">
+          :class="{active: navigation.activeEl.nav.itemId === nav.itemId}">
           <router-link :to="`${nav.route}`">
             <font-awesome-icon :icon="['fas', nav.optional.icon]"/>
             <p>
@@ -48,7 +48,7 @@ export default {
       navigation: {
         items: [
           {
-            id: 1,
+            itemId: 1,
             value: 'Balíky',
             route: 'parcel',
             optional: {
@@ -57,7 +57,7 @@ export default {
             }
           },
           {
-            id: 2,
+            itemId: 2,
             value: 'Zásielky',
             route: '',
             optional: {
@@ -66,7 +66,7 @@ export default {
             }
           },
           {
-            id: 3,
+            itemId: 3,
             value: 'Vozidlá',
             route: '',
             optional: {
@@ -75,7 +75,7 @@ export default {
             }
           },
           {
-            id: 4,
+            itemId: 4,
             value: 'Správy',
             route: '',
             optional: {
@@ -84,7 +84,7 @@ export default {
             }
           },
           {
-            id: 5,
+            itemId: 5,
             value: 'Odhlásiť sa',
             route: '',
             optional: {
@@ -95,7 +95,7 @@ export default {
         ],
         activeEl: {
           nav: {
-            id: 1,
+            itemId: 1,
             value: 'Balíky'
           }
         }
@@ -111,7 +111,7 @@ export default {
   },
   methods: {
     selectedNav: function (el) {
-      this.navigation.activeEl.nav.id = el.id
+      this.navigation.activeEl.nav.itemId = el.itemId
       this.navigation.activeEl.nav.value = el.value
 
       if (this.navigation.activeEl.nav.value === this.navigation.items[4].value) {

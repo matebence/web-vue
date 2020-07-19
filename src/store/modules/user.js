@@ -87,7 +87,7 @@ const actions = {
     return resource.search({service: 'user-service'}, {
       pagination: {
         pageNumber: 0,
-        pageSize: 4
+        pageSize: 10
       },
       search: {
         ...payload

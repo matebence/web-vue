@@ -196,7 +196,7 @@ const actions = {
     return resource.search({service: 'parcel-service'}, {
       pagination: {
         pageNumber: 0,
-        pageSize: 4
+        pageSize: 10
       },
       search: {
         sender: payload.sender

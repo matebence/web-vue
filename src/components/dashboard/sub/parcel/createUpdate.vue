@@ -1,5 +1,5 @@
 <template>
-  <div id="create">
+  <div id="createUpdate">
     <form>
       <div class="form-group">
         <label
@@ -177,7 +177,7 @@ import alert from '@/components/common/alert'
 import {required, alphaNum, numeric} from 'vuelidate/lib/validators'
 
 export default {
-  name: 'create',
+  name: 'createUpdate',
   props: ['form'],
   created: function () {
     return this.$store.dispatch(types.ACTION_CATEGORY_GET_ALL, {})
@@ -276,7 +276,7 @@ export default {
             }]
           }
         })
-        return this.$emit('parcelCreated', {component: 'app-parcel-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
+        return this.$emit('createOrUpdate', {component: 'app-parcel-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
       }
     },
     onUpdate: function () {
@@ -293,7 +293,7 @@ export default {
             }]
           }
         })
-        return this.$emit('parcelCreated', {component: 'app-parcel-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
+        return this.$emit('createOrUpdate', {component: 'app-parcel-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
       }
     }
   }
@@ -301,17 +301,17 @@ export default {
 </script>
 
 <style scoped>
-  div#create form {
+  div#createUpdate form {
     margin-top: 1rem;
     padding: 0.5rem;
     margin-bottom: 3rem;
   }
 
-  div#create label {
+  div#createUpdate label {
     font-size: 0.9em;
   }
 
-  div#create button {
+  div#createUpdate button {
     font-size: 0.9em;
     background: #ffffff;
     border: solid 0.09rem #176c9d;
@@ -322,19 +322,19 @@ export default {
     margin-bottom: 1rem;
   }
 
-  div#create button:hover {
+  div#createUpdate button:hover {
     border-color: #7f7f7f;
     background: #176c9d;
     color: #ffffff;
   }
 
-  div#create button[disabled] {
+  div#createUpdate button[disabled] {
     border-color: #7f7f7f;
     background: #176c9d;
     color: #ffffff;
   }
 
-  div#create select {
+  div#createUpdate select {
     background: #ffffff;
     font-size: 0.9em;
     width: 100%;
@@ -346,15 +346,15 @@ export default {
     border-bottom: 0.1rem solid #dbdbdb;
   }
 
-  div#create select:focus {
+  div#createUpdate select:focus {
     background: #ffffff;
   }
 
-  div#create option {
+  div#createUpdate option {
     background: #ffffff;
   }
 
-  div#create input[type="text"] {
+  div#createUpdate input[type="text"] {
     font-size: 0.9em;
     width: 100%;
     height: 3rem;
@@ -366,44 +366,44 @@ export default {
     border-bottom: 0.1rem solid #dbdbdb;
   }
 
-  div#create div #autocomplete {
+  div#createUpdate div #autocomplete {
     width: 100%;
     position: relative;
   }
 
-  div#create div #autocomplete ul {
+  div#createUpdate div #autocomplete ul {
     position: absolute;
     width: calc(100%);
     background: #ffffff;
   }
 
-  div#create div#autocomplete ul li {
+  div#createUpdate div#autocomplete ul li {
     font-size: 1em;
     padding: 0.8rem;
     border: solid 0.01rem #dbdbdb;
   }
-  div#create div#autocomplete ul li:hover {
+  div#createUpdate div#autocomplete ul li:hover {
     cursor: pointer;
     background: #f1f1f1;
   }
 
-  div#create textarea {
+  div#createUpdate textarea {
     border: none;
     background: transparent;
     border-radius: 0;
     border-bottom: 0.1rem solid #dbdbdb;
   }
 
-  div#create small, .text-muted {
+  div#createUpdate small, .text-muted {
     font-size: 0.8em;
     color: #ff0000 !important;
   }
 
-  div#create input.invalid, div#create select.invalid, div#create textarea.invalid {
+  div#createUpdate input.invalid, div#createUpdate select.invalid, div#createUpdate textarea.invalid {
     border-bottom: 0.1rem solid #ff0000;
   }
 
-  div#create input.valid, div#create select.valid, div#create textarea.valid {
+  div#createUpdate input.valid, div#createUpdate select.valid, div#createUpdate textarea.valid {
     border-bottom: 0.1rem solid #008000;
   }
 </style>

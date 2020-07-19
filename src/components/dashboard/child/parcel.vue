@@ -2,10 +2,10 @@
   <div id="parcel">
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
-        <app-manage></app-manage>
+        <app-manage @selectedParcel="selectedParcelId = $event"></app-manage>
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
-        <app-courier></app-courier>
+        <app-courier :selectedParcelId="selectedParcelId"></app-courier>
       </div>
     </div>
   </div>
@@ -17,6 +17,11 @@ import manage from '@/components/dashboard/child/parcel/manage'
 
 export default {
   name: 'parcel',
+  data: function () {
+    return {
+      selectedParcelId: 0
+    }
+  },
   components: {
     appCourier: courier,
     appManage: manage

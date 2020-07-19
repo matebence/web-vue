@@ -34,22 +34,22 @@
         :is="selectedComponent"
         :activeEl="components.activeEl"
         :form="components.appCreate.form"
-        @parcelCreated="
+        @createOrUpdate="
           selectedComponent = $event.component;
           selectedIcon = $event.icon;
-          components.activeEl.tabs.id = $event.nav.id;
+          components.activeEl.tabs.tabId = $event.nav.id;
           components.activeEl.tabs.value = $event.nav.value;">
       </component>
     </keep-alive>
     <app-modal
-      :id="'modalAlert'"
+      :modalId="'parcelAlert'"
       :text="components.appModal.text"
       :title="components.appModal.title"
       :button="components.appModal.button">
     </app-modal>
     <app-confirm
       @confirmed="removeParcel($event)"
-      :id="'modalConfirm'"
+      :confirmId="'parcelConfirm'"
       :text="components.appConfirm.text"
       :title="components.appConfirm.title"
       :positiveButton="components.appConfirm.positiveButton"
@@ -65,22 +65,22 @@ import * as types from '@/store/types'
 
 import modal from '@/components/common/modal'
 import confirm from '@/components/common/confirm'
-import list from '@/components/dashboard/sub/parcel/list'
-import create from '@/components/dashboard/sub/parcel/create'
+import parcelList from '@/components/dashboard/sub/parcel/parcelList'
+import createUpdate from '@/components/dashboard/sub/parcel/createUpdate'
 
 export default {
   name: 'manage',
   data: function () {
     return {
-      selectedComponent: 'app-list',
+      selectedComponent: 'app-parcel-list',
       selectedIcon: 'plus',
       components: {
         appList: {
-          name: 'app-list',
+          name: 'app-parcel-list',
           icon: 'plus'
         },
         appCreate: {
-          name: 'app-create',
+          name: 'app-create-update',
           icon: 'angle-left',
           form: {
             values: {
@@ -110,11 +110,11 @@ export default {
         },
         activeEl: {
           tabs: {
-            id: 1,
+            tabId: 1,
             value: 'Pridelené'
           },
           parcels: {
-            id: 0
+            parcelId: 0
           }
         }
       }
@@ -122,13 +122,18 @@ export default {
   },
   components: {
     appConfirm: confirm,
-    appCreate: create,
+    appCreateUpdate: createUpdate,
     appModal: modal,
-    appList: list
+    appParcelList: parcelList
+  },
+  watch: {
+    'components.activeEl.parcels.parcelId': function (newValue, oldValue) {
+      this.$emit('selectedParcel', newValue)
+    }
   },
   computed: {
-    isSelected () {
-      return this.components.activeEl.parcels.id !== 0
+    isSelected: function () {
+      return this.components.activeEl.parcels.parcelId !== 0
     },
     ...mapGetters({
       parcel: types.GETTER_PARCEL_DEFAULT
@@ -150,34 +155,34 @@ export default {
       this.components.appModal.title = title
       this.components.appModal.text = text
       this.components.appModal.button = button
-      return bootstrap('#modalAlert').modal('show')
+      return bootstrap('#parcelAlert').modal('show')
     },
     showConfirmModal: function (title, text) {
       this.components.appConfirm.title = title
       this.components.appConfirm.text = text
       this.components.appConfirm.positiveButton = 'Áno'
       this.components.appConfirm.negativeButton = 'Nie'
-      return bootstrap('#modalConfirm').modal('show')
+      return bootstrap('#parcelConfirm').modal('show')
     },
     deselectParcel: function () {
-      this.components.activeEl.parcels.id = 0
+      this.components.activeEl.parcels.parcelId = 0
     },
     editParcel: function () {
-      if (this.components.activeEl.parcels.id > 0) {
+      if (this.components.activeEl.parcels.parcelId > 0) {
         return this.showAlertModal('Editovanie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné editovať.', 'Zatvoriť')
       } else {
-        const data = this.parcel.data.create.filter(e => e.id === this.components.activeEl.parcels.id)
+        const data = this.parcel.data.create.filter(e => e.id === this.components.activeEl.parcels.parcelId)
         this.selectedComponent = this.manageComponenets()
         this.deselectParcel()
         this.components.appCreate.form.values = {...data.pop()}
       }
     },
     removeParcel: function (confirmed) {
-      if (this.components.activeEl.parcels.id > 0) {
+      if (this.components.activeEl.parcels.parcelId > 0) {
         return this.showAlertModal('Odstránenie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné odstrániť.', 'Zatvoriť')
       } else {
         if (confirmed) {
-          const data = this.parcel.data.create.filter(e => e.id !== this.components.activeEl.parcels.id)
+          const data = this.parcel.data.create.filter(e => e.id !== this.components.activeEl.parcels.parcelId)
           this.$store.commit(types.MUTATION_PARCEL_DATA, {
             data: {
               ...this.parcel.data,

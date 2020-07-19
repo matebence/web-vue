@@ -1,6 +1,6 @@
 <template>
   <div id="modal">
-    <div class="modal fade" :id="id" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal fade" :id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -21,7 +21,7 @@
 <script>
 export default {
   name: 'modal',
-  props: ['id', 'title', 'text', 'button']
+  props: ['modalId', 'title', 'text', 'button']
 }
 </script>
 

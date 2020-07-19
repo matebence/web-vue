@@ -1,11 +1,11 @@
 <template>
-  <div id="list">
+  <div id="parcelList">
     <ul class="tabs">
       <li
         v-bind:key="option.id"
         @click.prevent="selectedOption(option)"
         v-for="option in tab.items"
-        :class="{active: activeEl.tabs.id === option.id}">{{option.value}}</li>
+        :class="{active: activeEl.tabs.tabId === option.itemId}">{{option.value}}</li>
     </ul>
     <ul class="parcels">
       <li
@@ -13,7 +13,7 @@
         @click.prevent="selectedParcel(item)"
         v-for="item in parcel.data.search"
         v-show="activeEl.tabs.value === tab.items[0].value || activeEl.tabs.value === tab.items[2].value"
-        :class="{active: activeEl.parcels.id === item.id}">
+        :class="{active: activeEl.parcels.parcelId === item.id}">
         <ul class="parcel">
           <li class="image">
             <font-awesome-icon :icon="['fas', formatIcon(tab.items[0].value)]"/>
@@ -35,7 +35,7 @@
         @click.prevent="selectedParcel(item)"
         v-for="item in parcel.data.create"
         v-show="activeEl.tabs.value === tab.items[1].value || activeEl.tabs.value === tab.items[2].value"
-        :class="{active: activeEl.parcels.id === item.id}">
+        :class="{active: activeEl.parcels.parcelId === item.id}">
         <ul class="parcel">
           <li class="image">
             <font-awesome-icon :icon="['fas', formatIcon(tab.items[1].value)]"/>
@@ -60,7 +60,7 @@ import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
 
 export default {
-  name: 'list',
+  name: 'parcelList',
   props: ['activeEl'],
   created: function () {
     return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.data.accountId})
@@ -73,15 +73,15 @@ export default {
       tab: {
         items: [
           {
-            id: 1,
+            itemId: 1,
             value: 'Pridelené'
           },
           {
-            id: 2,
+            itemId: 2,
             value: 'Nepridelené'
           },
           {
-            id: 3,
+            itemId: 3,
             value: 'Všetky'
           }
         ]
@@ -96,8 +96,8 @@ export default {
   },
   methods: {
     selectedOption: function (el) {
-      this.activeEl.parcels.id = 0
-      this.activeEl.tabs.id = el.id
+      this.activeEl.parcels.parcelId = 0
+      this.activeEl.tabs.tabId = el.id
       this.activeEl.tabs.value = el.value
 
       if (this.activeEl.tabs.value === this.tab.items[0].value) {
@@ -105,7 +105,7 @@ export default {
       }
     },
     selectedParcel: function (el) {
-      this.activeEl.parcels.id = el.id
+      this.activeEl.parcels.parcelId = el.id
     },
     formatDate: function (timestamp) {
       const date = new Date(timestamp)
@@ -140,13 +140,13 @@ export default {
 </script>
 
 <style scoped>
-  div#list ul.tabs {
+  div#parcelList ul.tabs {
     margin-top: 2rem;
     margin-bottom: 2rem;
     width: 102%;
   }
 
-  div#list ul.tabs li {
+  div#parcelList ul.tabs li {
     display: inline;
     font-weight: 600;
     font-size: 0.8em;
@@ -155,8 +155,8 @@ export default {
     color: #a5a3a5;
   }
 
-  div#list ul.tabs li:hover,
-  div#list ul.tabs li.active {
+  div#parcelList ul.tabs li:hover,
+  div#parcelList ul.tabs li.active {
     background: #176c9d;
     border-radius: 5rem;
     color: #ffffff;
@@ -164,14 +164,14 @@ export default {
 
   }
 
-  div#list ul.parcels li:hover,
-  div#list ul.parcels li.active {
+  div#parcelList ul.parcels li:hover,
+  div#parcelList ul.parcels li.active {
     background: #f1f1f1;
     border-radius: 0.5rem;
     cursor: pointer;
   }
 
-  div#list ul.parcels li ul.parcel {
+  div#parcelList ul.parcels li ul.parcel {
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
@@ -179,7 +179,7 @@ export default {
     text-align: center;
   }
 
-  div#list ul.parcels li ul.parcel li.image {
+  div#parcelList ul.parcels li ul.parcel li.image {
     display: inline-block;
     font-size: 1.3em;
     width: 3.5rem;
@@ -191,18 +191,18 @@ export default {
     color: #176c9d;
   }
 
-  div#list ul.parcels li ul.parcel li ul li.number,
-  div#list ul.parcels li ul.parcel li ul li.created {
+  div#parcelList ul.parcels li ul.parcel li ul li.number,
+  div#parcelList ul.parcels li ul.parcel li ul li.created {
     font-size: 0.9em;
     font-weight: 400;
     color: #000000;
   }
 
-  div#list ul.parcels li ul.parcel li.category {
+  div#parcelList ul.parcels li ul.parcel li.category {
     padding: 1rem;
   }
 
-  div#list ul.parcels li ul.parcel li.category svg {
+  div#parcelList ul.parcels li ul.parcel li.category svg {
     font-size: 1.3em;
     color: #176c9d;
   }
