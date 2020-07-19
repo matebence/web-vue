@@ -18,7 +18,7 @@
           :class="{valid: !$v.form.values.receiver.name.$error && $v.form.values.receiver.name.$dirty, invalid: $v.form.values.receiver.name.$error}">
         <div id="autocomplete">
           <ul>
-            <li v-for="user in users.data.search" v-bind:key="user.userId" v-if="user.accountId !== signIn.data.accountId" :data-userId="user.userId" @click.prevent="autoCompletedSelected($event.target)">{{user.firstName}} {{user.lastName}}</li>
+            <li v-for="user in autoComplete.client" v-bind:key="user.userId" v-if="user.accountId !== signIn.data.accountId" :data-userId="user.userId" @click.prevent="selectReceiver($event.target)">{{user.firstName}} {{user.lastName}}</li>
           </ul>
         </div>
         <small
@@ -185,6 +185,14 @@ export default {
   beforeMount: function () {
     return this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
   },
+  data: function () {
+    return {
+      autoComplete: {
+        client: {
+        }
+      }
+    }
+  },
   validations: {
     form: {
       values: {
@@ -234,19 +242,24 @@ export default {
     ...mapGetters({
       categories: types.GETTER_CATEGORY_DEFAULT,
       parcel: types.GETTER_PARCEL_DEFAULT,
-      signIn: types.GETTER_SIGN_IN_DEFAULT,
-      users: types.GETTER_USER_DEFAULT
+      signIn: types.GETTER_SIGN_IN_DEFAULT
     })
   },
   methods: {
     autoCompleteReceiver: function ($event) {
+      if ($event.length === 0) return this.searchCourier({roles: process.env.APP_ROLE_CLIENT})
       if ($event.length < 3) return
-      return this.$store.dispatch(types.ACTION_USER_SEARCH, {firstName: $event, roles: process.env.APP_ROLE_CLIENT})
+      return this.searchReceiver({firstName: $event, roles: process.env.APP_ROLE_CLIENT})
     },
-    autoCompletedSelected: function ($event) {
+    searchReceiver: function (obj) {
+      return this.$store.dispatch(types.ACTION_USER_SEARCH, {...obj}).then(result => {
+        this.autoComplete.client = result
+      })
+    },
+    selectReceiver: function ($event) {
       this.form.values.receiver.userId = $event.dataset.userid
       this.form.values.receiver.name = $event.textContent
-      return this.$store.commit(types.MUTATIONS_CLEAR_USER_DATA, {})
+      this.autoComplete.client = {}
     },
     onCreate: function () {
       if (this.form.values.id === undefined) {
@@ -263,7 +276,7 @@ export default {
             }]
           }
         })
-        return this.$emit('parcelCreated', {component: 'app-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
+        return this.$emit('parcelCreated', {component: 'app-parcel-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
       }
     },
     onUpdate: function () {
@@ -280,7 +293,7 @@ export default {
             }]
           }
         })
-        return this.$emit('parcelCreated', {component: 'app-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
+        return this.$emit('parcelCreated', {component: 'app-parcel-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
       }
     }
   }
