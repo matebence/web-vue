@@ -2,10 +2,13 @@
   <div id="parcel">
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
-        <app-manage @selectedParcel="selectedParcelId = $event"></app-manage>
+        <app-manage
+          @selectedParcel="selectedParcelId = $event"/>
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
-        <app-courier :selectedParcelId="selectedParcelId"></app-courier>
+        <app-courier
+          :selectedParcelId="selectedParcelId"/>
+        <app-here-map />
       </div>
     </div>
   </div>
@@ -14,6 +17,7 @@
 <script>
 import courier from '@/components/dashboard/child/parcel/courier'
 import manage from '@/components/dashboard/child/parcel/manage'
+import hereMap from '@/components/dashboard/child/parcel/hereMap'
 
 export default {
   name: 'parcel',
@@ -24,7 +28,8 @@ export default {
   },
   components: {
     appCourier: courier,
-    appManage: manage
+    appManage: manage,
+    appHereMap: hereMap
   }
 }
 </script>
@@ -49,6 +54,8 @@ export default {
     border-bottom-left-radius: 3rem;
     border: 0.5rem #f1f1f1 solid;
     background: #ffffff;
+    padding: 0;
+    height: 98vh;
   }
 
   @media (max-width: 992px) {

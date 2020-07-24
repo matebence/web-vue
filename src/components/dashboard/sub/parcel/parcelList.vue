@@ -97,7 +97,7 @@ export default {
   methods: {
     selectedOption: function (el) {
       this.activeEl.parcels.parcelId = 0
-      this.activeEl.tabs.tabId = el.id
+      this.activeEl.tabs.tabId = el.itemId
       this.activeEl.tabs.value = el.value
 
       if (this.activeEl.tabs.value === this.tab.items[0].value) {

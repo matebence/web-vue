@@ -38,23 +38,20 @@
           selectedComponent = $event.component;
           selectedIcon = $event.icon;
           components.activeEl.tabs.tabId = $event.nav.id;
-          components.activeEl.tabs.value = $event.nav.value;">
-      </component>
+          components.activeEl.tabs.value = $event.nav.value;"/>
     </keep-alive>
     <app-modal
       :modalId="'parcelAlert'"
       :text="components.appModal.text"
       :title="components.appModal.title"
-      :button="components.appModal.button">
-    </app-modal>
+      :button="components.appModal.button"/>
     <app-confirm
       @confirmed="removeParcel($event)"
       :confirmId="'parcelConfirm'"
       :text="components.appConfirm.text"
       :title="components.appConfirm.title"
       :positiveButton="components.appConfirm.positiveButton"
-      :negativeButton="components.appConfirm.negativeButton">
-    </app-confirm>
+      :negativeButton="components.appConfirm.negativeButton"/>
   </div>
 </template>
 

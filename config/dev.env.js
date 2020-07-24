@@ -14,5 +14,6 @@ module.exports = merge(prodEnv, {
   APP_ROLE_COURIER: '"ROLE_COURIER"',
 
   CLIENT_ID: '"8de4dc56-6e96-11ea-bc55-0242ac130003"',
-  CLIENT_SECRET: '"04ed73c86f2d48e9789fa2d2bae6acf78bcd9b431d676e5f6d9c9c9a28de29a3"'
+  CLIENT_SECRET: '"04ed73c86f2d48e9789fa2d2bae6acf78bcd9b431d676e5f6d9c9c9a28de29a3"',
+  HERE_JS_SDK_API: '"cg148a7i1R6OXqhpPmkHUBvCr07I-qJKX_Cf2qpo_KU"'
 })

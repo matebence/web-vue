@@ -13,8 +13,7 @@
             <keep-alive>
               <component
                 :is="component"
-                @loadComponent="component=$event">
-              </component>
+                @loadComponent="component=$event"/>
             </keep-alive>
           </transition>
         </div>

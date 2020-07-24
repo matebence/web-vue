@@ -1,6 +1,6 @@
 <template>
   <div id="courier">
-    <h1>Kuriéry</h1>
+    <h1>Kuriéri</h1>
     <form class="search">
       <input
         type="text"
@@ -8,14 +8,16 @@
         placeholder="Meno kuriéra"
         v-model="components.search.name"
         @input="autoCompleteCourier($event.target.value)">
-      <button type="submit" class="searchButton">
+      <button
+        @click.prevent="searchCourier({firstName: components.search.courier[0].firstName})"
+        type="submit"
+        class="searchButton">
         <i class="fa fa-search"></i>
       </button>
     </form>
     <app-courier-list
       :search="components.search"
-      :selectedParcelId="selectedParcelId">
-    </app-courier-list>
+      :selectedParcelId="selectedParcelId"/>
   </div>
 </template>
 
@@ -53,10 +55,10 @@ export default {
       this.components.search.activeEl.courierId = 0
       if ($event.length === 0) return this.searchCourier({roles: process.env.APP_ROLE_COURIER})
       if ($event.length < 3) return
-      return this.searchCourier({firstName: $event, roles: process.env.APP_ROLE_COURIER})
+      return this.searchCourier({firstName: $event})
     },
     searchCourier: function (obj) {
-      return this.$store.dispatch(types.ACTION_USER_SEARCH, {...obj}).then(result => {
+      return this.$store.dispatch(types.ACTION_USER_SEARCH, {roles: process.env.APP_ROLE_COURIER, ...obj}).then(result => {
         this.components.search.courier = result
       })
     }
@@ -65,8 +67,13 @@ export default {
 </script>
 
 <style scoped>
+  div#courier {
+    height: 29.5vh;
+  }
+
   div#courier h1 {
     margin-top: 1em;
+    margin-left: 0.5em;
     font-size: 2em;
     display: inline-block;
   }
@@ -111,11 +118,23 @@ export default {
     background: #187fb1;
   }
 
-  @media (max-width: 370px) {
+  @media (max-width: 1440px) {
+    div#courier {
+      height: 34.5vh;
+    }
+  }
+
+  @media (max-width: 400px) {
+    div#courier {
+      height: 40.5vh;
+    }
+
     div#courier form.search {
       margin-top: 2rem;
+      margin-left: 1.5rem;
       position: relative;
-      left: calc(50% - (10rem / 2));
+      display: flex;
+      justify-content: center;
     }
   }
 </style>

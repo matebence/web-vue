@@ -16,8 +16,7 @@
       :modalId="'courierAlert'"
       :text="components.appModal.text"
       :title="components.appModal.title"
-      :button="components.appModal.button">
-    </app-modal>
+      :button="components.appModal.button"/>
   </div>
 </template>
 
@@ -61,6 +60,8 @@ export default {
 <style scoped>
   div#courierList ul.couriers {
     margin-top: 2rem;
+    margin-left: 0.5em;
+    margin-bottom: 0.5em;
     display: flex;
     flex-direction: row;
     text-align: center;
