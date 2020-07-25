@@ -1,20 +1,33 @@
 <template>
   <div id="hereMap">
-    <div id="map" ref="map" style="width: 100%; height: 100%">
+    <div id="map" ref="map">
       <form>
         <div class="form-group">
-          <input type="text" class="form-control" id="from" placeholder="Odkiaľ">
+          <input
+            v-model="form.from.value"
+            type="text"
+            class="form-control"
+            id="from"
+            placeholder="Odkiaľ">
         </div>
         <div class="form-group">
-          <input type="text" class="form-control" id="to" placeholder="Kam">
+          <input
+            v-model="form.to.value"
+            type="text"
+            class="form-control"
+            id="to"
+            placeholder="Kam">
         </div>
-        <button type="submit" class="btn btn-primary">Potvrdiť</button>
+        <button
+          @click.prevent="visualizeOnMap"
+          type="submit"
+          class="btn btn-primary">Potvrdiť</button>
       </form>
       <div id="summary">
         <ul>
-          <li><span>Dľžka:</span> 90km</li>
-          <li><span>Čas:</span> 1h41m</li>
-          <li><span>Cena:</span> 10,50€</li>
+          <li><span>Dľžka:</span> {{summary.length}}</li>
+          <li><span>Čas:</span> {{summary.time}}</li>
+          <li><span>Cena:</span> {{summary.price}}</li>
         </ul>
       </div>
     </div>
@@ -34,108 +47,127 @@ export default {
     })
   },
   mounted: function () {
-    this.map = new H.Map(
-      this.$refs.map,
-      this.platform.createDefaultLayers().raster.normal.map, {zoom: 8, center: {lng: 19.7508084, lat: 48.62366}}
-    )
-    const mapEvents = new H.mapevents.MapEvents(this.map)
-    new H.mapevents.Behavior(mapEvents)
-
-    function geocode(platform) {
-      var geocoder = platform.getSearchService(),
-        geocodingParameters = {
-          q: 'Nitra'
-        };
-
-      geocoder.geocode(
-        geocodingParameters,
-        onSuccess,
-        onError
-      );
-    }
-    function onError(error) {
-      alert('Can\'t reach the remote server');
-    }
-
-    function onSuccess(result) {
-      var locations = result.items;
-      console.log(locations)
-      /*
-       * The styling of the geocoding response on the map is entirely under the developer's control.
-       * A representitive styling can be found the full JS + HTML code of this example
-       * in the functions below:
-       */
-      // ... etc.
-    }
-
-    geocode(this.platform)
-      const routingParameters = {
-      routingMode: 'fast',
-      transportMode: 'car',
-      origin: '48.134650,17.112390',
-      destination: '48.308647,18.053315',
-      return: 'polyline,turnByTurnActions,actions,instructions,travelSummary'
-    }
-
-    const onResult = (result) => {
-      if (result.routes.length) {
-        var route = result.routes[0]
-        let duration = 0,
-          distance = 0;
-        route.sections.forEach((section) => {
-          distance += section.travelSummary.length;
-          duration += section.travelSummary.duration;
-        });
-        console.log(duration)
-        console.log(distance)
-
-        result.routes[0].sections.forEach(section => {
-          let linestring = H.geo.LineString.fromFlexiblePolyline(section.polyline)
-          const routeLine = new H.map.Group()
-          const pngIcon = new H.map.Icon(bleskMarker)
-          const startMarker = new H.map.Marker(section.departure.place.location, {
-            icon: pngIcon
-          })
-          let endMarker = new H.map.Marker(section.arrival.place.location, {
-            icon: pngIcon
-          })
-
-          const routeOutline = new H.map.Polyline(linestring, {
-            style: {
-              lineWidth: 10,
-              strokeColor: 'rgb(23, 108, 157)',
-              lineTailCap: 'arrow-tail',
-              lineHeadCap: 'arrow-head'
-            }
-          })
-
-          const routeArrows = new H.map.Polyline(linestring, {
-            style: {
-              lineWidth: 10,
-              fillColor: 'white',
-              strokeColor: 'rgb(255, 255, 255, 1)',
-              lineDash: [0, 2],
-              lineTailCap: 'arrow-tail',
-              lineHeadCap: 'arrow-head'
-            }
-          })
-
-          this.map.addObjects([routeLine, startMarker, endMarker])
-          routeLine.addObjects([routeOutline, routeArrows])
-          this.map.getViewModel().setLookAtData({bounds: routeLine.getBoundingBox()})
-        })
-      }
-    }
-
-    const router = this.platform.getRoutingService(null, 8)
-    router.calculateRoute(routingParameters, onResult, function (error) { console.log(error) })
-    router.calculateRoute(routingParameters, function (success) { console.log(success) })
+    const defaultLayers = this.platform.createDefaultLayers().raster.normal.map
+    this.map = new H.Map(this.$refs.map, defaultLayers, {...this.here.slovakia})
+    new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map))
   },
   name: 'hereMap',
   data: function () {
     return {
-      map: {},
-      platform: {}
+      map: {
+      },
+      platform: {
+      },
+      form: {
+        from: {
+          value: null,
+          geo: {
+            lat: 0,
+            lng: 0
+          }
+        },
+        to: {
+          value: null,
+          geo: {
+            lat: 0,
+            lng: 0
+          }
+        }
+      },
+      summary: {
+        length: '0km',
+        time: '0m 0s',
+        price: '0.00 €'
+      },
+      here: {
+        slovakia: {
+          zoom: 8,
+          center: {
+            lng: 19.7508084,
+            lat: 48.62366
+          }
+        },
+        routingConfiguration: {
+          routingMode: 'fast',
+          transportMode: 'car',
+          return: 'polyline,turnByTurnActions,actions,instructions,travelSummary'
+        },
+        outline: {
+          style: {
+            lineWidth: 10,
+            strokeColor: 'rgb(23, 108, 157)',
+            lineTailCap: 'arrow-tail',
+            lineHeadCap: 'arrow-head'
+          }
+        },
+        arrows: {
+          style: {
+            lineWidth: 10,
+            fillColor: 'white',
+            strokeColor: 'rgb(255, 255, 255, 1)',
+            lineDash: [0, 2],
+            lineTailCap: 'arrow-tail',
+            lineHeadCap: 'arrow-head'
+          }
+        }
+      }
+    }
+  },
+  methods: {
+    geoCode: function (coordinates) {
+      const searchService = this.platform.getSearchService()
+      let isLast = Object.keys(this.form).length
+      for (const item in this.form) {
+        const geocodingParameters = {q: this.form[item].value}
+        searchService.geocode(geocodingParameters, onSuccess => {
+          const position = onSuccess.items.pop().position
+          this.form[item].geo = {...position}
+          if (!--isLast) coordinates(this.form)
+        }, onError => { console.log(onError) })
+      }
+    },
+    visualizeOnMap: function () {
+      return this.geoCode(coordinates => {
+        this.here.routingConfiguration = {
+          ...this.here.routingConfiguration,
+          origin: `${coordinates.from.geo.lat},${coordinates.from.geo.lng}`,
+          destination: `${coordinates.to.geo.lat},${coordinates.to.geo.lng}`
+        }
+        const router = this.platform.getRoutingService(null, 8)
+        router.calculateRoute(this.here.routingConfiguration, this.drawRoute, onError => { console.log(onError) })
+      })
+    },
+    drawRoute: function (result) {
+      if (result.routes.length) {
+        const group = new H.map.Group()
+        const markerIcon = new H.map.Icon(bleskMarker)
+
+        result = result.routes.pop()
+        this.removePreviousRoutes()
+
+        result.sections.forEach(section => {
+          const polyline = H.geo.LineString.fromFlexiblePolyline(section.polyline)
+
+          const start = new H.map.Marker(section.departure.place.location, {icon: markerIcon})
+          const destination = new H.map.Marker(section.arrival.place.location, {icon: markerIcon})
+
+          const outline = new H.map.Polyline(polyline, {...this.here.outline})
+          const arrows = new H.map.Polyline(polyline, {...this.here.arrows})
+
+          this.map.addObjects([group, start, destination])
+          group.addObjects([outline, arrows])
+
+          this.calculateSummury(section)
+          return this.map.getViewModel().setLookAtData({bounds: group.getBoundingBox()}, true)
+        })
+      }
+    },
+    removePreviousRoutes: function () {
+      return this.map.getObjects().forEach(e => this.map.removeObject(e))
+    },
+    calculateSummury: function (result) {
+      this.summary.time = `${Math.floor(Number(result.travelSummary.duration) / 60)}min ${(Number(result.travelSummary.duration) % 60)}sec`
+      this.summary.length = (`${parseFloat(Number(result.travelSummary.length) / 1000).toFixed(2)}km`)
     }
   }
 }
@@ -150,6 +182,8 @@ export default {
   }
 
   div#hereMap div#map {
+    width: 100%;
+    height: 100%;
     position: relative;
   }
 
