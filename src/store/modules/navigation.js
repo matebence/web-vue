@@ -44,9 +44,9 @@ const mutations = {
     }
   },
 
-  [types.MUTATIONS_CLEAR_USER_ERRORS]: function (state, data) {
-    state.payload.user = {
-      ...state.payload.user,
+  [types.MUTATIONS_CLEAR_NAVIGATION_ERRORS]: function (state, data) {
+    state.payload.navigation = {
+      ...state.payload.navigation,
       error: {
         is: false,
         message: null,
