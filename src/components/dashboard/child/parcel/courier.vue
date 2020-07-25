@@ -118,7 +118,7 @@ export default {
     background: #187fb1;
   }
 
-  @media (max-width: 1440px) {
+  @media (max-width: 1500px) {
     div#courier {
       height: 34.5vh;
     }

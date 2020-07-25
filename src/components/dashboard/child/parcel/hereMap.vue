@@ -21,7 +21,7 @@
         <button
           @click.prevent="visualizeOnMap"
           type="submit"
-          class="btn btn-primary">Potvrdiť</button>
+          class="btn btn-primary">Hľadať</button>
       </form>
       <div id="summary">
         <ul>
@@ -29,6 +29,11 @@
           <li><span>Čas:</span> {{summary.time}}</li>
           <li><span>Cena:</span> {{summary.price}}</li>
         </ul>
+      </div>
+      <div id="finish">
+        <button
+          type="submit"
+          class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
       </div>
     </div>
   </div>
@@ -211,7 +216,7 @@ export default {
     margin-right: 0.5rem;
   }
 
-  div#hereMap div#map form button {
+  div#hereMap div#map form button, div#hereMap div#map div#finish button {
     background: #176c9d;
     font-size: 0.8em;
     text-align: center;
@@ -222,7 +227,7 @@ export default {
     font-size: 0.9em;
   }
 
-  div#hereMap div#map form button:hover {
+  div#hereMap div#map form button:hover, div#hereMap div#map div#finish button:hover {
     background: #187fb1;
   }
 
@@ -231,6 +236,18 @@ export default {
     font-size: 0.8em;
     border-radius: 3rem;
     outline: none;
+  }
+
+  div#hereMap div#map div#finish {
+    z-index: 2;
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+  }
+
+  div#hereMap div#map div#finish button {
+    width: 3rem;
+    height: 3rem;
   }
 
   div#hereMap div#map div#summary {
@@ -264,7 +281,7 @@ export default {
     font-size: 1.3em;
   }
 
-  @media (max-width: 1440px) {
+  @media (max-width: 1500px) {
     div#hereMap {
       height: 62vh;
     }
@@ -293,9 +310,10 @@ export default {
   @media (max-width: 1100px) {
     div#hereMap {
       border: none;
+      border-top: solid 0.08rem black;
     }
 
-    div#hereMap form {
+    div#hereMap div#map form {
       width: 100%;
       border: none;
     }
@@ -312,10 +330,6 @@ export default {
   }
 
   @media (max-width: 640px) {
-    div#hereMap div#map form {
-      width: 70%;
-    }
-
     div#hereMap div#map form div.form-group {
       display: block;
     }

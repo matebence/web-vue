@@ -64,7 +64,7 @@ const mutations = {
     }
   },
 
-  [types.MUTATIONS_CLEAR_NAVIGATION_ERRORS]: function (state, data) {
+  [types.MUTATIONS_CLEAR_USER_ERRORS]: function (state, data) {
     state.payload.user = {
       ...state.payload.user,
       error: {
