@@ -53,7 +53,7 @@
             class="spinner-border spinner-border-sm"
             role="status"
             aria-hidden="true"
-            v-show="!signIn.done">
+            v-show="!signInDone">
           </span>&nbsp;Prihlásiť sa
         </button>
       </form>
@@ -68,9 +68,9 @@
         Zaregistrovať sa teraz
       </a>
       <app-alert
-        :type="[signIn.error.is || signOut.error.is ? 'alert-danger' : 'alert-success']"
-        :condition="[signIn.error.message !== null, signOut.error.message !== null]"
-        :content="[signIn.error.message, signOut.error.message]"/>
+        :type="[signInError.is || signOutError.is ? 'alert-danger' : 'alert-success']"
+        :condition="[signInError.message !== null, signOutError.message !== null]"
+        :content="[signInError.message, signOutError.message]"/>
     </div>
   </div>
 </template>
@@ -117,8 +117,10 @@ export default {
   },
   computed: {
     ...mapGetters({
-      signIn: types.GETTER_SIGN_IN_DEFAULT,
-      signOut: types.GETTER_SIGN_OUT_DEFAULT
+      signInError: types.GETTER_SIGN_IN_ERROR,
+      signInDone: types.GETTER_SIGN_IN_DONE,
+      signOutError: types.GETTER_SIGN_OUT_ERROR,
+      signOutDone: types.GETTER_SIGN_OUT_DONE
     })
   },
   methods: {
@@ -127,8 +129,8 @@ export default {
       return this.$router.push({path: $event.replace('app-', '')})
     },
     onSignIn: function () {
-      this.signIn.error.message = null
-      this.signIn.error.is = false
+      this.signInError.message = null
+      this.signInError.is = false
 
       return this.$store.dispatch(types.ACTION_SIGN_IN, {
         grantType: process.env.GRANT_TYPE_PASSWORD,

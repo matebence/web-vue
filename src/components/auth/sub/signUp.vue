@@ -19,7 +19,7 @@
           <small
             id="userNameInvalid"
             class="form-text text-muted"
-            v-show="signUp.error.reason.userName !== null">{{signUp.error.reason.userName}}</small>
+            v-show="signUpError.reason.userName !== null">{{signUpError.reason.userName}}</small>
         </div>
         <div class="form-group">
           <label
@@ -37,7 +37,7 @@
           <small
             id="emailInvalid"
             class="form-text text-muted"
-            v-show="signUp.error.reason.email !== null">{{signUp.error.reason.email}}</small>
+            v-show="signUpError.reason.email !== null">{{signUpError.reason.email}}</small>
         </div>
         <div class="form-group">
           <label
@@ -56,7 +56,7 @@
           <small
             id="passwordInvalid"
             class="form-text text-muted"
-            v-show="signUp.error.reason.password !== null">{{signUp.error.reason.password}}</small>
+            v-show="signUpError.reason.password !== null">{{signUpError.reason.password}}</small>
         </div>
         <div class="form-group">
           <label
@@ -75,7 +75,7 @@
           <small
             id="confirmPasswordInvalid"
             class="form-text text-muted"
-            v-show="signUp.error.reason.password !== null">{{signUp.error.reason.password}}</small>
+            v-show="signUpError.reason.password !== null">{{signUpError.reason.password}}</small>
         </div>
         <div class="form-group">
           <label
@@ -107,14 +107,14 @@
             class="spinner-border spinner-border-sm"
             role="status"
             aria-hidden="true"
-            v-show="!signUp.done">
+            v-show="!signUpDone">
           </span>&nbsp;Registrovať sa
         </button>
       </form>
       <app-alert
-        :type="[signUp.error.is || activationToken.error.is ? 'alert-danger' : 'alert-success']"
-        :condition="[signUp.error.message !== null, activationToken.error.message !== null]"
-        :content="[signUp.error.message, activationToken.error.message]"/>
+        :type="[signUpError.is || activationTokenError.is ? 'alert-danger' : 'alert-success']"
+        :condition="[signUpError.message !== null, activationTokenError.message !== null]"
+        :content="[signUpError.message, activationTokenError.message]"/>
     </div>
   </div>
 </template>
@@ -185,8 +185,10 @@ export default {
   },
   computed: {
     ...mapGetters({
-      signUp: types.GETTER_SIGN_UP_DEFAULT,
-      activationToken: types.GETTER_ACCOUNT_ACTIVATION_DEFAULT
+      signUpError: types.GETTER_SIGN_UP_ERROR,
+      signUpDone: types.GETTER_SIGN_UP_DONE,
+      activationTokenError: types.GETTER_ACCOUNT_ACTIVATION_ERROR,
+      activationTokenDone: types.GETTER_ACCOUNT_ACTIVATION_DONE
     })
   },
   methods: {
@@ -200,8 +202,8 @@ export default {
         key: this.url.values.key})
     },
     onSignUp: function () {
-      this.signUp.error.message = this.activationToken.error.message = null
-      this.signUp.error.is = this.activationToken.error.is = false
+      this.signUpError.message = this.activationTokenError.message = null
+      this.signUpError.is = this.activationTokenError.is = false
 
       return this.$store.dispatch(types.ACTION_SIGN_UP, {
         userName: this.form.values.userName,

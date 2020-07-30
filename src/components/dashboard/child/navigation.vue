@@ -21,7 +21,7 @@
       </ul>
       <ul class="sub-items">
         <li>
-          <a href="#" :data-letters="nav.data.loggedAccount.avatar"></a>
+          <a href="#" :data-letters="avatar"></a>
         </li>
         <li class="settings">
           <a href="#">
@@ -40,9 +40,6 @@ import * as types from '@/store/types'
 
 export default {
   name: 'navigation',
-  created: function () {
-    return this.$store.dispatch(types.ACTION_NAVIGATION_AVATAR, {})
-  },
   data: function () {
     return {
       navigation: {
@@ -103,10 +100,11 @@ export default {
     }
   },
   computed: {
+    avatar: function () {
+      return localStorage.getItem('avatar')
+    },
     ...mapGetters({
-      signIn: types.GETTER_SIGN_IN_DEFAULT,
-      user: types.GETTER_USER_DEFAULT,
-      nav: types.GETTER_NAVIGATION_DEFAULT
+      signIn: types.GETTER_SIGN_IN_DATA
     })
   },
   methods: {
@@ -116,7 +114,7 @@ export default {
 
       if (this.navigation.activeEl.nav.value === this.navigation.items[4].value) {
         return this.$store.dispatch(types.ACTION_SIGN_OUT, {
-          accessToken: this.signIn.data.accessToken
+          accessToken: this.signIn.accessToken
         })
       }
     }

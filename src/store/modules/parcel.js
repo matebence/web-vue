@@ -185,6 +185,7 @@ const actions = {
           },
           done: true
         })
+        return new Error(parsed.message)
       })
     })
   },
@@ -226,6 +227,7 @@ const actions = {
           },
           done: true
         })
+        return new Error(parsed.message)
       })
     })
   },
@@ -258,18 +260,39 @@ const actions = {
           },
           done: true
         })
+        return new Error(parsed.message)
       })
     })
   }
 }
 
 const getters = {
-  [types.GETTER_PARCEL_DEFAULT]: function (state) {
-    return state.payload.parcel
+  [types.GETTER_PARCEL_DATA_CREATE]: function (state) {
+    return state.payload.parcel.data.create
   },
 
-  [types.GETTER_CATEGORY_DEFAULT]: function (state) {
-    return state.payload.category
+  [types.GETTER_PARCEL_DATA_SEARCH]: function (state) {
+    return state.payload.parcel.data.search
+  },
+
+  [types.GETTER_PARCEL_DONE]: function (state) {
+    return state.payload.parcel.done
+  },
+
+  [types.GETTER_PARCEL_ERROR]: function (state) {
+    return state.payload.parcel.error
+  },
+
+  [types.GETTER_CATEGORY_DATA_GET_ALL]: function (state) {
+    return state.payload.category.data.getAll
+  },
+
+  [types.GETTER_CATEGORY_DONE]: function (state) {
+    return state.payload.category.done
+  },
+
+  [types.GETTER_CATEGORY_ERROR]: function (state) {
+    return state.payload.category.error
   }
 }
 

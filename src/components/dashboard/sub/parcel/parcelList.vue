@@ -11,7 +11,7 @@
       <li
         v-bind:key="item.id"
         @click.prevent="selectedParcel(item)"
-        v-for="item in parcel.data.search"
+        v-for="item in parcelSearch"
         v-show="activeEl.tabs.value === tab.items[0].value || activeEl.tabs.value === tab.items[2].value"
         :class="{active: activeEl.parcels.parcelId === item.id}">
         <ul class="parcel">
@@ -33,7 +33,7 @@
       <li
         v-bind:key="item.id"
         @click.prevent="selectedParcel(item)"
-        v-for="item in parcel.data.create"
+        v-for="item in parcelCreate"
         v-show="activeEl.tabs.value === tab.items[1].value || activeEl.tabs.value === tab.items[2].value"
         :class="{active: activeEl.parcels.parcelId === item.id}">
         <ul class="parcel">
@@ -63,7 +63,7 @@ export default {
   name: 'parcelList',
   props: ['activeEl'],
   created: function () {
-    return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.data.accountId})
+    return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.accountId})
   },
   beforeMount: function () {
     return this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
@@ -90,8 +90,9 @@ export default {
   },
   computed: {
     ...mapGetters({
-      signIn: types.GETTER_SIGN_IN_DEFAULT,
-      parcel: types.GETTER_PARCEL_DEFAULT
+      signIn: types.GETTER_SIGN_IN_DATA,
+      parcelSearch: types.GETTER_PARCEL_DATA_SEARCH,
+      parcelCreate: types.GETTER_PARCEL_DATA_CREATE
     })
   },
   methods: {
@@ -101,7 +102,7 @@ export default {
       this.activeEl.tabs.value = el.value
 
       if (this.activeEl.tabs.value === this.tab.items[0].value) {
-        return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.data.accountId})
+        return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.accountId})
       }
     },
     selectedParcel: function (el) {

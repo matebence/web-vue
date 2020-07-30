@@ -116,14 +116,60 @@ const actions = {
           },
           done: true
         })
+        return new Error(parsed.message)
+      })
+    })
+  },
+
+  [types.ACTION_USER_GET]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_USER_DATA, {done: false})
+    const resource = this._vm.$resource('{service}/api/users/{accountId}', {}, {
+      get: {method: 'GET', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
+    return resource.get({service: 'user-service', accountId: payload}).then(response => {
+      return response.json()
+    }).then(parsed => {
+      commit(types.MUTATION_USER_DATA, {
+        data: {
+          ...state.payload.user.data,
+          get: {
+            ...parsed
+          }
+        },
+        done: true
+      })
+      return state.payload.user.data.get
+    }).catch(err => {
+      err.json().then(parsed => {
+        commit(types.MUTATION_USER_DATA, {
+          error: {
+            is: parsed.error,
+            message: parsed.message,
+            from: 'search',
+            reason: {}
+          },
+          done: true
+        })
+        return new Error(parsed.message)
       })
     })
   }
 }
 
 const getters = {
-  [types.GETTER_USER_DEFAULT]: function (state) {
-    return state.payload.user
+  [types.GETTER_USER_DATA_SEARCH]: function (state) {
+    return state.payload.user.data.search
+  },
+
+  [types.GETTER_USER_DATA_GET]: function (state) {
+    return state.payload.user.data.get
+  },
+
+  [types.GETTER_USER_DONE]: function (state) {
+    return state.payload.user.done
+  },
+
+  [types.GETTER_USER_ERROR]: function (state) {
+    return state.payload.user.error
   }
 }
 

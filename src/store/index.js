@@ -1,18 +1,22 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import parcel from './modules/parcel'
-import user from './modules/user'
 import authorization from './modules/authorization'
-import navigation from './modules/navigation'
+import preferences from './modules/preferences'
+import shipment from './modules/shipment'
+import parcel from './modules/parcel'
+import place from './modules/place'
+import user from './modules/user'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
     authorization,
-    navigation,
+    preferences,
+    shipment,
     parcel,
+    place,
     user
   }
 })

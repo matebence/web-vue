@@ -293,6 +293,21 @@ const actions = {
     }, payload.expirationTime * 1000)
   },
 
+  [types.ACTION_SETUP_AVATAR]: function ({commit, dispatch, state, rootState}, payload) {
+    if (localStorage.getItem('avatar') === null) {
+      localStorage.setItem('avatar', `${payload.firstName.substr(0, 1)}${payload.lastName.substr(0, 1)}`)
+    }
+    return localStorage.getItem('avatar')
+  },
+
+  [types.ACTION_CHECK_PROFILE]: function ({commit, dispatch, state, rootState}, payload) {
+    dispatch(types.ACTION_USER_GET, rootState.authorization.payload.signIn.data.accountId).then(result => {
+      return dispatch(types.ACTION_SETUP_AVATAR, {...result})
+    }).catch(err => {
+      return console.log(`${err} presmeruj na user profil setup screen`)
+    })
+  },
+
   [types.ACTION_AUTO_SIGN_IN]: function ({commit, dispatch, state, rootState}, payload) {
     const data = localStorage.getItem('accountData')
     if (!data) return
@@ -307,6 +322,7 @@ const actions = {
       },
       done: true
     })
+    dispatch(types.ACTION_CHECK_PROFILE)
     router.push({path: '/dashboard/parcel'})
   },
 
@@ -338,6 +354,7 @@ const actions = {
       localStorage.setItem('accountData', JSON.stringify(accountData))
       localStorage.setItem('expirationDate', new Date(new Date().getTime() + parsed.expires_in * 1000))
 
+      dispatch(types.ACTION_CHECK_PROFILE)
       dispatch(types.ACTION_START_AUTH_TIMER, {expirationTime: parsed.expires_in})
       router.push({path: '/dashboard/parcel'})
       return state.payload.signIn.data
@@ -352,6 +369,7 @@ const actions = {
           },
           done: true
         })
+        return new Error(parsed.message)
       })
     })
   },
@@ -396,6 +414,7 @@ const actions = {
           },
           done: true
         })
+        return new Error(parsed.message)
       })
     })
   },
@@ -430,6 +449,7 @@ const actions = {
           },
           done: true
         })
+        return new Error(parsed.message)
       })
     })
   },
@@ -468,6 +488,7 @@ const actions = {
           },
           done: true
         })
+        return new Error(parsed.message)
       })
     })
   },
@@ -498,6 +519,7 @@ const actions = {
           },
           done: true
         })
+        return new Error(parsed.message)
       })
     })
   },
@@ -525,6 +547,7 @@ const actions = {
             }
           }
         })
+        return new Error(parsed.message)
       })
     })
   },
@@ -552,16 +575,13 @@ const actions = {
             }
           }
         })
+        return new Error(parsed.message)
       })
     })
   }
 }
 
 const getters = {
-  [types.GETTER_SIGN_IN_DEFAULT]: function (state) {
-    return state.payload.signIn
-  },
-
   [types.GETTER_SIGN_IN_IS_AUTH]: function (state) {
     return state.payload.signIn.data.accessToken !== null
   },
@@ -570,24 +590,76 @@ const getters = {
     return state.payload.signIn.data.authorities
   },
 
-  [types.GETTER_SIGN_UP_DEFAULT]: function (state) {
-    return state.payload.signUp
+  [types.GETTER_SIGN_IN_DATA]: function (state) {
+    return state.payload.signIn.data
   },
 
-  [types.GETTER_SIGN_OUT_DEFAULT]: function (state) {
-    return state.payload.signOut
+  [types.GETTER_SIGN_IN_DONE]: function (state) {
+    return state.payload.signIn.done
   },
 
-  [types.GETTER_FORGET_PASSWORD_DEFAULT]: function (state) {
-    return state.payload.forgetPassword
+  [types.GETTER_SIGN_IN_ERROR]: function (state) {
+    return state.payload.signIn.error
   },
 
-  [types.GETTER_ACCOUNT_RECOVER_DEFAULT]: function (state) {
-    return state.payload.recoverToken
+  [types.GETTER_SIGN_UP_DATA]: function (state) {
+    return state.payload.signUp.data
   },
 
-  [types.GETTER_ACCOUNT_ACTIVATION_DEFAULT]: function (state) {
-    return state.payload.activationToken
+  [types.GETTER_SIGN_UP_DONE]: function (state) {
+    return state.payload.signUp.done
+  },
+
+  [types.GETTER_SIGN_UP_ERROR]: function (state) {
+    return state.payload.signUp.error
+  },
+
+  [types.GETTER_SIGN_OUT_DATA]: function (state) {
+    return state.payload.signOut.data
+  },
+
+  [types.GETTER_SIGN_OUT_DONE]: function (state) {
+    return state.payload.signOut.done
+  },
+
+  [types.GETTER_SIGN_OUT_ERROR]: function (state) {
+    return state.payload.signOut.error
+  },
+
+  [types.GETTER_FORGET_PASSWORD_DATA]: function (state) {
+    return state.payload.forgetPassword.data
+  },
+
+  [types.GETTER_FORGET_PASSWORD_DONE]: function (state) {
+    return state.payload.forgetPassword.done
+  },
+
+  [types.GETTER_FORGET_PASSWORD_ERROR]: function (state) {
+    return state.payload.forgetPassword.error
+  },
+
+  [types.GETTER_ACCOUNT_RECOVER_DATA]: function (state) {
+    return state.payload.recoverToken.data
+  },
+
+  [types.GETTER_ACCOUNT_RECOVER_DONE]: function (state) {
+    return state.payload.recoverToken.done
+  },
+
+  [types.GETTER_ACCOUNT_RECOVER_ERROR]: function (state) {
+    return state.payload.recoverToken.error
+  },
+
+  [types.GETTER_ACCOUNT_ACTIVATION_DATA]: function (state) {
+    return state.payload.activationToken.data
+  },
+
+  [types.GETTER_ACCOUNT_ACTIVATION_DONE]: function (state) {
+    return state.payload.activationToken.done
+  },
+
+  [types.GETTER_ACCOUNT_ACTIVATION_ERROR]: function (state) {
+    return state.payload.activationToken.error
   }
 }
 

@@ -18,13 +18,13 @@
           :class="{valid: !$v.form.values.receiver.name.$error && $v.form.values.receiver.name.$dirty, invalid: $v.form.values.receiver.name.$error}">
         <div id="autocomplete">
           <ul>
-            <li v-for="user in autoComplete.client" v-bind:key="user.userId" v-if="user.accountId !== signIn.data.accountId" :data-userId="user.userId" @click.prevent="selectReceiver($event.target)">{{user.firstName}} {{user.lastName}}</li>
+            <li v-for="user in autoComplete.client" v-bind:key="user.userId" v-if="user.accountId !== signIn.accountId" :data-userId="user.userId" @click.prevent="selectReceiver($event.target)">{{user.firstName}} {{user.lastName}}</li>
           </ul>
         </div>
         <small
           id="confirmPasswordInvalid"
           class="form-text text-muted"
-          v-show="parcel.error.reason.receiver !== null">{{parcel.error.reason.receiver}}</small>
+          v-show="parcelError.reason.receiver !== null">{{parcelError.reason.receiver}}</small>
       </div>
       <div class="form-group">
         <label
@@ -39,12 +39,12 @@
           @change="$v.form.values.category.$touch()"
           :class="{valid: !$v.form.values.category.$error && $v.form.values.category.$dirty, invalid: $v.form.values.category.$error}">
           <option value="null" disabled selected >Vyberte z možností</option>
-          <option v-for="category in categories.data.getAll" :value="category" v-bind:key="category.id">{{category.name}}</option>
+          <option v-for="category in categories" :value="category" v-bind:key="category.id">{{category.name}}</option>
         </select>
         <small
           id="categoryInvalid"
           class="form-text text-muted"
-          v-show="parcel.error.reason.categoryId !== null">{{parcel.error.reason.categoryId}}</small>
+          v-show="parcelError.reason.categoryId !== null">{{parcelError.reason.categoryId}}</small>
       </div>
       <div class="form-group">
         <label
@@ -64,7 +64,7 @@
         <small
           id="noteInvalid"
           class="form-text text-muted"
-          v-show="parcel.error.reason.note !== null">{{parcel.error.reason.note}}</small>
+          v-show="parcelError.reason.note !== null">{{parcelError.reason.note}}</small>
       </div>
       <div class="form-group">
         <label
@@ -82,7 +82,7 @@
         <small
           id="lengthInvalid"
           class="form-text text-muted"
-          v-show="parcel.error.reason.length !== null">{{parcel.error.reason.length}}</small>
+          v-show="parcelError.reason.length !== null">{{parcelError.reason.length}}</small>
       </div>
       <div class="form-group">
         <label
@@ -100,7 +100,7 @@
         <small
           id="widthInvalid"
           class="form-text text-muted"
-          v-show="parcel.error.reason.width !== null">{{parcel.error.reason.width}}</small>
+          v-show="parcelError.reason.width !== null">{{parcelError.reason.width}}</small>
       </div>
       <div class="form-group">
         <label
@@ -118,7 +118,7 @@
         <small
           id="heightInvalid"
           class="form-text text-muted"
-          v-show="parcel.error.reason.height !== null">{{parcel.error.reason.height}}</small>
+          v-show="parcelError.reason.height !== null">{{parcelError.reason.height}}</small>
       </div>
       <div class="form-group">
         <label
@@ -136,7 +136,7 @@
         <small
           id="weightInvalid"
           class="form-text text-muted"
-          v-show="parcel.error.reason.weight !== null">{{parcel.error.reason.weight}}</small>
+          v-show="parcelError.reason.weight !== null">{{parcelError.reason.weight}}</small>
       </div>
       <button
         type="submit"
@@ -148,7 +148,7 @@
           class="spinner-border spinner-border-sm"
           role="status"
           aria-hidden="true"
-          v-show="!parcel.done"></span>&nbsp;Vytvoriť
+          v-show="!parcelDone"></span>&nbsp;Vytvoriť
       </button>
       <button
         type="submit"
@@ -160,13 +160,13 @@
           class="spinner-border spinner-border-sm"
           role="status"
           aria-hidden="true"
-          v-show="!parcel.done"></span>&nbsp;Aktualizovať
+          v-show="!parcelDone"></span>&nbsp;Aktualizovať
       </button>
     </form>
     <app-alert
-      :type="[parcel.error.is ? 'alert-danger' : 'alert-success']"
-      :condition="[(parcel.error.message !== null && parcel.error.from === 'create')]"
-      :content="[parcel.error.message]"/>
+      :type="[parcelError.is ? 'alert-danger' : 'alert-success']"
+      :condition="[(parcelError.message !== null && parcelError.from === 'create')]"
+      :content="[parcelError.message]"/>
   </div>
 </template>
 
@@ -240,9 +240,11 @@ export default {
   },
   computed: {
     ...mapGetters({
-      categories: types.GETTER_CATEGORY_DEFAULT,
-      parcel: types.GETTER_PARCEL_DEFAULT,
-      signIn: types.GETTER_SIGN_IN_DEFAULT
+      categories: types.GETTER_CATEGORY_DATA_GET_ALL,
+      parcelCreate: types.GETTER_PARCEL_DATA_CREATE,
+      parcelDone: types.GETTER_PARCEL_DONE,
+      parcelError: types.GETTER_PARCEL_ERROR,
+      signIn: types.GETTER_SIGN_IN_DATA
     })
   },
   methods: {
@@ -263,15 +265,14 @@ export default {
     },
     onCreate: function () {
       if (this.form.values.id === undefined) {
-        this.parcel.error.message = null
-        this.parcel.error.is = false
+        this.parcelError.message = null
+        this.parcelError.is = false
 
         this.$store.commit(types.MUTATION_PARCEL_DATA, {
           data: {
-            ...this.parcel.data,
-            create: [...this.parcel.data.create, {
+            create: [...this.parcelCreate, {
               ...this.form.values,
-              sender: {senderId: this.signIn.data.accountId},
+              sender: {senderId: this.signIn.accountId},
               id: Date.now() * -1
             }]
           }
@@ -281,13 +282,12 @@ export default {
     },
     onUpdate: function () {
       if (this.form.values.id !== undefined) {
-        this.parcel.error.message = null
-        this.parcel.error.is = false
+        this.parcelError.message = null
+        this.parcelError.is = false
 
-        const data = this.parcel.data.create.filter(e => e.id !== this.form.values.id)
+        const data = this.parcelCreate.filter(e => e.id !== this.form.values.id)
         this.$store.commit(types.MUTATION_PARCEL_DATA, {
           data: {
-            ...this.parcel.data,
             create: [...data, {
               ...this.form.values
             }]

@@ -30,14 +30,14 @@
             class="spinner-border spinner-border-sm"
             role="status"
             aria-hidden="true"
-            v-show="!forgetPassword.done">
+            v-show="!forgetPasswordDone">
           </span>&nbsp;Odoslať
         </button>
       </form>
       <app-alert
-        :type="[forgetPassword.error.is || recoverToken.error.is ? 'alert-danger' : 'alert-success']"
-        :condition="[forgetPassword.error.message !== null, recoverToken.error.message !== null]"
-        :content="[forgetPassword.error.message, recoverToken.error.message]"/>
+        :type="[forgetPasswordError.is || recoverTokenError.is ? 'alert-danger' : 'alert-success']"
+        :condition="[forgetPasswordError.message !== null, recoverTokenError.message !== null]"
+        :content="[forgetPasswordError.message, recoverTokenError.message]"/>
     </div>
   </div>
 </template>
@@ -86,8 +86,10 @@ export default {
   },
   computed: {
     ...mapGetters({
-      forgetPassword: types.GETTER_FORGET_PASSWORD_DEFAULT,
-      recoverToken: types.GETTER_ACCOUNT_RECOVER_DEFAULT
+      forgetPasswordError: types.GETTER_FORGET_PASSWORD_ERROR,
+      forgetPasswordDone: types.GETTER_FORGET_PASSWORD_DONE,
+      recoverTokenError: types.GETTER_ACCOUNT_RECOVER_ERROR,
+      recoverTokenDone: types.GETTER_ACCOUNT_RECOVER_DONE
     })
   },
   methods: {

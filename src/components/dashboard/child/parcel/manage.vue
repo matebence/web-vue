@@ -133,7 +133,7 @@ export default {
       return this.components.activeEl.parcels.parcelId !== 0
     },
     ...mapGetters({
-      parcel: types.GETTER_PARCEL_DEFAULT
+      parcel: types.GETTER_PARCEL_DATA_CREATE
     })
   },
   methods: {
@@ -168,7 +168,7 @@ export default {
       if (this.components.activeEl.parcels.parcelId > 0) {
         return this.showAlertModal('Editovanie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné editovať.', 'Zatvoriť')
       } else {
-        const data = this.parcel.data.create.filter(e => e.id === this.components.activeEl.parcels.parcelId)
+        const data = this.parcel.filter(e => e.id === this.components.activeEl.parcels.parcelId)
         this.selectedComponent = this.manageComponenets()
         this.deselectParcel()
         this.components.appCreate.form.values = {...data.pop()}
@@ -179,10 +179,9 @@ export default {
         return this.showAlertModal('Odstránenie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné odstrániť.', 'Zatvoriť')
       } else {
         if (confirmed) {
-          const data = this.parcel.data.create.filter(e => e.id !== this.components.activeEl.parcels.parcelId)
+          const data = this.parcel.filter(e => e.id !== this.components.activeEl.parcels.parcelId)
           this.$store.commit(types.MUTATION_PARCEL_DATA, {
             data: {
-              ...this.parcel.data,
               create: [...data]
             }
           })
