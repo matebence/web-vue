@@ -17,7 +17,7 @@
     </form>
     <app-courier-list
       :search="components.search"
-      :selectedParcelId="selectedParcelId"/>
+      :parcel="parcel"/>
   </div>
 </template>
 
@@ -27,7 +27,7 @@ import courierList from '@/components/dashboard/sub/parcel/courierList'
 
 export default {
   name: 'courier',
-  props: ['selectedParcelId'],
+  props: ['parcel'],
   created: function () {
     return this.searchCourier({roles: process.env.APP_ROLE_COURIER})
   },

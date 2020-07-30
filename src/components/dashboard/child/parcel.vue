@@ -3,11 +3,11 @@
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
         <app-manage
-          @selectedParcel="selectedParcelId = $event"/>
+          @selectedParcel="parcel.parcelId = $event"/>
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-courier
-          :selectedParcelId="selectedParcelId"/>
+          :parcel="parcel"/>
         <app-here-map />
       </div>
     </div>
@@ -23,13 +23,21 @@ export default {
   name: 'parcel',
   data: function () {
     return {
-      selectedParcelId: 0
+      parcel: {
+        parcelId: 0,
+        shipment: {
+        }
+      }
     }
   },
   components: {
     appCourier: courier,
     appManage: manage,
     appHereMap: hereMap
+  },
+  watch: {
+    'parcel.parcelId': function (newValue, oldValue) {
+    }
   }
 }
 </script>
