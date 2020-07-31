@@ -10,6 +10,8 @@ module.exports = merge(prodEnv, {
   GRANT_TYPE_PASSWORD: '"password"',
   GRANT_TYPE_REFRESH_TOKEN: '"refresh_token"',
 
+  COMPANY_PRICE_PROFIT_ID: '"5ef89dcd56f69d17643556e8"',
+
   APP_ROLE_CLIENT: '"ROLE_CLIENT"',
   APP_ROLE_COURIER: '"ROLE_COURIER"',
 

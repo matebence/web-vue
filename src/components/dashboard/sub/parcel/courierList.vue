@@ -3,7 +3,7 @@
     <ul class="couriers">
       <li
         v-bind:key="user.accountId"
-        v-for="user in search.courier"
+        v-for="user in search.user"
         @click.prevent="selectedCourier(user)"
         :class="{active: search.activeEl.courierId === user.accountId && parcel.parcelId !== 0}">
         <ul class="courier">

@@ -99,7 +99,7 @@ const actions = {
         data: {
           ...state.payload.preference.data,
           search: {
-            ...parsed.data
+            ...parsed._embedded.preferencesSearchList
           }
         },
         done: true

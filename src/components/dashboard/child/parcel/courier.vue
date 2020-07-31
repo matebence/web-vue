@@ -6,11 +6,11 @@
         type="text"
         class="searchTerm"
         placeholder="Meno kuriéra"
-        v-model="components.search.name"
+        v-model="courier.search.name"
         :disabled="parcel.parcelId >= 0"
         @input="autoCompleteCourier($event.target.value)">
       <button
-        @click.prevent="searchCourier({firstName: components.search.courier[0].firstName})"
+        @click.prevent="searchCourier({firstName: Object.values(courier.search.user).pop().firstName})"
         type="submit"
         :disabled="parcel.parcelId >= 0"
         class="searchButton">
@@ -18,7 +18,7 @@
       </button>
     </form>
     <app-courier-list
-      :search="components.search"
+      :search="courier.search"
       :parcel="parcel"/>
   </div>
 </template>
@@ -29,39 +29,26 @@ import courierList from '@/components/dashboard/sub/parcel/courierList'
 
 export default {
   name: 'courier',
-  props: ['parcel'],
+  props: ['parcel', 'courier'],
   created: function () {
     return this.searchCourier({roles: process.env.APP_ROLE_COURIER})
   },
   beforeMount: function () {
     return this.$store.commit(types.MUTATIONS_CLEAR_USER_ERRORS, {})
   },
-  data: function () {
-    return {
-      components: {
-        search: {
-          courier: {
-          },
-          activeEl: {
-            courierId: 0
-          }
-        }
-      }
-    }
-  },
   components: {
     appCourierList: courierList
   },
   methods: {
     autoCompleteCourier: function ($event) {
-      this.components.search.activeEl.courierId = 0
+      this.courier.search.activeEl.courierId = 0
       if ($event.length === 0) return this.searchCourier({roles: process.env.APP_ROLE_COURIER})
       if ($event.length < 3) return
       return this.searchCourier({firstName: $event})
     },
     searchCourier: function (obj) {
       return this.$store.dispatch(types.ACTION_USER_SEARCH, {roles: process.env.APP_ROLE_COURIER, ...obj}).then(result => {
-        this.components.search.courier = result
+        this.courier.search.user = result
       })
     }
   }

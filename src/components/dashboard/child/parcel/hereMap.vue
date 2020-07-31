@@ -21,7 +21,7 @@
             placeholder="Kam">
         </div>
         <button
-          @click.prevent="visualizeOnMap"
+          @click.prevent="calculatePriceByDistance"
           type="submit"
           :disabled="(parcel.shipment.parcelId > 0) || (form.from.value.length < 3 || form.to.value.length < 3)"
           class="btn btn-primary">Hľadať</button>
@@ -48,6 +48,7 @@ import 'here-js-api/scripts/mapsjs-core'
 import 'here-js-api/scripts/mapsjs-service'
 import 'here-js-api/scripts/mapsjs-mapevents'
 import bleskMarker from '@/assets/img/blesk-marker.png'
+import * as types from '@/store/types'
 
 export default {
   created: function () {
@@ -61,7 +62,7 @@ export default {
     return new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map))
   },
   name: 'hereMap',
-  props: ['parcel'],
+  props: ['parcel', 'courier'],
   data: function () {
     return {
       map: {
@@ -145,6 +146,12 @@ export default {
     }
   },
   methods: {
+    calculatePriceByDistance: function () {
+      const courier = Object.values(this.courier.search.user).filter(e => e.accountId === this.courier.search.activeEl.courierId).pop()
+      this.$store.dispatch(types.ACTION_PREFERENCES_SEARCH, {accountId: courier.accountId}).then(result => {
+        console.log(Object.values(result).pop())
+      })
+    },
     geoCode: function (coordinates) {
       const searchService = this.platform.getSearchService()
       let isLast = Object.keys(this.form).length

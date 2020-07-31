@@ -3,13 +3,15 @@
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
         <app-manage
-          @selectedParcel="parcel.parcelId = $event"/>
+          @selectedParcel="components.parcel.parcelId = $event"/>
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-courier
-          :parcel="parcel"/>
+          :parcel="components.parcel"
+          :courier="components.courier" />
         <app-here-map
-          :parcel="parcel"/>
+          :parcel="components.parcel"
+          :courier="components.courier" />
       </div>
     </div>
   </div>
@@ -25,9 +27,20 @@ export default {
   name: 'parcel',
   data: function () {
     return {
-      parcel: {
-        parcelId: 0,
-        shipment: {
+      components: {
+        parcel: {
+          parcelId: 0,
+          shipment: {
+          }
+        },
+        courier: {
+          search: {
+            user: {
+            },
+            activeEl: {
+              courierId: 0
+            }
+          }
         }
       }
     }
@@ -38,12 +51,12 @@ export default {
     appHereMap: hereMap
   },
   watch: {
-    'parcel.parcelId': function (newValue, oldValue) {
+    'components.parcel.parcelId': function (newValue, oldValue) {
       if (newValue <= 0) {
-        this.parcel.shipment = {}
+        this.components.parcel.shipment = {}
       } else {
         return this.$store.dispatch(types.ACTION_SHIPMENTS_SEARCH, {parcelId: newValue}).then(result => {
-          this.parcel.shipment = result[0]
+          this.components.parcel.shipment = Object.values(result).pop()
         })
       }
     }
