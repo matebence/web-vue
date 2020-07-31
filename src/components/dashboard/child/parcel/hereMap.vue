@@ -5,6 +5,7 @@
         <div class="form-group">
           <input
             v-model="form.from.value"
+            :disabled="parcel.shipment.parcelId > 0 || parcel.parcelId === 0"
             type="text"
             class="form-control"
             id="from"
@@ -13,6 +14,7 @@
         <div class="form-group">
           <input
             v-model="form.to.value"
+            :disabled="parcel.shipment.parcelId > 0 || parcel.parcelId === 0"
             type="text"
             class="form-control"
             id="to"
@@ -21,6 +23,7 @@
         <button
           @click.prevent="visualizeOnMap"
           type="submit"
+          :disabled="(parcel.shipment.parcelId > 0) || (form.from.value.length < 3 || form.to.value.length < 3)"
           class="btn btn-primary">Hľadať</button>
       </form>
       <div id="summary">
@@ -33,6 +36,7 @@
       <div id="finish">
         <button
           type="submit"
+          :disabled="(parcel.shipment.parcelId > 0) || (form.from.value.length < 3 || form.to.value.length < 3)"
           class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
       </div>
     </div>
@@ -54,9 +58,10 @@ export default {
   mounted: function () {
     const defaultLayers = this.platform.createDefaultLayers().raster.normal.map
     this.map = new H.Map(this.$refs.map, defaultLayers, {...this.here.slovakia})
-    new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map))
+    return new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map))
   },
   name: 'hereMap',
+  props: ['parcel'],
   data: function () {
     return {
       map: {
@@ -65,14 +70,14 @@ export default {
       },
       form: {
         from: {
-          value: null,
+          value: '',
           geo: {
             lat: 0,
             lng: 0
           }
         },
         to: {
-          value: null,
+          value: '',
           geo: {
             lat: 0,
             lng: 0
@@ -82,7 +87,7 @@ export default {
       summary: {
         length: '0km',
         time: '0m 0s',
-        price: '0.00 €'
+        price: '0,00 €'
       },
       here: {
         slovakia: {
@@ -118,6 +123,27 @@ export default {
       }
     }
   },
+  watch: {
+    'parcel.shipment.parcelId': function (newValue, oldValue) {
+      if (newValue === undefined) {
+        this.summary.length = '0km'
+        this.summary.time = '0m 0s'
+        this.summary.price = '0,00 €'
+
+        this.form.from.value = ''
+        this.form.to.value = ''
+
+        return this.removePreviousRoutes()
+      } else {
+        const formatter = new Intl.NumberFormat('sk-SK', {style: 'currency', currency: 'EUR'})
+        this.form.from.value = this.parcel.shipment.from
+        this.form.to.value = this.parcel.shipment.to
+        this.summary.price = formatter.format(this.parcel.shipment.price)
+
+        return this.visualizeOnMap()
+      }
+    }
+  },
   methods: {
     geoCode: function (coordinates) {
       const searchService = this.platform.getSearchService()
@@ -132,15 +158,17 @@ export default {
       }
     },
     visualizeOnMap: function () {
-      return this.geoCode(coordinates => {
-        this.here.routingConfiguration = {
-          ...this.here.routingConfiguration,
-          origin: `${coordinates.from.geo.lat},${coordinates.from.geo.lng}`,
-          destination: `${coordinates.to.geo.lat},${coordinates.to.geo.lng}`
-        }
-        const router = this.platform.getRoutingService(null, 8)
-        router.calculateRoute(this.here.routingConfiguration, this.drawRoute, onError => { console.log(onError) })
-      })
+      if (this.form.from.value.length > 2 && this.form.to.value.length > 2) {
+        return this.geoCode(coordinates => {
+          this.here.routingConfiguration = {
+            ...this.here.routingConfiguration,
+            origin: `${coordinates.from.geo.lat},${coordinates.from.geo.lng}`,
+            destination: `${coordinates.to.geo.lat},${coordinates.to.geo.lng}`
+          }
+          const router = this.platform.getRoutingService(null, 8)
+          router.calculateRoute(this.here.routingConfiguration, this.drawRoute, onError => { console.log(onError) })
+        })
+      }
     },
     drawRoute: function (result) {
       if (result.routes.length) {
@@ -229,6 +257,10 @@ export default {
 
   div#hereMap div#map form button:hover, div#hereMap div#map div#finish button:hover {
     background: #187fb1;
+  }
+
+  div#hereMap div#map form button:disabled, div#hereMap div#map div#finish button:disabled {
+    background: #095174;
   }
 
   div#hereMap div#map form div.form-group input {

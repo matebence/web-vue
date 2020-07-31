@@ -101,7 +101,7 @@ export default {
       this.activeEl.tabs.tabId = el.itemId
       this.activeEl.tabs.value = el.value
 
-      if (this.activeEl.tabs.value === this.tab.items[0].value) {
+      if (this.activeEl.tabs.value === this.tab.items[0].value || this.activeEl.tabs.value === this.tab.items[2].value) {
         return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.accountId})
       }
     },

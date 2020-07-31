@@ -7,10 +7,12 @@
         class="searchTerm"
         placeholder="Meno kuriéra"
         v-model="components.search.name"
+        :disabled="parcel.parcelId >= 0"
         @input="autoCompleteCourier($event.target.value)">
       <button
         @click.prevent="searchCourier({firstName: components.search.courier[0].firstName})"
         type="submit"
+        :disabled="parcel.parcelId >= 0"
         class="searchButton">
         <i class="fa fa-search"></i>
       </button>
@@ -116,6 +118,10 @@ export default {
 
   div#courier form.search .searchButton:hover {
     background: #187fb1;
+  }
+
+  div#courier form.search .searchButton:disabled {
+    background: rgba(9, 81, 116, 0.74);
   }
 
   @media (max-width: 1500px) {

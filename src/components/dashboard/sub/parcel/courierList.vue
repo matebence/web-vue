@@ -2,10 +2,10 @@
   <div id="courierList">
     <ul class="couriers">
       <li
-        v-bind:key="user.userId"
+        v-bind:key="user.accountId"
         v-for="user in search.courier"
         @click.prevent="selectedCourier(user)"
-        :class="{active: search.activeEl.courierId === user.userId && parcel.parcelId !== 0}">
+        :class="{active: search.activeEl.courierId === user.accountId && parcel.parcelId !== 0}">
         <ul class="courier">
           <li><i :data-letters="`${user.firstName.substr(0, 1)}${user.lastName.substr(0, 1)}`"></i></li>
           <li><p>{{user.firstName}} {{user.lastName}}</p></li>
@@ -42,6 +42,14 @@ export default {
   components: {
     appModal: modal
   },
+  watch: {
+    'parcel.shipment.courier.courierId': function (newValue, oldValue) {
+      this.search.activeEl.courierId = newValue
+    },
+    'parcel.parcelId': function (newValue, oldValue) {
+      if (newValue <= 0) this.search.activeEl.courierId = 0
+    }
+  },
   methods: {
     showAlertModal: function (title, text, button) {
       this.components.appModal.title = title
@@ -50,8 +58,9 @@ export default {
       return bootstrap('#courierAlert').modal('show')
     },
     selectedCourier: function (el) {
+      if (this.parcel.parcelId > 0) return
       if (this.parcel.parcelId === 0) return this.showAlertModal('Upozornenie', 'Nemáte zvolený balík.', 'Zatvoriť')
-      this.search.activeEl.courierId = el.userId
+      this.search.activeEl.courierId = el.accountId
     }
   }
 }

@@ -8,7 +8,8 @@
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-courier
           :parcel="parcel"/>
-        <app-here-map />
+        <app-here-map
+          :parcel="parcel"/>
       </div>
     </div>
   </div>
@@ -18,6 +19,7 @@
 import courier from '@/components/dashboard/child/parcel/courier'
 import manage from '@/components/dashboard/child/parcel/manage'
 import hereMap from '@/components/dashboard/child/parcel/hereMap'
+import * as types from '@/store/types'
 
 export default {
   name: 'parcel',
@@ -37,6 +39,13 @@ export default {
   },
   watch: {
     'parcel.parcelId': function (newValue, oldValue) {
+      if (newValue <= 0) {
+        this.parcel.shipment = {}
+      } else {
+        return this.$store.dispatch(types.ACTION_SHIPMENTS_SEARCH, {parcelId: newValue}).then(result => {
+          this.parcel.shipment = result[0]
+        })
+      }
     }
   }
 }
