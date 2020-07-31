@@ -4,7 +4,7 @@
       <form>
         <div class="form-group">
           <input
-            v-model="form.from.value"
+            v-model="navigator.form.from.value"
             :disabled="parcel.shipment.parcelId > 0 || parcel.parcelId === 0"
             type="text"
             class="form-control"
@@ -13,7 +13,7 @@
         </div>
         <div class="form-group">
           <input
-            v-model="form.to.value"
+            v-model="navigator.form.to.value"
             :disabled="parcel.shipment.parcelId > 0 || parcel.parcelId === 0"
             type="text"
             class="form-control"
@@ -23,20 +23,20 @@
         <button
           @click.prevent="calculatePriceByDistance"
           type="submit"
-          :disabled="(parcel.shipment.parcelId > 0) || (form.from.value.length < 3 || form.to.value.length < 3)"
+          :disabled="(parcel.shipment.parcelId > 0) || (navigator.form.from.value.length < 3 || navigator.form.to.value.length < 3)"
           class="btn btn-primary">Hľadať</button>
       </form>
       <div id="summary">
         <ul>
-          <li><span>Dľžka:</span> {{summary.length}}</li>
-          <li><span>Čas:</span> {{summary.time}}</li>
-          <li><span>Cena:</span> {{summary.price}}</li>
+          <li><span>Dľžka:</span> {{navigator.summary.length}}</li>
+          <li><span>Čas:</span> {{navigator.summary.time}}</li>
+          <li><span>Cena:</span> {{navigator.summary.price}}</li>
         </ul>
       </div>
       <div id="finish">
         <button
           type="submit"
-          :disabled="(parcel.shipment.parcelId > 0) || (form.from.value.length < 3 || form.to.value.length < 3)"
+          :disabled="(parcel.shipment.parcelId > 0) || (navigator.form.from.value.length < 3 || navigator.form.to.value.length < 3)"
           class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
       </div>
     </div>
@@ -52,45 +52,50 @@ import * as types from '@/store/types'
 
 export default {
   created: function () {
-    this.platform = new H.service.Platform({
+    this.here.platform = new H.service.Platform({
       'apikey': process.env.HERE_JS_SDK_API
     })
   },
   mounted: function () {
-    const defaultLayers = this.platform.createDefaultLayers().raster.normal.map
-    this.map = new H.Map(this.$refs.map, defaultLayers, {...this.here.slovakia})
-    return new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map))
+    const defaultLayers = this.here.platform.createDefaultLayers().raster.normal.map
+    this.here.map = new H.Map(this.$refs.map, defaultLayers, {...this.here.slovakia})
+    return new H.mapevents.Behavior(new H.mapevents.MapEvents(this.here.map))
   },
   name: 'hereMap',
   props: ['parcel', 'courier'],
   data: function () {
     return {
-      map: {
-      },
-      platform: {
-      },
-      form: {
-        from: {
-          value: '',
-          geo: {
-            lat: 0,
-            lng: 0
+      navigator: {
+        form: {
+          from: {
+            value: '',
+            geo: {
+              lat: 0,
+              lng: 0
+            }
+          },
+          to: {
+            value: '',
+            geo: {
+              lat: 0,
+              lng: 0
+            }
           }
         },
-        to: {
-          value: '',
-          geo: {
-            lat: 0,
-            lng: 0
-          }
+        summary: {
+          length: '0km',
+          time: '0m 0s',
+          price: '0,00 €'
+        },
+        courier: {
+          price: 0.00
         }
       },
-      summary: {
-        length: '0km',
-        time: '0m 0s',
-        price: '0,00 €'
-      },
       here: {
+        map: {
+        },
+        platform: {
+        },
         slovakia: {
           zoom: 8,
           center: {
@@ -127,19 +132,19 @@ export default {
   watch: {
     'parcel.shipment.parcelId': function (newValue, oldValue) {
       if (newValue === undefined) {
-        this.summary.length = '0km'
-        this.summary.time = '0m 0s'
-        this.summary.price = '0,00 €'
+        this.navigator.summary.length = '0km'
+        this.navigator.summary.time = '0m 0s'
+        this.navigator.summary.price = '0,00 €'
 
-        this.form.from.value = ''
-        this.form.to.value = ''
+        this.navigator.form.from.value = ''
+        this.navigator.form.to.value = ''
 
         return this.removePreviousRoutes()
       } else {
         const formatter = new Intl.NumberFormat('sk-SK', {style: 'currency', currency: 'EUR'})
-        this.form.from.value = this.parcel.shipment.from
-        this.form.to.value = this.parcel.shipment.to
-        this.summary.price = formatter.format(this.parcel.shipment.price)
+        this.navigator.form.from.value = this.parcel.shipment.from
+        this.navigator.form.to.value = this.parcel.shipment.to
+        this.navigator.summary.price = formatter.format(this.parcel.shipment.price)
 
         return this.visualizeOnMap()
       }
@@ -148,31 +153,32 @@ export default {
   methods: {
     calculatePriceByDistance: function () {
       const courier = Object.values(this.courier.search.user).filter(e => e.accountId === this.courier.search.activeEl.courierId).pop()
-      this.$store.dispatch(types.ACTION_PREFERENCES_SEARCH, {accountId: courier.accountId}).then(result => {
-        console.log(Object.values(result).pop())
+      this.$store.dispatch(types.ACTION_PREFERENCES_SEARCH, {accountId: courier.accountId, name: 'Cena prepravy (eur/1km)'}).then(result => {
+        this.navigator.courier.price = Object.values(result).pop().value
+        return this.visualizeOnMap()
       })
     },
     geoCode: function (coordinates) {
-      const searchService = this.platform.getSearchService()
-      let isLast = Object.keys(this.form).length
-      for (const item in this.form) {
-        const geocodingParameters = {q: this.form[item].value}
+      const searchService = this.here.platform.getSearchService()
+      let isLast = Object.keys(this.navigator.form).length
+      for (const item in this.navigator.form) {
+        const geocodingParameters = {q: this.navigator.form[item].value}
         searchService.geocode(geocodingParameters, onSuccess => {
           const position = onSuccess.items.pop().position
-          this.form[item].geo = {...position}
-          if (!--isLast) coordinates(this.form)
+          this.navigator.form[item].geo = {...position}
+          if (!--isLast) coordinates(this.navigator.form)
         }, onError => { console.log(onError) })
       }
     },
     visualizeOnMap: function () {
-      if (this.form.from.value.length > 2 && this.form.to.value.length > 2) {
+      if (this.navigator.form.from.value.length > 2 && this.navigator.form.to.value.length > 2) {
         return this.geoCode(coordinates => {
           this.here.routingConfiguration = {
             ...this.here.routingConfiguration,
             origin: `${coordinates.from.geo.lat},${coordinates.from.geo.lng}`,
             destination: `${coordinates.to.geo.lat},${coordinates.to.geo.lng}`
           }
-          const router = this.platform.getRoutingService(null, 8)
+          const router = this.here.platform.getRoutingService(null, 8)
           router.calculateRoute(this.here.routingConfiguration, this.drawRoute, onError => { console.log(onError) })
         })
       }
@@ -194,20 +200,22 @@ export default {
           const outline = new H.map.Polyline(polyline, {...this.here.outline})
           const arrows = new H.map.Polyline(polyline, {...this.here.arrows})
 
-          this.map.addObjects([group, start, destination])
+          this.here.map.addObjects([group, start, destination])
           group.addObjects([outline, arrows])
 
           this.calculateSummury(section)
-          return this.map.getViewModel().setLookAtData({bounds: group.getBoundingBox()}, true)
+          return this.here.map.getViewModel().setLookAtData({bounds: group.getBoundingBox()}, true)
         })
       }
     },
     removePreviousRoutes: function () {
-      return this.map.getObjects().forEach(e => this.map.removeObject(e))
+      return this.here.map.getObjects().forEach(e => this.here.map.removeObject(e))
     },
     calculateSummury: function (result) {
-      this.summary.time = `${Math.floor(Number(result.travelSummary.duration) / 60)}min ${(Number(result.travelSummary.duration) % 60)}sec`
-      this.summary.length = (`${parseFloat(Number(result.travelSummary.length) / 1000).toFixed(2)}km`)
+      const formatter = new Intl.NumberFormat('sk-SK', {style: 'currency', currency: 'EUR'})
+      this.navigator.summary.time = `${Math.floor(Number(result.travelSummary.duration) / 60)}min ${(Number(result.travelSummary.duration) % 60)}sec`
+      this.navigator.summary.length = (`${parseFloat(Number(result.travelSummary.length) / 1000).toFixed(2)}km`)
+      this.navigator.summary.price = formatter.format(parseFloat(Number(result.travelSummary.length) / 1000) * Number(this.navigator.courier.price))
     }
   }
 }
