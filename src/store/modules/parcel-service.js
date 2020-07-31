@@ -267,6 +267,10 @@ const actions = {
 }
 
 const getters = {
+  [types.GETTER_PARCEL_DATA]: function (state) {
+    return state.payload.parcel.data
+  },
+
   [types.GETTER_PARCEL_DATA_CREATE]: function (state) {
     return state.payload.parcel.data.create
   },

@@ -124,7 +124,7 @@ const actions = {
       search: {method: 'POST', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
     return resource.search({service: 'shipment-service'}, {
       pagination: {
-        pageNumber: 0,
+        pageNumber: 1,
         pageSize: 10
       },
       search: {
@@ -161,6 +161,10 @@ const actions = {
 }
 
 const getters = {
+  [types.GETTER_SHIPMENTS_DATA]: function (state) {
+    return state.payload.shipment.data
+  },
+
   [types.GETTER_SHIPMENTS_DATA_CREATE]: function (state) {
     return state.payload.shipment.data.create
   },

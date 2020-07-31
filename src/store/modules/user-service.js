@@ -156,6 +156,10 @@ const actions = {
 }
 
 const getters = {
+  [types.GETTER_USER_DATA]: function (state) {
+    return state.payload.user.data
+  },
+
   [types.GETTER_USER_DATA_SEARCH]: function (state) {
     return state.payload.user.data.search
   },
