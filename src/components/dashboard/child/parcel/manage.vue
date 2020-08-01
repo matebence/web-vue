@@ -14,7 +14,7 @@
       v-show="isSelected"
       id="modify">
       <button
-        @click.prevent="deselectParcel()">
+        @click.prevent="components.activeEl.parcels.parcelId = 0">
         <font-awesome-icon
           :icon="['fas', 'ban']"/>
       </button>
@@ -163,16 +163,13 @@ export default {
       this.components.appConfirm.negativeButton = 'Nie'
       return bootstrap('#parcelConfirm').modal('show')
     },
-    deselectParcel: function () {
-      this.components.activeEl.parcels.parcelId = 0
-    },
     editParcel: function () {
       if (this.components.activeEl.parcels.parcelId > 0) {
         return this.showAlertModal('Editovanie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné editovať.', 'Zatvoriť')
       } else {
         const data = this.parcelCreate.filter(e => e.id === this.components.activeEl.parcels.parcelId)
         this.selectedComponent = this.manageComponenets()
-        this.deselectParcel()
+        this.components.activeEl.parcels.parcelId = 0
         this.components.appCreate.form.values = {...data.pop()}
       }
     },
@@ -188,7 +185,7 @@ export default {
               create: [...data]
             }
           })
-          return this.deselectParcel()
+          this.components.activeEl.parcels.parcelId = 0
         }
         return this.showConfirmModal('Odstránenie', 'Naozaj chcete odstrániť balík?')
       }

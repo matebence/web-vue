@@ -144,7 +144,7 @@ const actions = {
           error: {
             is: parsed.error,
             message: parsed.message,
-            from: 'search',
+            from: 'get',
             reason: {}
           },
           done: true

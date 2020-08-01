@@ -9,7 +9,13 @@
             type="text"
             class="form-control"
             id="from"
-            placeholder="Odkiaľ">
+            placeholder="Odkiaľ"
+            @input="autoCompletePlace($event)">
+          <div class="autocomplete">
+            <ul>
+              <li v-for="place in navigator.form.from.autoComplete" v-bind:key="place.id" data-element="from" @click.prevent="selectPlace($event.target)">{{place.fullName}}</li>
+            </ul>
+          </div>
         </div>
         <div class="form-group">
           <input
@@ -18,7 +24,13 @@
             type="text"
             class="form-control"
             id="to"
-            placeholder="Kam">
+            placeholder="Kam"
+            @input="autoCompletePlace($event)">
+          <div class="autocomplete">
+            <ul>
+              <li v-for="place in navigator.form.to.autoComplete" v-bind:key="place.id" data-element="to" @click.prevent="selectPlace($event.target)">{{place.fullName}}</li>
+            </ul>
+          </div>
         </div>
         <button
           @click.prevent="calculatePriceByDistance"
@@ -28,9 +40,9 @@
       </form>
       <div id="summary">
         <ul>
-          <li><span>Dľžka:</span> {{navigator.summary.length}}</li>
-          <li><span>Čas:</span> {{navigator.summary.time}}</li>
-          <li><span>Cena:</span> {{navigator.summary.price}}</li>
+          <li><span>Dľžka:</span> {{formatDistance(navigator.summary.values.length)}}</li>
+          <li><span>Čas:</span> {{formatDuration(navigator.summary.values.time)}}</li>
+          <li><span>Cena:</span> {{formatPrice(navigator.summary.values.length, navigator.courier.price)}}</li>
         </ul>
       </div>
       <div id="finish">
@@ -40,20 +52,32 @@
           class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
       </div>
     </div>
+    <app-modal
+      :modalId="'hereMapAlert'"
+      :text="components.appModal.text"
+      :title="components.appModal.title"
+      :button="components.appModal.button"/>
   </div>
 </template>
 
 <script>
+import bootstrap from 'jquery'
 import 'here-js-api/scripts/mapsjs-core'
 import 'here-js-api/scripts/mapsjs-service'
 import 'here-js-api/scripts/mapsjs-mapevents'
+
 import bleskMarker from '@/assets/img/blesk-marker.png'
+import modal from '@/components/common/modal'
 import * as types from '@/store/types'
 
 export default {
   created: function () {
-    this.here.platform = new H.service.Platform({
-      'apikey': process.env.HERE_JS_SDK_API
+    this.here.platform = new H.service.Platform({'apikey': process.env.HERE_JS_SDK_API})
+    return this.reverseGeoCode()
+  },
+  beforeMount: function () {
+    return this.$store.dispatch(types.ACTION_PRICES_GET, process.env.COMPANY_PRICE_PROFIT_ID).then(result => {
+      this.navigator.company.price = Number(result.price)
     })
   },
   mounted: function () {
@@ -69,6 +93,8 @@ export default {
         form: {
           from: {
             value: '',
+            autoComplete: {
+            },
             geo: {
               lat: 0,
               lng: 0
@@ -76,6 +102,8 @@ export default {
           },
           to: {
             value: '',
+            autoComplete: {
+            },
             geo: {
               lat: 0,
               lng: 0
@@ -83,12 +111,25 @@ export default {
           }
         },
         summary: {
-          length: '0km',
-          time: '0m 0s',
-          price: '0,00 €'
+          isSet: false,
+          values: {
+            length: 0,
+            time: 0,
+            price: 0
+          }
         },
         courier: {
           price: 0.00
+        },
+        company: {
+          price: 0.00
+        }
+      },
+      components: {
+        appModal: {
+          text: null,
+          title: null,
+          button: null
         }
       },
       here: {
@@ -129,35 +170,26 @@ export default {
       }
     }
   },
+  components: {
+    appModal: modal
+  },
   watch: {
     'parcel.shipment.parcelId': function (newValue, oldValue) {
-      if (newValue === undefined) {
-        this.navigator.summary.length = '0km'
-        this.navigator.summary.time = '0m 0s'
-        this.navigator.summary.price = '0,00 €'
+      if (newValue === undefined) return this.removePreviousRoutes()
 
-        this.navigator.form.from.value = ''
-        this.navigator.form.to.value = ''
-
-        return this.removePreviousRoutes()
-      } else {
-        const formatter = new Intl.NumberFormat('sk-SK', {style: 'currency', currency: 'EUR'})
-        this.navigator.form.from.value = this.parcel.shipment.from
-        this.navigator.form.to.value = this.parcel.shipment.to
-        this.navigator.summary.price = formatter.format(this.parcel.shipment.price)
-
-        return this.visualizeOnMap()
-      }
+      this.navigator.form.from.value = this.parcel.shipment.from
+      this.navigator.form.to.value = this.parcel.shipment.to
+      this.navigator.summary.isSet = true
+      return this.visualizeOnMap()
+    },
+    'parcel.parcelId': function (newValue, oldValue) {
+      if (newValue === 0) return this.removePreviousRoutes()
+    },
+    'courier.search.activeEl.courierId': function (newValue, oldValue) {
+      if (newValue > 0 && !this.navigator.summary.isSet) return this.calculatePriceByDistance()
     }
   },
   methods: {
-    calculatePriceByDistance: function () {
-      const courier = Object.values(this.courier.search.user).filter(e => e.accountId === this.courier.search.activeEl.courierId).pop()
-      this.$store.dispatch(types.ACTION_PREFERENCES_SEARCH, {accountId: courier.accountId, name: 'Cena prepravy (eur/1km)'}).then(result => {
-        this.navigator.courier.price = Object.values(result).pop().value
-        return this.visualizeOnMap()
-      })
-    },
     geoCode: function (coordinates) {
       const searchService = this.here.platform.getSearchService()
       let isLast = Object.keys(this.navigator.form).length
@@ -169,6 +201,15 @@ export default {
           if (!--isLast) coordinates(this.navigator.form)
         }, onError => { console.log(onError) })
       }
+    },
+    reverseGeoCode: function () {
+      if (localStorage.getItem('position') === null) return
+      const searchService = this.here.platform.getSearchService()
+      const reverseGeocodingParameters = {at: localStorage.getItem('position'), limit: '1'}
+      return searchService.reverseGeocode(reverseGeocodingParameters, onSuccess => {
+        const place = Object.values(onSuccess.items).pop()
+        this.navigator.form.from.value = place.address.city
+      }, onError => { console.log(onError) })
     },
     visualizeOnMap: function () {
       if (this.navigator.form.from.value.length > 2 && this.navigator.form.to.value.length > 2) {
@@ -185,11 +226,12 @@ export default {
     },
     drawRoute: function (result) {
       if (result.routes.length) {
+        let travelSummary = null
         const group = new H.map.Group()
         const markerIcon = new H.map.Icon(bleskMarker)
 
         result = result.routes.pop()
-        this.removePreviousRoutes()
+        this.here.map.getObjects().forEach(e => this.here.map.removeObject(e))
 
         result.sections.forEach(section => {
           const polyline = H.geo.LineString.fromFlexiblePolyline(section.polyline)
@@ -202,20 +244,71 @@ export default {
 
           this.here.map.addObjects([group, start, destination])
           group.addObjects([outline, arrows])
-
-          this.calculateSummury(section)
-          return this.here.map.getViewModel().setLookAtData({bounds: group.getBoundingBox()}, true)
+          travelSummary = section.travelSummary
         })
+        this.navigator.summary.values.time = Number(travelSummary.duration)
+        this.navigator.summary.values.length = Number(travelSummary.length)
+        return this.here.map.getViewModel().setLookAtData({bounds: group.getBoundingBox()}, true)
       }
     },
     removePreviousRoutes: function () {
+      this.navigator.summary.isSet = false
+
+      this.navigator.summary.values.length = 0
+      this.navigator.summary.values.time = 0
+      this.navigator.summary.values.price = 0
+
+      this.navigator.form.from.value = ''
+      this.navigator.form.to.value = ''
+
       return this.here.map.getObjects().forEach(e => this.here.map.removeObject(e))
     },
-    calculateSummury: function (result) {
+    formatPrice: function (distance, price) {
       const formatter = new Intl.NumberFormat('sk-SK', {style: 'currency', currency: 'EUR'})
-      this.navigator.summary.time = `${Math.floor(Number(result.travelSummary.duration) / 60)}min ${(Number(result.travelSummary.duration) % 60)}sec`
-      this.navigator.summary.length = (`${parseFloat(Number(result.travelSummary.length) / 1000).toFixed(2)}km`)
-      this.navigator.summary.price = formatter.format(parseFloat(Number(result.travelSummary.length) / 1000) * Number(this.navigator.courier.price))
+      if (this.parcel.shipment.price === undefined) return formatter.format(0)
+      if (!this.navigator.summary.isSet) return formatter.format(parseFloat((distance / 1000) * price) + (this.navigator.company.price))
+      return formatter.format(this.parcel.shipment.price)
+    },
+    formatDuration: function (duration) {
+      return `${Math.floor(duration / 60)}min ${(duration % 60)}sec`
+    },
+    formatDistance: function (distance) {
+      return (`${parseFloat(distance / 1000).toFixed(2)}km`)
+    },
+    calculatePriceByDistance: function () {
+      if (this.courier.search.activeEl.courierId === 0) return this.showAlertModal('Upozornenie', 'Nezvolili ste si kuriéra.', 'Zatvoriť')
+      const courier = Object.values(this.courier.search.user).filter(e => e.accountId === this.courier.search.activeEl.courierId).pop()
+      this.$store.dispatch(types.ACTION_PREFERENCES_SEARCH, {accountId: courier.accountId, name: 'Cena prepravy (eur/1km)'}).then(result => {
+        this.navigator.courier.price = Object.values(result).pop().value
+        return this.visualizeOnMap()
+      })
+    },
+    showAlertModal: function (title, text, button) {
+      this.components.appModal.title = title
+      this.components.appModal.text = text
+      this.components.appModal.button = button
+      return bootstrap('#hereMapAlert').modal('show')
+    },
+    autoCompletePlace: function ($event) {
+      if ($event.target.value.length < 3 && $event.target.id === 'from') {
+        this.navigator.form.from.autoComplete = {}
+      } else if ($event.target.value.length < 3 && $event.target.id === 'to') {
+        this.navigator.form.to.autoComplete = {}
+      } else {
+        return this.$store.dispatch(types.ACTION_PLACES_SEARCH, { fullName: $event.target.value }).then(result => {
+          if ($event.target.id === 'from') this.navigator.form.from.autoComplete = Object.values(result)
+          if ($event.target.id === 'to') this.navigator.form.to.autoComplete = Object.values(result)
+        })
+      }
+    },
+    selectPlace: function ($event) {
+      if ($event.dataset.element === 'from') {
+        this.navigator.form.from.value = $event.textContent
+        this.navigator.form.from.autoComplete = {}
+      } else if ($event.dataset.element === 'to') {
+        this.navigator.form.to.value = $event.textContent
+        this.navigator.form.to.autoComplete = {}
+      }
     }
   }
 }
@@ -259,6 +352,31 @@ export default {
     margin-right: 0.5rem;
   }
 
+  div#hereMap div.autocomplete {
+    width: 100%;
+    position: relative;
+  }
+
+  div#hereMap div.autocomplete ul {
+    position: absolute;
+    width: calc(100%);
+    background: #ffffff;
+    max-height: 15rem;
+    overflow: auto;
+  }
+
+  div#hereMap div.autocomplete ul li {
+    font-size: 0.9em;
+    text-align: left;
+    padding: 0.6rem;
+    border: solid 0.01rem #dbdbdb;
+  }
+
+  div#hereMap div.autocomplete ul li:hover {
+    cursor: pointer;
+    background: #f1f1f1;
+  }
+
   div#hereMap div#map form button, div#hereMap div#map div#finish button {
     background: #176c9d;
     font-size: 0.8em;
@@ -281,7 +399,7 @@ export default {
   div#hereMap div#map form div.form-group input {
     border: 0.13rem solid #176c9d;
     font-size: 0.8em;
-    border-radius: 3rem;
+    border-radius: 0.4rem;
     outline: none;
   }
 

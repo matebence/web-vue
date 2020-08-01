@@ -16,6 +16,14 @@ import '@/assets/fonts/fonts.css'
 import '@/assets/css/reset.css'
 
 export default {
+  created: function () {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        const userPosition = `${position.coords.latitude},${position.coords.longitude},${position.coords.accuracy}`
+        localStorage.setItem('position', userPosition)
+      })
+    }
+  },
   name: 'App'
 }
 </script>

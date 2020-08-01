@@ -13,8 +13,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
     authorization,
-    account,
     shipment,
+    account,
     parcel,
     place,
     user
