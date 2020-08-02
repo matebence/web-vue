@@ -261,7 +261,7 @@ export default {
       padding-left: 0;
     }
 
-    div#navigation nav ul.items li.active {
+    div#navigation nav ul.items li {
       width: 3rem;
       height: 3rem;
     }

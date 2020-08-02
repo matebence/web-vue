@@ -42,13 +42,14 @@
         <ul>
           <li><span>Dľžka:</span> {{formatDistance(navigator.summary.values.length)}}</li>
           <li><span>Čas:</span> {{formatDuration(navigator.summary.values.time)}}</li>
-          <li><span>Cena:</span> {{formatPrice(navigator.summary.values.length, navigator.courier.price)}}</li>
+          <li><span>Cena:</span> {{formatPrice(navigator.summary.values.length, navigator.courier.price, navigator.company.profit)}}</li>
         </ul>
       </div>
       <div id="finish">
         <button
           type="submit"
-          :disabled="(parcel.shipment.parcelId > 0) || (navigator.form.from.value.length < 3 || navigator.form.to.value.length < 3)"
+          :disabled="(courier.search.activeEl.courierId === 0) || (parcel.shipment.parcelId > 0) || (navigator.form.from.value.length < 3 || navigator.form.to.value.length < 3)"
+          @click.prevent="onCreate"
           class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
       </div>
     </div>
@@ -77,7 +78,7 @@ export default {
   },
   beforeMount: function () {
     return this.$store.dispatch(types.ACTION_PRICES_GET, process.env.COMPANY_PRICE_PROFIT_ID).then(result => {
-      this.navigator.company.price = Number(result.price)
+      this.navigator.company.profit = Number(result.price)
     })
   },
   mounted: function () {
@@ -122,7 +123,7 @@ export default {
           price: 0.00
         },
         company: {
-          price: 0.00
+          profit: 0.00
         }
       },
       components: {
@@ -263,11 +264,16 @@ export default {
 
       return this.here.map.getObjects().forEach(e => this.here.map.removeObject(e))
     },
-    formatPrice: function (distance, price) {
+    formatPrice: function (distance, price, profit) {
       const formatter = new Intl.NumberFormat('sk-SK', {style: 'currency', currency: 'EUR'})
-      if (this.parcel.shipment.price === undefined) return formatter.format(0)
-      if (!this.navigator.summary.isSet) return formatter.format(parseFloat((distance / 1000) * price) + (this.navigator.company.price))
-      return formatter.format(this.parcel.shipment.price)
+      if (!this.navigator.summary.isSet) {
+        const total = parseFloat(distance / 1000 * price) + profit
+        return total > profit ? formatter.format(total) : formatter.format(0)
+      } else if (this.parcel.shipment.price === undefined && this.navigator.summary.isSet) {
+        return formatter.format(0)
+      } else {
+        return formatter.format(this.parcel.shipment.price)
+      }
     },
     formatDuration: function (duration) {
       return `${Math.floor(duration / 60)}min ${(duration % 60)}sec`
@@ -309,6 +315,9 @@ export default {
         this.navigator.form.to.value = $event.textContent
         this.navigator.form.to.autoComplete = {}
       }
+    },
+    onCreate: function () {
+      if (this.navigator.summary.values.time === 0 || this.navigator.summary.values.length === 0) return this.showAlertModal('Upozornenie', 'Dľžka cesty nie je známa.', 'Zatvoriť')
     }
   }
 }
