@@ -154,115 +154,129 @@ const mutations = {
 const actions = {
   [types.ACTION_PARCEL_CREATE]: function ({commit, dispatch, state, rootState}, payload) {
     commit(types.MUTATION_PARCEL_DATA, {done: false})
-    const resource = this._vm.$resource('{service}/api/parcels', {}, {
-      create: {method: 'POST', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
-    return resource.create({service: 'parcel-service'}, {canceled: false, ...payload}).then(response => {
-      return response.json()
-    }).then(parsed => {
-      commit(types.MUTATION_PARCEL_DATA, {
-        data: {
-          ...state.payload.parcel.data,
-          create: {
-            ...parsed.data
-          }
-        },
-        done: true
+    return this._vm.$resource('{service}/api/parcels', {}, {
+      create: {
+        method: 'POST',
+        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        }
+      }
+    }).create({service: 'parcel-service'}, {canceled: false, ...payload.data})
+      .then(response => {
+        return response.json()
       })
-      return state.payload.parcel.data.create
-    }).catch(err => {
-      err.json().then(parsed => {
-        let validations = {}
-        parsed.validations.forEach(e => { validations[e.param] = e.msg })
-
+      .then(parsed => {
         commit(types.MUTATION_PARCEL_DATA, {
-          error: {
-            is: parsed.error,
-            message: parsed.message,
-            from: 'create',
-            reason: {
-              ...validations
-            }
+          data: {
+            ...state.payload.parcel.data,
+            create: [
+              ...Object.values(state.payload.parcel.data.create).filter(e => e.id !== payload.id)
+            ]
           },
           done: true
         })
-        return new Error(parsed.message)
+        return parsed
       })
-    })
+      .catch(err => {
+        return err.json()
+          .then(parsed => {
+            let validations = {}
+            parsed.validations.forEach(e => { validations[e.param] = e.msg })
+
+            commit(types.MUTATION_PARCEL_DATA, {
+              error: {
+                is: parsed.error,
+                message: parsed.message,
+                from: 'create',
+                reason: {
+                  ...validations
+                }
+              },
+              done: true
+            })
+            throw parsed.message
+          })
+      })
   },
 
   [types.ACTION_PARCEL_SEARCH]: function ({commit, dispatch, state, rootState}, payload) {
     commit(types.MUTATION_PARCEL_DATA, {done: false})
-    const resource = this._vm.$resource('{service}/api/parcels/search', {}, {
-      search: {method: 'POST', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
-    return resource.search({service: 'parcel-service'}, {
-      pagination: {
-        pageNumber: 0,
-        pageSize: 10
-      },
+    return this._vm.$resource('{service}/api/parcels/search', {}, {
       search: {
-        sender: payload.sender
+        method: 'POST',
+        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}
       }
-    }).then(response => {
-      return response.json()
-    }).then(parsed => {
-      commit(types.MUTATION_PARCEL_DATA, {
-        data: {
-          ...state.payload.parcel.data,
-          search: {
-            ...parsed.data
-          }
-        },
-        done: true
+    }).search({service: 'parcel-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: {sender: payload.sender}, orderBy: {id: 'desc'}})
+      .then(response => {
+        return response.json()
       })
-      return state.payload.parcel.data.search
-    }).catch(err => {
-      err.json().then(parsed => {
+      .then(parsed => {
         commit(types.MUTATION_PARCEL_DATA, {
-          error: {
-            is: parsed.error,
-            message: parsed.message,
-            from: 'search',
-            reason: {
+          data: {
+            ...state.payload.parcel.data,
+            search: {
+              ...parsed.data
             }
           },
           done: true
         })
-        return new Error(parsed.message)
+        return state.payload.parcel.data.search
       })
-    })
+      .catch(err => {
+        return err.json()
+          .then(parsed => {
+            commit(types.MUTATION_PARCEL_DATA, {
+              error: {
+                is: parsed.error,
+                message: parsed.message,
+                from: 'search',
+                reason: {
+                }
+              },
+              done: true
+            })
+            throw parsed.message
+          })
+      })
   },
 
   [types.ACTION_CATEGORY_GET_ALL]: function ({commit, dispatch, state, rootState}, payload) {
-    const resource = this._vm.$resource('{service}/api/categories/page/{page}/limit/{limit}', {}, {
-      getAll: {method: 'GET', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
-    return resource.getAll({service: 'parcel-service', page: 1, limit: 10}).then(response => {
-      return response.json()
-    }).then(parsed => {
-      commit(types.MUTATION_CATEGORY_DATA, {
-        data: {
-          ...state.payload.parcel.data,
-          getAll: {
-            ...parsed.data
-          }
-        },
-        done: true
+    return this._vm.$resource('{service}/api/categories/page/{page}/limit/{limit}', {}, {
+      getAll: {
+        method: 'GET',
+        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}
+      }
+    }).getAll({service: 'parcel-service', page: 1, limit: 10})
+      .then(response => {
+        return response.json()
       })
-      return state.payload.parcel.data.getAll
-    }).catch(err => {
-      err.json().then(parsed => {
+      .then(parsed => {
         commit(types.MUTATION_CATEGORY_DATA, {
-          error: {
-            is: parsed.error,
-            message: parsed.message,
-            from: 'getAll',
-            reason: {
+          data: {
+            ...state.payload.parcel.data,
+            getAll: {
+              ...parsed.data
             }
           },
           done: true
         })
-        return new Error(parsed.message)
+        return state.payload.parcel.data.getAll
       })
-    })
+      .catch(err => {
+        return err.json()
+          .then(parsed => {
+            commit(types.MUTATION_CATEGORY_DATA, {
+              error: {
+                is: parsed.error,
+                message: parsed.message,
+                from: 'getAll',
+                reason: {
+                }
+              },
+              done: true
+            })
+            throw parsed.message
+          })
+      })
   }
 }
 

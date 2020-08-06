@@ -359,7 +359,7 @@ const actions = {
       router.push({path: '/dashboard/parcel'})
       return state.payload.signIn.data
     }).catch(err => {
-      err.json().then(parsed => {
+      return err.json().then(parsed => {
         commit(types.MUTATIONS_SIGN_IN_DATA, {
           error: {
             is: parsed.error,
@@ -369,7 +369,7 @@ const actions = {
           },
           done: true
         })
-        return new Error(parsed.message)
+        throw parsed.message
       })
     })
   },
@@ -404,7 +404,7 @@ const actions = {
       dispatch(types.ACTION_START_AUTH_TIMER, {expirationTime: parsed.expires_in})
       return state.payload.signIn.data
     }).catch(err => {
-      err.json().then(parsed => {
+      return err.json().then(parsed => {
         commit(types.MUTATIONS_SIGN_IN_DATA, {
           error: {
             is: parsed.error,
@@ -414,7 +414,7 @@ const actions = {
           },
           done: true
         })
-        return new Error(parsed.message)
+        throw parsed.message
       })
     })
   },
@@ -440,7 +440,7 @@ const actions = {
       })
       return state.payload.signUp.data
     }).catch(err => {
-      err.json().then(parsed => {
+      return err.json().then(parsed => {
         commit(types.MUTATION_SIGN_UP_DATA, {
           error: {
             is: parsed.error,
@@ -449,7 +449,7 @@ const actions = {
           },
           done: true
         })
-        return new Error(parsed.message)
+        throw parsed.message
       })
     })
   },
@@ -461,6 +461,7 @@ const actions = {
       return response.json()
     }).then(parsed => {
       localStorage.removeItem('avatar')
+      localStorage.removeItem('position')
       localStorage.removeItem('accountData')
       localStorage.removeItem('expirationDate')
 
@@ -478,7 +479,7 @@ const actions = {
       router.push({path: '/sign-in'})
       return state.payload.signOut.data
     }).catch(err => {
-      err.json().then(parsed => {
+      return err.json().then(parsed => {
         commit(types.MUTATION_SIGN_OUT_DATA, {
           error: {
             is: parsed.error,
@@ -488,7 +489,7 @@ const actions = {
           },
           done: true
         })
-        return new Error(parsed.message)
+        throw parsed.message
       })
     })
   },
@@ -509,7 +510,7 @@ const actions = {
       })
       return state.payload.forgetPassword.data
     }).catch(err => {
-      err.json().then(parsed => {
+      return err.json().then(parsed => {
         commit(types.MUTATION_FORGET_PASSWORD_DATA, {
           error: {
             is: parsed.error,
@@ -519,7 +520,7 @@ const actions = {
           },
           done: true
         })
-        return new Error(parsed.message)
+        throw parsed.message
       })
     })
   },
@@ -538,7 +539,7 @@ const actions = {
       })
       return state.payload.recoverToken.data
     }).catch(err => {
-      err.json().then(parsed => {
+      return err.json().then(parsed => {
         commit(types.MUTATION_ACCOUNT_RECOVER_DATA, {
           error: {
             is: parsed.error,
@@ -547,7 +548,7 @@ const actions = {
             }
           }
         })
-        return new Error(parsed.message)
+        throw parsed.message
       })
     })
   },
@@ -566,7 +567,7 @@ const actions = {
       })
       return state.payload.activationToken.data
     }).catch(err => {
-      err.json().then(parsed => {
+      return err.json().then(parsed => {
         commit(types.MUTATION_ACCOUNT_ACTIVATION_DATA, {
           error: {
             is: parsed.error,
@@ -575,7 +576,7 @@ const actions = {
             }
           }
         })
-        return new Error(parsed.message)
+        throw parsed.message
       })
     })
   }

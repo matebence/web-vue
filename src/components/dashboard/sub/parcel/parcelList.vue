@@ -20,7 +20,8 @@
           </li>
           <li>
             <ul>
-              <li class="number">#{{item.id}}</li>
+              <li class="number" v-if="isNewItem(item.createdAt)"><span class="badge badge-pill badge-danger">Nové</span></li>
+              <li class="number" v-else>#{{item.id}}</li>
               <li class="created">{{formatDate(item.createdAt)}}<br>{{formatTime(item.createdAt)}}</li>
             </ul>
           </li>
@@ -88,6 +89,11 @@ export default {
       }
     }
   },
+  watch: {
+    'activeEl.tabs.tabId': function (newValue, oldValue) {
+      if (newValue === 1) this.selectedOption({itemId: this.activeEl.tabs.tabId, value: this.activeEl.tabs.value})
+    }
+  },
   computed: {
     ...mapGetters({
       signIn: types.GETTER_SIGN_IN_DATA,
@@ -107,6 +113,11 @@ export default {
     },
     selectedParcel: function (el) {
       this.activeEl.parcels.parcelId = el.id
+    },
+    isNewItem: function (timestamp) {
+      const current = Number(new Date().getTime()) / 1000
+      const parcel = Number(new Date(timestamp).getTime()) / 1000
+      return current - parcel < 60
     },
     formatDate: function (timestamp) {
       const date = new Date(timestamp)

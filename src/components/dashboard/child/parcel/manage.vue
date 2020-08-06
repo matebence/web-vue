@@ -14,7 +14,7 @@
       v-show="isSelected"
       id="modify">
       <button
-        @click.prevent="components.activeEl.parcels.parcelId = 0">
+        @click.prevent="activeEl.parcels.parcelId = 0">
         <font-awesome-icon
           :icon="['fas', 'ban']"/>
       </button>
@@ -32,13 +32,13 @@
     <keep-alive>
       <component
         :is="selectedComponent"
-        :activeEl="components.activeEl"
+        :activeEl="activeEl"
         :form="components.appCreate.form"
         @createOrUpdate="
           selectedComponent = $event.component;
           selectedIcon = $event.icon;
-          components.activeEl.tabs.tabId = $event.nav.id;
-          components.activeEl.tabs.value = $event.nav.value;"/>
+          activeEl.tabs.tabId = $event.nav.id;
+          activeEl.tabs.value = $event.nav.value;"/>
     </keep-alive>
     <app-modal
       :modalId="'parcelAlert'"
@@ -67,6 +67,7 @@ import createUpdate from '@/components/dashboard/sub/parcel/createUpdate'
 
 export default {
   name: 'manage',
+  props: ['activeEl'],
   data: function () {
     return {
       selectedComponent: 'app-parcel-list',
@@ -104,15 +105,6 @@ export default {
           title: null,
           positiveButton: null,
           negativeButton: null
-        },
-        activeEl: {
-          tabs: {
-            tabId: 1,
-            value: 'Pridelené'
-          },
-          parcels: {
-            parcelId: 0
-          }
         }
       }
     }
@@ -124,13 +116,13 @@ export default {
     appParcelList: parcelList
   },
   watch: {
-    'components.activeEl.parcels.parcelId': function (newValue, oldValue) {
+    'activeEl.parcels.parcelId': function (newValue, oldValue) {
       this.$emit('selectedParcel', newValue)
     }
   },
   computed: {
     isSelected: function () {
-      return this.components.activeEl.parcels.parcelId !== 0
+      return this.activeEl.parcels.parcelId !== 0
     },
     ...mapGetters({
       parcelCreate: types.GETTER_PARCEL_DATA_CREATE,
@@ -159,35 +151,36 @@ export default {
     showConfirmModal: function (title, text) {
       this.components.appConfirm.title = title
       this.components.appConfirm.text = text
-      this.components.appConfirm.positiveButton = 'Áno'
-      this.components.appConfirm.negativeButton = 'Nie'
+      this.components.appConfirm.positiveButton = 'Odstrániť'
+      this.components.appConfirm.negativeButton = 'Zrušiť'
       return bootstrap('#parcelConfirm').modal('show')
     },
     editParcel: function () {
-      if (this.components.activeEl.parcels.parcelId > 0) {
+      if (this.activeEl.parcels.parcelId > 0) {
         return this.showAlertModal('Editovanie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné editovať.', 'Zatvoriť')
       } else {
-        const data = this.parcelCreate.filter(e => e.id === this.components.activeEl.parcels.parcelId)
+        const data = this.parcelCreate.filter(e => e.id === this.activeEl.parcels.parcelId)
         this.selectedComponent = this.manageComponenets()
-        this.components.activeEl.parcels.parcelId = 0
+        this.activeEl.parcels.parcelId = 0
         this.components.appCreate.form.values = {...data.pop()}
       }
     },
     removeParcel: function (confirmed) {
-      if (this.components.activeEl.parcels.parcelId > 0) {
+      if (this.activeEl.parcels.parcelId > 0) {
         return this.showAlertModal('Odstránenie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné odstrániť.', 'Zatvoriť')
       } else {
         if (confirmed) {
-          const data = this.parcelCreate.filter(e => e.id !== this.components.activeEl.parcels.parcelId)
+          const data = this.parcelCreate.filter(e => e.id !== this.activeEl.parcels.parcelId)
           this.$store.commit(types.MUTATION_PARCEL_DATA, {
             data: {
               ...this.parcelData,
               create: [...data]
             }
           })
-          this.components.activeEl.parcels.parcelId = 0
+          this.activeEl.parcels.parcelId = 0
+        } else {
+          return this.showConfirmModal('Odstránenie', 'Naozaj chcete odstrániť balík?')
         }
-        return this.showConfirmModal('Odstránenie', 'Naozaj chcete odstrániť balík?')
       }
     }
   }

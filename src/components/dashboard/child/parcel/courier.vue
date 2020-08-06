@@ -7,19 +7,19 @@
         class="searchTerm"
         placeholder="Meno kuriéra"
         v-model="courier.search.name"
-        :disabled="parcel.parcelId >= 0"
+        :disabled="parcel.search.activeEl.parcels.parcelId >= 0"
         @input="autoCompleteCourier($event.target.value)">
       <button
         @click.prevent="searchCourier({firstName: Object.values(courier.search.user).pop().firstName})"
         type="submit"
-        :disabled="parcel.parcelId >= 0"
+        :disabled="parcel.search.activeEl.parcels.parcelId >= 0"
         class="searchButton">
         <i class="fa fa-search"></i>
       </button>
     </form>
     <app-courier-list
       :search="courier.search"
-      :parcel="parcel"/>
+      :parcel="parcel.search.activeEl.parcels"/>
   </div>
 </template>
 
@@ -47,9 +47,10 @@ export default {
       return this.searchCourier({firstName: $event})
     },
     searchCourier: function (obj) {
-      return this.$store.dispatch(types.ACTION_USER_SEARCH, {roles: process.env.APP_ROLE_COURIER, ...obj}).then(result => {
-        this.courier.search.user = result
-      })
+      return this.$store.dispatch(types.ACTION_USER_SEARCH, {roles: process.env.APP_ROLE_COURIER, ...obj})
+        .then(result => {
+          this.courier.search.user = result
+        })
     }
   }
 }

@@ -199,7 +199,8 @@ export default {
     onPageLoad: function () {
       return this.$store.dispatch(types.ACTION_ACCOUNT_ACTIVATION, {
         id: this.url.values.id,
-        key: this.url.values.key})
+        key: this.url.values.key
+      })
     },
     onSignUp: function () {
       this.signUpError.message = this.activationTokenError.message = null
@@ -210,7 +211,8 @@ export default {
         email: this.form.values.email,
         password: this.form.values.password,
         confirmPassword: this.form.values.confirmPassword,
-        roles: JSON.parse(this.form.values.roles)})
+        roles: JSON.parse(this.form.values.roles)
+      })
     }
   }
 }

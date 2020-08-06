@@ -82,76 +82,86 @@ const mutations = {
 const actions = {
   [types.ACTION_USER_SEARCH]: function ({commit, dispatch, state, rootState}, payload) {
     commit(types.MUTATION_USER_DATA, {done: false})
-    const resource = this._vm.$resource('{service}/api/users/search', {}, {
-      search: {method: 'POST', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
-    return resource.search({service: 'user-service'}, {
-      pagination: {
-        pageNumber: 0,
-        pageSize: 10
-      },
+    return this._vm.$resource('{service}/api/users/search', {}, {
       search: {
-        ...payload
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        }
       }
-    }).then(response => {
-      return response.json()
-    }).then(parsed => {
-      commit(types.MUTATION_USER_DATA, {
-        data: {
-          ...state.payload.user.data,
-          search: {
-            ...parsed._embedded.usersList
-          }
-        },
-        done: true
+    }).search({service: 'user-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: { ...payload }})
+      .then(response => {
+        return response.json()
       })
-      return state.payload.user.data.search
-    }).catch(err => {
-      err.json().then(parsed => {
+      .then(parsed => {
         commit(types.MUTATION_USER_DATA, {
-          error: {
-            is: parsed.error,
-            message: parsed.message,
-            from: 'search',
-            reason: {}
+          data: {
+            ...state.payload.user.data,
+            search: {
+              ...parsed._embedded.usersList
+            }
           },
           done: true
         })
-        return new Error(parsed.message)
+        return state.payload.user.data.search
       })
-    })
+      .catch(err => {
+        return err.json()
+          .then(parsed => {
+            commit(types.MUTATION_USER_DATA, {
+              error: {
+                is: parsed.error,
+                message: parsed.message,
+                from: 'search',
+                reason: {}
+              },
+              done: true
+            })
+            throw parsed.message
+          })
+      })
   },
 
   [types.ACTION_USER_GET]: function ({commit, dispatch, state, rootState}, payload) {
     commit(types.MUTATION_USER_DATA, {done: false})
-    const resource = this._vm.$resource('{service}/api/users/{accountId}', {}, {
-      get: {method: 'GET', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
-    return resource.get({service: 'user-service', accountId: payload}).then(response => {
-      return response.json()
-    }).then(parsed => {
-      commit(types.MUTATION_USER_DATA, {
-        data: {
-          ...state.payload.user.data,
-          get: {
-            ...parsed
-          }
-        },
-        done: true
+    return this._vm.$resource('{service}/api/users/{accountId}', {}, {
+      get: {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        }
+      }
+    }).get({service: 'user-service', accountId: payload})
+      .then(response => {
+        return response.json()
       })
-      return state.payload.user.data.get
-    }).catch(err => {
-      err.json().then(parsed => {
+      .then(parsed => {
         commit(types.MUTATION_USER_DATA, {
-          error: {
-            is: parsed.error,
-            message: parsed.message,
-            from: 'get',
-            reason: {}
+          data: {
+            ...state.payload.user.data,
+            get: {
+              ...parsed
+            }
           },
           done: true
         })
-        return new Error(parsed.message)
+        return state.payload.user.data.get
       })
-    })
+      .catch(err => {
+        return err.json()
+          .then(parsed => {
+            commit(types.MUTATION_USER_DATA, {
+              error: {
+                is: parsed.error,
+                message: parsed.message,
+                from: 'get',
+                reason: {}
+              },
+              done: true
+            })
+            throw parsed.message
+          })
+      })
   }
 }
 

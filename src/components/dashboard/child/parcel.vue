@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
         <app-manage
-          @selectedParcel="components.parcel.parcelId = $event"/>
+          :activeEl="components.parcel.search.activeEl" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-courier
@@ -19,8 +19,8 @@
 
 <script>
 import courier from '@/components/dashboard/child/parcel/courier'
-import manage from '@/components/dashboard/child/parcel/manage'
 import hereMap from '@/components/dashboard/child/parcel/hereMap'
+import manage from '@/components/dashboard/child/parcel/manage'
 import * as types from '@/store/types'
 
 export default {
@@ -29,8 +29,18 @@ export default {
     return {
       components: {
         parcel: {
-          parcelId: 0,
-          shipment: {
+          search: {
+            shipment: {
+            },
+            activeEl: {
+              tabs: {
+                tabId: 1,
+                value: 'Pridelené'
+              },
+              parcels: {
+                parcelId: 0
+              }
+            }
           }
         },
         courier: {
@@ -51,13 +61,14 @@ export default {
     appHereMap: hereMap
   },
   watch: {
-    'components.parcel.parcelId': function (newValue, oldValue) {
+    'components.parcel.search.activeEl.parcels.parcelId': function (newValue, oldValue) {
       if (newValue <= 0) {
-        this.components.parcel.shipment = {}
+        this.components.parcel.search.shipment = {}
       } else {
-        return this.$store.dispatch(types.ACTION_SHIPMENTS_SEARCH, {parcelId: newValue}).then(result => {
-          this.components.parcel.shipment = Object.values(result).pop()
-        })
+        return this.$store.dispatch(types.ACTION_SHIPMENTS_SEARCH, {parcelId: newValue})
+          .then(result => {
+            this.components.parcel.search.shipment = Object.values(result).pop()
+          })
       }
     }
   }

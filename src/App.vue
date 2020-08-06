@@ -17,14 +17,15 @@ import '@/assets/css/reset.css'
 
 export default {
   created: function () {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(position => {
-        const userPosition = `${position.coords.latitude},${position.coords.longitude},${position.coords.accuracy}`
-        localStorage.setItem('position', userPosition)
-      })
-    }
+    if (navigator.geolocation) navigator.geolocation.getCurrentPosition(this.onLocationSuccess)
   },
-  name: 'App'
+  name: 'App',
+  methods: {
+    onLocationSuccess: function (position) {
+      const userPosition = `${position.coords.latitude},${position.coords.longitude},${position.coords.accuracy}`
+      localStorage.setItem('position', userPosition)
+    }
+  }
 }
 </script>
 

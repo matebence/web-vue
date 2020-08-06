@@ -254,9 +254,10 @@ export default {
       return this.searchReceiver({firstName: $event, roles: process.env.APP_ROLE_CLIENT})
     },
     searchReceiver: function (obj) {
-      return this.$store.dispatch(types.ACTION_USER_SEARCH, {...obj}).then(result => {
-        this.autoComplete.client = result
-      })
+      return this.$store.dispatch(types.ACTION_USER_SEARCH, {...obj})
+        .then(result => {
+          this.autoComplete.client = result
+        })
     },
     selectReceiver: function ($event) {
       this.form.values.receiver.userId = $event.dataset.userid

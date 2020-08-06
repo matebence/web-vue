@@ -136,7 +136,8 @@ export default {
         grantType: process.env.GRANT_TYPE_PASSWORD,
         userName: this.form.values.userName,
         password: this.form.values.password,
-        stayLoggedIn: this.form.values.stayLoggedIn})
+        stayLoggedIn: this.form.values.stayLoggedIn
+      })
     }
   }
 }

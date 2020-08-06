@@ -82,43 +82,42 @@ const mutations = {
 const actions = {
   [types.ACTION_PLACES_SEARCH]: function ({commit, dispatch, state, rootState}, payload) {
     commit(types.MUTATION_PLACES_DATA, {done: false})
-    const resource = this._vm.$resource('{service}/api/villages/search', {}, {
-      search: {method: 'POST', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
-    return resource.search({service: 'place-service'}, {
-      pagination: {
-        pageNumber: 0,
-        pageSize: 10
-      },
+    return this._vm.$resource('{service}/api/villages/search', {}, {
       search: {
-        ...payload
+        method: 'POST',
+        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}
       }
-    }).then(response => {
-      return response.json()
-    }).then(parsed => {
-      commit(types.MUTATION_PLACES_DATA, {
-        data: {
-          ...state.payload.place.data,
-          search: {
-            ...parsed.data
-          }
-        },
-        done: true
+    }).search({service: 'place-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: {...payload}})
+      .then(response => {
+        return response.json()
       })
-      return state.payload.place.data.search
-    }).catch(err => {
-      err.json().then(parsed => {
+      .then(parsed => {
         commit(types.MUTATION_PLACES_DATA, {
-          error: {
-            is: parsed.error,
-            message: parsed.message,
-            from: 'search',
-            reason: {}
+          data: {
+            ...state.payload.place.data,
+            search: {
+              ...parsed.data
+            }
           },
           done: true
         })
-        return new Error(parsed.message)
+        return state.payload.place.data.search
       })
-    })
+      .catch(err => {
+        return err.json()
+          .then(parsed => {
+            commit(types.MUTATION_PLACES_DATA, {
+              error: {
+                is: parsed.error,
+                message: parsed.message,
+                from: 'search',
+                reason: {}
+              },
+              done: true
+            })
+            throw parsed.message
+          })
+      })
   }
 }
 

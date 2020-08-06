@@ -5,7 +5,7 @@
         <div class="form-group">
           <input
             v-model="navigator.form.from.value"
-            :disabled="parcel.shipment.parcelId > 0 || parcel.parcelId === 0"
+            :disabled="parcel.search.shipment.parcelId > 0 || parcel.search.activeEl.parcels.parcelId === 0"
             type="text"
             class="form-control"
             id="from"
@@ -13,14 +13,14 @@
             @input="autoCompletePlace($event)">
           <div class="autocomplete">
             <ul>
-              <li v-for="place in navigator.form.from.autoComplete" v-bind:key="place.id" data-element="from" @click.prevent="selectPlace($event.target)">{{place.fullName}}</li>
+              <li v-for="place in navigator.form.from.autoComplete" v-bind:key="place.id" data-element="from" @click.prevent="selectPlace($event.target)">{{here.country.name}}, {{place.fullName}}</li>
             </ul>
           </div>
         </div>
         <div class="form-group">
           <input
             v-model="navigator.form.to.value"
-            :disabled="parcel.shipment.parcelId > 0 || parcel.parcelId === 0"
+            :disabled="parcel.search.shipment.parcelId > 0 || parcel.search.activeEl.parcels.parcelId === 0"
             type="text"
             class="form-control"
             id="to"
@@ -28,14 +28,14 @@
             @input="autoCompletePlace($event)">
           <div class="autocomplete">
             <ul>
-              <li v-for="place in navigator.form.to.autoComplete" v-bind:key="place.id" data-element="to" @click.prevent="selectPlace($event.target)">{{place.fullName}}</li>
+              <li v-for="place in navigator.form.to.autoComplete" v-bind:key="place.id" data-element="to" @click.prevent="selectPlace($event.target)">{{here.country.name}}, {{place.fullName}}</li>
             </ul>
           </div>
         </div>
         <button
           @click.prevent="calculatePriceByDistance"
           type="submit"
-          :disabled="(parcel.shipment.parcelId > 0) || (navigator.form.from.value.length < 3 || navigator.form.to.value.length < 3)"
+          :disabled="(parcel.search.shipment.parcelId > 0) || (navigator.form.from.value.length < 3 || navigator.form.to.value.length < 3)"
           class="btn btn-primary">Hľadať</button>
       </form>
       <div id="summary">
@@ -48,8 +48,8 @@
       <div id="finish">
         <button
           type="submit"
-          :disabled="(courier.search.activeEl.courierId === 0) || (parcel.shipment.parcelId > 0) || (navigator.form.from.value.length < 3 || navigator.form.to.value.length < 3)"
-          @click.prevent="onCreate"
+          :disabled="(courier.search.activeEl.courierId === 0) || (parcel.search.shipment.parcelId > 0) || (navigator.form.from.value.length < 3 || navigator.form.to.value.length < 3)"
+          @click.prevent="onCreate(false)"
           class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
       </div>
     </div>
@@ -58,6 +58,13 @@
       :text="components.appModal.text"
       :title="components.appModal.title"
       :button="components.appModal.button"/>
+    <app-confirm
+      @confirmed="onCreate($event)"
+      :confirmId="'hereMapConfirm'"
+      :text="components.appConfirm.text"
+      :title="components.appConfirm.title"
+      :positiveButton="components.appConfirm.positiveButton"
+      :negativeButton="components.appConfirm.negativeButton"/>
   </div>
 </template>
 
@@ -68,23 +75,40 @@ import 'here-js-api/scripts/mapsjs-service'
 import 'here-js-api/scripts/mapsjs-mapevents'
 
 import bleskMarker from '@/assets/img/blesk-marker.png'
+import confirm from '@/components/common/confirm'
 import modal from '@/components/common/modal'
 import * as types from '@/store/types'
+import {mapGetters} from 'vuex'
 
 export default {
   created: function () {
     this.here.platform = new H.service.Platform({'apikey': process.env.HERE_JS_SDK_API})
-    return this.reverseGeoCode()
   },
   beforeMount: function () {
-    return this.$store.dispatch(types.ACTION_PRICES_GET, process.env.COMPANY_PRICE_PROFIT_ID).then(result => {
-      this.navigator.company.profit = Number(result.price)
-    })
-  },
-  mounted: function () {
-    const defaultLayers = this.here.platform.createDefaultLayers().raster.normal.map
-    this.here.map = new H.Map(this.$refs.map, defaultLayers, {...this.here.slovakia})
-    return new H.mapevents.Behavior(new H.mapevents.MapEvents(this.here.map))
+    return Promise.all([
+      this.$store.dispatch(types.ACTION_LOCATION_GET),
+      this.$store.dispatch(types.ACTION_PRICES_GET, process.env.COMPANY_PRICE_PROFIT_ID)
+    ])
+      .then(results => {
+        if (results.length < 2) return
+        const profit = results.pop()
+        const location = results.pop()
+
+        this.here.country.name = location.country
+        this.navigator.company.profit = Number(profit.price)
+        this.here.country.value.center = {lng: location.lon, lat: location.lat}
+
+        return this.here.country.value
+      })
+      .then(result => {
+        const defaultLayers = this.here.platform.createDefaultLayers().raster.normal.map
+        this.here.map = new H.Map(this.$refs.map, defaultLayers, {...result})
+        return this.here.map
+      })
+      .then(result => {
+        new H.mapevents.Behavior(new H.mapevents.MapEvents(result))
+        return this.reverseGeoCode()
+      })
   },
   name: 'hereMap',
   props: ['parcel', 'courier'],
@@ -131,6 +155,12 @@ export default {
           text: null,
           title: null,
           button: null
+        },
+        appConfirm: {
+          text: null,
+          title: null,
+          positiveButton: null,
+          negativeButton: null
         }
       },
       here: {
@@ -138,11 +168,14 @@ export default {
         },
         platform: {
         },
-        slovakia: {
-          zoom: 8,
-          center: {
-            lng: 19.7508084,
-            lat: 48.62366
+        country: {
+          name: '',
+          value: {
+            zoom: 8,
+            center: {
+              lng: 0.00,
+              lat: 0.00
+            }
           }
         },
         routingConfiguration: {
@@ -172,23 +205,29 @@ export default {
     }
   },
   components: {
+    appConfirm: confirm,
     appModal: modal
   },
   watch: {
-    'parcel.shipment.parcelId': function (newValue, oldValue) {
+    'parcel.search.shipment.parcelId': function (newValue, oldValue) {
       if (newValue === undefined) return this.removePreviousRoutes()
 
-      this.navigator.form.from.value = this.parcel.shipment.from
-      this.navigator.form.to.value = this.parcel.shipment.to
+      this.navigator.form.from.value = this.parcel.search.shipment.from
+      this.navigator.form.to.value = this.parcel.search.shipment.to
       this.navigator.summary.isSet = true
       return this.visualizeOnMap()
     },
-    'parcel.parcelId': function (newValue, oldValue) {
+    'parcel.search.activeEl.parcels.parcelId': function (newValue, oldValue) {
       if (newValue === 0) return this.removePreviousRoutes()
     },
     'courier.search.activeEl.courierId': function (newValue, oldValue) {
       if (newValue > 0 && !this.navigator.summary.isSet) return this.calculatePriceByDistance()
     }
+  },
+  computed: {
+    ...mapGetters({
+      parcelCreate: types.GETTER_PARCEL_DATA_CREATE
+    })
   },
   methods: {
     geoCode: function (coordinates) {
@@ -209,7 +248,7 @@ export default {
       const reverseGeocodingParameters = {at: localStorage.getItem('position'), limit: '1'}
       return searchService.reverseGeocode(reverseGeocodingParameters, onSuccess => {
         const place = Object.values(onSuccess.items).pop()
-        this.navigator.form.from.value = place.address.city
+        this.navigator.form.from.value = `${this.here.country.name}, ${place.address.city}`
       }, onError => { console.log(onError) })
     },
     visualizeOnMap: function () {
@@ -269,10 +308,10 @@ export default {
       if (!this.navigator.summary.isSet) {
         const total = parseFloat(distance / 1000 * price) + profit
         return total > profit ? formatter.format(total) : formatter.format(0)
-      } else if (this.parcel.shipment.price === undefined && this.navigator.summary.isSet) {
+      } else if (this.parcel.search.shipment.price === undefined && this.navigator.summary.isSet) {
         return formatter.format(0)
       } else {
-        return formatter.format(this.parcel.shipment.price)
+        return formatter.format(this.parcel.search.shipment.price)
       }
     },
     formatDuration: function (duration) {
@@ -284,10 +323,11 @@ export default {
     calculatePriceByDistance: function () {
       if (this.courier.search.activeEl.courierId === 0) return this.showAlertModal('Upozornenie', 'Nezvolili ste si kuriéra.', 'Zatvoriť')
       const courier = Object.values(this.courier.search.user).filter(e => e.accountId === this.courier.search.activeEl.courierId).pop()
-      this.$store.dispatch(types.ACTION_PREFERENCES_SEARCH, {accountId: courier.accountId, name: 'Cena prepravy (eur/1km)'}).then(result => {
-        this.navigator.courier.price = Object.values(result).pop().value
-        return this.visualizeOnMap()
-      })
+      this.$store.dispatch(types.ACTION_PREFERENCES_SEARCH, {accountId: courier.accountId, name: 'Cena prepravy (eur/1km)'})
+        .then(result => {
+          this.navigator.courier.price = Object.values(result).pop().value
+          return this.visualizeOnMap()
+        })
     },
     showAlertModal: function (title, text, button) {
       this.components.appModal.title = title
@@ -295,16 +335,24 @@ export default {
       this.components.appModal.button = button
       return bootstrap('#hereMapAlert').modal('show')
     },
+    showConfirmModal: function (title, text) {
+      this.components.appConfirm.title = title
+      this.components.appConfirm.text = text
+      this.components.appConfirm.positiveButton = 'Áno, vytvoriť'
+      this.components.appConfirm.negativeButton = 'Zrušiť'
+      return bootstrap('#hereMapConfirm').modal('show')
+    },
     autoCompletePlace: function ($event) {
       if ($event.target.value.length < 3 && $event.target.id === 'from') {
         this.navigator.form.from.autoComplete = {}
       } else if ($event.target.value.length < 3 && $event.target.id === 'to') {
         this.navigator.form.to.autoComplete = {}
       } else {
-        return this.$store.dispatch(types.ACTION_PLACES_SEARCH, { fullName: $event.target.value }).then(result => {
-          if ($event.target.id === 'from') this.navigator.form.from.autoComplete = Object.values(result)
-          if ($event.target.id === 'to') this.navigator.form.to.autoComplete = Object.values(result)
-        })
+        return this.$store.dispatch(types.ACTION_PLACES_SEARCH, { fullName: $event.target.value })
+          .then(result => {
+            if ($event.target.id === 'from') this.navigator.form.from.autoComplete = Object.values(result)
+            if ($event.target.id === 'to') this.navigator.form.to.autoComplete = Object.values(result)
+          })
       }
     },
     selectPlace: function ($event) {
@@ -316,8 +364,29 @@ export default {
         this.navigator.form.to.autoComplete = {}
       }
     },
-    onCreate: function () {
-      if (this.navigator.summary.values.time === 0 || this.navigator.summary.values.length === 0) return this.showAlertModal('Upozornenie', 'Dľžka cesty nie je známa.', 'Zatvoriť')
+    onCreate: function (confirmed) {
+      if (this.navigator.summary.values.time === 0 || this.navigator.summary.values.length === 0) {
+        return this.showAlertModal('Upozornenie', 'Dľžka cesty nie je známa.', 'Zatvoriť')
+      } else {
+        if (confirmed) {
+          const data = Object.values(this.parcelCreate).filter(e => e.id === this.parcel.search.activeEl.parcels.parcelId).pop()
+          let payload = {id: this.parcel.search.activeEl.parcels.parcelId, data: {sender: Number(data.sender.senderId), receiver: Number(data.receiver.userId), categoryId: data.category.id, length: Number(data.length), width: Number(data.width), height: Number(data.height), weight: Number(data.weight), note: data.note}}
+
+          this.$store.dispatch(types.ACTION_PARCEL_CREATE, payload)
+            .then(result => {
+              payload = {shipments: [{ courier: this.courier.search.activeEl.courierId, parcelId: result.id, from: this.navigator.form.from.value, to: this.navigator.form.to.value, status: process.env.PARCEL_NEW_STATUS_ID, price: Number(parseFloat(this.navigator.summary.values.length / 1000 * this.navigator.courier.price).toFixed(2)) }]}
+              return this.$store.dispatch(types.ACTION_SHIPMENTS_CREATE, payload)
+            })
+            .then(result => {
+              this.parcel.search.activeEl.tabs = {tabId: 1, value: 'Pridelené'}
+            })
+            .catch(err => {
+              return this.showAlertModal('Chyba', err, 'Zatvoriť')
+            })
+        } else {
+          return this.showConfirmModal('Upozornenie', 'Po vytvorenie zásielky, zmena už nebude možná!')
+        }
+      }
     }
   }
 }

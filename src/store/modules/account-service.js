@@ -82,43 +82,43 @@ const mutations = {
 const actions = {
   [types.ACTION_PREFERENCES_SEARCH]: function ({commit, dispatch, state, rootState}, payload) {
     commit(types.MUTATION_PREFERENCES_DATA, {done: false})
-    const resource = this._vm.$resource('{service}/api/preferences/search', {}, {
-      search: {method: 'POST', headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}}})
-    return resource.search({service: 'account-service'}, {
-      pagination: {
-        pageNumber: 0,
-        pageSize: 10
-      },
+    return this._vm.$resource('{service}/api/preferences/search', {}, {
       search: {
-        ...payload
+        method: 'POST',
+        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        }
       }
-    }).then(response => {
-      return response.json()
-    }).then(parsed => {
-      commit(types.MUTATION_PREFERENCES_DATA, {
-        data: {
-          ...state.payload.preference.data,
-          search: {
-            ...parsed._embedded.preferencesSearchList
-          }
-        },
-        done: true
+    }).search({service: 'account-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: {...payload}})
+      .then(response => {
+        return response.json()
       })
-      return state.payload.preference.data.search
-    }).catch(err => {
-      err.json().then(parsed => {
+      .then(parsed => {
         commit(types.MUTATION_PREFERENCES_DATA, {
-          error: {
-            is: parsed.error,
-            message: parsed.message,
-            from: 'search',
-            reason: {}
+          data: {
+            ...state.payload.preference.data,
+            search: {
+              ...parsed._embedded.preferencesSearchList
+            }
           },
           done: true
         })
-        return new Error(parsed.message)
+        return state.payload.preference.data.search
       })
-    })
+      .catch(err => {
+        return err.json()
+          .then(parsed => {
+            commit(types.MUTATION_PREFERENCES_DATA, {
+              error: {
+                is: parsed.error,
+                message: parsed.message,
+                from: 'search',
+                reason: {}
+              },
+              done: true
+            })
+            throw parsed.message
+          })
+      })
   }
 }
 
