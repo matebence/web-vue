@@ -16,6 +16,30 @@ const parcel = resolve => {
   }, 'parcel')
 }
 
+const client = resolve => {
+  require.ensure(['@/components/dashboard/child/client'], () => {
+    resolve(require('@/components/dashboard/child/client'))
+  }, 'client')
+}
+
+const message = resolve => {
+  require.ensure(['@/components/dashboard/child/message'], () => {
+    resolve(require('@/components/dashboard/child/message'))
+  }, 'message')
+}
+
+const shipment = resolve => {
+  require.ensure(['@/components/dashboard/child/shipment'], () => {
+    resolve(require('@/components/dashboard/child/shipment'))
+  }, 'shipment')
+}
+
+const vehicle = resolve => {
+  require.ensure(['@/components/dashboard/child/vehicle'], () => {
+    resolve(require('@/components/dashboard/child/vehicle'))
+  }, 'vehicle')
+}
+
 const auth = resolve => {
   require.ensure(['@/components/auth/auth'], () => {
     resolve(require('@/components/auth/auth'))
@@ -33,20 +57,64 @@ const routes = [
     component: dashboard,
     name: 'dashboard',
     beforeEnter: function (to, from, next) {
-      if (store.state.authorization.payload.signIn.data.accessToken) return next()
-      return next('/sign-in')
+      return store.state.authorization.payload.signIn.data.accessToken ? next() : next('/sign-in')
     },
     children: [
-      {path: 'parcel', name: 'parcel', component: parcel}]},
+      {
+        path: 'parcel',
+        name: 'parcel',
+        component: parcel,
+        beforeEnter: function (to, from, next) {
+          return store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_CLIENT) ? next() : next('/sign-in')
+        }
+      }, {
+        path: 'client',
+        name: 'client',
+        component: client,
+        beforeEnter: function (to, from, next) {
+          return store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_COURIER) ? next() : next('/sign-in')
+        }
+      }, {
+        path: 'vehicle',
+        name: 'vehicle',
+        component: vehicle,
+        beforeEnter: function (to, from, next) {
+          return store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_COURIER) ? next() : next('/sign-in')
+        }
+      }, {
+        path: 'message',
+        name: 'message',
+        component: message,
+        beforeEnter: function (to, from, next) {
+          return (store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_CLIENT) || store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_COURIER)) ? next() : next('/sign-in')
+        }
+      }, {
+        path: 'shipment',
+        name: 'shipment',
+        component: shipment,
+        beforeEnter: function (to, from, next) {
+          return store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_CLIENT) ? next() : next('/sign-in')
+        }
+      }
+    ]
+  },
 
   {path: '/',
     component: auth,
     name: 'welcome',
     children: [
-      {path: ':component', component: auth},
-      {path: ':component/account/:id/token/:key', component: auth}]},
+      {
+        path: ':component',
+        component: auth
+      }, {
+        path: ':component/account/:id/token/:key',
+        component: auth
+      }
+    ]
+  },
 
-  {path: '*',
+  {
+    path: '*',
     component: error,
     name: 'error'
   }

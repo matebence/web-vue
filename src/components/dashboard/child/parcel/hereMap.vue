@@ -367,6 +367,8 @@ export default {
     onCreate: function (confirmed) {
       if (this.navigator.summary.values.time === 0 || this.navigator.summary.values.length === 0) {
         return this.showAlertModal('Upozornenie', 'Dľžka cesty nie je známa.', 'Zatvoriť')
+      } else if (Number(parseFloat(this.navigator.summary.values.length / 1000 * this.navigator.courier.price).toFixed(2)) > localStorage.getItem('balance')) {
+        return this.showAlertModal('Upozornenie', 'Nemáte dostatok penazí na účte.', 'Zatvoriť')
       } else {
         if (confirmed) {
           const data = Object.values(this.parcelCreate).filter(e => e.id === this.parcel.search.activeEl.parcels.parcelId).pop()

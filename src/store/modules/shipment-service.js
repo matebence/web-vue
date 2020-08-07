@@ -154,7 +154,7 @@ const mutations = {
 const actions = {
   [types.ACTION_SHIPMENTS_CREATE]: function ({commit, dispatch, state, rootState}, payload) {
     commit(types.MUTATION_SHIPMENTS_DATA, {done: false})
-    return this._vm.$resource('{service}/api/shipments', {}, {
+    return this._vm.$resource('{service}/api/shipment', {}, {
       create: {
         method: 'POST',
         headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}
@@ -199,7 +199,7 @@ const actions = {
 
   [types.ACTION_SHIPMENTS_SEARCH]: function ({commit, dispatch, state, rootState}, payload) {
     commit(types.MUTATION_SHIPMENTS_DATA, {done: false})
-    return this._vm.$resource('{service}/api/shipments/search', {}, {
+    return this._vm.$resource('{service}/api/shipment/search', {}, {
       search: {
         method: 'POST',
         headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`

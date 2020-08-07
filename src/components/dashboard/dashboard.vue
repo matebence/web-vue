@@ -3,7 +3,8 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-1 col-xl-2" id="navigation">
-          <app-navigation></app-navigation>
+          <app-navigation
+            :activeEl = "navigation.activeEl" />
         </div>
         <div class="col-lg-11 col-xl-10" id="wrapper">
           <router-view/>
@@ -14,12 +15,40 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+import * as types from '@/store/types'
 import navigation from '@/components/dashboard/child/navigation'
 
 export default {
+  created: function () {
+    if ([...this.allowedRoles].includes(process.env.APP_ROLE_CLIENT)) {
+      this.navigation.activeEl.nav = {itemId: 1, value: 'Balíky'}
+      this.$router.push({path: '/dashboard/parcel'})
+    } else if ([...this.allowedRoles].includes(process.env.APP_ROLE_COURIER)) {
+      this.navigation.activeEl.nav = {itemId: 3, value: 'Klienti'}
+      this.$router.push({path: '/dashboard/client'})
+    } else {
+      this.$router.push({path: '/sign-in'})
+    }
+  },
   name: 'dashboard',
+  data: function () {
+    return {
+      navigation: {
+        activeEl: {
+          nav: {
+          }
+        }
+      }
+    }
+  },
   components: {
     appNavigation: navigation
+  },
+  computed: {
+    ...mapGetters({
+      allowedRoles: types.GETTER_SIGN_IN_GET_ROLE
+    })
   }
 }
 </script>

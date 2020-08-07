@@ -9,7 +9,8 @@
           v-bind:key="nav.itemId"
           v-for="nav in navigation.items"
           @click.prevent="selectedNav(nav)"
-          :class="{active: navigation.activeEl.nav.itemId === nav.itemId}">
+          v-if="userHasRole(nav.isVisible.for)"
+          :class="{active: activeEl.nav.itemId === nav.itemId}">
           <router-link :to="`${nav.route}`">
             <font-awesome-icon :icon="['fas', nav.optional.icon]"/>
             <p>
@@ -40,6 +41,7 @@ import * as types from '@/store/types'
 
 export default {
   name: 'navigation',
+  props: ['activeEl'],
   data: function () {
     return {
       navigation: {
@@ -51,51 +53,72 @@ export default {
             optional: {
               icon: 'box-open',
               badge: ''
+            },
+            isVisible: {
+              for: [process.env.APP_ROLE_CLIENT]
             }
           },
           {
             itemId: 2,
             value: 'Zásielky',
-            route: '',
+            route: 'shipment',
             optional: {
               icon: 'shipping-fast',
               badge: ''
+            },
+            isVisible: {
+              for: [process.env.APP_ROLE_CLIENT]
             }
           },
           {
             itemId: 3,
-            value: 'Vozidlá',
-            route: '',
+            value: 'Klienti',
+            route: 'client',
             optional: {
-              icon: 'car',
+              icon: 'users',
               badge: ''
+            },
+            isVisible: {
+              for: [process.env.APP_ROLE_COURIER]
             }
           },
           {
             itemId: 4,
-            value: 'Správy',
-            route: '',
+            value: 'Vozidlá',
+            route: 'vehicle',
             optional: {
-              icon: 'comment-dots',
-              badge: 'Nové'
+              icon: 'car',
+              badge: ''
+            },
+            isVisible: {
+              for: [process.env.APP_ROLE_COURIER]
             }
           },
           {
             itemId: 5,
+            value: 'Správy',
+            route: 'message',
+            optional: {
+              icon: 'comment-dots',
+              badge: 'Nové'
+            },
+            isVisible: {
+              for: [process.env.APP_ROLE_CLIENT, process.env.APP_ROLE_COURIER]
+            }
+          },
+          {
+            itemId: 6,
             value: 'Odhlásiť sa',
-            route: '',
+            route: 'sign-out',
             optional: {
               icon: 'sign-out-alt',
               badge: ''
+            },
+            isVisible: {
+              for: [process.env.APP_ROLE_CLIENT, process.env.APP_ROLE_COURIER]
             }
           }
-        ],
-        activeEl: {
-          nav: {
-            itemId: 1,
-            value: 'Balíky'
-          }
-        }
+        ]
       }
     }
   },
@@ -104,19 +127,23 @@ export default {
       return localStorage.getItem('avatar')
     },
     ...mapGetters({
-      signIn: types.GETTER_SIGN_IN_DATA
+      signIn: types.GETTER_SIGN_IN_DATA,
+      allowedRoles: types.GETTER_SIGN_IN_GET_ROLE
     })
   },
   methods: {
     selectedNav: function (el) {
-      this.navigation.activeEl.nav.itemId = el.itemId
-      this.navigation.activeEl.nav.value = el.value
+      this.activeEl.nav.itemId = el.itemId
+      this.activeEl.nav.value = el.value
 
-      if (this.navigation.activeEl.nav.value === this.navigation.items[4].value) {
+      if (this.activeEl.nav.value === this.navigation.items[5].value) {
         return this.$store.dispatch(types.ACTION_SIGN_OUT, {
           accessToken: this.signIn.accessToken
         })
       }
+    },
+    userHasRole: function (role) {
+      return [...this.allowedRoles].some(e => role.includes(e))
     }
   }
 }
@@ -230,8 +257,7 @@ export default {
   }
 
   div#navigation nav ul.sub-items li:hover [data-letters]:before {
-    background: #176c9d;
-    color: #ffffff;
+    cursor: auto;
   }
 
   @media (max-width: 1390px) {
