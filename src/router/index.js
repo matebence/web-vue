@@ -40,6 +40,12 @@ const vehicle = resolve => {
   }, 'vehicle')
 }
 
+const profile = resolve => {
+  require.ensure(['@/components/dashboard/child/profile'], () => {
+    resolve(require('@/components/dashboard/child/profile'))
+  }, 'profile')
+}
+
 const auth = resolve => {
   require.ensure(['@/components/auth/auth'], () => {
     resolve(require('@/components/auth/auth'))
@@ -94,6 +100,13 @@ const routes = [
         component: shipment,
         beforeEnter: function (to, from, next) {
           return store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_CLIENT) ? next() : next('/sign-in')
+        }
+      }, {
+        path: 'profile',
+        name: 'profile',
+        component: profile,
+        beforeEnter: function (to, from, next) {
+          return (store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_CLIENT) || store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_COURIER)) ? next() : next('/sign-in')
         }
       }
     ]

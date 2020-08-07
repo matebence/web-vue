@@ -10,7 +10,8 @@
           v-for="nav in navigation.items"
           @click.prevent="selectedNav(nav)"
           v-if="userHasRole(nav.isVisible.for)"
-          :class="{active: activeEl.nav.itemId === nav.itemId}">
+          :class="{active: activeEl.nav.itemId === nav.itemId}"
+          :id="nav.route">
           <router-link :to="`${nav.route}`">
             <font-awesome-icon :icon="['fas', nav.optional.icon]"/>
             <p>
@@ -24,11 +25,14 @@
         <li>
           <a href="#" :data-letters="avatar"></a>
         </li>
-        <li class="settings">
-          <a href="#">
+        <li class="settings"
+          @click.prevent="selectedNav({itemId: 6, value: 'Nastavenia'})">
+          <router-link
+            to="profile"
+            :class="{active: activeEl.nav.itemId === 6}">
             <font-awesome-icon :icon="['fas', 'cog']"/>
             <p>Nastavenia</p>
-          </a>
+          </router-link>
         </li>
       </ul>
     </nav>
@@ -57,8 +61,7 @@ export default {
             isVisible: {
               for: [process.env.APP_ROLE_CLIENT]
             }
-          },
-          {
+          }, {
             itemId: 2,
             value: 'Zásielky',
             route: 'shipment',
@@ -69,8 +72,7 @@ export default {
             isVisible: {
               for: [process.env.APP_ROLE_CLIENT]
             }
-          },
-          {
+          }, {
             itemId: 3,
             value: 'Klienti',
             route: 'client',
@@ -81,8 +83,7 @@ export default {
             isVisible: {
               for: [process.env.APP_ROLE_COURIER]
             }
-          },
-          {
+          }, {
             itemId: 4,
             value: 'Vozidlá',
             route: 'vehicle',
@@ -93,8 +94,7 @@ export default {
             isVisible: {
               for: [process.env.APP_ROLE_COURIER]
             }
-          },
-          {
+          }, {
             itemId: 5,
             value: 'Správy',
             route: 'message',
@@ -105,9 +105,19 @@ export default {
             isVisible: {
               for: [process.env.APP_ROLE_CLIENT, process.env.APP_ROLE_COURIER]
             }
-          },
-          {
+          }, {
             itemId: 6,
+            value: 'Nastavenia',
+            route: 'profile',
+            optional: {
+              icon: 'cog',
+              badge: ''
+            },
+            isVisible: {
+              for: [process.env.APP_ROLE_CLIENT, process.env.APP_ROLE_COURIER]
+            }
+          }, {
+            itemId: 7,
             value: 'Odhlásiť sa',
             route: 'sign-out',
             optional: {
@@ -136,7 +146,7 @@ export default {
       this.activeEl.nav.itemId = el.itemId
       this.activeEl.nav.value = el.value
 
-      if (this.activeEl.nav.value === this.navigation.items[5].value) {
+      if (this.activeEl.nav.value === this.navigation.items[6].value) {
         return this.$store.dispatch(types.ACTION_SIGN_OUT, {
           accessToken: this.signIn.accessToken
         })
@@ -230,6 +240,7 @@ export default {
     padding-left: 0.5rem;
   }
 
+  div#navigation nav ul.sub-items li a.active,
   div#navigation nav ul.sub-items li a:hover {
     background: #187fb1;
     border-radius: 10rem;
@@ -266,6 +277,12 @@ export default {
     }
   }
 
+  @media (min-width: 1200px) {
+    div#navigation nav ul.items li#profile {
+      display: none;
+    }
+  }
+
   @media (max-width: 1200px) {
     div#navigation nav > a img {
       transform: rotate(-90deg);
@@ -275,7 +292,7 @@ export default {
 
     div#navigation nav ul.items {
       width: inherit;
-      height: 50vh;
+      height: unset;
       overflow: hidden;
     }
 
