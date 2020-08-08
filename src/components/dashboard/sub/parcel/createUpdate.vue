@@ -18,7 +18,7 @@
           :class="{valid: !$v.form.values.receiver.name.$error && $v.form.values.receiver.name.$dirty, invalid: $v.form.values.receiver.name.$error}">
         <div id="autocomplete">
           <ul>
-            <li v-for="user in autoComplete.client" v-bind:key="user.userId" v-if="user.accountId !== signIn.accountId" :data-userId="user.userId" @click.prevent="selectReceiver($event.target)">{{user.firstName}} {{user.lastName}}</li>
+            <li v-for="user in autoComplete.client" v-bind:key="user.accountId" v-if="user.accountId !== signIn.accountId" :data-accountId="user.accountId" @click.prevent="selectReceiver($event.target)">{{user.firstName}} {{user.lastName}}</li>
           </ul>
         </div>
         <small
@@ -201,7 +201,7 @@ export default {
             required,
             alpha: value => value.match(/^[\D ]+$/)
           },
-          userId: {
+          accountId: {
             required,
             numeric
           }
@@ -260,7 +260,7 @@ export default {
         })
     },
     selectReceiver: function ($event) {
-      this.form.values.receiver.userId = $event.dataset.userid
+      this.form.values.receiver.accountId = $event.dataset.accountid
       this.form.values.receiver.name = $event.textContent
       this.autoComplete.client = {}
     },

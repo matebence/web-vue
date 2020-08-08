@@ -10,7 +10,7 @@
         :disabled="parcel.search.activeEl.parcels.parcelId >= 0"
         @input="autoCompleteCourier($event.target.value)">
       <button
-        @click.prevent="searchCourier({firstName: Object.values(courier.search.user).pop().firstName})"
+        @click.prevent="searchCourier({firstName: courier.search.user.pop().firstName})"
         type="submit"
         :disabled="parcel.search.activeEl.parcels.parcelId >= 0"
         class="searchButton">
@@ -19,7 +19,7 @@
     </form>
     <app-courier-list
       :search="courier.search"
-      :parcel="parcel.search.activeEl.parcels"/>
+      :parcel="parcel.search"/>
   </div>
 </template>
 
@@ -49,7 +49,7 @@ export default {
     searchCourier: function (obj) {
       return this.$store.dispatch(types.ACTION_USER_SEARCH, {roles: process.env.APP_ROLE_COURIER, ...obj})
         .then(result => {
-          this.courier.search.user = result
+          this.courier.search.user = Object.values(result)
         })
     }
   }

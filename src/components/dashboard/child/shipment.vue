@@ -2,6 +2,8 @@
   <div id="shipment">
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
+        <app-manage
+          :activeEl="components.shipment.search.activeEl"/>
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
       </div>
@@ -10,8 +12,32 @@
 </template>
 
 <script>
+import manage from '@/components/dashboard/child/shipment/manage'
+
 export default {
-  name: 'shipment'
+  name: 'shipment',
+  data: function () {
+    return {
+      components: {
+        shipment: {
+          search: {
+            activeEl: {
+              tabs: {
+                tabId: 1,
+                value: 'Vlastné'
+              },
+              shipments: {
+                shipmentId: 0
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  components: {
+    appManage: manage
+  }
 }
 </script>
 

@@ -66,6 +66,9 @@ import parcelList from '@/components/dashboard/sub/parcel/parcelList'
 import createUpdate from '@/components/dashboard/sub/parcel/createUpdate'
 
 export default {
+  beforeMount: function () {
+    return this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
+  },
   name: 'manage',
   props: ['activeEl'],
   data: function () {
@@ -84,7 +87,7 @@ export default {
             values: {
               receiver: {
                 name: null,
-                userId: null
+                accountId: null
               },
               category: null,
               note: null,

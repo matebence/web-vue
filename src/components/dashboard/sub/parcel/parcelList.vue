@@ -21,7 +21,7 @@
           <li>
             <ul>
               <li class="number" v-if="isNewItem(item.createdAt)"><span class="badge badge-pill badge-danger">Nové</span></li>
-              <li class="number" v-else>#{{item.id}}</li>
+              <li class="number" v-else>Číslo balíka: {{item.id}}</li>
               <li class="created">{{formatDate(item.createdAt)}}<br>{{formatTime(item.createdAt)}}</li>
             </ul>
           </li>
@@ -173,7 +173,6 @@ export default {
     border-radius: 5rem;
     color: #ffffff;
     cursor: pointer;
-
   }
 
   div#parcelList ul.parcels li:hover,

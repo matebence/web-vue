@@ -85,6 +85,8 @@ export default {
     this.here.platform = new H.service.Platform({'apikey': process.env.HERE_JS_SDK_API})
   },
   beforeMount: function () {
+    this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
+
     return Promise.all([
       this.$store.dispatch(types.ACTION_LOCATION_GET),
       this.$store.dispatch(types.ACTION_PRICES_GET, process.env.COMPANY_PRICE_PROFIT_ID)
@@ -372,7 +374,7 @@ export default {
       } else {
         if (confirmed) {
           const data = Object.values(this.parcelCreate).filter(e => e.id === this.parcel.search.activeEl.parcels.parcelId).pop()
-          let payload = {id: this.parcel.search.activeEl.parcels.parcelId, data: {sender: Number(data.sender.senderId), receiver: Number(data.receiver.userId), categoryId: data.category.id, length: Number(data.length), width: Number(data.width), height: Number(data.height), weight: Number(data.weight), note: data.note}}
+          let payload = {id: this.parcel.search.activeEl.parcels.parcelId, data: {sender: Number(data.sender.senderId), receiver: Number(data.receiver.accountId), categoryId: data.category.id, length: Number(data.length), width: Number(data.width), height: Number(data.height), weight: Number(data.weight), note: data.note}}
 
           this.$store.dispatch(types.ACTION_PARCEL_CREATE, payload)
             .then(result => {
