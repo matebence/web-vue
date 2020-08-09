@@ -332,6 +332,7 @@ const actions = {
       },
       done: true
     })
+    dispatch(types.ACTION_START_AUTH_TIMER, {expirationTime: Number(new Date(localStorage.getItem('expirationDate')).getTime() / 1000) - Number(new Date().getTime() / 1000)})
     dispatch(types.ACTION_CHECK_PROFILE)
     router.push({path: '/dashboard'})
   },

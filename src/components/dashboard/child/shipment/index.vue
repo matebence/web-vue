@@ -2,11 +2,13 @@
   <div id="index">
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
-        <app-manage
+        <h1>Zásielky</h1>
+        <app-vertical-list
           :activeEl="components.shipment.activeEl"
           :shipment="components.shipment.search" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
+        <app-properties/>
       </div>
     </div>
   </div>
@@ -15,7 +17,8 @@
 <script>
 import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
-import manage from '@/components/dashboard/child/shipment/manage'
+import properties from '@/components/dashboard/child/shipment/sub/properties'
+import verticalList from '@/components/dashboard/child/shipment/sub/verticalList'
 
 export default {
   name: 'index',
@@ -45,7 +48,8 @@ export default {
     }
   },
   components: {
-    appManage: manage
+    appProperties: properties,
+    appVerticalList: verticalList
   },
   watch: {
     'components.shipment.activeEl.tabs.value': function (newValue, oldValue) {
@@ -79,6 +83,12 @@ export default {
 </script>
 
 <style scoped>
+  div#index h1 {
+    margin-top: 1em;
+    font-size: 2em;
+    display: inline-block;
+  }
+
   div#index div#main-content,
   div#index div#content {
     width: 100%;
