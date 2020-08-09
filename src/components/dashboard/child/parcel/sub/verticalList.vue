@@ -1,5 +1,5 @@
 <template>
-  <div id="parcelList">
+  <div id="list">
     <ul class="tabs">
       <li
         v-bind:key="option.id"
@@ -61,10 +61,11 @@ import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
 
 export default {
-  name: 'parcelList',
+  name: 'list',
   props: ['activeEl'],
   created: function () {
     return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.accountId})
+      .catch(err => console.log(err))
   },
   beforeMount: function () {
     return this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
@@ -109,6 +110,7 @@ export default {
 
       if (this.activeEl.tabs.value === this.tab.items[0].value || this.activeEl.tabs.value === this.tab.items[2].value) {
         return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.accountId})
+          .catch(err => console.log(err))
       }
     },
     selectedParcel: function (el) {
@@ -152,13 +154,13 @@ export default {
 </script>
 
 <style scoped>
-  div#parcelList ul.tabs {
+  div#list ul.tabs {
     margin-top: 2rem;
     margin-bottom: 2rem;
     width: 102%;
   }
 
-  div#parcelList ul.tabs li {
+  div#list ul.tabs li {
     display: inline;
     font-weight: 600;
     font-size: 0.8em;
@@ -167,22 +169,22 @@ export default {
     color: #a5a3a5;
   }
 
-  div#parcelList ul.tabs li:hover,
-  div#parcelList ul.tabs li.active {
+  div#list ul.tabs li:hover,
+  div#list ul.tabs li.active {
     background: #176c9d;
     border-radius: 5rem;
     color: #ffffff;
     cursor: pointer;
   }
 
-  div#parcelList ul.parcels li:hover,
-  div#parcelList ul.parcels li.active {
+  div#list ul.parcels li:hover,
+  div#list ul.parcels li.active {
     background: #f1f1f1;
     border-radius: 0.5rem;
     cursor: pointer;
   }
 
-  div#parcelList ul.parcels li ul.parcel {
+  div#list ul.parcels li ul.parcel {
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
@@ -190,7 +192,7 @@ export default {
     text-align: center;
   }
 
-  div#parcelList ul.parcels li ul.parcel li.image {
+  div#list ul.parcels li ul.parcel li.image {
     display: inline-block;
     font-size: 1.3em;
     width: 3.5rem;
@@ -202,18 +204,18 @@ export default {
     color: #176c9d;
   }
 
-  div#parcelList ul.parcels li ul.parcel li ul li.number,
-  div#parcelList ul.parcels li ul.parcel li ul li.created {
+  div#list ul.parcels li ul.parcel li ul li.number,
+  div#list ul.parcels li ul.parcel li ul li.created {
     font-size: 0.9em;
     font-weight: 400;
     color: #000000;
   }
 
-  div#parcelList ul.parcels li ul.parcel li.category {
+  div#list ul.parcels li ul.parcel li.category {
     padding: 1rem;
   }
 
-  div#parcelList ul.parcels li ul.parcel li.category svg {
+  div#list ul.parcels li ul.parcel li.category svg {
     font-size: 1.3em;
     color: #176c9d;
   }

@@ -147,9 +147,8 @@ export default {
       this.activeEl.nav.value = el.value
 
       if (this.activeEl.nav.value === this.navigation.items[6].value) {
-        return this.$store.dispatch(types.ACTION_SIGN_OUT, {
-          accessToken: this.signIn.accessToken
-        })
+        return this.$store.dispatch(types.ACTION_SIGN_OUT, {accessToken: this.signIn.accessToken})
+          .catch(err => console.log(err))
       }
     },
     userHasRole: function (role) {

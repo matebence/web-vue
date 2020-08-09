@@ -1,5 +1,5 @@
 <template>
-  <div id="createUpdate">
+  <div id="crud">
     <form>
       <div class="form-group">
         <label
@@ -177,10 +177,11 @@ import alert from '@/components/common/alert'
 import {required, alphaNum, numeric} from 'vuelidate/lib/validators'
 
 export default {
-  name: 'createUpdate',
+  name: 'crud',
   props: ['form'],
   created: function () {
     return this.$store.dispatch(types.ACTION_CATEGORY_GET_ALL, {})
+      .catch(err => console.log(err))
   },
   beforeMount: function () {
     return this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
@@ -258,6 +259,7 @@ export default {
         .then(result => {
           this.autoComplete.client = result
         })
+        .catch(err => console.log(err))
     },
     selectReceiver: function ($event) {
       this.form.values.receiver.accountId = $event.dataset.accountid
@@ -278,7 +280,7 @@ export default {
             }]
           }
         })
-        return this.$emit('createOrUpdate', {component: 'app-parcel-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
+        return this.$emit('crud', {component: 'app-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
       }
     },
     onUpdate: function () {
@@ -294,7 +296,7 @@ export default {
             }]
           }
         })
-        return this.$emit('createOrUpdate', {component: 'app-parcel-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
+        return this.$emit('crud', {component: 'app-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
       }
     }
   }
@@ -302,17 +304,17 @@ export default {
 </script>
 
 <style scoped>
-  div#createUpdate form {
+  div#crud form {
     margin-top: 1rem;
     padding: 0.5rem;
     margin-bottom: 3rem;
   }
 
-  div#createUpdate label {
+  div#crud label {
     font-size: 0.9em;
   }
 
-  div#createUpdate button {
+  div#crud button {
     font-size: 0.9em;
     background: #ffffff;
     border: solid 0.09rem #176c9d;
@@ -323,19 +325,19 @@ export default {
     margin-bottom: 1rem;
   }
 
-  div#createUpdate button:hover {
+  div#crud button:hover {
     border-color: #7f7f7f;
     background: #176c9d;
     color: #ffffff;
   }
 
-  div#createUpdate button[disabled] {
+  div#crud button[disabled] {
     border-color: #7f7f7f;
     background: #176c9d;
     color: #ffffff;
   }
 
-  div#createUpdate select {
+  div#crud select {
     background: #ffffff;
     font-size: 0.9em;
     width: 100%;
@@ -347,15 +349,15 @@ export default {
     border-bottom: 0.1rem solid #dbdbdb;
   }
 
-  div#createUpdate select:focus {
+  div#crud select:focus {
     background: #ffffff;
   }
 
-  div#createUpdate option {
+  div#crud option {
     background: #ffffff;
   }
 
-  div#createUpdate input[type="text"] {
+  div#crud input[type="text"] {
     font-size: 0.9em;
     width: 100%;
     height: 3rem;
@@ -367,44 +369,44 @@ export default {
     border-bottom: 0.1rem solid #dbdbdb;
   }
 
-  div#createUpdate div #autocomplete {
+  div#crud div #autocomplete {
     width: 100%;
     position: relative;
   }
 
-  div#createUpdate div #autocomplete ul {
+  div#crud div #autocomplete ul {
     position: absolute;
     width: calc(100%);
     background: #ffffff;
   }
 
-  div#createUpdate div#autocomplete ul li {
+  div#crud div#autocomplete ul li {
     font-size: 1em;
     padding: 0.8rem;
     border: solid 0.01rem #dbdbdb;
   }
-  div#createUpdate div#autocomplete ul li:hover {
+  div#crud div#autocomplete ul li:hover {
     cursor: pointer;
     background: #f1f1f1;
   }
 
-  div#createUpdate textarea {
+  div#crud textarea {
     border: none;
     background: transparent;
     border-radius: 0;
     border-bottom: 0.1rem solid #dbdbdb;
   }
 
-  div#createUpdate small, .text-muted {
+  div#crud small, .text-muted {
     font-size: 0.8em;
     color: #ff0000 !important;
   }
 
-  div#createUpdate input.invalid, div#createUpdate select.invalid, div#createUpdate textarea.invalid {
+  div#crud input.invalid, div#crud select.invalid, div#crud textarea.invalid {
     border-bottom: 0.1rem solid #ff0000;
   }
 
-  div#createUpdate input.valid, div#createUpdate select.valid, div#createUpdate textarea.valid {
+  div#crud input.valid, div#crud select.valid, div#crud textarea.valid {
     border-bottom: 0.1rem solid #008000;
   }
 </style>

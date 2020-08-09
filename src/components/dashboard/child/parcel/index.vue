@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
         <app-manage
-          :activeEl="components.parcel.search.activeEl" />
+          :activeEl="components.parcel.activeEl" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-courier
@@ -31,15 +31,15 @@ export default {
         parcel: {
           search: {
             shipment: {
+            }
+          },
+          activeEl: {
+            tabs: {
+              tabId: 1,
+              value: 'Pridelené'
             },
-            activeEl: {
-              tabs: {
-                tabId: 1,
-                value: 'Pridelené'
-              },
-              parcels: {
-                parcelId: 0
-              }
+            parcels: {
+              parcelId: 0
             }
           }
         },
@@ -61,14 +61,15 @@ export default {
     appHereMap: hereMap
   },
   watch: {
-    'components.parcel.search.activeEl.parcels.parcelId': function (newValue, oldValue) {
+    'components.parcel.activeEl.parcels.parcelId': function (newValue, oldValue) {
       if (newValue <= 0) {
         this.components.parcel.search.shipment = {}
       } else {
-        return this.$store.dispatch(types.ACTION_SHIPMENTS_SEARCH, {parcelId: newValue})
+        return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {parcelId: newValue})
           .then(result => {
             this.components.parcel.search.shipment = Object.values(result).pop()
           })
+          .catch(err => console.log(err))
       }
     }
   }

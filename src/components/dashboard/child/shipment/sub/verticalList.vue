@@ -1,5 +1,5 @@
 <template>
-  <div id="shipmentList">
+  <div id="list">
     <ul class="tabs">
       <li
         v-bind:key="option.id"
@@ -8,16 +8,20 @@
         :class="{active: activeEl.tabs.tabId === option.itemId}">{{option.value}}</li>
     </ul>
     <ul class="shipments">
-      <li>
+      <li
+        v-bind:key="item._id"
+        @click.prevent="selectedShipment(item)"
+        v-for="item in search"
+        :class="{active: activeEl.shipments.shipmentId === item._id}">
         <ul class="shipment">
           <li class="image">
             <font-awesome-icon :icon="['fas', 'dolly']"/>
           </li>
           <li>
             <ul>
-              <li class="from">Veľké Lovce - Radava</li>
-              <li class="status">Registrované dopravcom</li>
-              <li class="number">5f2e792efec03d67bf8d9dcd</li>
+              <li class="from">{{item.from.split(',').pop()}} - {{item.to.split(',').pop()}}</li>
+              <li class="status">{{item.status.name}}</li>
+              <li class="number">{{item._id}}</li>
             </ul>
           </li>
         </ul>
@@ -28,8 +32,8 @@
 
 <script>
 export default {
-  name: 'shipmentList',
-  props: ['activeEl'],
+  name: 'list',
+  props: ['activeEl', 'search'],
   data: function () {
     return {
       tab: {
@@ -54,19 +58,22 @@ export default {
     selectedOption: function (el) {
       this.activeEl.tabs.tabId = el.itemId
       this.activeEl.tabs.value = el.value
+    },
+    selectedShipment: function (el) {
+      this.activeEl.shipments.shipmentId = el.id
     }
   }
 }
 </script>
 
 <style scoped>
-  div#shipmentList ul.tabs {
+  div#list ul.tabs {
     margin-top: 2rem;
     margin-bottom: 2rem;
     width: 102%;
   }
 
-  div#shipmentList ul.tabs li {
+  div#list ul.tabs li {
     display: inline;
     font-weight: 600;
     font-size: 0.8em;
@@ -75,30 +82,30 @@ export default {
     color: #a5a3a5;
   }
 
-  div#shipmentList ul.tabs li:hover,
-  div#shipmentList ul.tabs li.active {
+  div#list ul.tabs li:hover,
+  div#list ul.tabs li.active {
     background: #176c9d;
     border-radius: 5rem;
     color: #ffffff;
     cursor: pointer;
   }
 
-  div#shipmentList ul.shipments li ul.shipment ul {
+  div#list ul.shipments li ul.shipment ul {
     text-align: left;
   }
 
-  div#shipmentList ul.shipments li ul.shipment ul li {
+  div#list ul.shipments li ul.shipment ul li {
     margin-left: 1rem;
   }
 
-  div#shipmentList ul.shipments li:hover,
-  div#shipmentList ul.shipments li.active {
+  div#list ul.shipments li:hover,
+  div#list ul.shipments li.active {
     background: #f1f1f1;
     border-radius: 0.5rem;
     cursor: pointer;
   }
 
-  div#shipmentList ul.shipments li ul.shipment {
+  div#list ul.shipments li ul.shipment {
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
@@ -106,7 +113,7 @@ export default {
     text-align: center;
   }
 
-  div#shipmentList ul.shipments li ul.shipment li.image {
+  div#list ul.shipments li ul.shipment li.image {
     display: inline-block;
     font-size: 1.3em;
     width: 3.5rem;
@@ -118,9 +125,9 @@ export default {
     color: #176c9d;
   }
 
-  div#shipmentList ul.shipments li ul.shipment li ul li.number,
-  div#shipmentList ul.shipments li ul.shipment li ul li.status,
-  div#shipmentList ul.shipments li ul.shipment li ul li.from {
+  div#list ul.shipments li ul.shipment li ul li.number,
+  div#list ul.shipments li ul.shipment li ul li.status,
+  div#list ul.shipments li ul.shipment li ul li.from {
     font-size: 0.9em;
     font-weight: 400;
     color: #000000;

@@ -1,5 +1,5 @@
 <template>
-  <div id="courierList">
+  <div id="list">
     <ul class="couriers">
       <li
         v-bind:key="user.accountId"
@@ -26,7 +26,7 @@ import bootstrap from 'jquery'
 import modal from '@/components/common/modal'
 
 export default {
-  name: 'courierList',
+  name: 'list',
   props: ['search', 'parcel'],
   data: function () {
     return {
@@ -67,7 +67,7 @@ export default {
 </script>
 
 <style scoped>
-  div#courierList ul.couriers {
+  div#list ul.couriers {
     margin-top: 2rem;
     margin-left: 0.5em;
     margin-bottom: 0.5em;
@@ -79,7 +79,7 @@ export default {
     height: 7rem;
   }
 
-  div#courierList ul.couriers li {
+  div#list ul.couriers li {
     margin-right: 0.3rem;
     display: flex;
     align-items: center;
@@ -89,13 +89,13 @@ export default {
     padding-bottom: 0.3rem;
   }
 
-  div#courierList ul.couriers li:hover, #dashboard ul.couriers li.active {
+  div#list ul.couriers li:hover, #dashboard ul.couriers li.active {
     background: #f1f1f1;
     border-radius: 0.5rem;
     cursor: pointer;
   }
 
-  div#courierList ul.couriers li ul.courier li [data-letters]:before {
+  div#list ul.couriers li ul.courier li [data-letters]:before {
     content: attr(data-letters);
     border: solid 0.1rem #ffffff;
     display: inline-block;
