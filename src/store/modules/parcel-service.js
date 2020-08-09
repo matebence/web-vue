@@ -205,7 +205,7 @@ const actions = {
         method: 'POST',
         headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}
       }
-    }).search({service: 'parcel-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: {sender: payload.sender}, orderBy: {id: 'desc'}})
+    }).search({service: 'parcel-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: payload, orderBy: {id: 'desc'}})
       .then(response => {
         return response.json()
       })

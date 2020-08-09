@@ -34,7 +34,7 @@
         :is="selectedComponent"
         :activeEl="activeEl"
         :form="components.appCreate.form"
-        @createOrUpdate="
+        @crud="
           selectedComponent = $event.component;
           selectedIcon = $event.icon;
           activeEl.tabs.tabId = $event.nav.id;
@@ -62,8 +62,8 @@ import * as types from '@/store/types'
 
 import modal from '@/components/common/modal'
 import confirm from '@/components/common/confirm'
-import parcelList from '@/components/dashboard/sub/parcel/parcelList'
-import createUpdate from '@/components/dashboard/sub/parcel/createUpdate'
+import crud from '@/components/dashboard/child/parcel/sub/crud'
+import verticalList from '@/components/dashboard/child/parcel/sub/verticalList'
 
 export default {
   beforeMount: function () {
@@ -73,15 +73,15 @@ export default {
   props: ['activeEl'],
   data: function () {
     return {
-      selectedComponent: 'app-parcel-list',
+      selectedComponent: 'app-vertical-list',
       selectedIcon: 'plus',
       components: {
         appList: {
-          name: 'app-parcel-list',
+          name: 'app-vertical-list',
           icon: 'plus'
         },
         appCreate: {
-          name: 'app-create-update',
+          name: 'app-crud',
           icon: 'angle-left',
           form: {
             values: {
@@ -114,9 +114,9 @@ export default {
   },
   components: {
     appConfirm: confirm,
-    appCreateUpdate: createUpdate,
+    appCrud: crud,
     appModal: modal,
-    appParcelList: parcelList
+    appVerticalList: verticalList
   },
   watch: {
     'activeEl.parcels.parcelId': function (newValue, oldValue) {

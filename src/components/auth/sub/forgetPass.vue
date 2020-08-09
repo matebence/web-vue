@@ -98,13 +98,12 @@ export default {
       return this.$router.push({path: `/${$event.replace('app-', '')}`})
     },
     onPageLoad: function () {
-      return this.$store.dispatch(types.ACTION_ACCOUNT_RECOVER, {
-        id: this.url.values.id,
-        key: this.url.values.key})
+      return this.$store.dispatch(types.ACTION_ACCOUNT_RECOVER, {id: this.url.values.id, key: this.url.values.key})
+        .catch(err => console.log(err))
     },
     onSend: function () {
-      return this.$store.dispatch(types.ACTION_FORGET_PASSWORD, {
-        email: this.form.values.email})
+      return this.$store.dispatch(types.ACTION_FORGET_PASSWORD, {email: this.form.values.email})
+        .catch(err => console.log(err))
     }
   }
 }

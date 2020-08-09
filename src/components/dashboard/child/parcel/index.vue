@@ -1,5 +1,5 @@
 <template>
-  <div id="parcel">
+  <div id="index">
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
         <app-manage
@@ -8,7 +8,8 @@
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-courier
           :parcel="components.parcel"
-          :courier="components.courier" />
+          :courier="components.courier"
+          :activeEl="components.parcel.activeEl"/>
         <app-here-map
           :parcel="components.parcel"
           :courier="components.courier" />
@@ -24,7 +25,7 @@ import manage from '@/components/dashboard/child/parcel/manage'
 import * as types from '@/store/types'
 
 export default {
-  name: 'parcel',
+  name: 'index',
   data: function () {
     return {
       components: {
@@ -77,13 +78,13 @@ export default {
 </script>
 
 <style scoped>
-  div#parcel div#main-content,
-  div#parcel div#content {
+  div#index div#main-content,
+  div#index div#content {
     width: 100%;
     height: 98vh;
   }
 
-  div#parcel div#content {
+  div#index div#content {
     border-radius: 3rem;
     border: 0.5rem #f1f1f1 solid;
     background: #ffffff;
@@ -91,7 +92,7 @@ export default {
     overflow: auto;
   }
 
-  div#parcel div#main-content {
+  div#index div#main-content {
     border-top-left-radius: 3rem;
     border-bottom-left-radius: 3rem;
     border: 0.5rem #f1f1f1 solid;
@@ -101,7 +102,7 @@ export default {
   }
 
   @media (max-width: 992px) {
-    div#parcel div#main-content {
+    div#index div#main-content {
       border-top-left-radius: 3rem;
       border-top-right-radius: 3rem;
       border-bottom-left-radius: 0;

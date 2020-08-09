@@ -1,19 +1,20 @@
 <template>
   <div id="manage">
     <h1>Zásielky</h1>
-    <app-shipment-list
-      :activeEl="activeEl"/>
+    <app-vertical-list
+      :activeEl="activeEl"
+      :shipment="shipment" />
   </div>
 </template>
 
 <script>
-import shipmentList from '@/components/dashboard/sub/shipment/shipmentList'
+import verticalList from '@/components/dashboard/child/shipment/sub/verticalList'
 
 export default {
   name: 'manage',
-  props: ['activeEl'],
+  props: ['activeEl', 'shipment'],
   components: {
-    appShipmentList: shipmentList
+    appVerticalList: verticalList
   }
 }
 </script>

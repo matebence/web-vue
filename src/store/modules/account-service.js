@@ -30,14 +30,14 @@ const state = {
 }
 
 const mutations = {
-  [types.MUTATION_PREFERENCES_DATA]: function (state, data) {
+  [types.MUTATION_PREFERENCE_DATA]: function (state, data) {
     state.payload.preference = {
       ...state.payload.preference,
       ...data
     }
   },
 
-  [types.MUTATIONS_CLEAR_PREFERENCES_DATA]: function (state, data) {
+  [types.MUTATIONS_CLEAR_PREFERENCE_DATA]: function (state, data) {
     state.payload.preference = {
       data: {
         create: {
@@ -64,7 +64,7 @@ const mutations = {
     }
   },
 
-  [types.MUTATIONS_CLEAR_PREFERENCES_ERRORS]: function (state, data) {
+  [types.MUTATIONS_CLEAR_PREFERENCE_ERRORS]: function (state, data) {
     state.payload.preference = {
       ...state.payload.preference,
       error: {
@@ -80,8 +80,8 @@ const mutations = {
 }
 
 const actions = {
-  [types.ACTION_PREFERENCES_SEARCH]: function ({commit, dispatch, state, rootState}, payload) {
-    commit(types.MUTATION_PREFERENCES_DATA, {done: false})
+  [types.ACTION_PREFERENCE_SEARCH]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_PREFERENCE_DATA, {done: false})
     return this._vm.$resource('{service}/api/preferences/search', {}, {
       search: {
         method: 'POST',
@@ -93,7 +93,7 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
-        commit(types.MUTATION_PREFERENCES_DATA, {
+        commit(types.MUTATION_PREFERENCE_DATA, {
           data: {
             ...state.payload.preference.data,
             search: {
@@ -107,7 +107,7 @@ const actions = {
       .catch(err => {
         return err.json()
           .then(parsed => {
-            commit(types.MUTATION_PREFERENCES_DATA, {
+            commit(types.MUTATION_PREFERENCE_DATA, {
               error: {
                 is: parsed.error,
                 message: parsed.message,
@@ -123,19 +123,19 @@ const actions = {
 }
 
 const getters = {
-  [types.GETTER_PREFERENCES_DATA]: function (state) {
+  [types.GETTER_PREFERENCE_DATA]: function (state) {
     return state.payload.preference.data
   },
 
-  [types.GETTER_PREFERENCES_DATA_SEARCH]: function (state) {
+  [types.GETTER_PREFERENCE_DATA_SEARCH]: function (state) {
     return state.payload.preference.data.search
   },
 
-  [types.GETTER_PREFERENCES_DONE]: function (state) {
+  [types.GETTER_PREFERENCE_DONE]: function (state) {
     return state.payload.preference.done
   },
 
-  [types.GETTER_PREFERENCES_ERROR]: function (state) {
+  [types.GETTER_PREFERENCE_ERROR]: function (state) {
     return state.payload.preference.error
   }
 }

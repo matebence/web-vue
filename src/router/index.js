@@ -11,38 +11,38 @@ const dashboard = resolve => {
 }
 
 const parcel = resolve => {
-  require.ensure(['@/components/dashboard/child/parcel'], () => {
-    resolve(require('@/components/dashboard/child/parcel'))
+  require.ensure(['@/components/dashboard/child/parcel/index'], () => {
+    resolve(require('@/components/dashboard/child/parcel/index'))
   }, 'parcel')
 }
 
 const client = resolve => {
-  require.ensure(['@/components/dashboard/child/client'], () => {
-    resolve(require('@/components/dashboard/child/client'))
+  require.ensure(['@/components/dashboard/child/client/index'], () => {
+    resolve(require('@/components/dashboard/child/client/index'))
   }, 'client')
 }
 
 const message = resolve => {
-  require.ensure(['@/components/dashboard/child/message'], () => {
-    resolve(require('@/components/dashboard/child/message'))
+  require.ensure(['@/components/dashboard/child/message/index'], () => {
+    resolve(require('@/components/dashboard/child/message/index'))
   }, 'message')
 }
 
 const shipment = resolve => {
-  require.ensure(['@/components/dashboard/child/shipment'], () => {
-    resolve(require('@/components/dashboard/child/shipment'))
+  require.ensure(['@/components/dashboard/child/shipment/index'], () => {
+    resolve(require('@/components/dashboard/child/shipment/index'))
   }, 'shipment')
 }
 
 const vehicle = resolve => {
-  require.ensure(['@/components/dashboard/child/vehicle'], () => {
-    resolve(require('@/components/dashboard/child/vehicle'))
+  require.ensure(['@/components/dashboard/child/vehicle/index'], () => {
+    resolve(require('@/components/dashboard/child/vehicle/index'))
   }, 'vehicle')
 }
 
 const profile = resolve => {
-  require.ensure(['@/components/dashboard/child/profile'], () => {
-    resolve(require('@/components/dashboard/child/profile'))
+  require.ensure(['@/components/dashboard/child/profile/index'], () => {
+    resolve(require('@/components/dashboard/child/profile/index'))
   }, 'profile')
 }
 

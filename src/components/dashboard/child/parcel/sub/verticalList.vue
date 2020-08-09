@@ -1,5 +1,5 @@
 <template>
-  <div id="list">
+  <div id="verticalList">
     <ul class="tabs">
       <li
         v-bind:key="option.id"
@@ -61,7 +61,7 @@ import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
 
 export default {
-  name: 'list',
+  name: 'verticalList',
   props: ['activeEl'],
   created: function () {
     return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.accountId})
@@ -154,13 +154,13 @@ export default {
 </script>
 
 <style scoped>
-  div#list ul.tabs {
+  div#verticalList ul.tabs {
     margin-top: 2rem;
     margin-bottom: 2rem;
     width: 102%;
   }
 
-  div#list ul.tabs li {
+  div#verticalList ul.tabs li {
     display: inline;
     font-weight: 600;
     font-size: 0.8em;
@@ -169,22 +169,22 @@ export default {
     color: #a5a3a5;
   }
 
-  div#list ul.tabs li:hover,
-  div#list ul.tabs li.active {
+  div#verticalList ul.tabs li:hover,
+  div#verticalList ul.tabs li.active {
     background: #176c9d;
     border-radius: 5rem;
     color: #ffffff;
     cursor: pointer;
   }
 
-  div#list ul.parcels li:hover,
-  div#list ul.parcels li.active {
+  div#verticalList ul.parcels li:hover,
+  div#verticalList ul.parcels li.active {
     background: #f1f1f1;
     border-radius: 0.5rem;
     cursor: pointer;
   }
 
-  div#list ul.parcels li ul.parcel {
+  div#verticalList ul.parcels li ul.parcel {
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
@@ -192,7 +192,7 @@ export default {
     text-align: center;
   }
 
-  div#list ul.parcels li ul.parcel li.image {
+  div#verticalList ul.parcels li ul.parcel li.image {
     display: inline-block;
     font-size: 1.3em;
     width: 3.5rem;
@@ -204,18 +204,18 @@ export default {
     color: #176c9d;
   }
 
-  div#list ul.parcels li ul.parcel li ul li.number,
-  div#list ul.parcels li ul.parcel li ul li.created {
+  div#verticalList ul.parcels li ul.parcel li ul li.number,
+  div#verticalList ul.parcels li ul.parcel li ul li.created {
     font-size: 0.9em;
     font-weight: 400;
     color: #000000;
   }
 
-  div#list ul.parcels li ul.parcel li.category {
+  div#verticalList ul.parcels li ul.parcel li.category {
     padding: 1rem;
   }
 
-  div#list ul.parcels li ul.parcel li.category svg {
+  div#verticalList ul.parcels li ul.parcel li.category svg {
     font-size: 1.3em;
     color: #176c9d;
   }

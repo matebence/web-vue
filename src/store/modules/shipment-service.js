@@ -54,14 +54,14 @@ const state = {
 }
 
 const mutations = {
-  [types.MUTATION_SHIPMENTS_DATA]: function (state, data) {
+  [types.MUTATION_SHIPMENT_DATA]: function (state, data) {
     state.payload.shipment = {
       ...state.payload.shipment,
       ...data
     }
   },
 
-  [types.MUTATIONS_CLEAR_SHIPMENTS_DATA]: function (state, data) {
+  [types.MUTATIONS_CLEAR_SHIPMENT_DATA]: function (state, data) {
     state.payload.shipment = {
       data: {
         create: {
@@ -88,7 +88,7 @@ const mutations = {
     }
   },
 
-  [types.MUTATIONS_CLEAR_SHIPMENTS_ERRORS]: function (state, data) {
+  [types.MUTATIONS_CLEAR_SHIPMENT_ERRORS]: function (state, data) {
     state.payload.shipment = {
       ...state.payload.shipment,
       error: {
@@ -102,14 +102,14 @@ const mutations = {
     }
   },
 
-  [types.MUTATION_PRICES_DATA]: function (state, data) {
+  [types.MUTATION_PRICE_DATA]: function (state, data) {
     state.payload.price = {
       ...state.payload.price,
       ...data
     }
   },
 
-  [types.MUTATIONS_CLEAR_PRICES_DATA]: function (state, data) {
+  [types.MUTATIONS_CLEAR_PRICE_DATA]: function (state, data) {
     state.payload.price = {
       data: {
         create: {
@@ -136,7 +136,7 @@ const mutations = {
     }
   },
 
-  [types.MUTATIONS_CLEAR_PRICES_ERRORS]: function (state, data) {
+  [types.MUTATIONS_CLEAR_PRICE_ERRORS]: function (state, data) {
     state.payload.price = {
       ...state.payload.price,
       error: {
@@ -152,8 +152,8 @@ const mutations = {
 }
 
 const actions = {
-  [types.ACTION_SHIPMENTS_CREATE]: function ({commit, dispatch, state, rootState}, payload) {
-    commit(types.MUTATION_SHIPMENTS_DATA, {done: false})
+  [types.ACTION_SHIPMENT_CREATE]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_SHIPMENT_DATA, {done: false})
     return this._vm.$resource('{service}/api/shipments', {}, {
       create: {
         method: 'POST',
@@ -164,7 +164,7 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
-        commit(types.MUTATION_SHIPMENTS_DATA, {
+        commit(types.MUTATION_SHIPMENT_DATA, {
           data: {
             ...state.payload.shipment.data,
             create: {
@@ -181,7 +181,7 @@ const actions = {
             let validations = {}
             parsed.validations.forEach(e => { validations[e.param] = e.msg })
 
-            commit(types.MUTATION_SHIPMENTS_DATA, {
+            commit(types.MUTATION_SHIPMENT_DATA, {
               error: {
                 is: parsed.error,
                 message: parsed.message,
@@ -197,8 +197,8 @@ const actions = {
       })
   },
 
-  [types.ACTION_SHIPMENTS_SEARCH]: function ({commit, dispatch, state, rootState}, payload) {
-    commit(types.MUTATION_SHIPMENTS_DATA, {done: false})
+  [types.ACTION_SHIPMENT_SEARCH]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_SHIPMENT_DATA, {done: false})
     return this._vm.$resource('{service}/api/shipments/search', {}, {
       search: {
         method: 'POST',
@@ -210,7 +210,7 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
-        commit(types.MUTATION_SHIPMENTS_DATA, {
+        commit(types.MUTATION_SHIPMENT_DATA, {
           data: {
             ...state.payload.shipment.data,
             search: {
@@ -224,7 +224,7 @@ const actions = {
       .catch(err => {
         return err.json()
           .then(parsed => {
-            commit(types.MUTATION_SHIPMENTS_DATA, {
+            commit(types.MUTATION_SHIPMENT_DATA, {
               error: {
                 is: parsed.error,
                 message: parsed.message,
@@ -238,8 +238,8 @@ const actions = {
       })
   },
 
-  [types.ACTION_PRICES_GET]: function ({commit, dispatch, state, rootState}, payload) {
-    commit(types.MUTATION_PRICES_DATA, {done: false})
+  [types.ACTION_PRICE_GET]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_PRICE_DATA, {done: false})
     return this._vm.$resource('{service}/api/prices/{_id}', {}, {
       get: {
         method: 'GET',
@@ -251,7 +251,7 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
-        commit(types.MUTATION_PRICES_DATA, {
+        commit(types.MUTATION_PRICE_DATA, {
           data: {
             ...state.payload.price.data,
             get: {
@@ -265,7 +265,7 @@ const actions = {
       .catch(err => {
         return err.json()
           .then(parsed => {
-            commit(types.MUTATION_PRICES_DATA, {
+            commit(types.MUTATION_PRICE_DATA, {
               error: {
                 is: parsed.error,
                 message: parsed.message,
@@ -281,39 +281,39 @@ const actions = {
 }
 
 const getters = {
-  [types.GETTER_SHIPMENTS_DATA]: function (state) {
+  [types.GETTER_SHIPMENT_DATA]: function (state) {
     return state.payload.shipment.data
   },
 
-  [types.GETTER_SHIPMENTS_DATA_CREATE]: function (state) {
+  [types.GETTER_SHIPMENT_DATA_CREATE]: function (state) {
     return state.payload.shipment.data.create
   },
 
-  [types.GETTER_SHIPMENTS_DATA_SEARCH]: function (state) {
+  [types.GETTER_SHIPMENT_DATA_SEARCH]: function (state) {
     return state.payload.shipment.data.search
   },
 
-  [types.GETTER_SHIPMENTS_DONE]: function (state) {
+  [types.GETTER_SHIPMENT_DONE]: function (state) {
     return state.payload.shipment.done
   },
 
-  [types.GETTER_SHIPMENTS_ERROR]: function (state) {
+  [types.GETTER_SHIPMENT_ERROR]: function (state) {
     return state.payload.shipment.error
   },
 
-  [types.GETTER_PRICES_DATA]: function (state) {
+  [types.GETTER_PRICE_DATA]: function (state) {
     return state.payload.price.data
   },
 
-  [types.GETTER_PRICES_DATA_GET]: function (state) {
+  [types.GETTER_PRICE_DATA_GET]: function (state) {
     return state.payload.price.data.get
   },
 
-  [types.GETTER_PRICES_DONE]: function (state) {
+  [types.GETTER_PRICE_DONE]: function (state) {
     return state.payload.price.done
   },
 
-  [types.GETTER_PRICES_ERROR]: function (state) {
+  [types.GETTER_PRICE_ERROR]: function (state) {
     return state.payload.price.error
   }
 }

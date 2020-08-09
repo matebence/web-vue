@@ -30,14 +30,14 @@ const state = {
 }
 
 const mutations = {
-  [types.MUTATION_PLACES_DATA]: function (state, data) {
+  [types.MUTATION_PLACE_DATA]: function (state, data) {
     state.payload.place = {
       ...state.payload.place,
       ...data
     }
   },
 
-  [types.MUTATIONS_CLEAR_PLACES_DATA]: function (state, data) {
+  [types.MUTATIONS_CLEAR_PLACE_DATA]: function (state, data) {
     state.payload.place = {
       data: {
         create: {
@@ -64,7 +64,7 @@ const mutations = {
     }
   },
 
-  [types.MUTATIONS_CLEAR_PLACES_ERRORS]: function (state, data) {
+  [types.MUTATIONS_CLEAR_PLACE_ERRORS]: function (state, data) {
     state.payload.place = {
       ...state.payload.place,
       error: {
@@ -80,8 +80,8 @@ const mutations = {
 }
 
 const actions = {
-  [types.ACTION_PLACES_SEARCH]: function ({commit, dispatch, state, rootState}, payload) {
-    commit(types.MUTATION_PLACES_DATA, {done: false})
+  [types.ACTION_PLACE_SEARCH]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_PLACE_DATA, {done: false})
     return this._vm.$resource('{service}/api/villages/search', {}, {
       search: {
         method: 'POST',
@@ -92,7 +92,7 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
-        commit(types.MUTATION_PLACES_DATA, {
+        commit(types.MUTATION_PLACE_DATA, {
           data: {
             ...state.payload.place.data,
             search: {
@@ -106,7 +106,7 @@ const actions = {
       .catch(err => {
         return err.json()
           .then(parsed => {
-            commit(types.MUTATION_PLACES_DATA, {
+            commit(types.MUTATION_PLACE_DATA, {
               error: {
                 is: parsed.error,
                 message: parsed.message,
@@ -122,19 +122,19 @@ const actions = {
 }
 
 const getters = {
-  [types.GETTER_PLACES_DATA]: function (state) {
+  [types.GETTER_PLACE_DATA]: function (state) {
     return state.payload.place.data
   },
 
-  [types.GETTER_PLACES_DATA_SEARCH]: function (state) {
+  [types.GETTER_PLACE_DATA_SEARCH]: function (state) {
     return state.payload.place.data.search
   },
 
-  [types.GETTER_PLACES_DONE]: function (state) {
+  [types.GETTER_PLACE_DONE]: function (state) {
     return state.payload.place.done
   },
 
-  [types.GETTER_PLACES_ERROR]: function (state) {
+  [types.GETTER_PLACE_ERROR]: function (state) {
     return state.payload.place.error
   }
 }

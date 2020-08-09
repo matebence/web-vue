@@ -1,5 +1,5 @@
 <template>
-  <div id="message">
+  <div id="index">
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
       </div>
@@ -11,18 +11,18 @@
 
 <script>
 export default {
-  name: 'message'
+  name: 'index'
 }
 </script>
 
 <style scoped>
-  div#message div#main-content,
-  div#message div#content {
+  div#index div#main-content,
+  div#index div#content {
     width: 100%;
     height: 98vh;
   }
 
-  div#message div#content {
+  div#index div#content {
     border-radius: 3rem;
     border: 0.5rem #f1f1f1 solid;
     background: #ffffff;
@@ -30,7 +30,7 @@ export default {
     overflow: auto;
   }
 
-  div#message div#main-content {
+  div#index div#main-content {
     border-top-left-radius: 3rem;
     border-bottom-left-radius: 3rem;
     border: 0.5rem #f1f1f1 solid;
@@ -40,7 +40,7 @@ export default {
   }
 
   @media (max-width: 992px) {
-    div#message div#main-content {
+    div#index div#main-content {
       border-top-left-radius: 3rem;
       border-top-right-radius: 3rem;
       border-bottom-left-radius: 0;

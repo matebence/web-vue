@@ -1,5 +1,5 @@
 <template>
-  <div id="list">
+  <div id="verticalList">
     <ul class="tabs">
       <li
         v-bind:key="option.id"
@@ -11,7 +11,7 @@
       <li
         v-bind:key="item._id"
         @click.prevent="selectedShipment(item)"
-        v-for="item in search"
+        v-for="item in shipment"
         :class="{active: activeEl.shipments.shipmentId === item._id}">
         <ul class="shipment">
           <li class="image">
@@ -19,8 +19,8 @@
           </li>
           <li>
             <ul>
-              <li class="from">{{item.from.split(',').pop()}} - {{item.to.split(',').pop()}}</li>
               <li class="status">{{item.status.name}}</li>
+              <li class="from">{{item.from.split(',').pop()}} - {{item.to.split(',').pop()}}</li>
               <li class="number">{{item._id}}</li>
             </ul>
           </li>
@@ -32,8 +32,8 @@
 
 <script>
 export default {
-  name: 'list',
-  props: ['activeEl', 'search'],
+  name: 'verticalList',
+  props: ['activeEl', 'shipment'],
   data: function () {
     return {
       tab: {
@@ -60,20 +60,20 @@ export default {
       this.activeEl.tabs.value = el.value
     },
     selectedShipment: function (el) {
-      this.activeEl.shipments.shipmentId = el.id
+      this.activeEl.shipments.shipmentId = el._id
     }
   }
 }
 </script>
 
 <style scoped>
-  div#list ul.tabs {
+  div#verticalList ul.tabs {
     margin-top: 2rem;
     margin-bottom: 2rem;
     width: 102%;
   }
 
-  div#list ul.tabs li {
+  div#verticalList ul.tabs li {
     display: inline;
     font-weight: 600;
     font-size: 0.8em;
@@ -82,30 +82,30 @@ export default {
     color: #a5a3a5;
   }
 
-  div#list ul.tabs li:hover,
-  div#list ul.tabs li.active {
+  div#verticalList ul.tabs li:hover,
+  div#verticalList ul.tabs li.active {
     background: #176c9d;
     border-radius: 5rem;
     color: #ffffff;
     cursor: pointer;
   }
 
-  div#list ul.shipments li ul.shipment ul {
+  div#verticalList ul.shipments li ul.shipment ul {
     text-align: left;
   }
 
-  div#list ul.shipments li ul.shipment ul li {
+  div#verticalList ul.shipments li ul.shipment ul li {
     margin-left: 1rem;
   }
 
-  div#list ul.shipments li:hover,
-  div#list ul.shipments li.active {
+  div#verticalList ul.shipments li:hover,
+  div#verticalList ul.shipments li.active {
     background: #f1f1f1;
     border-radius: 0.5rem;
     cursor: pointer;
   }
 
-  div#list ul.shipments li ul.shipment {
+  div#verticalList ul.shipments li ul.shipment {
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
@@ -113,7 +113,7 @@ export default {
     text-align: center;
   }
 
-  div#list ul.shipments li ul.shipment li.image {
+  div#verticalList ul.shipments li ul.shipment li.image {
     display: inline-block;
     font-size: 1.3em;
     width: 3.5rem;
@@ -125,9 +125,9 @@ export default {
     color: #176c9d;
   }
 
-  div#list ul.shipments li ul.shipment li ul li.number,
-  div#list ul.shipments li ul.shipment li ul li.status,
-  div#list ul.shipments li ul.shipment li ul li.from {
+  div#verticalList ul.shipments li ul.shipment li ul li.number,
+  div#verticalList ul.shipments li ul.shipment li ul li.status,
+  div#verticalList ul.shipments li ul.shipment li ul li.from {
     font-size: 0.9em;
     font-weight: 400;
     color: #000000;

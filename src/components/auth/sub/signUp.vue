@@ -197,22 +197,15 @@ export default {
       return this.$router.push({path: `/${$event.replace('app-', '')}`})
     },
     onPageLoad: function () {
-      return this.$store.dispatch(types.ACTION_ACCOUNT_ACTIVATION, {
-        id: this.url.values.id,
-        key: this.url.values.key
-      })
+      return this.$store.dispatch(types.ACTION_ACCOUNT_ACTIVATION, {id: this.url.values.id, key: this.url.values.key})
+        .catch(err => console.log(err))
     },
     onSignUp: function () {
       this.signUpError.message = this.activationTokenError.message = null
       this.signUpError.is = this.activationTokenError.is = false
 
-      return this.$store.dispatch(types.ACTION_SIGN_UP, {
-        userName: this.form.values.userName,
-        email: this.form.values.email,
-        password: this.form.values.password,
-        confirmPassword: this.form.values.confirmPassword,
-        roles: JSON.parse(this.form.values.roles)
-      })
+      return this.$store.dispatch(types.ACTION_SIGN_UP, {userName: this.form.values.userName, email: this.form.values.email, password: this.form.values.password, confirmPassword: this.form.values.confirmPassword, roles: JSON.parse(this.form.values.roles)})
+        .catch(err => console.log(err))
     }
   }
 }

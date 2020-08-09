@@ -17,7 +17,7 @@
 <script>
 import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
-import navigation from '@/components/dashboard/child/navigation'
+import navigation from '@/components/dashboard/child/navigation/index'
 
 export default {
   created: function () {

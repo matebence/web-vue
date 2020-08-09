@@ -5,7 +5,7 @@
         <div class="form-group">
           <input
             v-model="navigator.form.from.value"
-            :disabled="parcel.search.shipment.parcelId > 0 || parcel.search.activeEl.parcels.parcelId === 0"
+            :disabled="parcel.search.shipment.parcelId > 0 || parcel.activeEl.parcels.parcelId === 0"
             type="text"
             class="form-control"
             id="from"
@@ -20,7 +20,7 @@
         <div class="form-group">
           <input
             v-model="navigator.form.to.value"
-            :disabled="parcel.search.shipment.parcelId > 0 || parcel.search.activeEl.parcels.parcelId === 0"
+            :disabled="parcel.search.shipment.parcelId > 0 || parcel.activeEl.parcels.parcelId === 0"
             type="text"
             class="form-control"
             id="to"
@@ -89,7 +89,7 @@ export default {
 
     return Promise.all([
       this.$store.dispatch(types.ACTION_LOCATION_GET),
-      this.$store.dispatch(types.ACTION_PRICES_GET, process.env.COMPANY_PRICE_PROFIT_ID)
+      this.$store.dispatch(types.ACTION_PRICE_GET, process.env.COMPANY_PRICE_PROFIT_ID)
     ])
       .then(results => {
         if (results.length < 2) return
@@ -111,6 +111,7 @@ export default {
         new H.mapevents.Behavior(new H.mapevents.MapEvents(result))
         return this.reverseGeoCode()
       })
+      .catch(err => console.log(err))
   },
   name: 'hereMap',
   props: ['parcel', 'courier'],
@@ -219,7 +220,7 @@ export default {
       this.navigator.summary.isSet = true
       return this.visualizeOnMap()
     },
-    'parcel.search.activeEl.parcels.parcelId': function (newValue, oldValue) {
+    'parcel.activeEl.parcels.parcelId': function (newValue, oldValue) {
       if (newValue === 0) return this.removePreviousRoutes()
     },
     'courier.search.activeEl.courierId': function (newValue, oldValue) {
@@ -325,11 +326,12 @@ export default {
     calculatePriceByDistance: function () {
       if (this.courier.search.activeEl.courierId === 0) return this.showAlertModal('Upozornenie', 'Nezvolili ste si kuriéra.', 'Zatvoriť')
       const courier = Object.values(this.courier.search.user).filter(e => e.accountId === this.courier.search.activeEl.courierId).pop()
-      this.$store.dispatch(types.ACTION_PREFERENCES_SEARCH, {accountId: courier.accountId, name: 'Cena prepravy (eur/1km)'})
+      this.$store.dispatch(types.ACTION_PREFERENCE_SEARCH, {accountId: courier.accountId, name: 'Cena prepravy (eur/1km)'})
         .then(result => {
           this.navigator.courier.price = Object.values(result).pop().value
           return this.visualizeOnMap()
         })
+        .catch(err => console.log(err))
     },
     showAlertModal: function (title, text, button) {
       this.components.appModal.title = title
@@ -350,11 +352,12 @@ export default {
       } else if ($event.target.value.length < 3 && $event.target.id === 'to') {
         this.navigator.form.to.autoComplete = {}
       } else {
-        return this.$store.dispatch(types.ACTION_PLACES_SEARCH, { fullName: $event.target.value })
+        return this.$store.dispatch(types.ACTION_PLACE_SEARCH, { fullName: $event.target.value })
           .then(result => {
             if ($event.target.id === 'from') this.navigator.form.from.autoComplete = Object.values(result)
             if ($event.target.id === 'to') this.navigator.form.to.autoComplete = Object.values(result)
           })
+          .catch(err => console.log(err))
       }
     },
     selectPlace: function ($event) {
@@ -373,16 +376,16 @@ export default {
         return this.showAlertModal('Upozornenie', 'Nemáte dostatok penazí na účte.', 'Zatvoriť')
       } else {
         if (confirmed) {
-          const data = Object.values(this.parcelCreate).filter(e => e.id === this.parcel.search.activeEl.parcels.parcelId).pop()
-          let payload = {id: this.parcel.search.activeEl.parcels.parcelId, data: {sender: Number(data.sender.senderId), receiver: Number(data.receiver.accountId), categoryId: data.category.id, length: Number(data.length), width: Number(data.width), height: Number(data.height), weight: Number(data.weight), note: data.note}}
+          const data = Object.values(this.parcelCreate).filter(e => e.id === this.parcel.activeEl.parcels.parcelId).pop()
+          let payload = {id: this.parcel.activeEl.parcels.parcelId, data: {sender: Number(data.sender.senderId), receiver: Number(data.receiver.accountId), categoryId: data.category.id, length: Number(data.length), width: Number(data.width), height: Number(data.height), weight: Number(data.weight), note: data.note}}
 
           this.$store.dispatch(types.ACTION_PARCEL_CREATE, payload)
             .then(result => {
               payload = {shipments: [{ courier: this.courier.search.activeEl.courierId, parcelId: result.id, from: this.navigator.form.from.value, to: this.navigator.form.to.value, status: process.env.PARCEL_NEW_STATUS_ID, price: Number(parseFloat(this.navigator.summary.values.length / 1000 * this.navigator.courier.price).toFixed(2)) }]}
-              return this.$store.dispatch(types.ACTION_SHIPMENTS_CREATE, payload)
+              return this.$store.dispatch(types.ACTION_SHIPMENT_CREATE, payload)
             })
             .then(result => {
-              this.parcel.search.activeEl.tabs = {tabId: 1, value: 'Pridelené'}
+              this.parcel.activeEl.tabs = {tabId: 1, value: 'Pridelené'}
             })
             .catch(err => {
               return this.showAlertModal('Chyba', err, 'Zatvoriť')

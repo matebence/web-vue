@@ -7,29 +7,31 @@
         class="searchTerm"
         placeholder="Meno kuriéra"
         v-model="courier.search.name"
-        :disabled="parcel.search.activeEl.parcels.parcelId >= 0"
+        :disabled="parcel.activeEl.parcels.parcelId >= 0"
         @input="autoCompleteCourier($event.target.value)">
       <button
         @click.prevent="searchCourier({firstName: courier.search.user.pop().firstName})"
         type="submit"
-        :disabled="parcel.search.activeEl.parcels.parcelId >= 0"
+        :disabled="parcel.activeEl.parcels.parcelId >= 0"
         class="searchButton">
         <i class="fa fa-search"></i>
       </button>
     </form>
-    <app-courier-list
-      :search="courier.search"
-      :parcel="parcel.search"/>
+    <app-horizontal-list
+      :courier="courier.search"
+      :parcel="parcel.search"
+      :activeEl="activeEl"
+    />
   </div>
 </template>
 
 <script>
 import * as types from '@/store/types'
-import courierList from '@/components/dashboard/sub/parcel/courierList'
+import horizontalList from '@/components/dashboard/child/parcel/sub/horizontalList'
 
 export default {
   name: 'courier',
-  props: ['parcel', 'courier'],
+  props: ['parcel', 'courier', 'activeEl'],
   created: function () {
     return this.searchCourier({roles: process.env.APP_ROLE_COURIER})
   },
@@ -37,7 +39,7 @@ export default {
     return this.$store.commit(types.MUTATIONS_CLEAR_USER_ERRORS, {})
   },
   components: {
-    appCourierList: courierList
+    appHorizontalList: horizontalList
   },
   methods: {
     autoCompleteCourier: function ($event) {
@@ -51,6 +53,7 @@ export default {
         .then(result => {
           this.courier.search.user = Object.values(result)
         })
+        .catch(err => console.log(err))
     }
   }
 }

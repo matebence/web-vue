@@ -1,5 +1,5 @@
 <template>
-  <div id="navigation">
+  <div id="index">
     <nav class="nav">
       <a class="navbar-brand" href="#">
         <img src="@/assets/img/blesk-default-logo.png" alt="Blesk logo">
@@ -44,7 +44,7 @@ import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
 
 export default {
-  name: 'navigation',
+  name: 'index',
   props: ['activeEl'],
   data: function () {
     return {
@@ -159,7 +159,7 @@ export default {
 </script>
 
 <style scoped>
-  div#navigation nav {
+  div#index nav {
     width: 100%;
     height: 100vh;
     display: flex;
@@ -169,11 +169,11 @@ export default {
     position: relative;
   }
 
-  div#navigation nav > a {
+  div#index nav > a {
     margin-bottom: 2rem;
   }
 
-  div#navigation nav > a img {
+  div#index nav > a img {
     margin-top: 2rem;
     margin-left: 1rem;
     width: 7rem;
@@ -182,77 +182,77 @@ export default {
     top: 0;
   }
 
-  div#navigation nav ul.sub-items {
+  div#index nav ul.sub-items {
     display: inherit;
     position: absolute;
     left: 0;
     bottom: 0;
   }
 
-  div#navigation nav ul.items,
-  div#navigation nav ul.sub-items {
+  div#index nav ul.items,
+  div#index nav ul.sub-items {
     width: 100%;
   }
 
-  div#navigation nav ul.sub-items li:nth-child(2) {
+  div#index nav ul.sub-items li:nth-child(2) {
     margin-top: 0.8rem;
   }
 
-  div#navigation nav ul.items li.settings {
+  div#index nav ul.items li.settings {
     display: none;
   }
 
-  div#navigation nav ul.items li a svg {
+  div#index nav ul.items li a svg {
     font-size: 2em;
     margin-right: 1rem;
   }
 
-  div#navigation nav ul.sub-items li p svg {
+  div#index nav ul.sub-items li p svg {
     font-size: 1.3em;
   }
 
-  div#navigation nav ul.items li,
-  div#navigation nav ul.sub-items li {
+  div#index nav ul.items li,
+  div#index nav ul.sub-items li {
     padding-bottom: 1rem;
     padding-top: 1rem;
     padding-left: 1rem;
     margin-bottom: 0.5rem;
   }
 
-  div#navigation nav ul.items li:hover,
-  div#navigation nav ul.items li.active {
+  div#index nav ul.items li:hover,
+  div#index nav ul.items li.active {
     background: #187fb1;
     border-radius: 10rem;
   }
 
-  div#navigation nav ul.items li a,
-  div#navigation nav ul.sub-items li a {
+  div#index nav ul.items li a,
+  div#index nav ul.sub-items li a {
     color: #ffffff;
     display: table;
   }
 
-  div#navigation nav ul.sub-items li:nth-child(2) a {
+  div#index nav ul.sub-items li:nth-child(2) a {
     padding: 0.5rem;
   }
 
-  div#navigation nav ul.sub-items li:nth-child(2) a p {
+  div#index nav ul.sub-items li:nth-child(2) a p {
     padding-left: 0.5rem;
   }
 
-  div#navigation nav ul.sub-items li a.active,
-  div#navigation nav ul.sub-items li a:hover {
+  div#index nav ul.sub-items li a.active,
+  div#index nav ul.sub-items li a:hover {
     background: #187fb1;
     border-radius: 10rem;
   }
 
-  div#navigation nav ul.items li a p,
-  div#navigation nav ul.sub-items li a p {
+  div#index nav ul.items li a p,
+  div#index nav ul.sub-items li a p {
     font-size: 0.9em;
     display: table-cell;
     vertical-align: middle;
   }
 
-  div#navigation nav ul.sub-items li [data-letters]:before {
+  div#index nav ul.sub-items li [data-letters]:before {
     content: attr(data-letters);
     border: solid 0.1rem #ffffff;
     display: inline-block;
@@ -266,114 +266,114 @@ export default {
     color: #176c9d;
   }
 
-  div#navigation nav ul.sub-items li:hover [data-letters]:before {
+  div#index nav ul.sub-items li:hover [data-letters]:before {
     cursor: auto;
   }
 
   @media (max-width: 1390px) {
-    div#navigation nav ul.sub-items li:nth-child(2) a svg {
+    div#index nav ul.sub-items li:nth-child(2) a svg {
       display: none;
     }
   }
 
   @media (min-width: 1200px) {
-    div#navigation nav ul.items li#profile {
+    div#index nav ul.items li#profile {
       display: none;
     }
   }
 
   @media (max-width: 1200px) {
-    div#navigation nav > a img {
+    div#index nav > a img {
       transform: rotate(-90deg);
       left: -2.9rem;
       top: 5%;
     }
 
-    div#navigation nav ul.items {
+    div#index nav ul.items {
       width: inherit;
       height: unset;
       overflow: hidden;
     }
 
-    div#navigation nav ul.sub-items {
+    div#index nav ul.sub-items {
       left: unset;
     }
 
-    div#navigation nav ul.sub-items li {
+    div#index nav ul.sub-items li {
       padding-left: 0;
     }
 
-    div#navigation nav ul.items li {
+    div#index nav ul.items li {
       width: 3rem;
       height: 3rem;
     }
 
-    div#navigation nav ul.items li.settings {
+    div#index nav ul.items li.settings {
       display: inline-block;
     }
 
-    div#navigation nav ul.sub-items li.settings {
+    div#index nav ul.sub-items li.settings {
       display: none;
     }
 
-    div#navigation nav ul.items li a svg {
+    div#index nav ul.items li a svg {
       margin: 0;
       padding: 0;
       font-size: 1.3em;
     }
 
-    div#navigation nav ul.items li a {
+    div#index nav ul.items li a {
       width: 1rem;
       display: flex;
       justify-content: space-around;
     }
 
-    div#navigation nav ul.items li a p {
+    div#index nav ul.items li a p {
       display: none;
     }
   }
 
   @media (max-width: 992px) {
-    div#navigation nav > a img {
+    div#index nav > a img {
       left: calc(50% - ((7rem + 1rem) / 2));
       top: 0;
       transform: none;
     }
 
-    div#navigation nav ul.items {
+    div#index nav ul.items {
       width: unset;
       height: unset;
       overflow: unset;
     }
 
-    div#navigation nav ul.sub-items {
+    div#index nav ul.sub-items {
       left: calc(50% - (60vw / 2));
     }
 
-    div#navigation nav ul.items li,
-    div#navigation nav ul.items li.active,
-    div#navigation nav ul.sub-items li [data-letters]:before {
+    div#index nav ul.items li,
+    div#index nav ul.items li.active,
+    div#index nav ul.sub-items li [data-letters]:before {
       width: 60vw;
       height: unset;
       text-align: center;
       border-radius: 10rem;
     }
 
-    div#navigation nav ul.sub-items li {
+    div#index nav ul.sub-items li {
       margin-bottom: 1rem;
     }
 
-    div#navigation nav ul.items li a {
+    div#index nav ul.items li a {
       width: auto;
       display: inline-table;
     }
 
-    div#navigation nav ul.items li a svg {
+    div#index nav ul.items li a svg {
       font-size: 2em;
       margin-right: 1rem;
     }
 
-    div#navigation nav ul.items li a p {
+    div#index nav ul.items li a p {
       display: table-cell;
     }
   }

@@ -85,6 +85,7 @@ export default {
   name: 'signin',
   created: function () {
     return this.$store.dispatch(types.ACTION_AUTO_SIGN_IN)
+      .catch(err => console.log(err))
   },
   beforeMount: function () {
     return this.$store.commit(types.MUTATIONS_CLEAR_SIGN_IN_ERRORS, {})
@@ -132,12 +133,8 @@ export default {
       this.signInError.message = null
       this.signInError.is = false
 
-      return this.$store.dispatch(types.ACTION_SIGN_IN, {
-        grantType: process.env.GRANT_TYPE_PASSWORD,
-        userName: this.form.values.userName,
-        password: this.form.values.password,
-        stayLoggedIn: this.form.values.stayLoggedIn
-      })
+      return this.$store.dispatch(types.ACTION_SIGN_IN, {grantType: process.env.GRANT_TYPE_PASSWORD, userName: this.form.values.userName, password: this.form.values.password, stayLoggedIn: this.form.values.stayLoggedIn})
+        .catch(err => console.log(err))
     }
   }
 }
