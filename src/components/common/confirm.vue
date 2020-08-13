@@ -15,9 +15,7 @@
               id="positive"
               type="button"
               data-dismiss="modal"
-              @click.prevent="confirmed()">
-              {{positiveButton}}
-            </button>
+              @click.prevent="confirmed()">{{positiveButton}}</button>
           </div>
         </div>
       </div>

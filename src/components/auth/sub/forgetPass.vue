@@ -54,7 +54,7 @@ export default {
     if (this.$route.params.key) return this.onPageLoad()
   },
   beforeMount: function () {
-    return this.$store.commit(types.MUTATIONS_CLEAR_FORGET_PASSWORD_ERRORS, {})
+    this.$store.commit(types.MUTATIONS_CLEAR_FORGET_PASSWORD_ERRORS, {})
   },
   data: function () {
     return {

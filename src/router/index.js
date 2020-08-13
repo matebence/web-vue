@@ -110,9 +110,8 @@ const routes = [
         }
       }
     ]
-  },
-
-  {path: '/',
+  }, {
+    path: '/',
     component: auth,
     name: 'welcome',
     children: [
@@ -124,9 +123,7 @@ const routes = [
         component: auth
       }
     ]
-  },
-
-  {
+  }, {
     path: '*',
     component: error,
     name: 'error'

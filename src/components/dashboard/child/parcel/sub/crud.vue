@@ -14,11 +14,11 @@
           v-model="form.values.receiver.name"
           placeholder="Meno príjemca"
           @change="$v.form.values.receiver.name.$touch()"
-          @input="autoCompleteReceiver($event.target.value)"
+          @input="onAutoCompleteReceiver($event.target.value)"
           :class="{valid: !$v.form.values.receiver.name.$error && $v.form.values.receiver.name.$dirty, invalid: $v.form.values.receiver.name.$error}">
         <div id="autocomplete">
           <ul>
-            <li v-for="user in autoComplete.client" v-bind:key="user.accountId" v-if="user.accountId !== signIn.accountId" :data-accountId="user.accountId" @click.prevent="selectReceiver($event.target)">{{user.firstName}} {{user.lastName}}</li>
+            <li v-for="user in autoComplete.client" :key="user.accountId" v-if="user.accountId !== signIn.accountId" :data-accountId="user.accountId" @click.prevent="onSelectedReceiver($event.target)">{{user.firstName}} {{user.lastName}}</li>
           </ul>
         </div>
         <small
@@ -39,7 +39,7 @@
           @change="$v.form.values.category.$touch()"
           :class="{valid: !$v.form.values.category.$error && $v.form.values.category.$dirty, invalid: $v.form.values.category.$error}">
           <option value="null" disabled selected >Vyberte z možností</option>
-          <option v-for="category in categories" :value="category" v-bind:key="category.id">{{category.name}}</option>
+          <option v-for="category in categories" :value="category" :key="category.id">{{category.name}}</option>
         </select>
         <small
           id="categoryInvalid"
@@ -184,7 +184,8 @@ export default {
       .catch(err => console.log(err))
   },
   beforeMount: function () {
-    return this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
+    this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_DATA, {})
+    this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
   },
   data: function () {
     return {
@@ -249,19 +250,19 @@ export default {
     })
   },
   methods: {
-    autoCompleteReceiver: function ($event) {
+    onAutoCompleteReceiver: function ($event) {
       if ($event.length === 0) return this.searchCourier({roles: process.env.APP_ROLE_CLIENT})
       if ($event.length < 3) return
-      return this.searchReceiver({firstName: $event, roles: process.env.APP_ROLE_CLIENT})
+      return this.onSearchReceiver({firstName: $event, roles: process.env.APP_ROLE_CLIENT})
     },
-    searchReceiver: function (obj) {
+    onSearchReceiver: function (obj) {
       return this.$store.dispatch(types.ACTION_USER_SEARCH, {...obj})
         .then(result => {
           this.autoComplete.client = result
         })
         .catch(err => console.log(err))
     },
-    selectReceiver: function ($event) {
+    onSelectedReceiver: function ($event) {
       this.form.values.receiver.accountId = $event.dataset.accountid
       this.form.values.receiver.name = $event.textContent
       this.autoComplete.client = {}

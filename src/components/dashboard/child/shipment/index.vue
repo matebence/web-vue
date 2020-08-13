@@ -3,12 +3,25 @@
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
         <h1>Zásielky</h1>
+        <div
+          v-show="isSelected"
+          id="modify">
+          <button
+            @click.prevent="components.shipment.activeEl.shipments.shipmentId = 0">
+            <font-awesome-icon
+              :icon="['fas', 'ban']"/>
+          </button>
+        </div>
         <app-vertical-list
           :activeEl="components.shipment.activeEl"
           :shipment="components.shipment.search" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
-        <app-properties/>
+        <app-properties
+          :activeEl="components.shipment.activeEl"
+          :shipment="components.shipment.search"
+          :parcel="components.parcel.search" />
+        <app-rating />
       </div>
     </div>
   </div>
@@ -17,20 +30,26 @@
 <script>
 import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
+import rating from '@/components/dashboard/child/shipment/sub/rating'
 import properties from '@/components/dashboard/child/shipment/sub/properties'
 import verticalList from '@/components/dashboard/child/shipment/sub/verticalList'
 
 export default {
   name: 'index',
   created: function () {
-    this.fetchShipmentDataToParcel({sender: this.signIn.accountId})
+    this.onFetchShipments({sender: this.signIn.accountId})
   },
   beforeMount: function () {
-    return this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
+    this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_DATA, {})
+    this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
   },
   data: function () {
     return {
       components: {
+        parcel: {
+          search: {
+          }
+        },
         shipment: {
           search: {
           },
@@ -48,6 +67,7 @@ export default {
     }
   },
   components: {
+    appRating: rating,
     appProperties: properties,
     appVerticalList: verticalList
   },
@@ -56,24 +76,29 @@ export default {
       this.components.shipment.search = {}
 
       if (newValue === 'Vlastné' || newValue === 'Všetky') {
-        this.fetchShipmentDataToParcel({sender: this.signIn.accountId})
+        this.onFetchShipments({sender: this.signIn.accountId})
       }
       if (newValue === 'Ostatné' || newValue === 'Všetky') {
-        this.fetchShipmentDataToParcel({receiver: this.signIn.accountId})
+        this.onFetchShipments({receiver: this.signIn.accountId})
       }
     }
   },
   computed: {
+    isSelected: function () {
+      return this.components.shipment.activeEl.shipments.shipmentId !== 0
+    },
     ...mapGetters({
       signIn: types.GETTER_SIGN_IN_DATA
     })
   },
   methods: {
-    fetchShipmentDataToParcel: function (obj) {
+    onFetchShipments: function (obj) {
       return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, obj)
-        .then(result => this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {parcelId: Object.values(result).map(e => e.id)}))
         .then(result => {
-          if (this.components.shipment.activeEl.shipments.shipmentId === 0) this.components.shipment.activeEl.shipments.shipmentId = Object.values(result).shift()._id
+          this.components.parcel.search = result
+          return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {parcelId: Object.values(result).map(e => e.id)})
+        })
+        .then(result => {
           this.components.shipment.search = result
         })
         .catch(err => console.log(err))
@@ -87,6 +112,40 @@ export default {
     margin-top: 1em;
     font-size: 2em;
     display: inline-block;
+  }
+
+  div#index div#modify {
+    display: inline;
+    float: right;
+    margin-top: 1rem;
+  }
+
+  div#index div#modify button {
+    display: inline;
+    text-align: right;
+    margin-top: 1.3rem;
+    margin-right: 0.5rem;
+    background: #176c9d;
+    border: none;
+    border-radius: 50%;
+    width: 1.8rem;
+    height: 1.8rem;
+    line-height: 1.3rem;
+    text-align: center;
+    font-size: 0.9em;
+  }
+
+  div#index div#modify button:hover {
+    background: #187fb1;
+  }
+
+  div#index div#modify button:focus {
+    outline: 0;
+  }
+
+  div#index div#modify button svg {
+    font-size: 0.8em;
+    color: #ffffff;
   }
 
   div#index div#main-content,

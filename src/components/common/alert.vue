@@ -10,9 +10,7 @@
         :class="getType.pop()"
         class="alert" role="alert"
         v-show="getCondition">
-        <p class="text-center">
-          {{ getContent.pop() }}
-        </p>
+        <p class="text-center">{{getContent.pop()}}</p>
       </div>
     </transition>
   </div>

@@ -3,8 +3,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-1 col-xl-2" id="navigation">
-          <app-navigation
-            :activeEl = "navigation.activeEl" />
+          <app-navigation :activeEl = "navigation.activeEl" />
         </div>
         <div class="col-lg-11 col-xl-10" id="wrapper">
           <router-view/>
@@ -21,7 +20,7 @@ import navigation from '@/components/dashboard/child/navigation/index'
 
 export default {
   created: function () {
-    if ([...this.allowedRoles].includes(process.env.APP_ROLE_CLIENT)) {
+    if (this.allowedRoles.includes(process.env.APP_ROLE_CLIENT)) {
       this.navigation.activeEl.nav = {itemId: 1, value: 'Balíky'}
       this.$router.push({path: '/dashboard/parcel'})
     } else if ([...this.allowedRoles].includes(process.env.APP_ROLE_COURIER)) {

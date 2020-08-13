@@ -49,6 +49,30 @@ const state = {
         }
       },
       done: true
+    },
+    invoice: {
+      data: {
+        create: {
+        },
+        update: {
+        },
+        remove: {
+        },
+        get: {
+        },
+        getAll: {
+        },
+        search: {
+        }
+      },
+      error: {
+        is: false,
+        message: null,
+        from: '',
+        reason: {
+        }
+      },
+      done: true
     }
   }
 }
@@ -139,6 +163,54 @@ const mutations = {
   [types.MUTATIONS_CLEAR_PRICE_ERRORS]: function (state, data) {
     state.payload.price = {
       ...state.payload.price,
+      error: {
+        is: false,
+        message: null,
+        from: '',
+        reason: {
+        }
+      },
+      done: true
+    }
+  },
+
+  [types.MUTATION_INVOICE_DATA]: function (state, data) {
+    state.payload.invoice = {
+      ...state.payload.invoice,
+      ...data
+    }
+  },
+
+  [types.MUTATIONS_CLEAR_INVOICE_DATA]: function (state, data) {
+    state.payload.invoice = {
+      data: {
+        create: {
+        },
+        update: {
+        },
+        remove: {
+        },
+        get: {
+        },
+        getAll: {
+        },
+        search: {
+        }
+      },
+      error: {
+        is: false,
+        message: null,
+        from: '',
+        reason: {
+        }
+      },
+      done: true
+    }
+  },
+
+  [types.MUTATIONS_CLEAR_INVOICE_ERRORS]: function (state, data) {
+    state.payload.invoice = {
+      ...state.payload.invoice,
       error: {
         is: false,
         message: null,
@@ -266,6 +338,42 @@ const actions = {
         return err.json()
           .then(parsed => {
             commit(types.MUTATION_PRICE_DATA, {
+              error: {
+                is: parsed.error,
+                message: parsed.message,
+                from: 'get',
+                reason: {}
+              },
+              done: true
+            })
+            throw parsed.message
+          })
+      })
+  },
+
+  [types.ACTION_INVOICE_DOWNLOAD]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_INVOICE_DATA, {done: false})
+    return this._vm.$resource('{service}/api/invoices/{_id}', {}, {
+      get: {
+        method: 'GET',
+        responseType: 'arraybuffer',
+        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        }
+      }
+    }).get({service: 'shipment-service', _id: payload})
+      .then(response => {
+        return response.data
+      })
+      .then(parsed => {
+        commit(types.MUTATION_INVOICE_DATA, {
+          done: true
+        })
+        return window.open(window.URL.createObjectURL(new Blob([parsed], {type: 'application/pdf'})))
+      })
+      .catch(err => {
+        return err.json()
+          .then(parsed => {
+            commit(types.MUTATION_INVOICE_DATA, {
               error: {
                 is: parsed.error,
                 message: parsed.message,

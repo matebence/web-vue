@@ -88,7 +88,7 @@ export default {
       .catch(err => console.log(err))
   },
   beforeMount: function () {
-    return this.$store.commit(types.MUTATIONS_CLEAR_SIGN_IN_ERRORS, {})
+    this.$store.commit(types.MUTATIONS_CLEAR_SIGN_IN_ERRORS, {})
   },
   data: function () {
     return {

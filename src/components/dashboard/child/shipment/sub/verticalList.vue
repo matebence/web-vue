@@ -2,15 +2,15 @@
   <div id="verticalList">
     <ul class="tabs">
       <li
-        v-bind:key="option.id"
-        @click.prevent="selectedOption(option)"
+        :key="option.id"
+        @click.prevent="onSelectedOption(option)"
         v-for="option in tab.items"
         :class="{active: activeEl.tabs.tabId === option.itemId}">{{option.value}}</li>
     </ul>
     <ul class="shipments">
       <li
-        v-bind:key="item._id"
-        @click.prevent="selectedShipment(item)"
+        :key="item._id"
+        @click.prevent="onSelectedShipment(item)"
         v-for="item in shipment"
         :class="{active: activeEl.shipments.shipmentId === item._id}">
         <ul class="shipment">
@@ -25,6 +25,22 @@
             </ul>
           </li>
         </ul>
+      </li>
+
+      <li
+        class="empty-list"
+        v-if="Object.keys(shipment).length === 0 && activeEl.tabs.value === tab.items[0].value">
+        Zoznam je prázdny
+      </li>
+      <li
+        class="empty-list"
+        v-if="Object.keys(shipment).length === 0 && activeEl.tabs.value === tab.items[1].value">
+        Zoznam je prázdny
+      </li>
+      <li
+        class="empty-list"
+        v-if="Object.keys(shipment).length === 0 && activeEl.tabs.value === tab.items[2].value">
+        Zoznam je prázdny
       </li>
     </ul>
   </div>
@@ -55,11 +71,11 @@ export default {
     }
   },
   methods: {
-    selectedOption: function (el) {
+    onSelectedOption: function (el) {
       this.activeEl.tabs.tabId = el.itemId
       this.activeEl.tabs.value = el.value
     },
-    selectedShipment: function (el) {
+    onSelectedShipment: function (el) {
       this.activeEl.shipments.shipmentId = el._id
     }
   }
@@ -98,11 +114,22 @@ export default {
     margin-left: 1rem;
   }
 
+  div#verticalList ul.shipments li.empty-list {
+    text-align: center;
+    font-size: 1em;
+    margin-top: 3rem;
+  }
+
   div#verticalList ul.shipments li:hover,
   div#verticalList ul.shipments li.active {
     background: #f1f1f1;
     border-radius: 0.5rem;
     cursor: pointer;
+  }
+
+  div#verticalList ul.shipments li.empty-list:hover {
+    cursor: auto;
+    background: none;
   }
 
   div#verticalList ul.shipments li ul.shipment {

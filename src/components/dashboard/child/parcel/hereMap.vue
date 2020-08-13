@@ -10,10 +10,10 @@
             class="form-control"
             id="from"
             placeholder="Odkiaľ"
-            @input="autoCompletePlace($event)">
+            @input="onAutoCompletePlace($event)">
           <div class="autocomplete">
             <ul>
-              <li v-for="place in navigator.form.from.autoComplete" v-bind:key="place.id" data-element="from" @click.prevent="selectPlace($event.target)">{{here.country.name}}, {{place.fullName}}</li>
+              <li v-for="place in navigator.form.from.autoComplete" :key="place.id" data-element="from" @click.prevent="onSelectPlace($event.target)">{{here.country.name}}, {{place.fullName}}</li>
             </ul>
           </div>
         </div>
@@ -25,10 +25,10 @@
             class="form-control"
             id="to"
             placeholder="Kam"
-            @input="autoCompletePlace($event)">
+            @input="onAutoCompletePlace($event)">
           <div class="autocomplete">
             <ul>
-              <li v-for="place in navigator.form.to.autoComplete" v-bind:key="place.id" data-element="to" @click.prevent="selectPlace($event.target)">{{here.country.name}}, {{place.fullName}}</li>
+              <li v-for="place in navigator.form.to.autoComplete" :key="place.id" data-element="to" @click.prevent="onSelectPlace($event.target)">{{here.country.name}}, {{place.fullName}}</li>
             </ul>
           </div>
         </div>
@@ -85,6 +85,7 @@ export default {
     this.here.platform = new H.service.Platform({'apikey': process.env.HERE_JS_SDK_API})
   },
   beforeMount: function () {
+    this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_DATA, {})
     this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
 
     return Promise.all([
@@ -306,6 +307,16 @@ export default {
 
       return this.here.map.getObjects().forEach(e => this.here.map.removeObject(e))
     },
+    calculatePriceByDistance: function () {
+      if (this.courier.search.activeEl.courierId === 0) return this.showAlertModal('Upozornenie', 'Nezvolili ste si kuriéra.', 'Zatvoriť')
+      const courier = Object.values(this.courier.search.user).filter(e => e.accountId === this.courier.search.activeEl.courierId).pop()
+      this.$store.dispatch(types.ACTION_PREFERENCE_SEARCH, {accountId: courier.accountId, name: 'Cena prepravy (eur/1km)'})
+        .then(result => {
+          this.navigator.courier.price = Object.values(result).pop().value
+          return this.visualizeOnMap()
+        })
+        .catch(err => console.log(err))
+    },
     formatPrice: function (distance, price, profit) {
       const formatter = new Intl.NumberFormat('sk-SK', {style: 'currency', currency: 'EUR'})
       if (!this.navigator.summary.isSet) {
@@ -323,16 +334,6 @@ export default {
     formatDistance: function (distance) {
       return (`${parseFloat(distance / 1000).toFixed(2)}km`)
     },
-    calculatePriceByDistance: function () {
-      if (this.courier.search.activeEl.courierId === 0) return this.showAlertModal('Upozornenie', 'Nezvolili ste si kuriéra.', 'Zatvoriť')
-      const courier = Object.values(this.courier.search.user).filter(e => e.accountId === this.courier.search.activeEl.courierId).pop()
-      this.$store.dispatch(types.ACTION_PREFERENCE_SEARCH, {accountId: courier.accountId, name: 'Cena prepravy (eur/1km)'})
-        .then(result => {
-          this.navigator.courier.price = Object.values(result).pop().value
-          return this.visualizeOnMap()
-        })
-        .catch(err => console.log(err))
-    },
     showAlertModal: function (title, text, button) {
       this.components.appModal.title = title
       this.components.appModal.text = text
@@ -346,7 +347,7 @@ export default {
       this.components.appConfirm.negativeButton = 'Zrušiť'
       return bootstrap('#hereMapConfirm').modal('show')
     },
-    autoCompletePlace: function ($event) {
+    onAutoCompletePlace: function ($event) {
       if ($event.target.value.length < 3 && $event.target.id === 'from') {
         this.navigator.form.from.autoComplete = {}
       } else if ($event.target.value.length < 3 && $event.target.id === 'to') {
@@ -360,7 +361,7 @@ export default {
           .catch(err => console.log(err))
       }
     },
-    selectPlace: function ($event) {
+    onSelectPlace: function ($event) {
       if ($event.dataset.element === 'from') {
         this.navigator.form.from.value = $event.textContent
         this.navigator.form.from.autoComplete = {}

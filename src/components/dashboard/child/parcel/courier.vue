@@ -8,9 +8,9 @@
         placeholder="Meno kuriéra"
         v-model="courier.search.name"
         :disabled="parcel.activeEl.parcels.parcelId >= 0"
-        @input="autoCompleteCourier($event.target.value)">
+        @input="onAutoCompleteCourier($event.target.value)">
       <button
-        @click.prevent="searchCourier({firstName: courier.search.user.pop().firstName})"
+        @click.prevent="onSearchCourier({firstName: courier.search.user.pop().firstName})"
         type="submit"
         :disabled="parcel.activeEl.parcels.parcelId >= 0"
         class="searchButton">
@@ -33,22 +33,23 @@ export default {
   name: 'courier',
   props: ['parcel', 'courier', 'activeEl'],
   created: function () {
-    return this.searchCourier({roles: process.env.APP_ROLE_COURIER})
+    return this.onSearchCourier({roles: process.env.APP_ROLE_COURIER})
   },
   beforeMount: function () {
-    return this.$store.commit(types.MUTATIONS_CLEAR_USER_ERRORS, {})
+    this.$store.commit(types.MUTATIONS_CLEAR_USER_DATA, {})
+    this.$store.commit(types.MUTATIONS_CLEAR_USER_ERRORS, {})
   },
   components: {
     appHorizontalList: horizontalList
   },
   methods: {
-    autoCompleteCourier: function ($event) {
+    onAutoCompleteCourier: function ($event) {
       this.courier.search.activeEl.courierId = 0
-      if ($event.length === 0) return this.searchCourier({roles: process.env.APP_ROLE_COURIER})
+      if ($event.length === 0) return this.onSearchCourier({roles: process.env.APP_ROLE_COURIER})
       if ($event.length < 3) return
-      return this.searchCourier({firstName: $event})
+      return this.onSearchCourier({firstName: $event})
     },
-    searchCourier: function (obj) {
+    onSearchCourier: function (obj) {
       return this.$store.dispatch(types.ACTION_USER_SEARCH, {roles: process.env.APP_ROLE_COURIER, ...obj})
         .then(result => {
           this.courier.search.user = Object.values(result)

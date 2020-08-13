@@ -6,18 +6,15 @@
       </a>
       <ul class="items">
         <li
-          v-bind:key="nav.itemId"
+          :key="nav.itemId"
           v-for="nav in navigation.items"
-          @click.prevent="selectedNav(nav)"
+          @click.prevent="onSelectedNav(nav)"
           v-if="userHasRole(nav.isVisible.for)"
           :class="{active: activeEl.nav.itemId === nav.itemId}"
           :id="nav.route">
           <router-link :to="`${nav.route}`">
             <font-awesome-icon :icon="['fas', nav.optional.icon]"/>
-            <p>
-              {{nav.value}}&nbsp;
-              <span class="badge badge-pill badge-danger">{{nav.optional.badge}}</span>
-            </p>
+            <p>{{nav.value}}&nbsp; <span class="badge badge-pill badge-danger">{{nav.optional.badge}}</span></p>
           </router-link>
         </li>
       </ul>
@@ -26,7 +23,7 @@
           <a href="#" :data-letters="avatar"></a>
         </li>
         <li class="settings"
-          @click.prevent="selectedNav({itemId: 6, value: 'Nastavenia'})">
+          @click.prevent="onSelectedNav({itemId: 6, value: 'Nastavenia'})">
           <router-link
             to="profile"
             :class="{active: activeEl.nav.itemId === 6}">
@@ -142,7 +139,7 @@ export default {
     })
   },
   methods: {
-    selectedNav: function (el) {
+    onSelectedNav: function (el) {
       this.activeEl.nav.itemId = el.itemId
       this.activeEl.nav.value = el.value
 

@@ -280,17 +280,17 @@ const mutations = {
 const actions = {
   [types.ACTION_START_AUTH_TIMER]: function ({commit, dispatch, state, rootState}, payload) {
     setTimeout(function () {
-      if (state.payload.data.stayLoggedIn) {
+      if (state.payload.signIn.data.stayLoggedIn) {
         dispatch(types.ACTION_REFRESH_AUTH, {
           grantType: process.env.GRANT_TYPE_REFRESH_TOKEN,
           refreshToken: state.payload.data.refreshToken
         })
       } else {
         dispatch(types.ACTION_SIGN_OUT, {
-          accessToken: state.payload.data.accessToken
+          accessToken: state.payload.signIn.data.accessToken
         })
       }
-    }, payload.expirationTime * 1000)
+    }, payload * 1000)
   },
 
   [types.ACTION_SETUP_AVATAR]: function ({commit, dispatch, state, rootState}, payload) {
@@ -332,7 +332,7 @@ const actions = {
       },
       done: true
     })
-    dispatch(types.ACTION_START_AUTH_TIMER, {expirationTime: Number(new Date(localStorage.getItem('expirationDate')).getTime() / 1000) - Number(new Date().getTime() / 1000)})
+    dispatch(types.ACTION_START_AUTH_TIMER, Number(new Date(localStorage.getItem('expirationDate')).getTime() / 1000) - Number(new Date().getTime() / 1000))
     dispatch(types.ACTION_CHECK_PROFILE)
     router.push({path: '/dashboard'})
   },
@@ -375,7 +375,7 @@ const actions = {
         localStorage.setItem('expirationDate', new Date(new Date().getTime() + parsed.expires_in * 1000))
 
         dispatch(types.ACTION_CHECK_PROFILE)
-        dispatch(types.ACTION_START_AUTH_TIMER, {expirationTime: parsed.expires_in})
+        dispatch(types.ACTION_START_AUTH_TIMER, parsed.expires_in)
         router.push({path: '/dashboard'})
         return state.payload.signIn.data
       })
@@ -432,7 +432,7 @@ const actions = {
         localStorage.setItem('accountData', JSON.stringify(accountData))
         localStorage.setItem('expirationDate', new Date(new Date().getTime() + parsed.expires_in * 1000))
 
-        dispatch(types.ACTION_START_AUTH_TIMER, {expirationTime: parsed.expires_in})
+        dispatch(types.ACTION_START_AUTH_TIMER, parsed.expires_in)
         return state.payload.signIn.data
       })
       .catch(err => {

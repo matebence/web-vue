@@ -131,7 +131,7 @@ export default {
     if (this.$route.params.key) return this.onPageLoad()
   },
   beforeMount: function () {
-    return this.$store.commit(types.MUTATIONS_CLEAR_SIGN_UP_ERRORS, {})
+    this.$store.commit(types.MUTATIONS_CLEAR_SIGN_UP_ERRORS, {})
   },
   data: function () {
     return {

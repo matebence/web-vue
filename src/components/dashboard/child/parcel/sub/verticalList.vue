@@ -2,15 +2,15 @@
   <div id="verticalList">
     <ul class="tabs">
       <li
-        v-bind:key="option.id"
-        @click.prevent="selectedOption(option)"
+        :key="option.id"
+        @click.prevent="onSelectedOption(option)"
         v-for="option in tab.items"
         :class="{active: activeEl.tabs.tabId === option.itemId}">{{option.value}}</li>
     </ul>
     <ul class="parcels">
       <li
-        v-bind:key="item.id"
-        @click.prevent="selectedParcel(item)"
+        :key="item.id"
+        @click.prevent="onSelectedParcel(item)"
         v-for="item in parcelSearch"
         v-show="activeEl.tabs.value === tab.items[0].value || activeEl.tabs.value === tab.items[2].value"
         :class="{active: activeEl.parcels.parcelId === item.id}">
@@ -20,7 +20,7 @@
           </li>
           <li>
             <ul>
-              <li class="number" v-if="isNewItem(item.createdAt)"><span class="badge badge-pill badge-danger">Nové</span></li>
+              <li class="number" v-if="onNewItemCreated(item.createdAt)"><span class="badge badge-pill badge-danger">Nové</span></li>
               <li class="number" v-else>Číslo balíka: {{item.id}}</li>
               <li class="created">{{formatDate(item.createdAt)}}<br>{{formatTime(item.createdAt)}}</li>
             </ul>
@@ -32,8 +32,8 @@
       </li>
 
       <li
-        v-bind:key="item.id"
-        @click.prevent="selectedParcel(item)"
+        :key="item.id"
+        @click.prevent="onSelectedParcel(item)"
         v-for="item in parcelCreate"
         v-show="activeEl.tabs.value === tab.items[1].value || activeEl.tabs.value === tab.items[2].value"
         :class="{active: activeEl.parcels.parcelId === item.id}">
@@ -52,6 +52,22 @@
           </li>
         </ul>
       </li>
+
+      <li
+        class="empty-list"
+        v-if="Object.keys(parcelSearch).length === 0 && activeEl.tabs.value === tab.items[0].value">
+        Zoznam je prázdny
+      </li>
+      <li
+        class="empty-list"
+        v-if="Object.keys(parcelCreate).length === 0 && activeEl.tabs.value === tab.items[1].value">
+        Zoznam je prázdny
+      </li>
+      <li
+        class="empty-list"
+        v-if="Object.keys(parcelSearch).length === 0 && Object.keys(parcelCreate).length === 0 && activeEl.tabs.value === tab.items[2].value">
+        Zoznam je prázdny
+      </li>
     </ul>
   </div>
 </template>
@@ -68,7 +84,8 @@ export default {
       .catch(err => console.log(err))
   },
   beforeMount: function () {
-    return this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
+    this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_DATA, {})
+    this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
   },
   data: function () {
     return {
@@ -92,7 +109,7 @@ export default {
   },
   watch: {
     'activeEl.tabs.tabId': function (newValue, oldValue) {
-      if (newValue === 1) this.selectedOption({itemId: this.activeEl.tabs.tabId, value: this.activeEl.tabs.value})
+      if (newValue === 1) this.onSelectedOption({itemId: this.activeEl.tabs.tabId, value: this.activeEl.tabs.value})
     }
   },
   computed: {
@@ -103,7 +120,7 @@ export default {
     })
   },
   methods: {
-    selectedOption: function (el) {
+    onSelectedOption: function (el) {
       this.activeEl.parcels.parcelId = 0
       this.activeEl.tabs.tabId = el.itemId
       this.activeEl.tabs.value = el.value
@@ -113,10 +130,10 @@ export default {
           .catch(err => console.log(err))
       }
     },
-    selectedParcel: function (el) {
+    onSelectedParcel: function (el) {
       this.activeEl.parcels.parcelId = el.id
     },
-    isNewItem: function (timestamp) {
+    onNewItemCreated: function (timestamp) {
       const current = Number(new Date().getTime()) / 1000
       const parcel = Number(new Date(timestamp).getTime()) / 1000
       return current - parcel < 60
@@ -177,11 +194,22 @@ export default {
     cursor: pointer;
   }
 
+  div#verticalList ul.parcels li.empty-list {
+    text-align: center;
+    font-size: 1em;
+    margin-top: 3rem;
+  }
+
   div#verticalList ul.parcels li:hover,
   div#verticalList ul.parcels li.active {
     background: #f1f1f1;
     border-radius: 0.5rem;
     cursor: pointer;
+  }
+
+  div#verticalList ul.parcels li.empty-list:hover {
+    cursor: auto;
+    background: none;
   }
 
   div#verticalList ul.parcels li ul.parcel {
