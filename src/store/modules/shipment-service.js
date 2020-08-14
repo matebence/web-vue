@@ -371,19 +371,16 @@ const actions = {
         return window.open(window.URL.createObjectURL(new Blob([parsed], {type: 'application/pdf'})))
       })
       .catch(err => {
-        return err.json()
-          .then(parsed => {
-            commit(types.MUTATION_INVOICE_DATA, {
-              error: {
-                is: parsed.error,
-                message: parsed.message,
-                from: 'get',
-                reason: {}
-              },
-              done: true
-            })
-            throw parsed.message
-          })
+        commit(types.MUTATION_INVOICE_DATA, {
+          error: {
+            is: !err.ok,
+            message: 'Ľutujeme, ale faktúra nie je k dispozícií',
+            from: 'get',
+            reason: {}
+          },
+          done: true
+        })
+        throw state.payload.invoice.error.message
       })
   }
 }

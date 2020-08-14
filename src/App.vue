@@ -40,7 +40,7 @@ export default {
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #176c9d;
+    background: #166085;
   }
 
   html {

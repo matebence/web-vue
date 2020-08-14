@@ -62,7 +62,8 @@ export default {
 
 <style scoped>
   div#courier {
-    height: 29.5vh;
+    height: 220px;
+    width: fit-content;
   }
 
   div#courier h1 {
@@ -116,15 +117,9 @@ export default {
     background: rgba(9, 81, 116, 0.74);
   }
 
-  @media (max-width: 1500px) {
-    div#courier {
-      height: 34.5vh;
-    }
-  }
-
   @media (max-width: 400px) {
     div#courier {
-      height: 40.5vh;
+      height: 275px;
     }
 
     div#courier form.search {

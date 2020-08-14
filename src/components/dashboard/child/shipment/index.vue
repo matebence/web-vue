@@ -152,6 +152,7 @@ export default {
   div#index div#content {
     width: 100%;
     height: 98vh;
+    overflow: auto;
   }
 
   div#index div#content {

@@ -82,6 +82,7 @@ export default {
   div#index div#content {
     width: 100%;
     height: 98vh;
+    overflow: auto;
   }
 
   div#index div#content {
@@ -89,7 +90,8 @@ export default {
     border: 0.5rem #f1f1f1 solid;
     background: #ffffff;
     height: 98vh;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
   div#index div#main-content {

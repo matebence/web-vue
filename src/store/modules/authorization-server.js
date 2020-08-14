@@ -283,7 +283,7 @@ const actions = {
       if (state.payload.signIn.data.stayLoggedIn) {
         dispatch(types.ACTION_REFRESH_AUTH, {
           grantType: process.env.GRANT_TYPE_REFRESH_TOKEN,
-          refreshToken: state.payload.data.refreshToken
+          refreshToken: state.payload.signIn.data.refreshToken
         })
       } else {
         dispatch(types.ACTION_SIGN_OUT, {
@@ -414,12 +414,12 @@ const actions = {
         const jwt = VueJwtDecode.decode(parsed.access_token)
         const accountData = {
           accessToken: parsed.access_token,
-          refreshToken: state.payload.data.refreshToken,
+          refreshToken: parsed.refresh_token,
           expiresIn: parsed.expires_in,
           userName: parsed.user_name,
           authorities: jwt.authorities,
           accountId: parsed.account_id,
-          stayLoggedIn: state.payload.data.stayLoggedIn
+          stayLoggedIn: state.payload.signIn.data.stayLoggedIn
         }
 
         commit(types.MUTATIONS_SIGN_IN_DATA, {

@@ -17,7 +17,7 @@
           <li class="image">
             <font-awesome-icon :icon="['fas', 'dolly']"/>
           </li>
-          <li>
+          <li class="summary">
             <ul>
               <li class="status">{{item.status.name}}</li>
               <li class="from">{{item.from.split(',').pop()}} - {{item.to.split(',').pop()}}</li>
@@ -107,7 +107,7 @@ export default {
   }
 
   div#verticalList ul.shipments li ul.shipment ul {
-    text-align: left;
+    text-align: center;
   }
 
   div#verticalList ul.shipments li ul.shipment ul li {
@@ -158,5 +158,53 @@ export default {
     font-size: 0.9em;
     font-weight: 400;
     color: #000000;
+  }
+
+  @media (max-width: 1400px) {
+    div#verticalList ul.shipments li ul.shipment li.image {
+      display: none;
+    }
+
+    div#verticalList ul.shipments li ul.shipment {
+      padding: 0.5rem;
+    }
+
+    div#verticalList ul.shipments li ul.shipment ul li {
+      margin-left: 0;
+    }
+
+    div#verticalList ul.shipments li ul.shipment {
+      justify-content: space-around;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    div#verticalList ul.shipments li ul.shipment li.image {
+      display: block;
+    }
+
+    div#verticalList ul.shipments li ul.shipment {
+      padding: 0;
+    }
+
+    div#verticalList ul.shipments li ul.shipment ul li {
+      margin-left: 0.5rem;
+    }
+
+    div#verticalList ul.shipments li ul.shipment {
+      justify-content: end;
+    }
+  }
+
+  @media (max-width: 992px) {
+    div#verticalList ul.tabs {
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      width: 100%;
+    }
+
+    div#verticalList ul.shipments li ul.shipment li.summary {
+      margin: 0 auto;
+    }
   }
 </style>

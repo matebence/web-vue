@@ -308,7 +308,7 @@ export default {
       return this.here.map.getObjects().forEach(e => this.here.map.removeObject(e))
     },
     calculatePriceByDistance: function () {
-      if (this.courier.search.activeEl.courierId === 0) return this.showAlertModal('Upozornenie', 'Nezvolili ste si kuriéra.', 'Zatvoriť')
+      if (this.courier.search.activeEl.courierId === 0) return this.showAlertModal('Upozornenie', 'Nemáte zvolené kuriéra.', 'Zatvoriť')
       const courier = Object.values(this.courier.search.user).filter(e => e.accountId === this.courier.search.activeEl.courierId).pop()
       this.$store.dispatch(types.ACTION_PREFERENCE_SEARCH, {accountId: courier.accountId, name: 'Cena prepravy (eur/1km)'})
         .then(result => {
@@ -404,13 +404,13 @@ export default {
   div#hereMap {
     border-bottom-left-radius: 3rem;
     overflow: hidden;
-    height: 67vh;
+    height: 510px;
     border-top: solid 0.08rem black;
   }
 
   div#hereMap div#map {
     width: 100%;
-    height: 100%;
+    height: inherit;
     position: relative;
   }
 
@@ -532,12 +532,6 @@ export default {
     font-size: 1.3em;
   }
 
-  @media (max-width: 1500px) {
-    div#hereMap {
-      height: 62vh;
-    }
-  }
-
   @media (max-width: 1400px) {
     div#hereMap div#map form {
       width: 80%;
@@ -598,12 +592,6 @@ export default {
   @media (max-width: 600px) {
     div#hereMap div#map div#summary {
       width: 95%;
-    }
-  }
-
-  @media (max-width: 400px) {
-    div#hereMap {
-      height: 55vh;
     }
   }
 </style>
