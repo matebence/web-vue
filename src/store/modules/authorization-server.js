@@ -279,18 +279,20 @@ const mutations = {
 
 const actions = {
   [types.ACTION_START_AUTH_TIMER]: function ({commit, dispatch, state, rootState}, payload) {
-    setTimeout(function () {
+    const timeout = setTimeout(function () {
       if (state.payload.signIn.data.stayLoggedIn) {
         dispatch(types.ACTION_REFRESH_AUTH, {
           grantType: process.env.GRANT_TYPE_REFRESH_TOKEN,
           refreshToken: state.payload.signIn.data.refreshToken
         })
       } else {
+        if (!state.payload.signIn.data.accessToken) return clearTimeout(timeout)
         dispatch(types.ACTION_SIGN_OUT, {
           accessToken: state.payload.signIn.data.accessToken
         })
       }
     }, payload * 1000)
+    return timeout
   },
 
   [types.ACTION_SETUP_AVATAR]: function ({commit, dispatch, state, rootState}, payload) {

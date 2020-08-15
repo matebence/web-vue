@@ -35,13 +35,9 @@ export default {
             }
           },
           activeEl: {
-            tabs: {
-              tabId: 1,
-              value: 'Pridelené'
-            },
-            parcels: {
-              parcelId: 0
-            }
+            tabId: 1,
+            value: 'Pridelené',
+            parcelId: 0
           }
         },
         courier: {
@@ -62,7 +58,7 @@ export default {
     appHereMap: hereMap
   },
   watch: {
-    'components.parcel.activeEl.parcels.parcelId': function (newValue, oldValue) {
+    'components.parcel.activeEl.parcelId': function (newValue, oldValue) {
       if (newValue <= 0) {
         this.components.parcel.search.shipment = {}
       } else {

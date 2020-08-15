@@ -19,7 +19,7 @@
         </div>
         <div class="col-sm-12 col-md-6">
           <h2>Stav</h2>
-          <p>{{components.shipment.properties.from}}</p>
+          <p>{{components.shipment.properties.status}}</p>
         </div>
       </div>
       <div class="row">
@@ -92,16 +92,14 @@ export default {
     appModal: modal
   },
   watch: {
-    'activeEl.shipments.shipmentId': function (newValue, oldValue) {
-      if (this.activeEl.shipments.shipmentId === 0) return Object.assign(this.$data, this.$options.data.apply(this))
-      const shipment = Object.values(this.shipment).filter(e => e._id === this.activeEl.shipments.shipmentId).pop()
-      const parcel = Object.values(this.parcel).filter(e => e.id === shipment.parcelId).pop()
-      this.components.shipment.properties = {from: shipment.from, to: shipment.to, courier: shipment.courier.userName, status: shipment.status.name, id: shipment._id, invoice: {name: shipment.invoice.invoice, id: shipment.invoice._id}, sender: parcel.sender.name, receiver: parcel.receiver.name}
+    'activeEl.shipmentId': function (newValue, oldValue) {
+      if (this.activeEl.shipmentId === 0) return Object.assign(this.$data, this.$options.data.apply(this))
+      this.components.shipment.properties = {from: this.shipment.from, to: this.shipment.to, courier: this.shipment.courier.userName, status: this.shipment.status.name, id: this.shipment._id, invoice: {name: this.shipment.invoice.invoice, id: this.shipment.invoice._id}, sender: this.shipment.sender.name, receiver: this.shipment.receiver.name}
     }
   },
   methods: {
     onDownload: function () {
-      if (this.activeEl.shipments.shipmentId === 0) return this.showAlertModal('Upozornenie', 'Nemáte zvolenú zásielku.', 'Zatvoriť')
+      if (this.activeEl.shipmentId === 0) return this.showAlertModal('Upozornenie', 'Nemáte zvolenú zásielku.', 'Zatvoriť')
       this.$store.dispatch(types.ACTION_INVOICE_DOWNLOAD, this.components.shipment.properties.invoice.id)
         .catch(err => this.showAlertModal('Informácia', err, 'Zatvoriť'))
     },

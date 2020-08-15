@@ -7,7 +7,7 @@
           v-show="isSelected"
           id="modify">
           <button
-            @click.prevent="components.shipment.activeEl.shipments.shipmentId = 0">
+            @click.prevent="components.shipment.activeEl.shipmentId = 0">
             <font-awesome-icon
               :icon="['fas', 'ban']"/>
           </button>
@@ -19,9 +19,10 @@
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-properties
           :activeEl="components.shipment.activeEl"
-          :shipment="components.shipment.search"
-          :parcel="components.parcel.search" />
-        <app-rating />
+          :shipment="selectedItem" />
+        <app-rating
+          :shipment="selectedItem"
+          :activeEl="components.shipment.activeEl" />
       </div>
     </div>
   </div>
@@ -40,7 +41,6 @@ export default {
     this.onFetchShipments({sender: this.signIn.accountId})
   },
   beforeMount: function () {
-    this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_DATA, {})
     this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
   },
   data: function () {
@@ -54,13 +54,9 @@ export default {
           search: {
           },
           activeEl: {
-            tabs: {
-              tabId: 1,
-              value: 'Vlastné'
-            },
-            shipments: {
-              shipmentId: 0
-            }
+            tabId: 1,
+            value: 'Vlastné',
+            shipmentId: 0
           }
         }
       }
@@ -72,7 +68,7 @@ export default {
     appVerticalList: verticalList
   },
   watch: {
-    'components.shipment.activeEl.tabs.value': function (newValue, oldValue) {
+    'components.shipment.activeEl.value': function (newValue, oldValue) {
       this.components.shipment.search = {}
 
       if (newValue === 'Vlastné' || newValue === 'Všetky') {
@@ -85,7 +81,13 @@ export default {
   },
   computed: {
     isSelected: function () {
-      return this.components.shipment.activeEl.shipments.shipmentId !== 0
+      return this.components.shipment.activeEl.shipmentId !== 0
+    },
+    selectedItem: function () {
+      if (this.components.shipment.activeEl.shipmentId === 0) return
+      const shipment = Object.values(this.components.shipment.search).filter(e => e._id === this.components.shipment.activeEl.shipmentId).pop()
+      const parcel = Object.values(this.components.parcel.search).filter(e => e.id === shipment.parcelId).pop()
+      return {...shipment, ...parcel}
     },
     ...mapGetters({
       signIn: types.GETTER_SIGN_IN_DATA

@@ -5,7 +5,7 @@
         <div class="form-group">
           <input
             v-model="navigator.form.from.value"
-            :disabled="parcel.search.shipment.parcelId > 0 || parcel.activeEl.parcels.parcelId === 0"
+            :disabled="parcel.search.shipment.parcelId > 0 || parcel.activeEl.parcelId === 0"
             type="text"
             class="form-control"
             id="from"
@@ -20,7 +20,7 @@
         <div class="form-group">
           <input
             v-model="navigator.form.to.value"
-            :disabled="parcel.search.shipment.parcelId > 0 || parcel.activeEl.parcels.parcelId === 0"
+            :disabled="parcel.search.shipment.parcelId > 0 || parcel.activeEl.parcelId === 0"
             type="text"
             class="form-control"
             id="to"
@@ -85,7 +85,6 @@ export default {
     this.here.platform = new H.service.Platform({'apikey': process.env.HERE_JS_SDK_API})
   },
   beforeMount: function () {
-    this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_DATA, {})
     this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
 
     return Promise.all([
@@ -221,7 +220,7 @@ export default {
       this.navigator.summary.isSet = true
       return this.visualizeOnMap()
     },
-    'parcel.activeEl.parcels.parcelId': function (newValue, oldValue) {
+    'parcel.activeEl.parcelId': function (newValue, oldValue) {
       if (newValue === 0) return this.removePreviousRoutes()
     },
     'courier.search.activeEl.courierId': function (newValue, oldValue) {
@@ -377,8 +376,8 @@ export default {
         return this.showAlertModal('Upozornenie', 'Nemáte dostatok penazí na účte.', 'Zatvoriť')
       } else {
         if (confirmed) {
-          const data = Object.values(this.parcelCreate).filter(e => e.id === this.parcel.activeEl.parcels.parcelId).pop()
-          let payload = {id: this.parcel.activeEl.parcels.parcelId, data: {sender: Number(data.sender.senderId), receiver: Number(data.receiver.accountId), categoryId: data.category.id, length: Number(data.length), width: Number(data.width), height: Number(data.height), weight: Number(data.weight), note: data.note}}
+          const data = Object.values(this.parcelCreate).filter(e => e.id === this.parcel.activeEl.parcelId).pop()
+          let payload = {id: this.parcel.activeEl.parcelId, data: {sender: Number(data.sender.senderId), receiver: Number(data.receiver.accountId), categoryId: data.category.id, length: Number(data.length), width: Number(data.width), height: Number(data.height), weight: Number(data.weight), note: data.note}}
 
           this.$store.dispatch(types.ACTION_PARCEL_CREATE, payload)
             .then(result => {

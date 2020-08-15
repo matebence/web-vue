@@ -5,15 +5,15 @@
         :key="option.id"
         @click.prevent="onSelectedOption(option)"
         v-for="option in tab.items"
-        :class="{active: activeEl.tabs.tabId === option.itemId}">{{option.value}}</li>
+        :class="{active: activeEl.tabId === option.itemId}">{{option.value}}</li>
     </ul>
     <ul class="parcels">
       <li
         :key="item.id"
         @click.prevent="onSelectedParcel(item)"
         v-for="item in parcelSearch"
-        v-show="activeEl.tabs.value === tab.items[0].value || activeEl.tabs.value === tab.items[2].value"
-        :class="{active: activeEl.parcels.parcelId === item.id}">
+        v-show="activeEl.value === tab.items[0].value || activeEl.value === tab.items[2].value"
+        :class="{active: activeEl.parcelId === item.id}">
         <ul class="parcel">
           <li class="image">
             <font-awesome-icon :icon="['fas', formatIcon(tab.items[0].value)]"/>
@@ -35,8 +35,8 @@
         :key="item.id"
         @click.prevent="onSelectedParcel(item)"
         v-for="item in parcelCreate"
-        v-show="activeEl.tabs.value === tab.items[1].value || activeEl.tabs.value === tab.items[2].value"
-        :class="{active: activeEl.parcels.parcelId === item.id}">
+        v-show="activeEl.value === tab.items[1].value || activeEl.value === tab.items[2].value"
+        :class="{active: activeEl.parcelId === item.id}">
         <ul class="parcel">
           <li class="image">
             <font-awesome-icon :icon="['fas', formatIcon(tab.items[1].value)]"/>
@@ -55,17 +55,17 @@
 
       <li
         class="empty-list"
-        v-if="Object.keys(parcelSearch).length === 0 && activeEl.tabs.value === tab.items[0].value">
+        v-if="(parcelSearch !== undefined) && (Object.keys(parcelSearch).length === 0) && (activeEl.value === tab.items[0].value)">
         Zoznam je prázdny
       </li>
       <li
         class="empty-list"
-        v-if="Object.keys(parcelCreate).length === 0 && activeEl.tabs.value === tab.items[1].value">
+        v-if="(parcelCreate !== undefined) && (Object.keys(parcelCreate).length === 0) && (activeEl.value === tab.items[1].value)">
         Zoznam je prázdny
       </li>
       <li
         class="empty-list"
-        v-if="Object.keys(parcelSearch).length === 0 && Object.keys(parcelCreate).length === 0 && activeEl.tabs.value === tab.items[2].value">
+        v-if="(parcelSearch !== undefined && parcelCreate !== undefined) && (Object.keys(parcelSearch).length === 0 && Object.keys(parcelCreate).length === 0) && (activeEl.value === tab.items[2].value)">
         Zoznam je prázdny
       </li>
     </ul>
@@ -84,7 +84,6 @@ export default {
       .catch(err => console.log(err))
   },
   beforeMount: function () {
-    this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_DATA, {})
     this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
   },
   data: function () {
@@ -108,8 +107,8 @@ export default {
     }
   },
   watch: {
-    'activeEl.tabs.tabId': function (newValue, oldValue) {
-      if (newValue === 1) this.onSelectedOption({itemId: this.activeEl.tabs.tabId, value: this.activeEl.tabs.value})
+    'activeEl.tabId': function (newValue, oldValue) {
+      if (newValue === 1) this.onSelectedOption({itemId: this.activeEl.tabId, value: this.activeEl.value})
     }
   },
   computed: {
@@ -121,17 +120,17 @@ export default {
   },
   methods: {
     onSelectedOption: function (el) {
-      this.activeEl.parcels.parcelId = 0
-      this.activeEl.tabs.tabId = el.itemId
-      this.activeEl.tabs.value = el.value
+      this.activeEl.parcelId = 0
+      this.activeEl.tabId = el.itemId
+      this.activeEl.value = el.value
 
-      if (this.activeEl.tabs.value === this.tab.items[0].value || this.activeEl.tabs.value === this.tab.items[2].value) {
+      if (this.activeEl.value === this.tab.items[0].value || this.activeEl.value === this.tab.items[2].value) {
         return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.accountId})
           .catch(err => console.log(err))
       }
     },
     onSelectedParcel: function (el) {
-      this.activeEl.parcels.parcelId = el.id
+      this.activeEl.parcelId = el.id
     },
     onNewItemCreated: function (timestamp) {
       const current = Number(new Date().getTime()) / 1000

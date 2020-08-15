@@ -7,12 +7,12 @@
         class="searchTerm"
         placeholder="Meno kuriéra"
         v-model="courier.search.name"
-        :disabled="parcel.activeEl.parcels.parcelId >= 0"
+        :disabled="parcel.activeEl.parcelId >= 0"
         @input="onAutoCompleteCourier($event.target.value)">
       <button
         @click.prevent="onSearchCourier({firstName: courier.search.user.pop().firstName})"
         type="submit"
-        :disabled="parcel.activeEl.parcels.parcelId >= 0"
+        :disabled="parcel.activeEl.parcelId >= 0"
         class="searchButton">
         <i class="fa fa-search"></i>
       </button>

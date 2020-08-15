@@ -49,6 +49,30 @@ const state = {
         }
       },
       done: true
+    },
+    rating: {
+      data: {
+        create: {
+        },
+        update: {
+        },
+        remove: {
+        },
+        get: {
+        },
+        getAll: {
+        },
+        search: {
+        }
+      },
+      error: {
+        is: false,
+        message: null,
+        from: '',
+        reason: {
+        }
+      },
+      done: true
     }
   }
 }
@@ -124,6 +148,54 @@ const mutations = {
   },
 
   [types.MUTATIONS_CLEAR_CATEGORY_DATA]: function (state, data) {
+    state.payload.category = {
+      data: {
+        create: {
+        },
+        update: {
+        },
+        remove: {
+        },
+        get: {
+        },
+        getAll: {
+        },
+        search: {
+        }
+      },
+      error: {
+        is: false,
+        message: null,
+        from: '',
+        reason: {
+        }
+      },
+      done: true
+    }
+  },
+
+  [types.MUTATION_RATING_DATA]: function (state, data) {
+    state.payload.category = {
+      ...state.payload.category,
+      ...data
+    }
+  },
+
+  [types.MUTATIONS_CLEAR_RATING_ERRORS]: function (state, data) {
+    state.payload.category = {
+      ...state.payload.category,
+      error: {
+        is: false,
+        message: null,
+        from: '',
+        reason: {
+        }
+      },
+      done: true
+    }
+  },
+
+  [types.MUTATIONS_CLEAR_RATING_DATA]: function (state, data) {
     state.payload.category = {
       data: {
         create: {
@@ -277,6 +349,52 @@ const actions = {
             throw parsed.message
           })
       })
+  },
+
+  [types.ACTION_RATING_CREATE]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_RATING_DATA, {done: false})
+    return this._vm.$resource('{service}/api/ratings', {}, {
+      create: {
+        method: 'POST',
+        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        }
+      }
+    }).create({service: 'parcel-service'}, {...payload})
+      .then(response => {
+        return response.json()
+      })
+      .then(parsed => {
+        commit(types.MUTATION_RATING_DATA, {
+          data: {
+            ...state.payload.rating.data,
+            create: [
+              ...Object.values(state.payload.rating.data.create).filter(e => e.id !== payload.id)
+            ]
+          },
+          done: true
+        })
+        return parsed
+      })
+      .catch(err => {
+        return err.json()
+          .then(parsed => {
+            let validations = {}
+            parsed.validations.forEach(e => { validations[e.param] = e.msg })
+
+            commit(types.MUTATION_RATING_DATA, {
+              error: {
+                is: parsed.error,
+                message: parsed.message,
+                from: 'create',
+                reason: {
+                  ...validations
+                }
+              },
+              done: true
+            })
+            throw parsed.message
+          })
+      })
   }
 }
 
@@ -301,6 +419,10 @@ const getters = {
     return state.payload.parcel.error
   },
 
+  [types.GETTER_CATEGORY_DATA]: function (state) {
+    return state.payload.category.data
+  },
+
   [types.GETTER_CATEGORY_DATA_GET_ALL]: function (state) {
     return state.payload.category.data.getAll
   },
@@ -310,6 +432,18 @@ const getters = {
   },
 
   [types.GETTER_CATEGORY_ERROR]: function (state) {
+    return state.payload.category.error
+  },
+
+  [types.GETTER_RATING_DATA]: function (state) {
+    return state.payload.category.data
+  },
+
+  [types.GETTER_RATING_DONE]: function (state) {
+    return state.payload.category.done
+  },
+
+  [types.GETTER_RATING_ERROR]: function (state) {
     return state.payload.category.error
   }
 }

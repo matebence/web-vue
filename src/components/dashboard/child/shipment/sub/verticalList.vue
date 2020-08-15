@@ -5,14 +5,14 @@
         :key="option.id"
         @click.prevent="onSelectedOption(option)"
         v-for="option in tab.items"
-        :class="{active: activeEl.tabs.tabId === option.itemId}">{{option.value}}</li>
+        :class="{active: activeEl.tabId === option.itemId}">{{option.value}}</li>
     </ul>
     <ul class="shipments">
       <li
         :key="item._id"
         @click.prevent="onSelectedShipment(item)"
         v-for="item in shipment"
-        :class="{active: activeEl.shipments.shipmentId === item._id}">
+        :class="{active: activeEl.shipmentId === item._id}">
         <ul class="shipment">
           <li class="image">
             <font-awesome-icon :icon="['fas', 'dolly']"/>
@@ -29,17 +29,17 @@
 
       <li
         class="empty-list"
-        v-if="Object.keys(shipment).length === 0 && activeEl.tabs.value === tab.items[0].value">
+        v-if="Object.keys(shipment).length === 0 && activeEl.value === tab.items[0].value">
         Zoznam je prázdny
       </li>
       <li
         class="empty-list"
-        v-if="Object.keys(shipment).length === 0 && activeEl.tabs.value === tab.items[1].value">
+        v-if="Object.keys(shipment).length === 0 && activeEl.value === tab.items[1].value">
         Zoznam je prázdny
       </li>
       <li
         class="empty-list"
-        v-if="Object.keys(shipment).length === 0 && activeEl.tabs.value === tab.items[2].value">
+        v-if="Object.keys(shipment).length === 0 && activeEl.value === tab.items[2].value">
         Zoznam je prázdny
       </li>
     </ul>
@@ -72,11 +72,11 @@ export default {
   },
   methods: {
     onSelectedOption: function (el) {
-      this.activeEl.tabs.tabId = el.itemId
-      this.activeEl.tabs.value = el.value
+      this.activeEl.tabId = el.itemId
+      this.activeEl.value = el.value
     },
     onSelectedShipment: function (el) {
-      this.activeEl.shipments.shipmentId = el._id
+      this.activeEl.shipmentId = el._id
     }
   }
 }

@@ -184,7 +184,6 @@ export default {
       .catch(err => console.log(err))
   },
   beforeMount: function () {
-    this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_DATA, {})
     this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
   },
   data: function () {
@@ -201,7 +200,7 @@ export default {
         receiver: {
           name: {
             required,
-            alpha: value => value.match(/^[\D ]+$/)
+            alpha: value => new RegExp(/^[\D ]+$/).test(value)
           },
           accountId: {
             required,
@@ -281,7 +280,7 @@ export default {
             }]
           }
         })
-        return this.$emit('crud', {component: 'app-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
+        return this.$emit('crud', {component: 'app-vertical-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
       }
     },
     onUpdate: function () {
@@ -297,7 +296,7 @@ export default {
             }]
           }
         })
-        return this.$emit('crud', {component: 'app-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
+        return this.$emit('crud', {component: 'app-vertical-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
       }
     }
   }
@@ -319,7 +318,7 @@ export default {
     font-size: 0.9em;
     background: #ffffff;
     border: solid 0.09rem #176c9d;
-    border-radius: 0.2rem;
+    border-radius: 10rem;
     color: #176c9d;
     float: right;
     margin-top: 1rem;

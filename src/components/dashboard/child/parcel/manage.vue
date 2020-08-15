@@ -14,7 +14,7 @@
       v-show="isSelected"
       id="modify">
       <button
-        @click.prevent="activeEl.parcels.parcelId = 0">
+        @click.prevent="activeEl.parcelId = 0">
         <font-awesome-icon
           :icon="['fas', 'ban']"/>
       </button>
@@ -37,8 +37,8 @@
         @crud="
           selectedComponent = $event.component;
           selectedIcon = $event.icon;
-          activeEl.tabs.tabId = $event.nav.id;
-          activeEl.tabs.value = $event.nav.value;"/>
+          activeEl.tabId = $event.nav.id;
+          activeEl.value = $event.nav.value;"/>
     </keep-alive>
     <app-modal
       :modalId="'parcelAlert'"
@@ -113,19 +113,19 @@ export default {
     }
   },
   components: {
-    appConfirm: confirm,
     appCrud: crud,
     appModal: modal,
+    appConfirm: confirm,
     appVerticalList: verticalList
   },
   watch: {
-    'activeEl.parcels.parcelId': function (newValue, oldValue) {
+    'activeEl.parcelId': function (newValue, oldValue) {
       this.$emit('selectedParcel', newValue)
     }
   },
   computed: {
     isSelected: function () {
-      return this.activeEl.parcels.parcelId !== 0
+      return this.activeEl.parcelId !== 0
     },
     ...mapGetters({
       parcelCreate: types.GETTER_PARCEL_DATA_CREATE,
@@ -159,28 +159,28 @@ export default {
       return bootstrap('#parcelConfirm').modal('show')
     },
     editParcel: function () {
-      if (this.activeEl.parcels.parcelId > 0) {
+      if (this.activeEl.parcelId > 0) {
         return this.showAlertModal('Editovanie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné editovať.', 'Zatvoriť')
       } else {
-        const data = this.parcelCreate.filter(e => e.id === this.activeEl.parcels.parcelId)
+        const data = this.parcelCreate.filter(e => e.id === this.activeEl.parcelId)
         this.selectedComponent = this.manageComponenets()
-        this.activeEl.parcels.parcelId = 0
+        this.activeEl.parcelId = 0
         this.components.appCreate.form.values = {...data.pop()}
       }
     },
     removeParcel: function (confirmed) {
-      if (this.activeEl.parcels.parcelId > 0) {
+      if (this.activeEl.parcelId > 0) {
         return this.showAlertModal('Odstránenie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné odstrániť.', 'Zatvoriť')
       } else {
         if (confirmed) {
-          const data = this.parcelCreate.filter(e => e.id !== this.activeEl.parcels.parcelId)
+          const data = this.parcelCreate.filter(e => e.id !== this.activeEl.parcelId)
           this.$store.commit(types.MUTATION_PARCEL_DATA, {
             data: {
               ...this.parcelData,
               create: [...data]
             }
           })
-          this.activeEl.parcels.parcelId = 0
+          this.activeEl.parcelId = 0
         } else {
           return this.showConfirmModal('Odstránenie', 'Naozaj chcete odstrániť balík?')
         }

@@ -10,7 +10,7 @@
           v-for="nav in navigation.items"
           @click.prevent="onSelectedNav(nav)"
           v-if="userHasRole(nav.isVisible.for)"
-          :class="{active: activeEl.nav.itemId === nav.itemId}"
+          :class="{active: activeEl.itemId === nav.itemId}"
           :id="nav.route">
           <router-link :to="`${nav.route}`">
             <font-awesome-icon :icon="['fas', nav.optional.icon]"/>
@@ -26,7 +26,7 @@
           @click.prevent="onSelectedNav({itemId: 6, value: 'Nastavenia'})">
           <router-link
             to="profile"
-            :class="{active: activeEl.nav.itemId === 6}">
+            :class="{active: activeEl.itemId === 6}">
             <font-awesome-icon :icon="['fas', 'cog']"/>
             <p>Nastavenia</p>
           </router-link>
@@ -140,10 +140,10 @@ export default {
   },
   methods: {
     onSelectedNav: function (el) {
-      this.activeEl.nav.itemId = el.itemId
-      this.activeEl.nav.value = el.value
+      this.activeEl.itemId = el.itemId
+      this.activeEl.value = el.value
 
-      if (this.activeEl.nav.value === this.navigation.items[6].value) {
+      if (this.activeEl.value === this.navigation.items[6].value) {
         return this.$store.dispatch(types.ACTION_SIGN_OUT, {accessToken: this.signIn.accessToken})
           .catch(err => console.log(err))
       }
@@ -330,6 +330,10 @@ div#index nav ul.sub-items li:hover [data-letters]:before {
     transform: none;
     left: 0;
     top: 0;
+  }
+
+  div#index nav ul.items li {
+    border: 0.2rem solid #176c9d;
   }
 
   div#index nav ul.items li,

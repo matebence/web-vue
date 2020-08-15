@@ -21,10 +21,10 @@ import navigation from '@/components/dashboard/child/navigation/index'
 export default {
   created: function () {
     if (this.allowedRoles.includes(process.env.APP_ROLE_CLIENT)) {
-      this.navigation.activeEl.nav = {itemId: 1, value: 'Balíky'}
+      this.navigation.activeEl = {itemId: 1, value: 'Balíky'}
       this.$router.push({path: '/dashboard/parcel'})
     } else if ([...this.allowedRoles].includes(process.env.APP_ROLE_COURIER)) {
-      this.navigation.activeEl.nav = {itemId: 3, value: 'Klienti'}
+      this.navigation.activeEl = {itemId: 3, value: 'Klienti'}
       this.$router.push({path: '/dashboard/client'})
     } else {
       this.$router.push({path: '/sign-in'})
@@ -35,8 +35,6 @@ export default {
     return {
       navigation: {
         activeEl: {
-          nav: {
-          }
         }
       }
     }
