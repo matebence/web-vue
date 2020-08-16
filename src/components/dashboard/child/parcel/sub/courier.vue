@@ -35,10 +35,6 @@ export default {
   created: function () {
     return this.onSearchCourier({roles: process.env.APP_ROLE_COURIER})
   },
-  beforeMount: function () {
-    this.$store.commit(types.MUTATIONS_CLEAR_USER_DATA, {})
-    this.$store.commit(types.MUTATIONS_CLEAR_USER_ERRORS, {})
-  },
   components: {
     appHorizontalList: horizontalList
   },
@@ -54,7 +50,7 @@ export default {
         .then(result => {
           this.courier.search.user = Object.values(result)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log(err.message))
     }
   }
 }

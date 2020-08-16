@@ -66,9 +66,6 @@ import crud from '@/components/dashboard/child/parcel/sub/crud'
 import verticalList from '@/components/dashboard/child/parcel/sub/verticalList'
 
 export default {
-  beforeMount: function () {
-    return this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
-  },
   name: 'manage',
   props: ['activeEl'],
   data: function () {

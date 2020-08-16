@@ -85,8 +85,6 @@ export default {
     this.here.platform = new H.service.Platform({'apikey': process.env.HERE_JS_SDK_API})
   },
   beforeMount: function () {
-    this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
-
     return Promise.all([
       this.$store.dispatch(types.ACTION_LOCATION_GET),
       this.$store.dispatch(types.ACTION_PRICE_GET, process.env.COMPANY_PRICE_PROFIT_ID)
@@ -111,7 +109,7 @@ export default {
         new H.mapevents.Behavior(new H.mapevents.MapEvents(result))
         return this.reverseGeoCode()
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err.message))
   },
   name: 'hereMap',
   props: ['parcel', 'courier'],
@@ -314,7 +312,7 @@ export default {
           this.navigator.courier.price = Object.values(result).pop().value
           return this.visualizeOnMap()
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log(err.message))
     },
     formatPrice: function (distance, price, profit) {
       const formatter = new Intl.NumberFormat('sk-SK', {style: 'currency', currency: 'EUR'})
@@ -357,7 +355,7 @@ export default {
             if ($event.target.id === 'from') this.navigator.form.from.autoComplete = Object.values(result)
             if ($event.target.id === 'to') this.navigator.form.to.autoComplete = Object.values(result)
           })
-          .catch(err => console.log(err))
+          .catch(err => console.log(err.message))
       }
     },
     onSelectPlace: function ($event) {
@@ -388,7 +386,7 @@ export default {
               this.parcel.activeEl.tabs = {tabId: 1, value: 'Pridelené'}
             })
             .catch(err => {
-              return this.showAlertModal('Chyba', err, 'Zatvoriť')
+              return this.showAlertModal('Chyba', err.message, 'Zatvoriť')
             })
         } else {
           return this.showConfirmModal('Upozornenie', 'Po vytvorenie zásielky, zmena už nebude možná!')
