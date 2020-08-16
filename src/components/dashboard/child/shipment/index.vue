@@ -42,6 +42,7 @@ export default {
   },
   beforeMount: function () {
     this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
+    this.$store.commit(types.MUTATIONS_CLEAR_RATING_ERRORS, {})
   },
   data: function () {
     return {
@@ -103,7 +104,7 @@ export default {
         .then(result => {
           this.components.shipment.search = result
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log(err.message))
     }
   }
 }

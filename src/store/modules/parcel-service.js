@@ -175,15 +175,15 @@ const mutations = {
   },
 
   [types.MUTATION_RATING_DATA]: function (state, data) {
-    state.payload.category = {
-      ...state.payload.category,
+    state.payload.rating = {
+      ...state.payload.rating,
       ...data
     }
   },
 
   [types.MUTATIONS_CLEAR_RATING_ERRORS]: function (state, data) {
-    state.payload.category = {
-      ...state.payload.category,
+    state.payload.rating = {
+      ...state.payload.rating,
       error: {
         is: false,
         message: null,
@@ -196,7 +196,7 @@ const mutations = {
   },
 
   [types.MUTATIONS_CLEAR_RATING_DATA]: function (state, data) {
-    state.payload.category = {
+    state.payload.rating = {
       data: {
         create: {
         },
@@ -265,7 +265,7 @@ const actions = {
               },
               done: true
             })
-            throw parsed.message
+            throw new Error(parsed.message)
           })
       })
   },
@@ -306,12 +306,13 @@ const actions = {
               },
               done: true
             })
-            throw parsed.message
+            throw new Error(parsed.message)
           })
       })
   },
 
   [types.ACTION_CATEGORY_GET_ALL]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_CATEGORY_DATA, {done: false})
     return this._vm.$resource('{service}/api/categories/page/{page}/limit/{limit}', {}, {
       getAll: {
         method: 'GET',
@@ -346,7 +347,7 @@ const actions = {
               },
               done: true
             })
-            throw parsed.message
+            throw new Error(parsed.message)
           })
       })
   },
@@ -392,7 +393,48 @@ const actions = {
               },
               done: true
             })
-            throw parsed.message
+            throw new Error(parsed.message)
+          })
+      })
+  },
+
+  [types.ACTION_RATING_SEARCH]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_RATING_DATA, {done: false})
+    return this._vm.$resource('{service}/api/ratings/search', {}, {
+      search: {
+        method: 'POST',
+        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}
+      }
+    }).search({service: 'parcel-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: payload})
+      .then(response => {
+        return response.json()
+      })
+      .then(parsed => {
+        commit(types.MUTATION_RATING_DATA, {
+          data: {
+            ...state.payload.rating.data,
+            search: {
+              ...parsed.data
+            }
+          },
+          done: true
+        })
+        return state.payload.rating.data.search
+      })
+      .catch(err => {
+        return err.json()
+          .then(parsed => {
+            commit(types.MUTATION_RATING_DATA, {
+              error: {
+                is: parsed.error,
+                message: parsed.message,
+                from: 'search',
+                reason: {
+                }
+              },
+              done: true
+            })
+            throw new Error(parsed.message)
           })
       })
   }

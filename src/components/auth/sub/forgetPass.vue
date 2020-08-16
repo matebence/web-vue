@@ -49,13 +49,10 @@ import alert from '@/components/common/alert'
 import {required, email} from 'vuelidate/lib/validators'
 
 export default {
-  name: 'forgetpass',
   created: function () {
     if (this.$route.params.key) return this.onPageLoad()
   },
-  beforeMount: function () {
-    this.$store.commit(types.MUTATIONS_CLEAR_FORGET_PASSWORD_ERRORS, {})
-  },
+  name: 'forgetpass',
   data: function () {
     return {
       form: {
@@ -99,11 +96,11 @@ export default {
     },
     onPageLoad: function () {
       return this.$store.dispatch(types.ACTION_ACCOUNT_RECOVER, {id: this.url.values.id, key: this.url.values.key})
-        .catch(err => console.log(err))
+        .catch(err => console.log(err.message))
     },
     onSend: function () {
       return this.$store.dispatch(types.ACTION_FORGET_PASSWORD, {email: this.form.values.email})
-        .catch(err => console.log(err))
+        .catch(err => console.log(err.message))
     }
   }
 }

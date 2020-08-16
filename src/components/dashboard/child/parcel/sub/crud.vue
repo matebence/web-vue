@@ -181,10 +181,7 @@ export default {
   props: ['form'],
   created: function () {
     return this.$store.dispatch(types.ACTION_CATEGORY_GET_ALL, {})
-      .catch(err => console.log(err))
-  },
-  beforeMount: function () {
-    this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
+      .catch(err => console.log(err.message))
   },
   data: function () {
     return {
@@ -259,7 +256,7 @@ export default {
         .then(result => {
           this.autoComplete.client = result
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log(err.message))
     },
     onSelectedReceiver: function ($event) {
       this.form.values.receiver.accountId = $event.dataset.accountid

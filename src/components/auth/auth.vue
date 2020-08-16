@@ -23,15 +23,21 @@
 </template>
 
 <script>
-import forgetPass from '@/components/auth/sub/forgetPass'
+import * as types from '@/store/types'
 import signIn from '@/components/auth/sub/signIn'
 import signUp from '@/components/auth/sub/signUp'
+import forgetPass from '@/components/auth/sub/forgetPass'
 
 export default {
-  name: 'auth',
+  beforeMount: function () {
+    this.$store.commit(types.MUTATIONS_CLEAR_SIGN_UP_ERRORS, {})
+    this.$store.commit(types.MUTATIONS_CLEAR_SIGN_IN_ERRORS, {})
+    this.$store.commit(types.MUTATIONS_CLEAR_FORGET_PASSWORD_ERRORS, {})
+  },
   created () {
     return this.navigateContent(this.$route.params.component)
   },
+  name: 'auth',
   data: function () {
     return {
       component: null

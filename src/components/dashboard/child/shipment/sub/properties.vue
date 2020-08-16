@@ -101,7 +101,7 @@ export default {
     onDownload: function () {
       if (this.activeEl.shipmentId === 0) return this.showAlertModal('Upozornenie', 'Nemáte zvolenú zásielku.', 'Zatvoriť')
       this.$store.dispatch(types.ACTION_INVOICE_DOWNLOAD, this.components.shipment.properties.invoice.id)
-        .catch(err => this.showAlertModal('Informácia', err, 'Zatvoriť'))
+        .catch(err => this.showAlertModal('Informácia', err.message, 'Zatvoriť'))
     },
     showAlertModal: function (title, text, button) {
       this.components.appModal.title = title

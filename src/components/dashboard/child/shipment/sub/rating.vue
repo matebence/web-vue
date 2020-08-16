@@ -117,11 +117,19 @@
       :disabled="$v.$invalid || activeEl.shipmentId === 0"
       @click.prevent="onCreate"
       class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
+    <app-modal
+      :modalId="'ratingAlert'"
+      :text="components.appModal.text"
+      :title="components.appModal.title"
+      :button="components.appModal.button"/>
   </div>
 </template>
 
 <script>
+import bootstrap from 'jquery'
+import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
+import modal from '@/components/common/modal'
 import {required, numeric} from 'vuelidate/lib/validators'
 
 export default {
@@ -142,6 +150,11 @@ export default {
               parcelId: 0
             }
           }
+        },
+        appModal: {
+          text: null,
+          title: null,
+          button: null
         }
       }
     }
@@ -174,7 +187,21 @@ export default {
       }
     }
   },
+  components: {
+    appModal: modal
+  },
+  computed: {
+    ...mapGetters({
+      signIn: types.GETTER_SIGN_IN_DATA
+    })
+  },
   methods: {
+    showAlertModal: function (title, text, button) {
+      this.components.appModal.title = title
+      this.components.appModal.text = text
+      this.components.appModal.button = button
+      return bootstrap('#ratingAlert').modal('show')
+    },
     onFileChange: function ($event) {
       const fileData = $event.target.files[0]
       const fileReader = new FileReader()
@@ -183,9 +210,14 @@ export default {
       this.components.appRating.form.values.image.name = fileData.name
     },
     onCreate: function () {
-      return this.$store.dispatch(types.ACTION_RATING_CREATE, {description: this.components.appRating.form.values.description, rating: this.components.appRating.form.values.rating, image: this.components.appRating.form.values.image.base64, parcelId: this.shipment.parcelId})
-        .then(result => console.log(result))
-        .catch(err => console.log(err))
+      if (this.shipment.sender.senderId === this.signIn.accountId) return this.showAlertModal('Informácia', 'Recenzia zásielky je možná iba zo strany prijmateľa.', 'Zatvoriť')
+      this.$store.dispatch(types.ACTION_RATING_SEARCH, {parcelId: this.shipment.parcelId})
+        .then(result => {
+          if (Object.values(result).length > 0) throw new Error('Pre daný balík už ste podali recenziu.')
+          return this.$store.dispatch(types.ACTION_RATING_CREATE, {description: this.components.appRating.form.values.description, rating: this.components.appRating.form.values.rating, image: this.components.appRating.form.values.image.base64, parcelId: this.shipment.parcelId})
+        })
+        .then(result => this.showAlertModal('Informácia', 'Ďakujeme za Vašu recenziu. Údaje sme úspešne spracovali.', 'Zatvoriť'))
+        .catch(err => this.showAlertModal('Upozornenie', err.message, 'Zatvoriť'))
     }
   }
 }

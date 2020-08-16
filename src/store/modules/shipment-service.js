@@ -264,7 +264,7 @@ const actions = {
               },
               done: true
             })
-            throw parsed.message
+            throw new Error(parsed.message)
           })
       })
   },
@@ -305,7 +305,7 @@ const actions = {
               },
               done: true
             })
-            throw parsed.message
+            throw new Error(parsed.message)
           })
       })
   },
@@ -346,7 +346,7 @@ const actions = {
               },
               done: true
             })
-            throw parsed.message
+            throw new Error(parsed.message)
           })
       })
   },
@@ -374,13 +374,13 @@ const actions = {
         commit(types.MUTATION_INVOICE_DATA, {
           error: {
             is: !err.ok,
-            message: 'Ľutujeme, ale faktúra nie je k dispozícií',
+            message: 'Ľutujeme, ale faktúra nie je k dispozícií.',
             from: 'get',
             reason: {}
           },
           done: true
         })
-        throw state.payload.invoice.error.message
+        throw new Error(state.payload.invoice.error.message)
       })
   }
 }

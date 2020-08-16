@@ -19,12 +19,16 @@
 </template>
 
 <script>
-import courier from '@/components/dashboard/child/parcel/courier'
-import hereMap from '@/components/dashboard/child/parcel/hereMap'
-import manage from '@/components/dashboard/child/parcel/manage'
 import * as types from '@/store/types'
+import manage from '@/components/dashboard/child/parcel/sub/manage'
+import courier from '@/components/dashboard/child/parcel/sub/courier'
+import hereMap from '@/components/dashboard/child/parcel/sub/hereMap'
 
 export default {
+  beforeMount: function () {
+    this.$store.commit(types.MUTATIONS_CLEAR_USER_DATA, {})
+    return this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
+  },
   name: 'index',
   data: function () {
     return {
@@ -66,7 +70,7 @@ export default {
           .then(result => {
             this.components.parcel.search.shipment = Object.values(result).pop()
           })
-          .catch(err => console.log(err))
+          .catch(err => console.log(err.message))
       }
     }
   }

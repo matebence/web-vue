@@ -81,10 +81,7 @@ export default {
   props: ['activeEl'],
   created: function () {
     return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.accountId})
-      .catch(err => console.log(err))
-  },
-  beforeMount: function () {
-    this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
+      .catch(err => console.log(err.message))
   },
   data: function () {
     return {
@@ -126,7 +123,7 @@ export default {
 
       if (this.activeEl.value === this.tab.items[0].value || this.activeEl.value === this.tab.items[2].value) {
         return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.accountId})
-          .catch(err => console.log(err))
+          .catch(err => console.log(err.message))
       }
     },
     onSelectedParcel: function (el) {

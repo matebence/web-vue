@@ -393,12 +393,13 @@ const actions = {
               },
               done: true
             })
-            throw parsed.message
+            throw new Error(parsed.message)
           })
       })
   },
 
   [types.ACTION_REFRESH_AUTH]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATIONS_SIGN_IN_DATA, {done: false})
     return this._vm.$resource('{service}/signin', {}, {
       refreshAuthorizationToken: {
         method: 'POST',
@@ -449,7 +450,7 @@ const actions = {
               },
               done: true
             })
-            throw parsed.message
+            throw new Error(parsed.message)
           })
       })
   },
@@ -490,12 +491,13 @@ const actions = {
               },
               done: true
             })
-            throw parsed.message
+            throw new Error(parsed.message)
           })
       })
   },
 
   [types.ACTION_SIGN_OUT]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_SIGN_OUT_DATA, {done: false})
     return this._vm.$resource('{service}/signout', {}, {
       performSignOut: {
         method: 'DELETE',
@@ -540,7 +542,7 @@ const actions = {
               },
               done: true
             })
-            throw parsed.message
+            throw new Error(parsed.message)
           })
       })
   },
@@ -576,12 +578,13 @@ const actions = {
               },
               done: true
             })
-            throw parsed.message
+            throw new Error(parsed.message)
           })
       })
   },
 
   [types.ACTION_ACCOUNT_RECOVER]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_ACCOUNT_RECOVER_DATA, { done: false })
     return this._vm.$resource('{service}/forgetpassword/{account}/{id}/{token}/{key}', {}, {
       verifyRecoverToken: {
         method: 'GET'}
@@ -609,12 +612,13 @@ const actions = {
                 }
               }
             })
-            throw parsed.message
+            throw new Error(parsed.message)
           })
       })
   },
 
   [types.ACTION_ACCOUNT_ACTIVATION]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_ACCOUNT_ACTIVATION_DATA, { done: false })
     return this._vm.$resource('{service}/signup/{account}/{id}/{token}/{key}', {}, {
       verifyActivationToken: {
         method: 'GET' }
@@ -642,7 +646,7 @@ const actions = {
                 }
               }
             })
-            throw parsed.message
+            throw new Error(parsed.message)
           })
       })
   }

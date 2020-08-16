@@ -115,7 +115,7 @@ const actions = {
               },
               done: true
             })
-            throw parsed.message
+            throw new Error(parsed.message)
           })
       })
   }

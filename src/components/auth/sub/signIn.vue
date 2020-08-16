@@ -82,14 +82,11 @@ import alert from '@/components/common/alert'
 import {required} from 'vuelidate/lib/validators'
 
 export default {
-  name: 'signin',
   created: function () {
     return this.$store.dispatch(types.ACTION_AUTO_SIGN_IN)
-      .catch(err => console.log(err))
+      .catch(err => console.log(err.message))
   },
-  beforeMount: function () {
-    this.$store.commit(types.MUTATIONS_CLEAR_SIGN_IN_ERRORS, {})
-  },
+  name: 'signin',
   data: function () {
     return {
       form: {
@@ -134,7 +131,7 @@ export default {
       this.signInError.is = false
 
       return this.$store.dispatch(types.ACTION_SIGN_IN, {grantType: process.env.GRANT_TYPE_PASSWORD, userName: this.form.values.userName, password: this.form.values.password, stayLoggedIn: this.form.values.stayLoggedIn})
-        .catch(err => console.log(err))
+        .catch(err => console.log(err.message))
     }
   }
 }

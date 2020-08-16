@@ -126,13 +126,10 @@ import alert from '@/components/common/alert'
 import {required, email, alphaNum, sameAs} from 'vuelidate/lib/validators'
 
 export default {
-  name: 'signup',
   created: function () {
     if (this.$route.params.key) return this.onPageLoad()
   },
-  beforeMount: function () {
-    this.$store.commit(types.MUTATIONS_CLEAR_SIGN_UP_ERRORS, {})
-  },
+  name: 'signup',
   data: function () {
     return {
       form: {
@@ -198,14 +195,14 @@ export default {
     },
     onPageLoad: function () {
       return this.$store.dispatch(types.ACTION_ACCOUNT_ACTIVATION, {id: this.url.values.id, key: this.url.values.key})
-        .catch(err => console.log(err))
+        .catch(err => console.log(err.message))
     },
     onSignUp: function () {
       this.signUpError.message = this.activationTokenError.message = null
       this.signUpError.is = this.activationTokenError.is = false
 
       return this.$store.dispatch(types.ACTION_SIGN_UP, {userName: this.form.values.userName, email: this.form.values.email, password: this.form.values.password, confirmPassword: this.form.values.confirmPassword, roles: JSON.parse(this.form.values.roles)})
-        .catch(err => console.log(err))
+        .catch(err => console.log(err.message))
     }
   }
 }
