@@ -80,6 +80,10 @@ export default {
     --animate-duration: 0.3s;
   }
 
+  .card {
+    border: none;
+  }
+
   .spinner-border{
     margin-bottom: 0.3rem;
   }

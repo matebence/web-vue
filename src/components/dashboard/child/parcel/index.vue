@@ -26,6 +26,7 @@ import hereMap from '@/components/dashboard/child/parcel/sub/hereMap'
 
 export default {
   beforeMount: function () {
+    this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_DATA, {})
     this.$store.commit(types.MUTATIONS_CLEAR_USER_DATA, {})
     return this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
   },

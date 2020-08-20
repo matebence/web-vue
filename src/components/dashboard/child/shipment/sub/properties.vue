@@ -120,7 +120,7 @@ export default {
 
   div#properties h1 {
     margin-top: 1em;
-    margin-left: 0.5em;
+    margin-left: 1rem;
     font-size: 2em;
     display: inline-block;
   }
@@ -129,8 +129,8 @@ export default {
     font-size: 1.3em;
     font-weight: 900;
     color: #a5a3a5;
-    margin-top: 1.5em;
-    margin-bottom: 0.3em;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
   }
 
   div#properties p, div#properties a {

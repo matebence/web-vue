@@ -63,8 +63,8 @@ export default {
   }
 
   div#courier h1 {
-    margin-top: 1em;
-    margin-left: 0.5em;
+    margin-top: 2rem;
+    margin-left: 1rem;
     font-size: 2em;
     display: inline-block;
   }

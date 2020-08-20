@@ -2,20 +2,40 @@
   <div id="index">
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
+        <h1>Nastavenia</h1>
+        <app-vertical-list />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
+        <app-money />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import money from '@/components/dashboard/child/profile/sub/money'
+import profil from '@/components/dashboard/child/profile/sub/profil'
+import security from '@/components/dashboard/child/profile/sub/security'
+import verticalList from '@/components/dashboard/child/profile/sub/verticalList'
+
 export default {
-  name: 'index'
+  name: 'index',
+  components: {
+    appMoney: money,
+    appProfil: profil,
+    appSecurity: security,
+    appVerticalList: verticalList
+  }
 }
 </script>
 
 <style scoped>
+  div#index h1 {
+    margin-top: 2rem;
+    font-size: 2em;
+    display: inline-block;
+  }
+
   div#index div#main-content,
   div#index div#content {
     width: 100%;

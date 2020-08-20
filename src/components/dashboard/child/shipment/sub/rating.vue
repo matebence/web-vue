@@ -358,4 +358,13 @@ export default {
   div#rating textarea.valid {
     border-bottom: 0.1rem solid #008000;
   }
+
+  @media (max-width: 768px) {
+    div#rating button {
+      margin-top: 2rem;
+      margin-left: 1rem;
+      margin-bottom: 2rem;
+      position: static;
+    }
+  }
 </style>

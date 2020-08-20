@@ -112,7 +112,7 @@ export default {
 
 <style scoped>
   div#index h1 {
-    margin-top: 1em;
+    margin-top: 2rem;
     font-size: 2em;
     display: inline-block;
   }

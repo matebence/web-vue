@@ -5,6 +5,7 @@ import router from './router'
 
 import 'bootstrap'
 
+import './mask'
 import './resource'
 import './vuelidate'
 import './vueawesome'

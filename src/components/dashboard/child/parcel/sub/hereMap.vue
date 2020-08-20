@@ -590,5 +590,21 @@ export default {
     div#hereMap div#map div#summary {
       width: 95%;
     }
+
+    div#hereMap div#map div#finish {
+      bottom: 3rem;
+    }
+  }
+
+  @media (max-width: 430px) {
+    div#hereMap div#map div#finish {
+      bottom: 5rem;
+    }
+  }
+
+  @media (max-width: 300px) {
+    div#hereMap div#map div#finish {
+      bottom: 7.5rem;
+    }
   }
 </style>
