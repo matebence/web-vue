@@ -4,16 +4,19 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-12 col-md-6">
-          <h2>Štát</h2>
+          <label for="country">Štát</label>
           <input
+            autofocus
+            autocomplete="off"
             type="text"
             name="country"
             value="Slovakia"
             id="country" />
         </div>
         <div class="col-sm-12 col-md-6">
-          <h2>Kraj</h2>
+          <label for="region">Kraj</label>
           <input
+            autocomplete="off"
             type="text"
             name="region"
             value="Banskobystrický kraj"
@@ -22,16 +25,18 @@
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-6">
-          <h2>Okres</h2>
+          <label for="district">Okres</label>
           <input
+            autocomplete="off"
             type="text"
             name="district"
             value="Poltár"
             id="district" />
         </div>
         <div class="col-sm-12 col-md-6">
-          <h2>Mesto</h2>
+          <label for="place">Mesto</label>
           <input
+            autocomplete="off"
             type="text"
             name="place"
             value="Bádice"
@@ -40,16 +45,18 @@
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-6">
-          <h2>Adresa</h2>
+          <label for="street">Adresa</label>
           <input
+            autocomplete="off"
             type="text"
             name="street"
             value="Obchodná 11"
             id="street" />
         </div>
         <div class="col-sm-12 col-md-6">
-          <h2>PSČ</h2>
+          <label for="zip">PSČ</label>
           <input
+            autocomplete="off"
             type="number"
             name="zip"
             value="95146"
@@ -61,16 +68,18 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-12 col-md-6">
-          <h2>Nové heslo</h2>
+          <label for="new-password">Nové heslo</label>
           <input
+            autocomplete="off"
             type="password"
             name="new-password"
             value=""
             id="new-password" />
         </div>
         <div class="col-sm-12 col-md-6">
-          <h2>Potvrdenie nového hesla</h2>
+          <label for="confirm-new-password">Potvrdenie nového hesla</label>
           <input
+            autocomplete="off"
             type="password"
             name="confirm-new-password"
             value=""
@@ -104,8 +113,8 @@ export default {
     display: inline-block;
   }
 
-  div#security h2 {
-    font-size: 1.3em;
+  div#security label {
+    font-size: 1.2em;
     font-weight: 900;
     color: #a5a3a5;
     margin-top: 0.5rem;
@@ -122,7 +131,7 @@ export default {
     font-size: 1.15em;
     font-weight: 700;
     width: 80%;
-    height: 3rem;
+    height: 2rem;
     display: block;
     border: none;
     color: #000000;

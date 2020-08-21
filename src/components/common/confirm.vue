@@ -1,6 +1,6 @@
 <template>
-  <div id="apply">
-    <div class="modal fade" :id="applyId" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div id="confirm">
+    <div class="modal fade" :id="confirmId" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -8,6 +8,9 @@
           </div>
           <div class="modal-body">
             <p>{{text}}</p>
+            <div class="form-input">
+              <input type="password"  name="password" id="password" autofocus autocomplete="off">
+            </div>
           </div>
           <div class="modal-footer">
             <button id="negative" type="button" data-dismiss="modal">{{negativeButton}}</button>
@@ -15,7 +18,7 @@
               id="positive"
               type="button"
               data-dismiss="modal"
-              @click.prevent="applied()">{{positiveButton}}</button>
+              @click.prevent="confirmed()">{{positiveButton}}</button>
           </div>
         </div>
       </div>
@@ -25,23 +28,23 @@
 
 <script>
 export default {
-  name: 'apply',
-  props: ['applyId', 'title', 'text', 'positiveButton', 'negativeButton'],
+  name: 'confirm',
+  props: ['confirmId', 'title', 'text', 'positiveButton', 'negativeButton'],
   methods: {
-    applied: function () {
-      return this.$emit('applied', true)
+    confirmed: function () {
+      return this.$emit('confirmed', true)
     }
   }
 }
 </script>
 
 <style scoped>
-  div#apply h5 {
+  div#confirm h5 {
     font-size: 1.3em;
   }
 
-  div#apply button#positive,
-  div#apply button#negative {
+  div#confirm button#positive,
+  div#confirm button#negative {
     text-transform: inherit;
     background: #ffffff;
     border: solid 0.09rem #7f7f7f;
@@ -51,9 +54,22 @@ export default {
     padding-bottom: 0.6rem;
   }
 
-  div#apply button#positive:hover {
+  div#confirm button#positive:hover {
     background: #176c9d;
     border-color: #176c9d;
     color: #ffffff;
+  }
+
+  div#confirm input[type="password"] {
+    font-size: 1.15em;
+    font-weight: 700;
+    width: 40%;
+    height: 2rem;
+    display: block;
+    border: none;
+    color: #000000;
+    background: transparent;
+    border-radius: 0;
+    border-bottom: 0.1rem solid #dbdbdb;
   }
 </style>

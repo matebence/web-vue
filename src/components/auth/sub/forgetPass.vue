@@ -9,6 +9,8 @@
             Zadajte Vašu emailová adresu
           </label>
           <input
+            autofocus
+            autocomplete="off"
             type="email"
             class="form-control" id="email"
             placeholder="Emailová adresa"
@@ -17,7 +19,7 @@
             :class="{valid: !$v.form.values.email.$error && $v.form.values.email.$dirty, invalid: $v.form.values.email.$error}">
           <a
             href="#"
-            @click.prevent="loadComponent('app-sign-in')">
+            @click.prevent="activeEl.component='app-sign-in'">
             Späť na prihlásenie
           </a>
         </div>
@@ -52,6 +54,7 @@ export default {
   created: function () {
     if (this.$route.params.key) return this.onPageLoad()
   },
+  props: ['activeEl'],
   name: 'forgetpass',
   data: function () {
     return {
@@ -90,10 +93,6 @@ export default {
     })
   },
   methods: {
-    loadComponent: function ($event) {
-      this.$emit('loadComponent', $event)
-      return this.$router.push({path: `/${$event.replace('app-', '')}`})
-    },
     onPageLoad: function () {
       return this.$store.dispatch(types.ACTION_ACCOUNT_RECOVER, {id: this.url.values.id, key: this.url.values.key})
         .catch(err => console.log(err.message))

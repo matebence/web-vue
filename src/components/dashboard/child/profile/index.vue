@@ -3,16 +3,21 @@
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
         <h1>Nastavenia</h1>
-        <app-vertical-list />
+        <app-vertical-list
+          :activeEl="components.settings.activeEl" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
-        <app-money />
+        <keep-alive>
+          <component
+            :is="components.settings.activeEl.component"/>
+        </keep-alive>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import bootstrap from 'jquery'
 import money from '@/components/dashboard/child/profile/sub/money'
 import profil from '@/components/dashboard/child/profile/sub/profil'
 import security from '@/components/dashboard/child/profile/sub/security'
@@ -20,6 +25,26 @@ import verticalList from '@/components/dashboard/child/profile/sub/verticalList'
 
 export default {
   name: 'index',
+  data: function () {
+    return {
+      components: {
+        settings: {
+          activeEl: {
+            itemId: 1,
+            value: 'Profil',
+            component: 'app-profil'
+          }
+        }
+      }
+    }
+  },
+  methods: {
+    removeParcel: function (applied) {
+    },
+    showAppliedModal: function () {
+      return bootstrap('#parcelApply').modal('show')
+    }
+  },
   components: {
     appMoney: money,
     appProfil: profil,

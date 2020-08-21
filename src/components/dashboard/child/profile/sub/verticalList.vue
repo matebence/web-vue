@@ -1,32 +1,17 @@
 <template>
   <div id="verticalList">
-    <ul class="settings">
-      <li>
+    <ul
+      class="settings"
+      :key="setting.itemId"
+      @click.prevent="onSelectedSetting(setting)"
+      v-for="setting in settings.items">
+      <li
+        :class="{active: activeEl.itemId === setting.itemId}">
         <ul class="setting">
           <li class="image">
-            <font-awesome-icon :icon="['fas', 'user']"/>
+            <font-awesome-icon :icon="['fas', setting.icon]"/>
           </li>
-          <li class="option">Profil</li>
-        </ul>
-      </li>
-    </ul>
-    <ul class="settings">
-      <li class="active">
-        <ul class="setting">
-          <li class="image">
-            <font-awesome-icon :icon="['fas', 'wallet']"/>
-          </li>
-          <li class="option">Peniaze</li>
-        </ul>
-      </li>
-    </ul>
-    <ul class="settings">
-      <li>
-        <ul class="setting">
-          <li class="image">
-            <font-awesome-icon :icon="['fas', 'shield-alt']"/>
-          </li>
-          <li class="option">Bezpečnosť</li>
+          <li class="option">{{setting.value}}</li>
         </ul>
       </li>
     </ul>
@@ -35,7 +20,39 @@
 
 <script>
 export default {
-  name: 'verticalList'
+  name: 'verticalList',
+  props: ['activeEl'],
+  data: function () {
+    return {
+      settings: {
+        items: [
+          {
+            itemId: 1,
+            value: 'Profil',
+            component: 'app-profil',
+            icon: 'user'
+          }, {
+            itemId: 2,
+            value: 'Peniaze',
+            component: 'app-money',
+            icon: 'wallet'
+          }, {
+            itemId: 3,
+            value: 'Bezpečnosť',
+            component: 'app-security',
+            icon: 'shield-alt'
+          }
+        ]
+      }
+    }
+  },
+  methods: {
+    onSelectedSetting: function (el) {
+      this.activeEl.value = el.value
+      this.activeEl.itemId = el.itemId
+      this.activeEl.component = el.component
+    }
+  }
 }
 </script>
 

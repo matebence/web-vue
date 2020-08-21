@@ -3,7 +3,86 @@
     <h1>Pošlite peniaze na účet Blesk</h1>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-5">
+          <div class="form-input">
+            <label for="cardNumber">Číslo karty</label>
+            <input
+              id="cardNumber"
+              autofocus
+              type="text"
+              v-mask="getNumberMask"
+              v-model="card.number"
+              @blur="onBlur"
+              data-ref="cardNumber"
+              autocomplete="off">
+          </div>
+          <div class="form-input">
+            <label for="cardName">Vlastník karty</label>
+            <input
+              id="cardName"
+              type="text"
+              v-model="card.name"
+              @blur="onBlur"
+              data-ref="cardName"
+              autocomplete="off">
+          </div>
+          <div class="form-input">
+            <div class="form-wrapper">
+              <div class="form-inline">
+                <div class="form-item">
+                  <label for="cardMonth">Mesiac</label>
+                  <input
+                    id="cardMonth"
+                    type="number"
+                    v-model="card.month"
+                    @blur="onBlur"
+                    data-ref="cardDate"
+                    autocomplete="off">
+                </div>
+              </div>
+              <div class="form-inline">
+                <div class="form-item">
+                  <label for="cardYear">Rok</label>
+                  <input
+                    id="cardYear"
+                    type="number"
+                    v-model="card.year"
+                    @blur="onBlur"
+                    data-ref="cardDate"
+                    autocomplete="off">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-input">
+            <div class="form-wrapper">
+              <div class="form-inline">
+                <div class="form-item">
+                  <label for="cardCVV">Kód</label>
+                  <input
+                    id="cardCVV"
+                    type="number"
+                    v-mask="'####'"
+                    maxlength="4"
+                    v-model="card.cvv"
+                    @focus="onFlip(true)"
+                    @blur="onFlip(false)"
+                    autocomplete="off">
+                </div>
+              </div>
+              <div class="form-inline">
+                <div class="form-item">
+                  <label for="credit-card-amount">Suma</label>
+                  <input
+                    id="credit-card-amount"
+                    type="number"
+                    autocomplete="off">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-7">
           <div
             class="card"
             :class="{ '-active' : card.is.flip }">
@@ -126,53 +205,32 @@
             </div>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="form-input">
-            <input
-              type="text"
-              v-mask="getNumberMask"
-              v-model="card.number"
-              @blur="onBlur"
-              data-ref="cardNumber"
-              autocomplete="off">
-          </div>
-          <div class="form-input">
-            <input
-              type="text"
-              v-model="card.name"
-              @blur="onBlur"
-              data-ref="cardName"
-              autocomplete="off">
-          </div>
-          <div class="form-input same-line">
-            <input
-              type="text"
-              v-model="card.month"
-              @blur="onBlur"
-              data-ref="cardDate"
-              autocomplete="off">
-            <input
-              type="text"
-              v-model="card.year"
-              @blur="onBlur"
-              data-ref="cardDate"
-              autocomplete="off">
-          </div>
-          <div class="form-input">
-            <input
-              type="text"
-              v-mask="'####'"
-              maxlength="4"
-              v-model="card.cvv"
-              @focus="onFlip(true)"
-              @blur="onFlip(false)"
-              autocomplete="off">
-          </div>
-          <button>Submit</button>
-        </div>
       </div>
     </div>
     <h1>Pošlite peniaze späť do banky</h1>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-5">
+          <div class="form-input">
+            <label for="iban">IBAN</label>
+            <input
+              id="iban"
+              type="text"
+              autocomplete="off">
+          </div>
+          <div class="form-input">
+            <label for="iban-amount">Suma</label>
+            <input
+              id="iban-amount"
+              type="text"
+              autocomplete="off">
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      type="submit"
+      class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
   </div>
 </template>
 
@@ -239,11 +297,6 @@ export default {
       this.card.is.flip = status
     },
     onBlur () {
-      setTimeout(() => {
-        if (!this.card.is.focus) {
-          this.card.is.focus.style = null
-        }
-      }, 300)
       this.card.is.focus = false
     }
   }
@@ -268,7 +321,9 @@ export default {
   div#money .card {
     max-width: 22.8rem;
     position: relative;
-    height: 13.8rem;
+    height: 16.5rem;
+    margin-left: auto;
+    margin-right: auto;
     z-index: 2;
   }
 
@@ -337,9 +392,8 @@ export default {
   }
 
   div#money .card-item-cover {
-    height: 100%;
     position: absolute;
-    height: 100%;
+    height: 13.5rem;
     left: 0;
     top: 0;
     width: 100%;
@@ -365,11 +419,11 @@ export default {
   }
 
   div#money .card-chip {
-    width: 3.7rem;
+    width: 3rem;
   }
 
   div#money .card-type {
-    height: 2.8rem;
+    height: 2rem;
     position: relative;
     display: flex;
     justify-content: flex-end;
@@ -392,7 +446,6 @@ export default {
     padding: 0.5rem 0.5rem;
     font-weight: 500;
     display: block;
-    cursor: pointer;
   }
 
   div#money .card-holder {
@@ -434,7 +487,6 @@ export default {
     margin-bottom: 1.18rem;
     display: inline-block;
     padding: 0.5rem 0.7rem;
-    cursor: pointer;
   }
 
   div#money .card-number-item {
@@ -457,7 +509,6 @@ export default {
     width: 5.13rem;
     white-space: nowrap;
     flex-shrink: 0;
-    cursor: pointer;
   }
 
   div#money .card-date-item {
@@ -519,13 +570,47 @@ export default {
     border-radius: 0.3rem;
   }
 
+  div#money button {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    background: #176c9d;
+    font-size: 0.8em;
+    text-align: center;
+    color: #ffffff;
+    border-color: transparent;
+    border-radius: 3rem;
+    font-size: 0.9em;
+    width: 3rem;
+    height: 3rem;
+  }
+
+  div#money button:hover {
+    cursor: pointer;
+    background: #187fb1;
+  }
+
+  div#money button:disabled {
+    opacity: .65;
+    background: #095174;
+  }
+
+  div#money div.form-input label {
+    font-size: 1.2em;
+    font-weight: 900;
+    color: #a5a3a5;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
   div#money div.form-input input[type="text"],
   div#money div.form-input input[type="number"],
   div#money div.form-input input[type="password"] {
     font-size: 1.15em;
     font-weight: 700;
-    width: 80%;
-    height: 3rem;
+    width: 100%;
+    height: 2rem;
     border: none;
     color: #000000;
     background: transparent;
@@ -533,11 +618,34 @@ export default {
     border-bottom: 0.1rem solid #dbdbdb;
   }
 
-  div#money div.form-input.same-line input[type="text"] {
-    width: 40%;
+  div#money div.form-input div.form-wrapper div.form-inline {
+    display: inline-block;
+    width: 49%;
+  }
+
+  div#money div.form-input div.form-wrapper div.form-inline div.form-item input {
+    width: 100%;
+  }
+
+  @media screen and (max-width: 1140px) {
+    div#money .card-number-item {
+      width: 0.9rem;
+    }
+
+    div#money .card-number {
+      font-size: 1.3em;
+      width: 21rem;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    div#money .card {
+      margin-top: 2rem;
+    }
   }
 
   @media screen and (max-width: 480px) {
+
     div#money .card-number {
       font-size: 1.3em;
       margin-bottom: 1rem;
@@ -620,7 +728,7 @@ export default {
     }
 
     div#money .card {
-      height: 11.25rem;
+      height: 14.5rem;
     }
 
     div#money .card-type {
@@ -643,6 +751,12 @@ export default {
       font-size: 1.18em;
       margin-bottom: 0.625rem;
       padding: 0.625rem 0.625rem;
+    }
+  }
+
+  @media screen and (max-width: 256px) {
+    div#money div.form-input div.form-wrapper div.form-inline {
+      width: 100%;
     }
   }
 </style>

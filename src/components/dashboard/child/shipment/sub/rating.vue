@@ -8,6 +8,8 @@
           <h2>Vaša spokojnosť od 1 do 5</h2>
           <div class="star-rating" id="star-rating">
             <input
+              autofocus
+              autocomplete="off"
               :disabled="activeEl.shipmentId === 0"
               v-model="components.appRating.form.values.rating"
               @input="$v.components.appRating.form.values.rating.$touch()"
@@ -22,6 +24,7 @@
               <i class="active fa fa-star" aria-hidden="true"></i>
             </label>
             <input
+              autocomplete="off"
               :disabled="activeEl.shipmentId === 0"
               v-model="components.appRating.form.values.rating"
               @input="$v.components.appRating.form.values.rating.$touch()"
@@ -36,6 +39,7 @@
               <i class="active fa fa-star" aria-hidden="true"></i>
             </label>
             <input
+              autocomplete="off"
               :disabled="activeEl.shipmentId === 0"
               v-model="components.appRating.form.values.rating"
               @input="$v.components.appRating.form.values.rating.$touch()"
@@ -50,6 +54,7 @@
               <i class="active fa fa-star" aria-hidden="true"></i>
             </label>
             <input
+              autocomplete="off"
               :disabled="activeEl.shipmentId === 0"
               v-model="components.appRating.form.values.rating"
               @input="$v.components.appRating.form.values.rating.$touch()"
@@ -64,6 +69,7 @@
               <i class="active fa fa-star" aria-hidden="true"></i>
             </label>
             <input
+              autocomplete="off"
               :disabled="activeEl.shipmentId === 0"
               v-model="components.appRating.form.values.rating"
               @input="$v.components.appRating.form.values.rating.$touch()"

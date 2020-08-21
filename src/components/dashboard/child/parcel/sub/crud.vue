@@ -7,6 +7,8 @@
           Zadajte meno príjemcu
         </label>
         <input
+          autofocus
+          autocomplete="off"
           aria-describedby="receiverInvalid"
           type="text"
           class="form-control"
@@ -72,6 +74,7 @@
           Zadajte dľžku balíka
         </label>
         <input
+          autocomplete="off"
           aria-describedby="lengthInvalid"
           type="text" class="form-control"
           id="length"
@@ -90,6 +93,7 @@
           Zadajte šírku balíka
         </label>
         <input
+          autocomplete="off"
           aria-describedby="widthInvalid"
           type="text" class="form-control"
           id="width"
@@ -108,6 +112,7 @@
           Zadajte výšku balíka
         </label>
         <input
+          autocomplete="off"
           aria-describedby="heightInvalid"
           type="text" class="form-control"
           id="height"
@@ -126,6 +131,7 @@
           Zadajte hmotnosť balíka
         </label>
         <input
+          autocomplete="off"
           aria-describedby="weightInvalid"
           type="text" class="form-control"
           id="weight"

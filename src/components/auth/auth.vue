@@ -12,8 +12,8 @@
             leave-active-class="animate__animated animate__fadeOut">
             <keep-alive>
               <component
-                :is="component"
-                @loadComponent="component=$event"/>
+                :activeEl="components.auth.activeEl"
+                :is="components.auth.activeEl.component" />
             </keep-alive>
           </transition>
         </div>
@@ -29,18 +29,24 @@ import signUp from '@/components/auth/sub/signUp'
 import forgetPass from '@/components/auth/sub/forgetPass'
 
 export default {
+  created () {
+    return this.navigateContent(this.$route.params.component)
+  },
   beforeMount: function () {
     this.$store.commit(types.MUTATIONS_CLEAR_SIGN_UP_ERRORS, {})
     this.$store.commit(types.MUTATIONS_CLEAR_SIGN_IN_ERRORS, {})
     this.$store.commit(types.MUTATIONS_CLEAR_FORGET_PASSWORD_ERRORS, {})
   },
-  created () {
-    return this.navigateContent(this.$route.params.component)
-  },
   name: 'auth',
   data: function () {
     return {
-      component: null
+      components: {
+        auth: {
+          activeEl: {
+            component: 'app-sign-in'
+          }
+        }
+      }
     }
   },
   components: {
@@ -59,7 +65,7 @@ export default {
         this.$router.push({name: 'error'})
         return
       }
-      this.component = `app-${componenet}`
+      this.components.auth.activeEl.component = `app-${componenet}`
     }
   }
 }

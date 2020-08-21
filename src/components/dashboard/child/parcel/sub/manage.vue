@@ -45,13 +45,13 @@
       :text="components.appModal.text"
       :title="components.appModal.title"
       :button="components.appModal.button"/>
-    <app-confirm
-      @confirmed="removeParcel($event)"
-      :confirmId="'parcelConfirm'"
-      :text="components.appConfirm.text"
-      :title="components.appConfirm.title"
-      :positiveButton="components.appConfirm.positiveButton"
-      :negativeButton="components.appConfirm.negativeButton"/>
+    <app-apply
+      @applied="removeParcel($event)"
+      :applyId="'parcelApply'"
+      :text="components.appApply.text"
+      :title="components.appApply.title"
+      :positiveButton="components.appApply.positiveButton"
+      :negativeButton="components.appApply.negativeButton"/>
   </div>
 </template>
 
@@ -61,7 +61,7 @@ import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
 
 import modal from '@/components/common/modal'
-import confirm from '@/components/common/confirm'
+import apply from '@/components/common/apply'
 import crud from '@/components/dashboard/child/parcel/sub/crud'
 import verticalList from '@/components/dashboard/child/parcel/sub/verticalList'
 
@@ -100,7 +100,7 @@ export default {
           title: null,
           button: null
         },
-        appConfirm: {
+        appApply: {
           text: null,
           title: null,
           positiveButton: null,
@@ -112,7 +112,7 @@ export default {
   components: {
     appCrud: crud,
     appModal: modal,
-    appConfirm: confirm,
+    appApply: apply,
     appVerticalList: verticalList
   },
   watch: {
@@ -148,12 +148,12 @@ export default {
       this.components.appModal.button = button
       return bootstrap('#parcelAlert').modal('show')
     },
-    showConfirmModal: function (title, text) {
-      this.components.appConfirm.title = title
-      this.components.appConfirm.text = text
-      this.components.appConfirm.positiveButton = 'Odstrániť'
-      this.components.appConfirm.negativeButton = 'Zrušiť'
-      return bootstrap('#parcelConfirm').modal('show')
+    showAppliedModal: function (title, text) {
+      this.components.appApply.title = title
+      this.components.appApply.text = text
+      this.components.appApply.positiveButton = 'Odstrániť'
+      this.components.appApply.negativeButton = 'Zrušiť'
+      return bootstrap('#parcelApply').modal('show')
     },
     editParcel: function () {
       if (this.activeEl.parcelId > 0) {
@@ -165,11 +165,11 @@ export default {
         this.components.appCreate.form.values = {...data.pop()}
       }
     },
-    removeParcel: function (confirmed) {
+    removeParcel: function (applied) {
       if (this.activeEl.parcelId > 0) {
         return this.showAlertModal('Odstránenie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné odstrániť.', 'Zatvoriť')
       } else {
-        if (confirmed) {
+        if (applied) {
           const data = this.parcelCreate.filter(e => e.id !== this.activeEl.parcelId)
           this.$store.commit(types.MUTATION_PARCEL_DATA, {
             data: {
@@ -179,7 +179,7 @@ export default {
           })
           this.activeEl.parcelId = 0
         } else {
-          return this.showConfirmModal('Odstránenie', 'Naozaj chcete odstrániť balík?')
+          return this.showAppliedModal('Odstránenie', 'Naozaj chcete odstrániť balík?')
         }
       }
     }

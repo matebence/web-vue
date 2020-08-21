@@ -9,16 +9,19 @@
       </div>
       <div class="row body">
         <div class="col-sm-12 col-md-6">
-          <h2>Username</h2>
+          <label for="username">Username</label>
           <input
+            autofocus
+            autocomplete="off"
             type="text"
             name="username"
             value="petervarga"
             id="username" />
         </div>
         <div class="col-sm-12 col-md-6">
-          <h2>Email</h2>
+          <label for="email">Email</label>
           <input
+            autocomplete="off"
             type="email"
             name="email"
             value="peter.varga@gmail.com"
@@ -27,16 +30,18 @@
       </div>
       <div class="row body">
         <div class="col-sm-12 col-md-6">
-          <h2>First name</h2>
+          <label for="firstname">First name</label>
           <input
+            autocomplete="off"
             type="text"
             name="firstname"
             value="Peter"
             id="firstname" />
         </div>
         <div class="col-sm-12 col-md-6">
-          <h2>Last name</h2>
+          <label for="lastname">Last name</label>
           <input
+            autocomplete="off"
             type="text"
             name="lastname"
             value="Varga"
@@ -45,15 +50,16 @@
       </div>
       <div class="row body">
         <div class="col-sm-12 col-md-6">
-          <h2>Tel. number</h2>
+          <label for="tel">Tel. number</label>
           <input
+            autocomplete="off"
             type="text"
             name="tel"
             value="+421915521884"
             id="tel" />
         </div>
         <div class="col-sm-12 col-md-6">
-          <h2>Pohlavie</h2>
+          <label for="gender">Pohlavie</label>
           <select
             class="form-control"
             id="gender">
@@ -91,13 +97,12 @@ export default {
   }
 
   div#profil div.header div.profil-image {
-    width: 8rem;
-    line-height: 8rem;
+    width: 9rem;
+    line-height: 9rem;
     border-radius: 50%;
     text-align: center;
-    font-size: 3em;
+    font-size: 3.5em;
     background-color: #176c9d;
-    box-shadow: 6px 6px 6px -6px rgba(0,0,0,0.75);
   }
 
   div#profil div.header div.profil-image:before {
@@ -110,8 +115,8 @@ export default {
     margin-top: 2rem;
   }
 
-  div#profil div.body h2 {
-    font-size: 1.3em;
+  div#profil div.body label {
+    font-size: 1.2em;
     font-weight: 900;
     color: #a5a3a5;
     margin-top: 0.5rem;
@@ -123,7 +128,7 @@ export default {
     font-size: 1.15em;
     font-weight: 700;
     width: 80%;
-    height: 3rem;
+    height: 2rem;
     display: block;
     border: none;
     color: #000000;
@@ -137,11 +142,12 @@ export default {
     font-size: 1.15em;
     font-weight: 700;
     width: 80%;
-    height: 3rem;
+    height: 2rem;
     display: block;
     border: none;
     border-radius: 0;
     color: #000000;
+    padding: 0;
     border-bottom: 0.1rem solid #dbdbdb;
   }
 
@@ -150,6 +156,7 @@ export default {
   }
 
   div#profil div.body option {
+    height: 2rem;
     background: #ffffff;
   }
 

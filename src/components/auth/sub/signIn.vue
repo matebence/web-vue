@@ -9,6 +9,8 @@
             Zadajte použivatelské meno
           </label>
           <input
+            autofocus
+            autocomplete="off"
             type="text"
             class="form-control"
             id="username"
@@ -20,6 +22,7 @@
             Zadajte heslo
           </label>
           <input
+            autocomplete="off"
             type="password"
             class="form-control"
             id="password"
@@ -39,7 +42,7 @@
             v-model="form.values.stayLoggedIn">
           <a
             href="#"
-            @click.prevent="loadComponent('app-forget-password')"
+            @click.prevent="activeEl.component='app-forget-password'"
             id="forgetPassword">
             Zabudli ste heslo?
           </a>
@@ -64,7 +67,7 @@
       <a
         class="text-center signup"
         href="#"
-        @click.prevent="loadComponent('app-sign-up')">
+        @click.prevent="activeEl.component='app-sign-up'">
         Zaregistrovať sa teraz
       </a>
       <app-alert
@@ -86,6 +89,7 @@ export default {
     return this.$store.dispatch(types.ACTION_AUTO_SIGN_IN)
       .catch(err => console.log(err.message))
   },
+  props: ['activeEl'],
   name: 'signin',
   data: function () {
     return {
@@ -122,10 +126,6 @@ export default {
     })
   },
   methods: {
-    loadComponent: function ($event) {
-      this.$emit('loadComponent', $event)
-      return this.$router.push({path: $event.replace('app-', '')})
-    },
     onSignIn: function () {
       this.signInError.message = null
       this.signInError.is = false

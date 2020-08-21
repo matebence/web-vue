@@ -4,6 +4,7 @@
       <form>
         <div class="form-group">
           <input
+            autocomplete="off"
             v-model="navigator.form.from.value"
             :disabled="parcel.search.shipment.parcelId > 0 || parcel.activeEl.parcelId === 0"
             type="text"
@@ -19,6 +20,7 @@
         </div>
         <div class="form-group">
           <input
+            autocomplete="off"
             v-model="navigator.form.to.value"
             :disabled="parcel.search.shipment.parcelId > 0 || parcel.activeEl.parcelId === 0"
             type="text"
@@ -58,13 +60,13 @@
       :text="components.appModal.text"
       :title="components.appModal.title"
       :button="components.appModal.button"/>
-    <app-confirm
-      @confirmed="onCreate($event)"
-      :confirmId="'hereMapConfirm'"
-      :text="components.appConfirm.text"
-      :title="components.appConfirm.title"
-      :positiveButton="components.appConfirm.positiveButton"
-      :negativeButton="components.appConfirm.negativeButton"/>
+    <app-apply
+      @applied="onCreate($event)"
+      :applyId="'hereMapApply'"
+      :text="components.appApply.text"
+      :title="components.appApply.title"
+      :positiveButton="components.appApply.positiveButton"
+      :negativeButton="components.appApply.negativeButton"/>
   </div>
 </template>
 
@@ -75,7 +77,7 @@ import 'here-js-api/scripts/mapsjs-service'
 import 'here-js-api/scripts/mapsjs-mapevents'
 
 import bleskMarker from '@/assets/img/blesk-marker.png'
-import confirm from '@/components/common/confirm'
+import apply from '@/components/common/apply'
 import modal from '@/components/common/modal'
 import * as types from '@/store/types'
 import {mapGetters} from 'vuex'
@@ -157,7 +159,7 @@ export default {
           title: null,
           button: null
         },
-        appConfirm: {
+        appApply: {
           text: null,
           title: null,
           positiveButton: null,
@@ -206,7 +208,7 @@ export default {
     }
   },
   components: {
-    appConfirm: confirm,
+    appApply: apply,
     appModal: modal
   },
   watch: {
@@ -337,12 +339,12 @@ export default {
       this.components.appModal.button = button
       return bootstrap('#hereMapAlert').modal('show')
     },
-    showConfirmModal: function (title, text) {
-      this.components.appConfirm.title = title
-      this.components.appConfirm.text = text
-      this.components.appConfirm.positiveButton = 'Áno, vytvoriť'
-      this.components.appConfirm.negativeButton = 'Zrušiť'
-      return bootstrap('#hereMapConfirm').modal('show')
+    showAppliedModal: function (title, text) {
+      this.components.appApply.title = title
+      this.components.appApply.text = text
+      this.components.appApply.positiveButton = 'Áno, vytvoriť'
+      this.components.appApply.negativeButton = 'Zrušiť'
+      return bootstrap('#hereMapApply').modal('show')
     },
     onAutoCompletePlace: function ($event) {
       if ($event.target.value.length < 3 && $event.target.id === 'from') {
@@ -367,13 +369,13 @@ export default {
         this.navigator.form.to.autoComplete = {}
       }
     },
-    onCreate: function (confirmed) {
+    onCreate: function (applied) {
       if (this.navigator.summary.values.time === 0 || this.navigator.summary.values.length === 0) {
         return this.showAlertModal('Upozornenie', 'Dľžka cesty nie je známa.', 'Zatvoriť')
       } else if (Number(parseFloat(this.navigator.summary.values.length / 1000 * this.navigator.courier.price).toFixed(2)) > localStorage.getItem('balance')) {
         return this.showAlertModal('Upozornenie', 'Nemáte dostatok penazí na účte.', 'Zatvoriť')
       } else {
-        if (confirmed) {
+        if (applied) {
           const data = Object.values(this.parcelCreate).filter(e => e.id === this.parcel.activeEl.parcelId).pop()
           let payload = {id: this.parcel.activeEl.parcelId, data: {sender: Number(data.sender.senderId), receiver: Number(data.receiver.accountId), categoryId: data.category.id, length: Number(data.length), width: Number(data.width), height: Number(data.height), weight: Number(data.weight), note: data.note}}
 
@@ -389,7 +391,7 @@ export default {
               return this.showAlertModal('Chyba', err.message, 'Zatvoriť')
             })
         } else {
-          return this.showConfirmModal('Upozornenie', 'Po vytvorenie zásielky, zmena už nebude možná!')
+          return this.showAppliedModal('Upozornenie', 'Po vytvorenie zásielky, zmena už nebude možná!')
         }
       }
     }
@@ -462,7 +464,6 @@ export default {
 
   div#hereMap div#map form button, div#hereMap div#map div#finish button {
     background: #176c9d;
-    font-size: 0.8em;
     text-align: center;
     color: #ffffff;
     border-color: transparent;

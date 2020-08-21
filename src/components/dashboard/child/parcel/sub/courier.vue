@@ -3,6 +3,7 @@
     <h1>Kuriéri</h1>
     <form class="search">
       <input
+        autocomplete="off"
         type="text"
         class="searchTerm"
         placeholder="Meno kuriéra"

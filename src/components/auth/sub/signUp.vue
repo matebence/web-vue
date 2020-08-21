@@ -9,6 +9,8 @@
             Zadajte použivatelské meno
           </label>
           <input
+            autofocus
+            autocomplete="off"
             aria-describedby="userNameInvalid"
             type="text" class="form-control"
             id="username"
@@ -27,6 +29,7 @@
             Zadajte emailovú adresu
           </label>
           <input
+            autocomplete="off"
             aria-describedby="emailInvalid"
             type="email" class="form-control"
             id="email"
@@ -45,6 +48,7 @@
             Zadajte heslo
           </label>
           <input
+            autocomplete="off"
             aria-describedby="passwordInvalid"
             type="password"
             class="form-control"
@@ -62,6 +66,7 @@
           <label
             for="confirmPassword">Potvrďte heslo</label>
           <input
+            autocomplete="off"
             aria-describedby="confirmPasswordInvalid"
             type="password"
             class="form-control"
@@ -94,7 +99,7 @@
           </select>
           <a
             href="#"
-            @click.prevent="loadComponent('app-sign-in')">
+            @click.prevent="activeEl.component='app-sign-in'">
             Späť na prihlásenie
           </a>
         </div>
@@ -129,6 +134,7 @@ export default {
   created: function () {
     if (this.$route.params.key) return this.onPageLoad()
   },
+  props: ['activeEl'],
   name: 'signup',
   data: function () {
     return {
@@ -189,10 +195,6 @@ export default {
     })
   },
   methods: {
-    loadComponent: function ($event) {
-      this.$emit('loadComponent', $event)
-      return this.$router.push({path: `/${$event.replace('app-', '')}`})
-    },
     onPageLoad: function () {
       return this.$store.dispatch(types.ACTION_ACCOUNT_ACTIVATION, {id: this.url.values.id, key: this.url.values.key})
         .catch(err => console.log(err.message))

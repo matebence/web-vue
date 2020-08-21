@@ -73,6 +73,15 @@ export default {
     outline: 0 !important;
   }
 
+  input[type=number],
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    margin: 0;
+
+  }
+
   .animate__animated.animate__backOutLeft,
   .animate__animated.animate__fadeIn,
   .animate__animated.animate__backOutLeft,
