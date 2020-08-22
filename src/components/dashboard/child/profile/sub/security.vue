@@ -6,20 +6,26 @@
         <div class="col-sm-12 col-md-6">
           <label for="country">Štát</label>
           <input
+            v-model="components.appSecurity.form.values.country"
+            @input="$v.components.appSecurity.form.values.country.$touch()"
+            :class="{valid: !$v.components.appSecurity.form.values.country.$error && $v.components.appSecurity.form.values.country.$dirty, invalid: $v.components.appSecurity.form.values.country.$error}"
             autofocus
+            placeholder="Názov štátu"
             autocomplete="off"
             type="text"
             name="country"
-            value="Slovakia"
             id="country" />
         </div>
         <div class="col-sm-12 col-md-6">
           <label for="region">Kraj</label>
           <input
+            v-model="components.appSecurity.form.values.region"
+            @input="$v.components.appSecurity.form.values.region.$touch()"
+            :class="{valid: !$v.components.appSecurity.form.values.region.$error && $v.components.appSecurity.form.values.region.$dirty, invalid: $v.components.appSecurity.form.values.region.$error}"
             autocomplete="off"
             type="text"
             name="region"
-            value="Banskobystrický kraj"
+            placeholder="Názov kraja"
             id="region" />
         </div>
       </div>
@@ -27,19 +33,25 @@
         <div class="col-sm-12 col-md-6">
           <label for="district">Okres</label>
           <input
+            v-model="components.appSecurity.form.values.district"
+            @input="$v.components.appSecurity.form.values.district.$touch()"
+            :class="{valid: !$v.components.appSecurity.form.values.district.$error && $v.components.appSecurity.form.values.district.$dirty, invalid: $v.components.appSecurity.form.values.district.$error}"
             autocomplete="off"
             type="text"
             name="district"
-            value="Poltár"
+            placeholder="Názov okresu"
             id="district" />
         </div>
         <div class="col-sm-12 col-md-6">
           <label for="place">Mesto</label>
           <input
+            v-model="components.appSecurity.form.values.place"
+            @input="$v.components.appSecurity.form.values.place.$touch()"
+            :class="{valid: !$v.components.appSecurity.form.values.place.$error && $v.components.appSecurity.form.values.place.$dirty, invalid: $v.components.appSecurity.form.values.place.$error}"
             autocomplete="off"
             type="text"
             name="place"
-            value="Bádice"
+            placeholder="Názov mesta"
             id="place" />
         </div>
       </div>
@@ -47,19 +59,25 @@
         <div class="col-sm-12 col-md-6">
           <label for="street">Adresa</label>
           <input
+            v-model="components.appSecurity.form.values.street"
+            @input="$v.components.appSecurity.form.values.street.$touch()"
+            :class="{valid: !$v.components.appSecurity.form.values.street.$error && $v.components.appSecurity.form.values.street.$dirty, invalid: $v.components.appSecurity.form.values.street.$error}"
             autocomplete="off"
             type="text"
             name="street"
-            value="Obchodná 11"
+            placeholder="Ulica"
             id="street" />
         </div>
         <div class="col-sm-12 col-md-6">
           <label for="zip">PSČ</label>
           <input
+            v-model="components.appSecurity.form.values.zip"
+            @input="$v.components.appSecurity.form.values.zip.$touch()"
+            :class="{valid: !$v.components.appSecurity.form.values.zip.$error && $v.components.appSecurity.form.values.zip.$dirty, invalid: $v.components.appSecurity.form.values.zip.$error}"
             autocomplete="off"
             type="number"
             name="zip"
-            value="95146"
+            placeholder="PSČ"
             id="zip" />
         </div>
       </div>
@@ -94,12 +112,86 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+import * as types from '@/store/types'
+import {required, numeric} from 'vuelidate/lib/validators'
+
 export default {
-  name: 'security'
+  created: function () {
+    this.components.appSecurity.form.values = {...this.userProfile.places}
+  },
+  name: 'security',
+  data: function () {
+    return {
+      components: {
+        appSecurity: {
+          form: {
+            values: {
+              country: null,
+              region: null,
+              district: null,
+              place: null,
+              street: null,
+              zip: null
+            }
+          }
+        }
+      }
+    }
+  },
+  validations: {
+    components: {
+      appSecurity: {
+        form: {
+          values: {
+            country: {
+              required,
+              alpha: value => new RegExp(/^[\D ]+$/).test(value)
+            },
+            region: {
+              required,
+              alpha: value => new RegExp(/^[\D ]+$/).test(value)
+            },
+            district: {
+              required,
+              alpha: value => new RegExp(/^[\D ]+$/).test(value)
+            },
+            place: {
+              required,
+              alpha: value => new RegExp(/^[\D ]+$/).test(value)
+            },
+            street: {
+              required,
+              alpha: value => new RegExp(/^[\D ]+[0-9]*$/).test(value)
+            },
+            zip: {
+              required,
+              numeric
+            }
+          }
+        }
+      }
+    }
+  },
+  computed: {
+    ...mapGetters({
+      userProfile: types.GETTER_USER_DATA_GET,
+      genders: types.GETTER_GENDER_DATA_GET_ALL
+    })
+  },
+  methods: {
+    onCreate: function () {
+
+    }
+  }
 }
 </script>
 
 <style scoped>
+  ::placeholder {
+    color: #000000;
+  }
+
   div#security {
     overflow: auto;
     height: 100%;
@@ -175,6 +267,7 @@ export default {
     font-size: 0.9em;
     width: 3rem;
     height: 3rem;
+    z-index: 999;
   }
 
   div#security button:hover {
@@ -185,6 +278,14 @@ export default {
   div#security button:disabled {
     opacity: .65;
     background: #095174;
+  }
+
+  div#security input.invalid {
+    border-bottom: 0.1rem solid #ff0000;
+  }
+
+  div#security input.valid {
+    border-bottom: 0.1rem solid #008000;
   }
 
   @media (max-width: 768px) {

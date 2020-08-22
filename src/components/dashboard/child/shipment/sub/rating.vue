@@ -337,6 +337,7 @@ export default {
     font-size: 0.9em;
     width: 3rem;
     height: 3rem;
+    z-index: 999;
   }
 
   div#rating button:hover, div#rating label.image-upload:hover {

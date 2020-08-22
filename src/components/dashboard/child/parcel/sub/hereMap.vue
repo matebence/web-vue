@@ -470,6 +470,7 @@ export default {
     border-radius: 3rem;
     cursor: pointer;
     font-size: 0.9em;
+    z-index: 999;
   }
 
   div#hereMap div#map form button:hover, div#hereMap div#map div#finish button:hover {

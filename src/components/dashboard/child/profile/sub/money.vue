@@ -9,6 +9,7 @@
             <input
               id="cardNumber"
               autofocus
+              placeholder="5356 5631 1265 7895"
               type="text"
               v-mask="getNumberMask"
               v-model="card.number"
@@ -21,6 +22,7 @@
             <input
               id="cardName"
               type="text"
+              placeholder="Meno Priezvisko"
               v-model="card.name"
               @blur="onBlur"
               data-ref="cardName"
@@ -34,6 +36,7 @@
                   <input
                     id="cardMonth"
                     type="number"
+                    placeholder="05"
                     v-model="card.month"
                     @blur="onBlur"
                     data-ref="cardDate"
@@ -46,6 +49,7 @@
                   <input
                     id="cardYear"
                     type="number"
+                    placeholder="2021"
                     v-model="card.year"
                     @blur="onBlur"
                     data-ref="cardDate"
@@ -63,6 +67,7 @@
                     id="cardCVV"
                     type="number"
                     v-mask="'####'"
+                    placeholder="000"
                     maxlength="4"
                     v-model="card.cvv"
                     @focus="onFlip(true)"
@@ -76,6 +81,7 @@
                   <input
                     id="credit-card-amount"
                     type="number"
+                    placeholder="10.00"
                     autocomplete="off">
                 </div>
               </div>
@@ -214,6 +220,7 @@
           <div class="form-input">
             <label for="iban">IBAN</label>
             <input
+              placeholder="SK53 0000 0053 4567 7898"
               id="iban"
               type="text"
               autocomplete="off">
@@ -222,6 +229,7 @@
             <label for="iban-amount">Suma</label>
             <input
               id="iban-amount"
+              placeholder="0.00"
               type="text"
               autocomplete="off">
           </div>
@@ -304,6 +312,10 @@ export default {
 </script>
 
 <style scoped>
+  ::placeholder {
+    color: #000000;
+  }
+
   div#money {
     overflow: auto;
     height: 100%;
@@ -583,6 +595,7 @@ export default {
     font-size: 0.9em;
     width: 3rem;
     height: 3rem;
+    z-index: 999;
   }
 
   div#money button:hover {
@@ -641,6 +654,12 @@ export default {
   @media screen and (max-width: 768px) {
     div#money .card {
       margin-top: 2rem;
+    }
+
+    div#money button {
+      margin-top: 2rem;
+      margin-left: 1rem;
+      position: static;
     }
   }
 

@@ -20,7 +20,10 @@ import navigation from '@/components/dashboard/child/navigation/index'
 
 export default {
   created: function () {
-    if (this.allowedRoles.includes(process.env.APP_ROLE_CLIENT)) {
+    if (this.userProfile.userId === undefined) {
+      this.navigation.activeEl = {itemId: 6, value: 'Nastavenia'}
+      this.$router.push({path: '/dashboard/settings'})
+    } else if (this.allowedRoles.includes(process.env.APP_ROLE_CLIENT)) {
       this.navigation.activeEl = {itemId: 1, value: 'Balíky'}
       this.$router.push({path: '/dashboard/parcel'})
     } else if ([...this.allowedRoles].includes(process.env.APP_ROLE_COURIER)) {
@@ -44,6 +47,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      userProfile: types.GETTER_USER_DATA_GET,
       allowedRoles: types.GETTER_SIGN_IN_GET_ROLE
     })
   }

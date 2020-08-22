@@ -127,8 +127,8 @@ export default {
   },
   methods: {
     onSignIn: function () {
-      this.signInError.message = null
-      this.signInError.is = false
+      this.signInError.message = this.signOutError.message = null
+      this.signInError.is = this.signOutError.is = false
 
       return this.$store.dispatch(types.ACTION_SIGN_IN, {grantType: process.env.GRANT_TYPE_PASSWORD, userName: this.form.values.userName, password: this.form.values.password, stayLoggedIn: this.form.values.stayLoggedIn})
         .catch(err => console.log(err.message))

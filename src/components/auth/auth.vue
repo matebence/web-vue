@@ -4,18 +4,11 @@
       <div id="hero-video">
         <video autoplay loop muted playsinline src="@/assets/video/hero-video.mp4"/>
         <div id="form">
-          <transition
-            mode="out-in"
-            type="animation"
-            appear
-            enter-active-class="animate__animated animate__fadeIn"
-            leave-active-class="animate__animated animate__fadeOut">
-            <keep-alive>
-              <component
-                :activeEl="components.auth.activeEl"
-                :is="components.auth.activeEl.component" />
-            </keep-alive>
-          </transition>
+          <keep-alive>
+            <component
+              :activeEl="components.appAuth.activeEl"
+              :is="components.appAuth.activeEl.component" />
+          </keep-alive>
         </div>
       </div>
     </div>
@@ -41,7 +34,7 @@ export default {
   data: function () {
     return {
       components: {
-        auth: {
+        appAuth: {
           activeEl: {
             component: 'app-sign-in'
           }
@@ -65,7 +58,7 @@ export default {
         this.$router.push({name: 'error'})
         return
       }
-      this.components.auth.activeEl.component = `app-${componenet}`
+      this.components.appAuth.activeEl.component = `app-${componenet}`
     }
   }
 }

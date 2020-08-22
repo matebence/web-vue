@@ -1,98 +1,203 @@
 <template>
-  <div id="profil">
-    <h1>Peter Varga</h1>
+  <div id="profile">
+    <h1>{{getUser}}</h1>
     <div class="container-fluid">
       <div class="row header">
         <div class="col-sm-12">
-          <div class="profil-image" data-letters="PV"></div>
+          <div class="profile-image" :data-letters="getAvatar ? getAvatar : 'XX'"></div>
           <div>
-            <h2>Aktualný zostatok na účte: 350€</h2>
-            <h2>Poloha: Slovakia, Banskobystrický kraj, Poltár, Bádice</h2>
+            <h2>Aktualný zostatok na účte: {{getBalance}}€</h2>
+            <h2>Poloha: {{getPosition}}</h2>
           </div>
         </div>
       </div>
       <div class="row body">
         <div class="col-sm-12 col-md-6">
-          <label for="username">Username</label>
+          <label for="username">Používateľské meno</label>
           <input
+            v-model="components.appProfile.form.values.userName"
+            @input="$v.components.appProfile.form.values.userName.$touch()"
+            :class="{valid: !$v.components.appProfile.form.values.userName.$error && $v.components.appProfile.form.values.userName.$dirty, invalid: $v.components.appProfile.form.values.userName.$error}"
             autofocus
             autocomplete="off"
             type="text"
+            placeholder="Vaše používateľské meno"
             name="username"
-            value="petervarga"
             id="username" />
         </div>
         <div class="col-sm-12 col-md-6">
           <label for="email">Email</label>
           <input
+            v-model="components.appProfile.form.values.email"
+            @input="$v.components.appProfile.form.values.email.$touch()"
+            :class="{valid: !$v.components.appProfile.form.values.email.$error && $v.components.appProfile.form.values.email.$dirty, invalid: $v.components.appProfile.form.values.email.$error}"
             autocomplete="off"
             type="email"
+            placeholder="Vaša emailová adresa"
             name="email"
-            value="peter.varga@gmail.com"
             id="email" />
         </div>
       </div>
       <div class="row body">
         <div class="col-sm-12 col-md-6">
-          <label for="firstname">First name</label>
+          <label for="firstname">Meno</label>
           <input
+            v-model="components.appProfile.form.values.firstName"
+            @input="$v.components.appProfile.form.values.firstName.$touch()"
+            :class="{valid: !$v.components.appProfile.form.values.firstName.$error && $v.components.appProfile.form.values.firstName.$dirty, invalid: $v.components.appProfile.form.values.firstName.$error}"
             autocomplete="off"
             type="text"
+            placeholder="Vaše meno"
             name="firstname"
-            value="Peter"
             id="firstname" />
         </div>
         <div class="col-sm-12 col-md-6">
-          <label for="lastname">Last name</label>
+          <label for="lastname">Priezvisko</label>
           <input
+            v-model="components.appProfile.form.values.lastName"
+            @input="$v.components.appProfile.form.values.lastName.$touch()"
+            :class="{valid: !$v.components.appProfile.form.values.lastName.$error && $v.components.appProfile.form.values.lastName.$dirty, invalid: $v.components.appProfile.form.values.lastName.$error}"
             autocomplete="off"
             type="text"
+            placeholder="Vaše priezvisko"
             name="lastname"
-            value="Varga"
             id="lastname" />
         </div>
       </div>
       <div class="row body">
         <div class="col-sm-12 col-md-6">
-          <label for="tel">Tel. number</label>
+          <label for="tel">Telefonné číslo</label>
           <input
+            v-model="components.appProfile.form.values.tel"
+            @input="$v.components.appProfile.form.values.tel.$touch()"
+            :class="{valid: !$v.components.appProfile.form.values.tel.$error && $v.components.appProfile.form.values.tel.$dirty, invalid: $v.components.appProfile.form.values.tel.$error}"
             autocomplete="off"
+            placeholder="Vaše telefonné číslo"
             type="text"
             name="tel"
-            value="+421915521884"
             id="tel" />
         </div>
         <div class="col-sm-12 col-md-6">
           <label for="gender">Pohlavie</label>
           <select
+            v-model="components.appProfile.form.values.gender"
+            @change="$v.components.appProfile.form.values.gender.$touch()"
+            :class="{valid: !$v.components.appProfile.form.values.gender.$error && $v.components.appProfile.form.values.gender.$dirty, invalid: $v.components.appProfile.form.values.gender.$error}"
             class="form-control"
             id="gender">
-            <option selected >Muž</option>
-            <option >Žena</option>
+            <option value="undefined" disabled selected>Vyberte z možností</option>
+            <option v-for="gender in genders" :value="gender.name" :key="gender.genderId">{{gender.name}}</option>
           </select>
         </div>
       </div>
     </div>
     <button
+      :disabled="$v.$invalid"
       type="submit"
       class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
   </div>
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+import * as types from '@/store/types'
+import {required, email} from 'vuelidate/lib/validators'
+
 export default {
-  name: 'profil'
+  created: function () {
+    return this.$store.dispatch(types.ACTION_GENDER_GET_ALL, {})
+      .then(result => { this.components.appProfile.form.values = {...this.userProfile} })
+      .catch(err => console.log(err.message))
+  },
+  name: 'profile',
+  data: function () {
+    return {
+      components: {
+        appProfile: {
+          form: {
+            values: {
+              userName: null,
+              email: null,
+              firstName: null,
+              lastName: null,
+              tel: null,
+              gender: null
+            }
+          }
+        }
+      }
+    }
+  },
+  validations: {
+    components: {
+      appProfile: {
+        form: {
+          values: {
+            userName: {
+              required,
+              username: value => new RegExp(/^[a-z.]+$/).test(value)
+            },
+            email: {
+              required,
+              email
+            },
+            firstName: {
+              required,
+              alpha: value => new RegExp(/^[\D ]+$/).test(value)
+            },
+            lastName: {
+              required,
+              alpha: value => new RegExp(/^[\D ]+$/).test(value)
+            },
+            tel: {
+              required,
+              telNumber: value => new RegExp(/^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[-. ]?)?((?:\(?\d{1,}\)?[-. ]?){0,})(?:[-. ]?(?:#|ext\.?|extension|x)[-. ]?(\d+))?$/).test(value)
+            },
+            gender: {
+              required,
+              alpha: value => new RegExp(/^[\D ]+$/).test(value)
+            }
+          }
+        }
+      }
+    }
+  },
+  computed: {
+    getBalance: function () {
+      if (!this.userProfile.balance) return Number.parseFloat(0.00).toFixed(2)
+      return this.userProfile.balance
+    },
+    getPosition: function () {
+      if (!this.userProfile.places || !this.userProfile.places.country || !this.userProfile.places.region || !this.userProfile.places.district || !this.userProfile.places.place) return 'Poloha nie je známa alebo nie je nastavená'
+      return `${this.userProfile.places.country}, ${this.userProfile.places.region}, ${this.userProfile.places.district}, ${this.userProfile.places.place}`
+    },
+    getUser: function () {
+      if (!this.userProfile.firstName || !this.userProfile.lastName) return 'Používateľ'
+      return `${this.userProfile.firstName} ${this.userProfile.lastName}`
+    },
+    getAvatar: function () {
+      return localStorage.getItem('avatar')
+    },
+    ...mapGetters({
+      userProfile: types.GETTER_USER_DATA_GET,
+      genders: types.GETTER_GENDER_DATA_GET_ALL
+    })
+  }
 }
 </script>
 
 <style scoped>
-  div#profil {
+  ::placeholder {
+    color: #000000;
+  }
+
+  div#profile {
     overflow: auto;
     height: 100%;
     padding-bottom: 2rem;
   }
 
-  div#profil h1 {
+  div#profile h1 {
     margin-top: 2rem;
     margin-left: 1rem;
     margin-bottom: 2rem;
@@ -100,7 +205,7 @@ export default {
     display: inline-block;
   }
 
-  div#profil div.header div.profil-image {
+  div#profile div.header div.profile-image {
     width: 9rem;
     line-height: 9rem;
     border-radius: 50%;
@@ -110,18 +215,18 @@ export default {
     display: inline-block;
   }
 
-  div#profil div.header div.profil-image:before {
+  div#profile div.header div.profile-image:before {
     color: #ffffff;
     font-family: Palanquin-Regular, sans-serif;
     content: attr(data-letters);
   }
 
-  div#profil div.body {
+  div#profile div.body {
     margin-top: 2rem;
   }
 
-  div#profil div.body label,
-  div#profil h2 {
+  div#profile div.body label,
+  div#profile h2 {
     font-size: 1.2em;
     font-weight: 900;
     color: #a5a3a5;
@@ -129,8 +234,12 @@ export default {
     margin-bottom: 0.5rem;
   }
 
-  div#profil div.body input[type="text"],
-  div#profil div.body input[type="email"] {
+  div#profile h2 {
+    color: #6b6b6b;
+  }
+
+  div#profile div.body input[type="text"],
+  div#profile div.body input[type="email"] {
     font-size: 1.15em;
     font-weight: 700;
     width: 80%;
@@ -143,7 +252,7 @@ export default {
     border-bottom: 0.1rem solid #dbdbdb;
   }
 
-  div#profil div.body select {
+  div#profile div.body select {
     background: #ffffff;
     font-size: 1.15em;
     font-weight: 700;
@@ -157,16 +266,16 @@ export default {
     border-bottom: 0.1rem solid #dbdbdb;
   }
 
-  div#profil div.body select:focus {
+  div#profile div.body select:focus {
     background: #ffffff;
   }
 
-  div#profil div.body option {
+  div#profile div.body option {
     height: 2rem;
     background: #ffffff;
   }
 
-  div#profil button {
+  div#profile button {
     position: absolute;
     bottom: 2rem;
     right: 2rem;
@@ -183,18 +292,28 @@ export default {
     z-index: 999;
   }
 
-  div#profil button:hover {
+  div#profile button:hover {
     cursor: pointer;
     background: #187fb1;
   }
 
-  div#profil button:disabled {
+  div#profile button:disabled {
     opacity: .65;
     background: #095174;
   }
 
+  div#profile div.body input.invalid,
+  div#profile div.body select.invalid{
+    border-bottom: 0.1rem solid #ff0000;
+  }
+
+  div#profile div.body input.valid,
+  div#profile div.body select.valid{
+    border-bottom: 0.1rem solid #008000;
+  }
+
   @media (max-width: 768px) {
-    div#profil button {
+    div#profile button {
       margin-top: 2rem;
       margin-left: 1rem;
       position: static;

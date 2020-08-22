@@ -4,12 +4,12 @@
       <div class="col-lg-4 col-xl-3" id="content">
         <h1>Nastavenia</h1>
         <app-vertical-list
-          :activeEl="components.settings.activeEl" />
+          :activeEl="components.appSettings.activeEl" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
         <keep-alive>
           <component
-            :is="components.settings.activeEl.component"/>
+            :is="components.appSettings.activeEl.component"/>
         </keep-alive>
       </div>
     </div>
@@ -19,7 +19,7 @@
 <script>
 import bootstrap from 'jquery'
 import money from '@/components/dashboard/child/profile/sub/money'
-import profil from '@/components/dashboard/child/profile/sub/profil'
+import profile from '@/components/dashboard/child/profile/sub/profile'
 import security from '@/components/dashboard/child/profile/sub/security'
 import verticalList from '@/components/dashboard/child/profile/sub/verticalList'
 
@@ -28,11 +28,11 @@ export default {
   data: function () {
     return {
       components: {
-        settings: {
+        appSettings: {
           activeEl: {
             itemId: 1,
             value: 'Profil',
-            component: 'app-profil'
+            component: 'app-profile'
           }
         }
       }
@@ -47,7 +47,7 @@ export default {
   },
   components: {
     appMoney: money,
-    appProfil: profil,
+    appProfile: profile,
     appSecurity: security,
     appVerticalList: verticalList
   }

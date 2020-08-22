@@ -5,44 +5,44 @@
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <h2>Odkiaľ</h2>
-          <p>{{components.shipment.properties.from}}</p>
+          <p>{{components.appShipment.properties.from}}</p>
         </div>
         <div class="col-sm-12 col-md-6">
           <h2>Kam</h2>
-          <p>{{components.shipment.properties.to}}</p>
+          <p>{{components.appShipment.properties.to}}</p>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <h2>Kuriér</h2>
-          <p>{{components.shipment.properties.courier}}</p>
+          <p>{{components.appShipment.properties.courier}}</p>
         </div>
         <div class="col-sm-12 col-md-6">
           <h2>Stav</h2>
-          <p>{{components.shipment.properties.status}}</p>
+          <p>{{components.appShipment.properties.status}}</p>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <h2>Identifikačné číslo</h2>
-          <p>{{components.shipment.properties.id}}</p>
+          <p>{{components.appShipment.properties.id}}</p>
         </div>
         <div class="col-sm-12 col-md-6">
           <h2>Faktúra</h2>
           <a
             href="invoice/download"
             @click.prevent="onDownload"
-          >{{components.shipment.properties.invoice.name}}</a>
+          >{{components.appShipment.properties.invoice.name}}</a>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <h2>Odosielateľ</h2>
-          <p>{{components.shipment.properties.sender}}</p>
+          <p>{{components.appShipment.properties.sender}}</p>
         </div>
         <div class="col-sm-12 col-md-6">
           <h2>Prijímateľ</h2>
-          <p>{{components.shipment.properties.receiver}}</p>
+          <p>{{components.appShipment.properties.receiver}}</p>
         </div>
       </div>
     </div>
@@ -65,7 +65,7 @@ export default {
   data: function () {
     return {
       components: {
-        shipment: {
+        appShipment: {
           properties: {
             from: 'Mesto vyzdivnutia zásielky',
             to: 'Mesto odovzdania zásielky',
@@ -94,13 +94,13 @@ export default {
   watch: {
     'activeEl.shipmentId': function (newValue, oldValue) {
       if (this.activeEl.shipmentId === 0) return Object.assign(this.$data, this.$options.data.apply(this))
-      this.components.shipment.properties = {from: this.shipment.from, to: this.shipment.to, courier: this.shipment.courier.userName, status: this.shipment.status.name, id: this.shipment._id, invoice: {name: this.shipment.invoice.invoice, id: this.shipment.invoice._id}, sender: this.shipment.sender.name, receiver: this.shipment.receiver.name}
+      this.components.appShipment.properties = {from: this.shipment.from, to: this.shipment.to, courier: this.shipment.courier.userName, status: this.shipment.status.name, id: this.shipment._id, invoice: {name: this.shipment.invoice.invoice, id: this.shipment.invoice._id}, sender: this.shipment.sender.name, receiver: this.shipment.receiver.name}
     }
   },
   methods: {
     onDownload: function () {
       if (this.activeEl.shipmentId === 0) return this.showAlertModal('Upozornenie', 'Nemáte zvolenú zásielku.', 'Zatvoriť')
-      this.$store.dispatch(types.ACTION_INVOICE_DOWNLOAD, this.components.shipment.properties.invoice.id)
+      this.$store.dispatch(types.ACTION_INVOICE_DOWNLOAD, this.components.appShipment.properties.invoice.id)
         .catch(err => this.showAlertModal('Informácia', err.message, 'Zatvoriť'))
     },
     showAlertModal: function (title, text, button) {

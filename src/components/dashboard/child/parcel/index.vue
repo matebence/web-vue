@@ -3,16 +3,16 @@
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
         <app-manage
-          :activeEl="components.parcel.activeEl" />
+          :activeEl="components.appParcel.activeEl" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-courier
-          :parcel="components.parcel"
-          :courier="components.courier"
-          :activeEl="components.parcel.activeEl"/>
+          :parcel="components.appParcel"
+          :courier="components.appCourier"
+          :activeEl="components.appParcel.activeEl"/>
         <app-here-map
-          :parcel="components.parcel"
-          :courier="components.courier" />
+          :parcel="components.appParcel"
+          :courier="components.appCourier" />
       </div>
     </div>
   </div>
@@ -27,14 +27,13 @@ import hereMap from '@/components/dashboard/child/parcel/sub/hereMap'
 export default {
   beforeMount: function () {
     this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_DATA, {})
-    this.$store.commit(types.MUTATIONS_CLEAR_USER_DATA, {})
     return this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
   },
   name: 'index',
   data: function () {
     return {
       components: {
-        parcel: {
+        appParcel: {
           search: {
             shipment: {
             }
@@ -45,7 +44,7 @@ export default {
             parcelId: 0
           }
         },
-        courier: {
+        appCourier: {
           search: {
             user: {
             },
@@ -63,13 +62,13 @@ export default {
     appHereMap: hereMap
   },
   watch: {
-    'components.parcel.activeEl.parcelId': function (newValue, oldValue) {
+    'components.appParcel.activeEl.parcelId': function (newValue, oldValue) {
       if (newValue <= 0) {
-        this.components.parcel.search.shipment = {}
+        this.components.appParcel.search.shipment = {}
       } else {
         return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {parcelId: newValue})
           .then(result => {
-            this.components.parcel.search.shipment = Object.values(result).pop()
+            this.components.appParcel.search.shipment = Object.values(result).pop()
           })
           .catch(err => console.log(err.message))
       }

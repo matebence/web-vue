@@ -302,6 +302,22 @@ const actions = {
     return localStorage.getItem('avatar')
   },
 
+  [types.CLEAR_APP_USEAGE_DATA]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATIONS_CLEAR_PARCEL_DATA, {})
+    commit(types.MUTATIONS_CLEAR_CATEGORY_DATA, {})
+    commit(types.MUTATIONS_CLEAR_GENDER_DATA, {})
+    commit(types.MUTATIONS_CLEAR_RATING_DATA, {})
+    commit(types.MUTATIONS_CLEAR_USER_DATA, {})
+    commit(types.MUTATIONS_CLEAR_PREFERENCE_DATA, {})
+    commit(types.MUTATIONS_CLEAR_PLACE_DATA, {})
+    commit(types.MUTATIONS_CLEAR_SHIPMENT_DATA, {})
+    commit(types.MUTATIONS_CLEAR_PRICE_DATA, {})
+    commit(types.MUTATIONS_CLEAR_INVOICE_DATA, {})
+    commit(types.MUTATIONS_CLEAR_LOCATION_DATA, {})
+    commit(types.MUTATIONS_CLEAR_PAYMENT_DATA, {})
+    commit(types.MUTATIONS_CLEAR_PAYOUT_DATA, {})
+  },
+
   [types.ACTION_CHECK_BALANCE]: function ({commit, dispatch, state, rootState}, payload) {
     if (localStorage.getItem('balance') === null) {
       localStorage.setItem('balance', Number(payload.balance))
@@ -310,13 +326,13 @@ const actions = {
   },
 
   [types.ACTION_CHECK_PROFILE]: function ({commit, dispatch, state, rootState}, payload) {
-    dispatch(types.ACTION_USER_GET, rootState.authorization.payload.signIn.data.accountId).then(result => {
+    return dispatch(types.ACTION_USER_GET, rootState.authorization.payload.signIn.data.accountId).then(result => {
       return Promise.all([
         dispatch(types.ACTION_SETUP_AVATAR, {...result}),
         dispatch(types.ACTION_CHECK_BALANCE, {...result})
       ])
     }).catch(err => {
-      return console.log(`${err} presmeruj na user profil setup screen`)
+      return new Error(err.message)
     })
   },
 
@@ -334,9 +350,16 @@ const actions = {
       },
       done: true
     })
-    dispatch(types.ACTION_START_AUTH_TIMER, Number(new Date(localStorage.getItem('expirationDate')).getTime() / 1000) - Number(new Date().getTime() / 1000))
-    dispatch(types.ACTION_CHECK_PROFILE)
-    router.push({path: '/dashboard'})
+    return Promise.all([
+      dispatch(types.ACTION_START_AUTH_TIMER, Number(new Date(localStorage.getItem('expirationDate')).getTime() / 1000) - Number(new Date().getTime() / 1000)),
+      dispatch(types.ACTION_CHECK_PROFILE)
+    ])
+      .then(result => {
+        router.push({path: '/dashboard'})
+      })
+      .catch(err => {
+        throw new Error(err.message)
+      })
   },
 
   [types.ACTION_SIGN_IN]: function ({commit, dispatch, state, rootState}, payload) {
@@ -376,8 +399,9 @@ const actions = {
         localStorage.setItem('accountData', JSON.stringify(accountData))
         localStorage.setItem('expirationDate', new Date(new Date().getTime() + parsed.expires_in * 1000))
 
-        dispatch(types.ACTION_CHECK_PROFILE)
-        dispatch(types.ACTION_START_AUTH_TIMER, parsed.expires_in)
+        return Promise.all([dispatch(types.ACTION_CHECK_PROFILE), dispatch(types.ACTION_START_AUTH_TIMER, parsed.expires_in)])
+      })
+      .then(result => {
         router.push({path: '/dashboard'})
         return state.payload.signIn.data
       })
@@ -510,15 +534,8 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
-        localStorage.removeItem('avatar')
-        localStorage.removeItem('balance')
-        localStorage.removeItem('position')
-        localStorage.removeItem('accountData')
-        localStorage.removeItem('expirationDate')
-
-        commit(types.MUTATIONS_CLEAR_USER_DATA, {})
-        commit(types.MUTATIONS_CLEAR_PARCEL_DATA, {})
-        commit(types.MUTATIONS_CLEAR_SIGN_IN_DATA, {})
+        localStorage.clear()
+        dispatch(types.CLEAR_APP_USEAGE_DATA)
 
         commit(types.MUTATION_SIGN_OUT_DATA, {
           error: {

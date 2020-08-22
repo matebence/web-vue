@@ -40,10 +40,10 @@ const vehicle = resolve => {
   }, 'vehicle')
 }
 
-const profile = resolve => {
+const settings = resolve => {
   require.ensure(['@/components/dashboard/child/profile/index'], () => {
     resolve(require('@/components/dashboard/child/profile/index'))
-  }, 'profile')
+  }, 'settings')
 }
 
 const auth = resolve => {
@@ -71,40 +71,70 @@ const routes = [
         name: 'parcel',
         component: parcel,
         beforeEnter: function (to, from, next) {
-          return store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_CLIENT) ? next() : next('/sign-in')
+          if (store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_CLIENT)) {
+            if (!store.state.user.payload.user.data.get.userId) {
+              return next('/dashboard/settings')
+            }
+            return next()
+          }
+          return next('/sign-in')
         }
       }, {
         path: 'client',
         name: 'client',
         component: client,
         beforeEnter: function (to, from, next) {
-          return store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_COURIER) ? next() : next('/sign-in')
+          if (store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_COURIER)) {
+            if (!store.state.user.payload.user.data.get.userId) {
+              return next('/dashboard/settings')
+            }
+            return next()
+          }
+          return next('/sign-in')
         }
       }, {
         path: 'vehicle',
         name: 'vehicle',
         component: vehicle,
         beforeEnter: function (to, from, next) {
-          return store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_COURIER) ? next() : next('/sign-in')
+          if (store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_COURIER)) {
+            if (!store.state.user.payload.user.data.get.userId) {
+              return next('/dashboard/settings')
+            }
+            return next()
+          }
+          return next('/sign-in')
         }
       }, {
         path: 'message',
         name: 'message',
         component: message,
         beforeEnter: function (to, from, next) {
-          return (store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_CLIENT) || store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_COURIER)) ? next() : next('/sign-in')
+          if (store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_CLIENT) || store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_COURIER)) {
+            if (!store.state.user.payload.user.data.get.userId) {
+              return next('/dashboard/settings')
+            }
+            return next()
+          }
+          return next('/sign-in')
         }
       }, {
         path: 'shipment',
         name: 'shipment',
         component: shipment,
         beforeEnter: function (to, from, next) {
-          return store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_CLIENT) ? next() : next('/sign-in')
+          if (store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_CLIENT)) {
+            if (!store.state.user.payload.user.data.get.userId) {
+              return next('/dashboard/settings')
+            }
+            return next()
+          }
+          return next('/sign-in')
         }
       }, {
-        path: 'profile',
-        name: 'profile',
-        component: profile,
+        path: 'settings',
+        name: 'settings',
+        component: settings,
         beforeEnter: function (to, from, next) {
           return (store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_CLIENT) || store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_COURIER)) ? next() : next('/sign-in')
         }

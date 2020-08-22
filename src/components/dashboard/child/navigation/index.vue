@@ -10,7 +10,7 @@
           v-for="nav in navigation.items"
           @click.prevent="onSelectedNav(nav)"
           v-if="userHasRole(nav.isVisible.for)"
-          :class="{active: activeEl.itemId === nav.itemId}"
+          :class="{active: activeEl.itemId === nav.itemId && userProfile.userId !== undefined}"
           :id="nav.route">
           <router-link :to="`${nav.route}`">
             <font-awesome-icon :icon="['fas', nav.optional.icon]"/>
@@ -20,12 +20,12 @@
       </ul>
       <ul class="sub-items">
         <li>
-          <a href="#" :data-letters="avatar"></a>
+          <a href="#" :data-letters="getAvatar ? getAvatar : 'XX'"></a>
         </li>
         <li class="settings"
           @click.prevent="onSelectedNav({itemId: 6, value: 'Nastavenia'})">
           <router-link
-            to="profile"
+            to="settings"
             :class="{active: activeEl.itemId === 6}">
             <font-awesome-icon :icon="['fas', 'cog']"/>
             <p>Nastavenia</p>
@@ -105,7 +105,7 @@ export default {
           }, {
             itemId: 6,
             value: 'Nastavenia',
-            route: 'profile',
+            route: 'settings',
             optional: {
               icon: 'cog',
               badge: ''
@@ -130,23 +130,25 @@ export default {
     }
   },
   computed: {
-    avatar: function () {
+    getAvatar: function () {
       return localStorage.getItem('avatar')
     },
     ...mapGetters({
       signIn: types.GETTER_SIGN_IN_DATA,
+      userProfile: types.GETTER_USER_DATA_GET,
       allowedRoles: types.GETTER_SIGN_IN_GET_ROLE
     })
   },
   methods: {
     onSelectedNav: function (el) {
-      this.activeEl.itemId = el.itemId
-      this.activeEl.value = el.value
-
-      if (this.activeEl.value === this.navigation.items[6].value) {
+      if (el.value === this.navigation.items[6].value) {
         return this.$store.dispatch(types.ACTION_SIGN_OUT, {accessToken: this.signIn.accessToken})
           .catch(err => console.log(err.message))
       }
+
+      if (this.userProfile.userId === undefined) return
+      this.activeEl.itemId = el.itemId
+      this.activeEl.value = el.value
     },
     userHasRole: function (role) {
       return [...this.allowedRoles].some(e => role.includes(e))
@@ -268,7 +270,7 @@ export default {
   }
 
   @media (min-width: 1200px) {
-    div#index nav ul.items li#profile {
+    div#index nav ul.items li#settings {
       display: none;
     }
   }

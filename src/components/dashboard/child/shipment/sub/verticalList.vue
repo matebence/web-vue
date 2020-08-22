@@ -4,7 +4,7 @@
       <li
         :key="option.id"
         @click.prevent="onSelectedOption(option)"
-        v-for="option in tab.items"
+        v-for="option in items"
         :class="{active: activeEl.tabId === option.itemId}">{{option.value}}</li>
     </ul>
     <ul class="shipments">
@@ -29,17 +29,17 @@
 
       <li
         class="empty-list"
-        v-if="Object.keys(shipment).length === 0 && activeEl.value === tab.items[0].value">
+        v-if="Object.keys(shipment).length === 0 && activeEl.value === items[0].value">
         Zoznam je prázdny
       </li>
       <li
         class="empty-list"
-        v-if="Object.keys(shipment).length === 0 && activeEl.value === tab.items[1].value">
+        v-if="Object.keys(shipment).length === 0 && activeEl.value === items[1].value">
         Zoznam je prázdny
       </li>
       <li
         class="empty-list"
-        v-if="Object.keys(shipment).length === 0 && activeEl.value === tab.items[2].value">
+        v-if="Object.keys(shipment).length === 0 && activeEl.value === items[2].value">
         Zoznam je prázdny
       </li>
     </ul>
@@ -52,22 +52,20 @@ export default {
   props: ['activeEl', 'shipment'],
   data: function () {
     return {
-      tab: {
-        items: [
-          {
-            itemId: 1,
-            value: 'Vlastné'
-          },
-          {
-            itemId: 2,
-            value: 'Ostatné'
-          },
-          {
-            itemId: 3,
-            value: 'Všetky'
-          }
-        ]
-      }
+      items: [
+        {
+          itemId: 1,
+          value: 'Vlastné'
+        },
+        {
+          itemId: 2,
+          value: 'Ostatné'
+        },
+        {
+          itemId: 3,
+          value: 'Všetky'
+        }
+      ]
     }
   },
   methods: {

@@ -7,22 +7,22 @@
           v-show="isSelected"
           id="modify">
           <button
-            @click.prevent="components.shipment.activeEl.shipmentId = 0">
+            @click.prevent="components.appShipment.activeEl.shipmentId = 0">
             <font-awesome-icon
               :icon="['fas', 'ban']"/>
           </button>
         </div>
         <app-vertical-list
-          :activeEl="components.shipment.activeEl"
-          :shipment="components.shipment.search" />
+          :activeEl="components.appShipment.activeEl"
+          :shipment="components.appShipment.search" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-properties
-          :activeEl="components.shipment.activeEl"
+          :activeEl="components.appShipment.activeEl"
           :shipment="selectedItem" />
         <app-rating
           :shipment="selectedItem"
-          :activeEl="components.shipment.activeEl" />
+          :activeEl="components.appShipment.activeEl" />
       </div>
     </div>
   </div>
@@ -47,11 +47,11 @@ export default {
   data: function () {
     return {
       components: {
-        parcel: {
+        appParcel: {
           search: {
           }
         },
-        shipment: {
+        appShipment: {
           search: {
           },
           activeEl: {
@@ -69,8 +69,8 @@ export default {
     appVerticalList: verticalList
   },
   watch: {
-    'components.shipment.activeEl.value': function (newValue, oldValue) {
-      this.components.shipment.search = {}
+    'components.appShipment.activeEl.value': function (newValue, oldValue) {
+      this.components.appShipment.search = {}
 
       if (newValue === 'Vlastné' || newValue === 'Všetky') {
         this.onFetchShipments({sender: this.signIn.accountId})
@@ -82,12 +82,12 @@ export default {
   },
   computed: {
     isSelected: function () {
-      return this.components.shipment.activeEl.shipmentId !== 0
+      return this.components.appShipment.activeEl.shipmentId !== 0
     },
     selectedItem: function () {
-      if (this.components.shipment.activeEl.shipmentId === 0) return
-      const shipment = Object.values(this.components.shipment.search).filter(e => e._id === this.components.shipment.activeEl.shipmentId).pop()
-      const parcel = Object.values(this.components.parcel.search).filter(e => e.id === shipment.parcelId).pop()
+      if (this.components.appShipment.activeEl.shipmentId === 0) return
+      const shipment = Object.values(this.components.appShipment.search).filter(e => e._id === this.components.appShipment.activeEl.shipmentId).pop()
+      const parcel = Object.values(this.components.appParcel.search).filter(e => e.id === shipment.parcelId).pop()
       return {...shipment, ...parcel}
     },
     ...mapGetters({
@@ -98,11 +98,11 @@ export default {
     onFetchShipments: function (obj) {
       return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, obj)
         .then(result => {
-          this.components.parcel.search = result
+          this.components.appParcel.search = result
           return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {parcelId: Object.values(result).map(e => e.id)})
         })
         .then(result => {
-          this.components.shipment.search = result
+          this.components.appShipment.search = result
         })
         .catch(err => console.log(err.message))
     }
