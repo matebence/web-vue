@@ -5,6 +5,10 @@
       <div class="row header">
         <div class="col-sm-12">
           <div class="profil-image" data-letters="PV"></div>
+          <div>
+            <h2>Aktualný zostatok na účte: 350€</h2>
+            <h2>Poloha: Slovakia, Banskobystrický kraj, Poltár, Bádice</h2>
+          </div>
         </div>
       </div>
       <div class="row body">
@@ -103,6 +107,7 @@ export default {
     text-align: center;
     font-size: 3.5em;
     background-color: #176c9d;
+    display: inline-block;
   }
 
   div#profil div.header div.profil-image:before {
@@ -115,7 +120,8 @@ export default {
     margin-top: 2rem;
   }
 
-  div#profil div.body label {
+  div#profil div.body label,
+  div#profil h2 {
     font-size: 1.2em;
     font-weight: 900;
     color: #a5a3a5;
@@ -174,6 +180,7 @@ export default {
     font-size: 0.9em;
     width: 3rem;
     height: 3rem;
+    z-index: 999;
   }
 
   div#profil button:hover {
