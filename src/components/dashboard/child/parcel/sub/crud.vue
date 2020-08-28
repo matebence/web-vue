@@ -20,7 +20,7 @@
           :class="{valid: !$v.form.values.receiver.name.$error && $v.form.values.receiver.name.$dirty, invalid: $v.form.values.receiver.name.$error}">
         <div id="autocomplete">
           <ul>
-            <li v-for="user in autoComplete.client" :key="user.accountId" v-if="user.accountId !== signIn.accountId" :data-accountId="user.accountId" @click.prevent="onSelectedReceiver($event.target)">{{user.firstName}} {{user.lastName}}</li>
+            <li v-for="user in components.appCrud.autocomplete.client" :key="user.accountId" v-if="user.accountId !== signIn.accountId" :data-accountId="user.accountId" @click.prevent="onSelectedReceiver($event.target)">{{user.firstName}} {{user.lastName}}</li>
           </ul>
         </div>
         <small
@@ -169,10 +169,12 @@
           v-show="!parcelDone"></span>&nbsp;Aktualizovať
       </button>
     </form>
-    <app-alert
-      :type="[parcelError.is ? 'alert-danger' : 'alert-success']"
-      :condition="[(parcelError.message !== null && parcelError.from === 'create')]"
-      :content="[parcelError.message]"/>
+    <div class="aler-wrapper">
+      <app-alert
+        :condition="components.appAlert.condition"
+        :type="components.appAlert.type"
+        :text="components.appAlert.text"/>
+    </div>
   </div>
 </template>
 
@@ -189,10 +191,24 @@ export default {
     return this.$store.dispatch(types.ACTION_CATEGORY_GET_ALL, {})
       .catch(err => console.log(err.message))
   },
+  beforeMount: function () {
+    this.components.appAlert.condition = [(this.parcelError.message !== null && this.parcelError.from === 'create')]
+    this.components.appAlert.type = [this.parcelError.is ? 'alert-danger' : 'alert-success']
+    this.components.appAlert.text = [this.parcelError.message]
+  },
   data: function () {
     return {
-      autoComplete: {
-        client: {
+      components: {
+        appCrud: {
+          autocomplete: {
+            client: {
+            }
+          }
+        },
+        appAlert: {
+          condition: [],
+          type: [],
+          text: []
         }
       }
     }
@@ -260,14 +276,14 @@ export default {
     onSearchReceiver: function (obj) {
       return this.$store.dispatch(types.ACTION_USER_SEARCH, {...obj})
         .then(result => {
-          this.autoComplete.client = result
+          this.components.appCrud.autocomplete.client = result
         })
         .catch(err => console.log(err.message))
     },
     onSelectedReceiver: function ($event) {
       this.form.values.receiver.accountId = $event.dataset.accountid
       this.form.values.receiver.name = $event.textContent
-      this.autoComplete.client = {}
+      this.components.appCrud.autocomplete.client = {}
     },
     onCreate: function () {
       if (this.form.values.id === undefined) {
@@ -372,23 +388,23 @@ export default {
     border-bottom: 0.1rem solid #dbdbdb;
   }
 
-  div#crud div #autocomplete {
+  div#crud div#autocomplete {
     width: 100%;
     position: relative;
   }
 
-  div#crud div #autocomplete ul {
+  div#crud div#autocomplete ul {
     position: absolute;
     width: calc(100%);
     background: #ffffff;
   }
 
-  div#crud div#autocomplete ul li {
+  div#crud #autocomplete ul li {
     font-size: 1em;
     padding: 0.8rem;
     border: solid 0.01rem #dbdbdb;
   }
-  div#crud div#autocomplete ul li:hover {
+  div#crud #autocomplete ul li:hover {
     cursor: pointer;
     background: #f1f1f1;
   }

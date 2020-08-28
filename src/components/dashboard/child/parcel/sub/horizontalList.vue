@@ -12,11 +12,13 @@
         </ul>
       </li>
     </ul>
-    <app-modal
-      :modalId="'courierAlert'"
-      :text="components.appModal.text"
-      :title="components.appModal.title"
-      :button="components.appModal.button"/>
+    <div class="modal-wrapper">
+      <app-modal
+        :modalId="'courierAlert'"
+        :text="components.appModal.text"
+        :title="components.appModal.title"
+        :button="components.appModal.button"/>
+    </div>
   </div>
 </template>
 

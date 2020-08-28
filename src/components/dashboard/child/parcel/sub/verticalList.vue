@@ -5,7 +5,7 @@
         :key="option.id"
         @click.prevent="onSelectedOption(option)"
         v-for="option in tab.items"
-        :class="{active: activeEl.tabId === option.itemId}">{{option.value}}</li>
+        :class="{active: activeEl.itemId === option.itemId}">{{option.value}}</li>
     </ul>
     <ul class="parcels">
       <li
@@ -104,8 +104,8 @@ export default {
     }
   },
   watch: {
-    'activeEl.tabId': function (newValue, oldValue) {
-      if (newValue === 1) this.onSelectedOption({itemId: this.activeEl.tabId, value: this.activeEl.value})
+    'activeEl.itemId': function (newValue, oldValue) {
+      if (newValue === 1) this.onSelectedOption({itemId: this.activeEl.itemId, value: this.activeEl.value})
     }
   },
   computed: {
@@ -118,7 +118,7 @@ export default {
   methods: {
     onSelectedOption: function (el) {
       this.activeEl.parcelId = 0
-      this.activeEl.tabId = el.itemId
+      this.activeEl.itemId = el.itemId
       this.activeEl.value = el.value
 
       if (this.activeEl.value === this.tab.items[0].value || this.activeEl.value === this.tab.items[2].value) {

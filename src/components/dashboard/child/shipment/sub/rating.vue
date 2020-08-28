@@ -110,7 +110,7 @@
             v-model="components.appRating.form.values.description"
             @input="$v.components.appRating.form.values.description.$touch()"
             :class="{valid: !$v.components.appRating.form.values.description.$error && $v.components.appRating.form.values.description.$dirty, invalid: $v.components.appRating.form.values.description.$error}"
-            :disabled="activeEl.shipmentId === 0">
+            :disabled="activeEl.shipmentId === 0"
             name="description"
             id="description"
             cols="30"
@@ -123,11 +123,13 @@
       :disabled="$v.$invalid || activeEl.shipmentId === 0"
       @click.prevent="onCreate"
       class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
-    <app-modal
-      :modalId="'ratingAlert'"
-      :text="components.appModal.text"
-      :title="components.appModal.title"
-      :button="components.appModal.button"/>
+    <div class="modal-wrapper">
+      <app-modal
+        :modalId="'ratingAlert'"
+        :text="components.appModal.text"
+        :title="components.appModal.title"
+        :button="components.appModal.button"/>
+    </div>
   </div>
 </template>
 
@@ -246,7 +248,7 @@ export default {
   div#rating h2 {
     font-size: 1.3em;
     font-weight: 900;
-    color: #a5a3a5;
+    color: #979797;
     margin-top: 1.8rem;
   }
 

@@ -350,16 +350,22 @@ const actions = {
           'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
         }
       }
-    }).update({service: 'user-service', accountId: payload}, {...payload})
+    }).update({service: 'user-service', accountId: payload.accountId}, {...payload})
       .then(response => {
-        return response.json()
-      })
-      .then(parsed => {
         commit(types.MUTATION_USER_DATA, {
           data: {
             ...state.payload.user.data,
             update: {
-              ...parsed
+              userId: state.payload.user.data.get.userId,
+              email: state.payload.user.data.get.email,
+              userName: state.payload.user.data.get.userName,
+              ...payload
+            },
+            get: {
+              userId: state.payload.user.data.get.userId,
+              email: state.payload.user.data.get.email,
+              userName: state.payload.user.data.get.userName,
+              ...payload
             }
           },
           done: true

@@ -9,7 +9,14 @@
           <div class="modal-body">
             <p>{{text}}</p>
             <div class="form-input">
-              <input type="password"  name="password" id="password" autofocus autocomplete="off">
+              <input
+                v-model="components.appConfirm.form.values.password"
+                :class="{invalid: components.appConfirm.form.is.valid}"
+                type="password"
+                name="password"
+                id="password"
+                autofocus
+                autocomplete="off">
             </div>
           </div>
           <div class="modal-footer">
@@ -17,7 +24,6 @@
             <button
               id="positive"
               type="button"
-              data-dismiss="modal"
               @click.prevent="confirmed()">{{positiveButton}}</button>
           </div>
         </div>
@@ -27,12 +33,42 @@
 </template>
 
 <script>
+import * as types from '@/store/types'
+import {mapGetters} from 'vuex'
+
 export default {
   name: 'confirm',
   props: ['confirmId', 'title', 'text', 'positiveButton', 'negativeButton'],
+  data: function () {
+    return {
+      components: {
+        appConfirm: {
+          form: {
+            values: {
+              password: null
+            },
+            is: {
+              valid: false
+            }
+          }
+        }
+      }
+    }
+  },
+  computed: {
+    ...mapGetters({
+      signIn: types.GETTER_SIGN_IN_DATA
+    })
+  },
   methods: {
     confirmed: function () {
-      return this.$emit('confirmed', true)
+      return this.$store.dispatch(types.ACTION_CONFIRM_CHANGES, {grantType: process.env.GRANT_TYPE_PASSWORD, userName: this.signIn.userName, password: this.components.appConfirm.form.values.password, stayLoggedIn: this.signIn.stayLoggedIn})
+        .then(result => {
+          return this.$emit('confirmed', result)
+        })
+        .catch(err => {
+          this.components.appConfirm.form.is.valid = !!err.message
+        })
     }
   }
 }
@@ -71,5 +107,9 @@ export default {
     background: transparent;
     border-radius: 0;
     border-bottom: 0.1rem solid #dbdbdb;
+  }
+
+  div#confirm input[type="password"].invalid {
+    border-bottom: 0.1rem solid #ff0000;
   }
 </style>

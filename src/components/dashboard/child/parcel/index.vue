@@ -39,7 +39,7 @@ export default {
             }
           },
           activeEl: {
-            tabId: 1,
+            itemId: 1,
             value: 'Pridelené',
             parcelId: 0
           }

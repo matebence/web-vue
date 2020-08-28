@@ -313,7 +313,7 @@ export default {
 
 <style scoped>
   ::placeholder {
-    color: #000000;
+    color: #dcdcdc;
   }
 
   div#money {
@@ -611,7 +611,7 @@ export default {
   div#money div.form-input label {
     font-size: 1.2em;
     font-weight: 900;
-    color: #a5a3a5;
+    color: #979797;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
     display: block;
@@ -629,6 +629,12 @@ export default {
     background: transparent;
     border-radius: 0;
     border-bottom: 0.1rem solid #dbdbdb;
+  }
+
+  div#money div.form-input input[type="text"]:disabled,
+  div#money div.form-input input[type="number"]:disabled,
+  div#money div.form-input input[type="password"]:disabled {
+    color: #115176;
   }
 
   div#money div.form-input div.form-wrapper div.form-inline {

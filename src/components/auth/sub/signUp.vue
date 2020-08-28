@@ -14,10 +14,10 @@
             aria-describedby="userNameInvalid"
             type="text" class="form-control"
             id="username"
-            v-model="form.values.userName"
+            v-model="components.appSignUp.form.values.userName"
             placeholder="Použivatelské meno"
-            @input="$v.form.values.userName.$touch()"
-            :class="{valid: !$v.form.values.userName.$error && $v.form.values.userName.$dirty, invalid: $v.form.values.userName.$error}">
+            @input="$v.components.appSignUp.form.values.userName.$touch()"
+            :class="{valid: !$v.components.appSignUp.form.values.userName.$error && $v.components.appSignUp.form.values.userName.$dirty, invalid: $v.components.appSignUp.form.values.userName.$error}">
           <small
             id="userNameInvalid"
             class="form-text text-muted"
@@ -33,10 +33,10 @@
             aria-describedby="emailInvalid"
             type="email" class="form-control"
             id="email"
-            v-model="form.values.email"
+            v-model="components.appSignUp.form.values.email"
             placeholder="Emailová adresa"
-            @input="$v.form.values.email.$touch()"
-            :class="{valid: !$v.form.values.email.$error && $v.form.values.email.$dirty, invalid: $v.form.values.email.$error}">
+            @input="$v.components.appSignUp.form.values.email.$touch()"
+            :class="{valid: !$v.components.appSignUp.form.values.email.$error && $v.components.appSignUp.form.values.email.$dirty, invalid: $v.components.appSignUp.form.values.email.$error}">
           <small
             id="emailInvalid"
             class="form-text text-muted"
@@ -53,10 +53,10 @@
             type="password"
             class="form-control"
             id="password"
-            v-model="form.values.password"
+            v-model="components.appSignUp.form.values.password"
             placeholder="Heslo"
-            @input="$v.form.values.password.$touch()"
-            :class="{valid: !$v.form.values.password.$error && $v.form.values.password.$dirty, invalid: $v.form.values.password.$error}">
+            @input="$v.components.appSignUp.form.values.password.$touch()"
+            :class="{valid: !$v.components.appSignUp.form.values.password.$error && $v.components.appSignUp.form.values.password.$dirty, invalid: $v.components.appSignUp.form.values.password.$error}">
           <small
             id="passwordInvalid"
             class="form-text text-muted"
@@ -71,12 +71,12 @@
             type="password"
             class="form-control"
             id="confirmPassword"
-            v-model="form.values.confirmPassword"
+            v-model="components.appSignUp.form.values.confirmPassword"
             placeholder="Potvrdenie hesla"
-            @input="$v.form.values.confirmPassword.$touch()"
+            @input="$v.components.appSignUp.form.values.confirmPassword.$touch()"
             :class="{
-                valid: !$v.form.values.confirmPassword.$error && $v.form.values.confirmPassword.$dirty,
-                invalid: $v.form.values.confirmPassword.$error}">
+                valid: !$v.components.appSignUp.form.values.confirmPassword.$error && $v.components.appSignUp.form.values.confirmPassword.$dirty,
+                invalid: $v.components.appSignUp.form.values.confirmPassword.$error}">
           <small
             id="confirmPasswordInvalid"
             class="form-text text-muted"
@@ -89,10 +89,10 @@
           </label>
           <select
             class="form-control"
-            v-model="form.values.roles"
+            v-model="components.appSignUp.form.values.roles"
             id="selectedRole"
-            @change="$v.form.values.roles.$touch()"
-            :class="{valid: !$v.form.values.roles.$error && $v.form.values.roles.$dirty, invalid: $v.form.values.roles.$error}">
+            @change="$v.components.appSignUp.form.values.roles.$touch()"
+            :class="{valid: !$v.components.appSignUp.form.values.roles.$error && $v.components.appSignUp.form.values.roles.$dirty, invalid: $v.components.appSignUp.form.values.roles.$error}">
             <option value="{}" disabled selected>Vyberte z možností</option>
             <option value='{"roleId": 3, "name": "ROLE_CLIENT"}'>Klientom</option>
             <option value='{"roleId": 4, "name": "ROLE_COURIER"}'>Kuriérom</option>
@@ -116,10 +116,12 @@
           </span>&nbsp;Registrovať sa
         </button>
       </form>
-      <app-alert
-        :type="[signUpError.is || activationTokenError.is ? 'alert-danger' : 'alert-success']"
-        :condition="[signUpError.message !== null, activationTokenError.message !== null]"
-        :content="[signUpError.message, activationTokenError.message]"/>
+      <div class="alert-wrapper">
+        <app-alert
+          :condition="components.appAlert.condition"
+          :type="components.appAlert.type"
+          :text="components.appAlert.text"/>
+      </div>
     </div>
   </div>
 </template>
@@ -138,47 +140,62 @@ export default {
   name: 'signup',
   data: function () {
     return {
-      form: {
-        values: {
-          userName: null,
-          email: null,
-          password: null,
-          confirmPassword: null,
-          roles: '{}'
-        }
-      },
-      url: {
-        values: {
-          id: this.$route.params.id,
-          key: this.$route.params.key
+      components: {
+        appSignUp: {
+          form: {
+            values: {
+              userName: null,
+              email: null,
+              password: null,
+              confirmPassword: null,
+              roles: '{}'
+            }
+          },
+          appUrl: {
+            url: {
+              values: {
+                id: this.$route.params.id,
+                key: this.$route.params.key
+              }
+            }
+          },
+          appAlert: {
+            condition: [],
+            type: [],
+            text: []
+          }
         }
       }
     }
   },
   validations: {
-    form: {
-      values: {
-        userName: {
-          required,
-          alphaNum
-        },
-        email: {
-          required,
-          email
-        },
-        confirmPassword: {
-          required,
-          sameAs: sameAs(vm => {
-            return vm.password
-          })
-        },
-        password: {
-          required,
-          contains: value => new RegExp(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?:.{8}|.{30})/g).test(value)
-        },
-        roles: {
-          required,
-          allowed: value => value === '{"roleId": 3, "name": "ROLE_CLIENT"}' || value === '{"roleId": 4, "name": "ROLE_COURIER"}'
+    components: {
+      appSignUp: {
+        form: {
+          values: {
+            userName: {
+              required,
+              alphaNum
+            },
+            email: {
+              required,
+              email
+            },
+            confirmPassword: {
+              required,
+              sameAs: sameAs(vm => {
+                return vm.password
+              })
+            },
+            password: {
+              required,
+              contains: value => new RegExp(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?:.{8}|.{30})/g).test(value)
+            },
+            roles: {
+              required,
+              allowed: value => value === '{"roleId": 3, "name": "ROLE_CLIENT"}' || value === '{"roleId": 4, "name": "ROLE_COURIER"}'
+            }
+          }
         }
       }
     }
@@ -190,21 +207,22 @@ export default {
     ...mapGetters({
       signUpError: types.GETTER_SIGN_UP_ERROR,
       signUpDone: types.GETTER_SIGN_UP_DONE,
-      activationTokenError: types.GETTER_ACCOUNT_ACTIVATION_ERROR,
-      activationTokenDone: types.GETTER_ACCOUNT_ACTIVATION_DONE
+      activationTokenError: types.GETTER_ACCOUNT_ACTIVATION_ERROR
     })
   },
   methods: {
     onPageLoad: function () {
-      return this.$store.dispatch(types.ACTION_ACCOUNT_ACTIVATION, {id: this.url.values.id, key: this.url.values.key})
-        .catch(err => console.log(err.message))
+      return this.$store.dispatch(types.ACTION_ACCOUNT_ACTIVATION, {id: this.components.appUrl.url.values.id, key: this.components.appUrl.url.values.key})
+        .then(result => this.showAlertModal([result !== null], ['alert-success'], [result.message]))
+        .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
     },
     onSignUp: function () {
       this.signUpError.message = this.activationTokenError.message = null
       this.signUpError.is = this.activationTokenError.is = false
 
-      return this.$store.dispatch(types.ACTION_SIGN_UP, {userName: this.form.values.userName, email: this.form.values.email, password: this.form.values.password, confirmPassword: this.form.values.confirmPassword, roles: JSON.parse(this.form.values.roles)})
-        .catch(err => console.log(err.message))
+      return this.$store.dispatch(types.ACTION_SIGN_UP, {userName: this.components.appSignUp.form.values.userName, email: this.components.appSignUp.form.values.email, password: this.components.appSignUp.form.values.password, confirmPassword: this.components.appSignUp.form.values.confirmPassword, roles: JSON.parse(this.components.appSignUp.form.values.roles)})
+        .then(result => this.showAlertModal([result !== null], ['alert-success'], [result.message]))
+        .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
     }
   }
 }

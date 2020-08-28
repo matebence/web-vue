@@ -14,9 +14,9 @@
             type="email"
             class="form-control" id="email"
             placeholder="Emailová adresa"
-            v-model="form.values.email"
-            @input="$v.form.values.email.$touch()"
-            :class="{valid: !$v.form.values.email.$error && $v.form.values.email.$dirty, invalid: $v.form.values.email.$error}">
+            v-model="components.appForgetPassword.form.values.email"
+            @input="$v.components.appForgetPassword.form.values.email.$touch()"
+            :class="{valid: !$v.components.appForgetPassword.form.values.email.$error && $v.components.appForgetPassword.form.values.email.$dirty, invalid: $v.components.appForgetPassword.form.values.email.$error}">
           <a
             href="#"
             @click.prevent="activeEl.component='app-sign-in'">
@@ -36,10 +36,12 @@
           </span>&nbsp;Odoslať
         </button>
       </form>
-      <app-alert
-        :type="[forgetPasswordError.is || recoverTokenError.is ? 'alert-danger' : 'alert-success']"
-        :condition="[forgetPasswordError.message !== null, recoverTokenError.message !== null]"
-        :content="[forgetPasswordError.message, recoverTokenError.message]"/>
+      <div class="alert-wrapper">
+        <app-alert
+          :condition="components.appAlert.condition"
+          :type="components.appAlert.type"
+          :text="components.appAlert.text"/>
+      </div>
     </div>
   </div>
 </template>
@@ -58,25 +60,40 @@ export default {
   name: 'forgetpass',
   data: function () {
     return {
-      form: {
-        values: {
-          email: null
-        }
-      },
-      url: {
-        values: {
-          id: this.$route.params.id,
-          key: this.$route.params.key
+      components: {
+        appForgetPassword: {
+          form: {
+            values: {
+              email: null
+            }
+          }
+        },
+        appUrl: {
+          url: {
+            values: {
+              id: this.$route.params.id,
+              key: this.$route.params.key
+            }
+          }
+        },
+        appAlert: {
+          condition: [],
+          type: [],
+          text: []
         }
       }
     }
   },
   validations: {
-    form: {
-      values: {
-        email: {
-          required,
-          email
+    components: {
+      appForgetPassword: {
+        form: {
+          values: {
+            email: {
+              required,
+              email
+            }
+          }
         }
       }
     }
@@ -86,20 +103,24 @@ export default {
   },
   computed: {
     ...mapGetters({
-      forgetPasswordError: types.GETTER_FORGET_PASSWORD_ERROR,
-      forgetPasswordDone: types.GETTER_FORGET_PASSWORD_DONE,
-      recoverTokenError: types.GETTER_ACCOUNT_RECOVER_ERROR,
-      recoverTokenDone: types.GETTER_ACCOUNT_RECOVER_DONE
+      forgetPasswordDone: types.GETTER_FORGET_PASSWORD_DONE
     })
   },
   methods: {
+    showAlertModal: function (condition, type, text) {
+      this.components.appAlert.condition = condition
+      this.components.appAlert.type = type
+      this.components.appAlert.text = text
+    },
     onPageLoad: function () {
-      return this.$store.dispatch(types.ACTION_ACCOUNT_RECOVER, {id: this.url.values.id, key: this.url.values.key})
-        .catch(err => console.log(err.message))
+      return this.$store.dispatch(types.ACTION_ACCOUNT_RECOVER, {id: this.components.appUrl.url.values.id, key: this.components.appUrl.url.values.key})
+        .then(result => this.showAlertModal([result !== null], ['alert-success'], [result.message]))
+        .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
     },
     onSend: function () {
-      return this.$store.dispatch(types.ACTION_FORGET_PASSWORD, {email: this.form.values.email})
-        .catch(err => console.log(err.message))
+      return this.$store.dispatch(types.ACTION_FORGET_PASSWORD, {email: this.components.appForgetPassword.form.values.email})
+        .then(result => this.showAlertModal([result !== null], ['alert-success'], [result.message]))
+        .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
     }
   }
 }

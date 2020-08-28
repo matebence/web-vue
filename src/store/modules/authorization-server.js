@@ -327,10 +327,7 @@ const actions = {
 
   [types.ACTION_CHECK_PROFILE]: function ({commit, dispatch, state, rootState}, payload) {
     return dispatch(types.ACTION_USER_GET, rootState.authorization.payload.signIn.data.accountId).then(result => {
-      return Promise.all([
-        dispatch(types.ACTION_SETUP_AVATAR, {...result}),
-        dispatch(types.ACTION_CHECK_BALANCE, {...result})
-      ])
+      return Promise.all([dispatch(types.ACTION_SETUP_AVATAR, {...result}), dispatch(types.ACTION_CHECK_BALANCE, {...result})])
     }).catch(err => {
       return new Error(err.message)
     })
@@ -350,15 +347,45 @@ const actions = {
       },
       done: true
     })
-    return Promise.all([
-      dispatch(types.ACTION_START_AUTH_TIMER, Number(new Date(localStorage.getItem('expirationDate')).getTime() / 1000) - Number(new Date().getTime() / 1000)),
-      dispatch(types.ACTION_CHECK_PROFILE)
+    return Promise.all([dispatch(types.ACTION_START_AUTH_TIMER, Number(new Date(localStorage.getItem('expirationDate')).getTime() / 1000) - Number(new Date().getTime() / 1000)), dispatch(types.ACTION_CHECK_PROFILE)
     ])
       .then(result => {
         router.push({path: '/dashboard'})
       })
       .catch(err => {
         throw new Error(err.message)
+      })
+  },
+
+  [types.ACTION_CONFIRM_CHANGES]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATIONS_SIGN_IN_DATA, {done: false})
+    return this._vm.$resource('{service}/signin', {}, {
+      performSignIn: {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${btoa(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET)}`
+        }
+      }
+    }, {
+      emulateJSON: true
+    }).performSignIn({service: 'authorization-server'}, {grant_type: payload.grantType, username: payload.userName, password: payload.password})
+      .then(response => {
+        return true
+      })
+      .catch(err => {
+        return err.json()
+          .then(parsed => {
+            commit(types.MUTATIONS_SIGN_IN_DATA, {
+              error: {
+                is: parsed.error,
+                message: parsed.message,
+                reason: {
+                }
+              },
+              done: true
+            })
+            throw new Error(parsed.message)
+          })
       })
   },
 
@@ -581,7 +608,7 @@ const actions = {
           },
           done: true
         })
-        return state.payload.forgetPassword.data
+        return parsed
       })
       .catch(err => {
         return err.json()
@@ -616,7 +643,7 @@ const actions = {
             message: parsed.message
           }
         })
-        return state.payload.recoverToken.data
+        return parsed
       })
       .catch(err => {
         return err.json()

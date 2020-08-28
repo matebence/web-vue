@@ -15,7 +15,7 @@
             class="form-control"
             id="username"
             placeholder="Použivatelské meno"
-            v-model="form.values.userName">
+            v-model="components.appSignIn.form.values.userName">
         </div>
         <div class="form-group">
           <label for="password">
@@ -27,7 +27,7 @@
             class="form-control"
             id="password"
             placeholder="Heslo"
-            v-model="form.values.password">
+            v-model="components.appSignIn.form.values.password">
         </div>
         <div class="form-group">
           <label
@@ -39,7 +39,7 @@
             type="checkbox"
             class="form-check-input"
             id="stayLoggedIn"
-            v-model="form.values.stayLoggedIn">
+            v-model="components.appSignIn.form.values.stayLoggedIn">
           <a
             href="#"
             @click.prevent="activeEl.component='app-forget-password'"
@@ -70,10 +70,12 @@
         @click.prevent="activeEl.component='app-sign-up'">
         Zaregistrovať sa teraz
       </a>
-      <app-alert
-        :type="[signInError.is || signOutError.is ? 'alert-danger' : 'alert-success']"
-        :condition="[signInError.message !== null, signOutError.message !== null]"
-        :content="[signInError.message, signOutError.message]"/>
+      <div class="alert-wrapper">
+        <app-alert
+          :condition="components.appAlert.condition"
+          :type="components.appAlert.type"
+          :text="components.appAlert.text"/>
+      </div>
     </div>
   </div>
 </template>
@@ -87,29 +89,45 @@ import {required} from 'vuelidate/lib/validators'
 export default {
   created: function () {
     return this.$store.dispatch(types.ACTION_AUTO_SIGN_IN)
-      .catch(err => console.log(err.message))
+      .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
+  },
+  beforeMount: function () {
+    this.showAlertModal([this.signOutError.message !== null], [this.signOutError.is ? 'alert-danger' : 'alert-success'], [this.signOutError.message])
   },
   props: ['activeEl'],
   name: 'signin',
   data: function () {
     return {
-      form: {
-        values: {
-          userName: null,
-          password: null,
-          stayLoggedIn: false
+      components: {
+        appSignIn: {
+          form: {
+            values: {
+              userName: null,
+              password: null,
+              stayLoggedIn: false
+            }
+          }
+        },
+        appAlert: {
+          condition: [],
+          type: [],
+          text: []
         }
       }
     }
   },
   validations: {
-    form: {
-      values: {
-        userName: {
-          required
-        },
-        password: {
-          required
+    components: {
+      appSignIn: {
+        form: {
+          values: {
+            userName: {
+              required
+            },
+            password: {
+              required
+            }
+          }
         }
       }
     }
@@ -121,17 +139,21 @@ export default {
     ...mapGetters({
       signInError: types.GETTER_SIGN_IN_ERROR,
       signInDone: types.GETTER_SIGN_IN_DONE,
-      signOutError: types.GETTER_SIGN_OUT_ERROR,
-      signOutDone: types.GETTER_SIGN_OUT_DONE
+      signOutError: types.GETTER_SIGN_OUT_ERROR
     })
   },
   methods: {
+    showAlertModal: function (condition, type, text) {
+      this.components.appAlert.condition = condition
+      this.components.appAlert.type = type
+      this.components.appAlert.text = text
+    },
     onSignIn: function () {
       this.signInError.message = this.signOutError.message = null
       this.signInError.is = this.signOutError.is = false
 
-      return this.$store.dispatch(types.ACTION_SIGN_IN, {grantType: process.env.GRANT_TYPE_PASSWORD, userName: this.form.values.userName, password: this.form.values.password, stayLoggedIn: this.form.values.stayLoggedIn})
-        .catch(err => console.log(err.message))
+      return this.$store.dispatch(types.ACTION_SIGN_IN, {grantType: process.env.GRANT_TYPE_PASSWORD, userName: this.components.appSignIn.form.values.userName, password: this.components.appSignIn.form.values.password, stayLoggedIn: this.components.appSignIn.form.values.stayLoggedIn})
+        .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
     }
   }
 }

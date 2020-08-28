@@ -55,18 +55,22 @@
           class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
       </div>
     </div>
-    <app-modal
-      :modalId="'hereMapAlert'"
-      :text="components.appModal.text"
-      :title="components.appModal.title"
-      :button="components.appModal.button"/>
-    <app-apply
-      @applied="onCreate($event)"
-      :applyId="'hereMapApply'"
-      :text="components.appApply.text"
-      :title="components.appApply.title"
-      :positiveButton="components.appApply.positiveButton"
-      :negativeButton="components.appApply.negativeButton"/>
+    <div class="modal-wrapper">
+      <app-modal
+        :modalId="'hereMapAlert'"
+        :text="components.appModal.text"
+        :title="components.appModal.title"
+        :button="components.appModal.button"/>
+    </div>
+    <div class="apply-wrapper">
+      <app-apply
+        @applied="onCreate($event)"
+        :applyId="'hereMapApply'"
+        :text="components.appApply.text"
+        :title="components.appApply.title"
+        :positiveButton="components.appApply.positiveButton"
+        :negativeButton="components.appApply.negativeButton"/>
+    </div>
   </div>
 </template>
 
@@ -385,7 +389,8 @@ export default {
               return this.$store.dispatch(types.ACTION_SHIPMENT_CREATE, payload)
             })
             .then(result => {
-              this.parcel.activeEl.tabs = {tabId: 1, value: 'Pridelené'}
+              this.parcel.activeEl.itemId = 1
+              this.parcel.activeEl.value = 'Pridelené'
             })
             .catch(err => {
               return this.showAlertModal('Chyba', err.message, 'Zatvoriť')

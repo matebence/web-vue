@@ -37,21 +37,25 @@
         @crud="
           selectedComponent = $event.component;
           selectedIcon = $event.icon;
-          activeEl.tabId = $event.nav.id;
+          activeEl.itemId = $event.nav.id;
           activeEl.value = $event.nav.value;"/>
     </keep-alive>
-    <app-modal
-      :modalId="'parcelAlert'"
-      :text="components.appModal.text"
-      :title="components.appModal.title"
-      :button="components.appModal.button"/>
-    <app-apply
-      @applied="removeParcel($event)"
-      :applyId="'parcelApply'"
-      :text="components.appApply.text"
-      :title="components.appApply.title"
-      :positiveButton="components.appApply.positiveButton"
-      :negativeButton="components.appApply.negativeButton"/>
+    <div class="modal-wrapper">
+      <app-modal
+        :modalId="'parcelAlert'"
+        :text="components.appModal.text"
+        :title="components.appModal.title"
+        :button="components.appModal.button"/>
+    </div>
+    <div class="apply-wrapper">
+      <app-apply
+        @applied="removeParcel($event)"
+        :applyId="'parcelApply'"
+        :text="components.appApply.text"
+        :title="components.appApply.title"
+        :positiveButton="components.appApply.positiveButton"
+        :negativeButton="components.appApply.negativeButton"/>
+    </div>
   </div>
 </template>
 

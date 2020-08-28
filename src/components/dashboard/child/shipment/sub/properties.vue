@@ -46,11 +46,13 @@
         </div>
       </div>
     </div>
-    <app-modal
-      :modalId="'propertiesAlert'"
-      :text="components.appModal.text"
-      :title="components.appModal.title"
-      :button="components.appModal.button"/>
+    <div class="modal-wrapper">
+      <app-modal
+        :modalId="'propertiesAlert'"
+        :text="components.appModal.text"
+        :title="components.appModal.title"
+        :button="components.appModal.button"/>
+    </div>
   </div>
 </template>
 
@@ -128,7 +130,7 @@ export default {
   div#properties h2 {
     font-size: 1.3em;
     font-weight: 900;
-    color: #a5a3a5;
+    color: #979797;
     margin-top: 2rem;
     margin-bottom: 0.5rem;
   }
