@@ -109,13 +109,13 @@ const actions = {
             commit(types.MUTATION_PLACE_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'search',
                 reason: {}
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   }
@@ -126,7 +126,31 @@ const getters = {
     return state.payload.place.data
   },
 
+  [types.GETTER_PLACE_DATA_CREATE]: function (state) {
+    return state.payload.place.data.create
+  },
+
+  [types.GETTER_PLACE_DATA_UPDATE]: function (state) {
+    return state.payload.place.data.update
+  },
+
+  [types.GETTER_PLACE_DATA_REMOVE]: function (state) {
+    return state.payload.place.data.remove
+  },
+
+  [types.GETTER_PLACE_DATA_GET]: function (state) {
+    return state.payload.place.data.get
+  },
+
+  [types.GETTER_PLACE_DATA_GET_ALL]: function (state) {
+    return state.payload.place.data.getAll
+  },
+
   [types.GETTER_PLACE_DATA_SEARCH]: function (state) {
+    return state.payload.place.data.search
+  },
+
+  [types.GETTER_PLACE_DATA_UPDATE]: function (state) {
     return state.payload.place.data.search
   },
 

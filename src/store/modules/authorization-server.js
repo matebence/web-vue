@@ -378,13 +378,13 @@ const actions = {
             commit(types.MUTATIONS_SIGN_IN_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 reason: {
                 }
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -438,13 +438,13 @@ const actions = {
             commit(types.MUTATIONS_SIGN_IN_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 reason: {
                 }
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -495,13 +495,13 @@ const actions = {
             commit(types.MUTATIONS_SIGN_IN_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 reason: {
                 }
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -520,7 +520,7 @@ const actions = {
         commit(types.MUTATION_SIGN_UP_DATA, {
           error: {
             is: parsed.error,
-            message: parsed.message,
+            message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
             reason: {
               userName: null,
               email: null,
@@ -537,12 +537,12 @@ const actions = {
             commit(types.MUTATION_SIGN_UP_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 reason: parsed.reason
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -567,7 +567,7 @@ const actions = {
         commit(types.MUTATION_SIGN_OUT_DATA, {
           error: {
             is: parsed.error,
-            message: parsed.message
+            message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba'
           },
           done: true
         })
@@ -580,13 +580,13 @@ const actions = {
             commit(types.MUTATION_SIGN_OUT_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 reason: {
                 }
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -604,7 +604,7 @@ const actions = {
         commit(types.MUTATION_FORGET_PASSWORD_DATA, {
           error: {
             is: parsed.error,
-            message: parsed.message
+            message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba'
           },
           done: true
         })
@@ -616,13 +616,13 @@ const actions = {
             commit(types.MUTATION_FORGET_PASSWORD_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 reason: {
                 }
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -640,7 +640,7 @@ const actions = {
         commit(types.MUTATION_ACCOUNT_RECOVER_DATA, {
           error: {
             is: parsed.error,
-            message: parsed.message
+            message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba'
           }
         })
         return parsed
@@ -651,12 +651,12 @@ const actions = {
             commit(types.MUTATION_ACCOUNT_RECOVER_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 reason: {
                 }
               }
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -674,7 +674,7 @@ const actions = {
         commit(types.MUTATION_ACCOUNT_ACTIVATION_DATA, {
           error: {
             is: parsed.error,
-            message: parsed.message
+            message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba'
           }
         })
         return state.payload.activationToken.data
@@ -685,12 +685,12 @@ const actions = {
             commit(types.MUTATION_ACCOUNT_ACTIVATION_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 reason: {
                 }
               }
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   }

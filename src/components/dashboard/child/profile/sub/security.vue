@@ -88,9 +88,9 @@
         <div class="col-sm-12 col-md-6">
           <label for="new-password">Nové heslo</label>
           <input
-            v-model="components.appSecurity.form.credentials.password"
-            @input="$v.components.appSecurity.form.credentials.password.$touch()"
-            :class="{valid: !$v.components.appSecurity.form.credentials.password.$error && $v.components.appSecurity.form.credentials.password.$dirty, invalid: $v.components.appSecurity.form.credentials.password.$error}"
+            v-model="components.appSecurity.form.credentials.values.password"
+            @input="$v.components.appSecurity.form.credentials.values.password.$touch()"
+            :class="{valid: !$v.components.appSecurity.form.credentials.values.password.$error && $v.components.appSecurity.form.credentials.values.password.$dirty, invalid: $v.components.appSecurity.form.credentials.values.password.$error}"
             autocomplete="off"
             type="password"
             name="new-password"
@@ -100,9 +100,9 @@
         <div class="col-sm-12 col-md-6">
           <label for="confirm-new-password">Potvrdenie nového hesla</label>
           <input
-            v-model="components.appSecurity.form.credentials.confirmPassword"
-            @input="$v.components.appSecurity.form.credentials.confirmPassword.$touch()"
-            :class="{valid: !$v.components.appSecurity.form.credentials.confirmPassword.$error && $v.components.appSecurity.form.credentials.confirmPassword.$dirty, invalid: $v.components.appSecurity.form.credentials.confirmPassword.$error}"
+            v-model="components.appSecurity.form.credentials.values.confirmPassword"
+            @input="$v.components.appSecurity.form.credentials.values.confirmPassword.$touch()"
+            :class="{valid: !$v.components.appSecurity.form.credentials.values.confirmPassword.$error && $v.components.appSecurity.form.credentials.values.confirmPassword.$dirty, invalid: $v.components.appSecurity.form.credentials.values.confirmPassword.$error}"
             autocomplete="off"
             type="password"
             name="confirm-new-password"
@@ -163,8 +163,10 @@ export default {
               }
             },
             credentials: {
-              confirmPassword: null,
-              password: null
+              values: {
+                confirmPassword: null,
+                password: null
+              }
             }
           }
         },
@@ -214,15 +216,17 @@ export default {
             }
           },
           credentials: {
-            confirmPassword: {
-              required,
-              sameAs: sameAs(vm => {
-                return vm.password
-              })
-            },
-            password: {
-              required,
-              contains: value => new RegExp(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?:.{8}|.{30})/g).test(value)
+            values: {
+              confirmPassword: {
+                required,
+                sameAs: sameAs(vm => {
+                  return vm.password
+                })
+              },
+              password: {
+                required,
+                contains: value => new RegExp(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?:.{8}|.{30})/g).test(value)
+              }
             }
           }
         }
@@ -254,13 +258,16 @@ export default {
     },
     onUpdate: function ($event) {
       if ($event) {
-        let placeData
+        let promises = []
         if (this.$v.components.appSecurity.form.place.values.zip.$dirty || this.$v.components.appSecurity.form.place.values.street.$dirty || this.$v.components.appSecurity.form.place.values.place.$dirty || this.$v.components.appSecurity.form.place.values.district.$dirty || this.$v.components.appSecurity.form.place.values.region.$dirty || this.$v.components.appSecurity.form.place.values.country.$dirty) {
-          placeData = {accountId: this.userProfile.accountId, places: {...this.components.appSecurity.form.place.values}, firstName: this.userProfile.firstName, lastName: this.userProfile.lastName, gender: this.userProfile.gender, balance: this.userProfile.balance, tel: this.userProfile.tel}
+          const placeData = {accountId: this.userProfile.accountId, places: {country: this.components.appSecurity.form.place.values.country, region: this.components.appSecurity.form.place.values.region, district: this.components.appSecurity.form.place.values.district, place: this.components.appSecurity.form.place.values.place, street: this.components.appSecurity.form.place.values.street, zip: this.components.appSecurity.form.place.values.zip, code: this.userProfile.places.code}, firstName: this.userProfile.firstName, lastName: this.userProfile.lastName, gender: this.userProfile.gender, balance: this.userProfile.balance, tel: this.userProfile.tel}
+          promises.push(this.$store.dispatch(types.ACTION_USER_UPDATE, placeData))
         }
-        if (!this.$v.components.appSecurity.form.credentials.confirmPassword.$invalid || !this.$v.components.appSecurity.form.credentials.confirmPassword.$invalid) {
+        if (!this.$v.components.appSecurity.form.credentials.values.confirmPassword.$invalid || !this.$v.components.appSecurity.form.credentials.values.confirmPassword.$invalid) {
+          const accountData = {accountId: this.userProfile.accountId, userName: this.userProfile.userName, email: this.userProfile.email, ...this.components.appSecurity.form.credentials.values}
+          promises.push(this.$store.dispatch(types.ACTION_ACCOUNT_UPDATE, accountData))
         }
-        Promise.all([this.$store.dispatch(types.ACTION_USER_UPDATE, placeData)])
+        Promise.all(promises)
           .then(result => {
             this.showAlertModal([result !== null], ['alert-success'], ['Údaje sa úspešne aktualizovali'])
             bootstrap('#securityConfirm').modal('hide')
@@ -270,7 +277,7 @@ export default {
             bootstrap('#securityConfirm').modal('hide')
           })
       }
-      return this.showConfirmedModal('Zmena dát', 'Pre uplatnenie zmien prosím zadajte Vaše heslo:')
+      return this.showConfirmedModal('Potvrdenie', 'Pre uplatnenie zmien prosím zadajte Vaše heslo:')
     }
   }
 }
@@ -373,6 +380,13 @@ export default {
   div#security button:disabled {
     opacity: .65;
     background: #095174;
+  }
+
+  div#security div#alert-wrapper {
+    width: 30rem;
+    position: relative;
+    margin: 0 auto;
+    margin-top: 3rem;
   }
 
   div#security input.invalid {

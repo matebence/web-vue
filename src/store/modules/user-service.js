@@ -330,13 +330,13 @@ const actions = {
             commit(types.MUTATION_USER_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'create',
                 reason: {}
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -378,13 +378,13 @@ const actions = {
             commit(types.MUTATION_USER_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'update',
                 reason: {}
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -420,13 +420,13 @@ const actions = {
             commit(types.MUTATION_USER_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'search',
                 reason: {}
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -462,13 +462,13 @@ const actions = {
             commit(types.MUTATION_USER_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'get',
                 reason: {}
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -504,20 +504,20 @@ const actions = {
             commit(types.MUTATION_GENDER_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'getAll',
                 reason: {}
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
 
   [types.ACTION_PAYOUT_CREATE]: function ({commit, dispatch, state, rootState}, payload) {
     commit(types.MUTATION_PAYOUT_DATA, {done: false})
-    return this._vm.$resource('{service}/api/users', {}, {
+    return this._vm.$resource('{service}/api/payouts', {}, {
       create: {
         method: 'POST',
         headers: {
@@ -546,20 +546,20 @@ const actions = {
             commit(types.MUTATION_PAYOUT_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'create',
                 reason: {}
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
 
   [types.ACTION_PAYMENT_CREATE]: function ({commit, dispatch, state, rootState}, payload) {
     commit(types.MUTATION_PAYMENT_DATA, {done: false})
-    return this._vm.$resource('{service}/api/users', {}, {
+    return this._vm.$resource('{service}/api/payments', {}, {
       create: {
         method: 'POST',
         headers: {
@@ -588,13 +588,13 @@ const actions = {
             commit(types.MUTATION_PAYMENT_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'create',
                 reason: {}
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   }
@@ -613,12 +613,24 @@ const getters = {
     return state.payload.user.data.update
   },
 
-  [types.GETTER_USER_DATA_SEARCH]: function (state) {
-    return state.payload.user.data.search
+  [types.GETTER_USER_DATA_REMOVE]: function (state) {
+    return state.payload.user.data.remove
   },
 
   [types.GETTER_USER_DATA_GET]: function (state) {
     return state.payload.user.data.get
+  },
+
+  [types.GETTER_USER_DATA_GET_ALL]: function (state) {
+    return state.payload.user.data.getAll
+  },
+
+  [types.GETTER_USER_DATA_SEARCH]: function (state) {
+    return state.payload.user.data.search
+  },
+
+  [types.GETTER_USER_DATA_UPDATE]: function (state) {
+    return state.payload.user.data.search
   },
 
   [types.GETTER_USER_DONE]: function (state) {
@@ -629,28 +641,36 @@ const getters = {
     return state.payload.user.error
   },
 
-  [types.GETTER_GENDER_DATA]: function (state) {
-    return state.payload.gender.data
-  },
-
-  [types.GETTER_GENDER_DATA_GET_ALL]: function (state) {
-    return state.payload.gender.data.getAll
-  },
-
-  [types.GETTER_GENDER_DONE]: function (state) {
-    return state.payload.gender.done
-  },
-
-  [types.GETTER_GENDER_ERROR]: function (state) {
-    return state.payload.gender.error
-  },
-
   [types.GETTER_PAYOUT_DATA]: function (state) {
     return state.payload.payout.data
   },
 
   [types.GETTER_PAYOUT_DATA_CREATE]: function (state) {
     return state.payload.payout.data.create
+  },
+
+  [types.GETTER_PAYOUT_DATA_UPDATE]: function (state) {
+    return state.payload.payout.data.update
+  },
+
+  [types.GETTER_PAYOUT_DATA_REMOVE]: function (state) {
+    return state.payload.payout.data.remove
+  },
+
+  [types.GETTER_PAYOUT_DATA_GET]: function (state) {
+    return state.payload.payout.data.get
+  },
+
+  [types.GETTER_PAYOUT_DATA_GET_ALL]: function (state) {
+    return state.payload.payout.data.getAll
+  },
+
+  [types.GETTER_PAYOUT_DATA_SEARCH]: function (state) {
+    return state.payload.payout.data.search
+  },
+
+  [types.GETTER_PAYOUT_DATA_UPDATE]: function (state) {
+    return state.payload.payout.data.search
   },
 
   [types.GETTER_PAYOUT_DONE]: function (state) {
@@ -669,12 +689,76 @@ const getters = {
     return state.payload.payment.data.create
   },
 
+  [types.GETTER_PAYMENT_DATA_UPDATE]: function (state) {
+    return state.payload.payment.data.update
+  },
+
+  [types.GETTER_PAYMENT_DATA_REMOVE]: function (state) {
+    return state.payload.payment.data.remove
+  },
+
+  [types.GETTER_PAYMENT_DATA_GET]: function (state) {
+    return state.payload.payment.data.get
+  },
+
+  [types.GETTER_PAYMENT_DATA_GET_ALL]: function (state) {
+    return state.payload.payment.data.getAll
+  },
+
+  [types.GETTER_PAYMENT_DATA_SEARCH]: function (state) {
+    return state.payload.payment.data.search
+  },
+
+  [types.GETTER_PAYMENT_DATA_UPDATE]: function (state) {
+    return state.payload.payment.data.search
+  },
+
   [types.GETTER_PAYMENT_DONE]: function (state) {
     return state.payload.payment.done
   },
 
   [types.GETTER_PAYMENT_ERROR]: function (state) {
     return state.payload.payment.error
+  },
+
+  [types.GETTER_GENDER_DATA]: function (state) {
+    return state.payload.gender.data
+  },
+
+  [types.GETTER_GENDER_DATA_CREATE]: function (state) {
+    return state.payload.gender.data.create
+  },
+
+  [types.GETTER_GENDER_DATA_UPDATE]: function (state) {
+    return state.payload.gender.data.update
+  },
+
+  [types.GETTER_GENDER_DATA_REMOVE]: function (state) {
+    return state.payload.gender.data.remove
+  },
+
+  [types.GETTER_GENDER_DATA_GET]: function (state) {
+    return state.payload.gender.data.get
+  },
+
+  [types.GETTER_GENDER_DATA_GET_ALL]: function (state) {
+    return state.payload.gender.data.getAll
+  },
+
+  [types.GETTER_GENDER_DATA_SEARCH]: function (state) {
+    return state.payload.gender.data.search
+  },
+
+  [types.GETTER_GENDER_DATA_UPDATE]: function (state) {
+    return state.payload.gender.data.search
+  },
+
+  [types.GETTER_GENDER_DONE]: function (state) {
+    return state.payload.gender.done
+  },
+
+  [types.GETTER_GENDER_ERROR]: function (state) {
+    return state.payload.gender.error
   }
 }
 

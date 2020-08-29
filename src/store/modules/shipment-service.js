@@ -256,7 +256,7 @@ const actions = {
             commit(types.MUTATION_SHIPMENT_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'create',
                 reason: {
                   ...validations
@@ -264,7 +264,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -299,13 +299,13 @@ const actions = {
             commit(types.MUTATION_SHIPMENT_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'search',
                 reason: {}
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -340,13 +340,13 @@ const actions = {
             commit(types.MUTATION_PRICE_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'get',
                 reason: {}
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -386,6 +386,86 @@ const actions = {
 }
 
 const getters = {
+  [types.GETTER_INVOICE_DATA]: function (state) {
+    return state.payload.invoice.data
+  },
+
+  [types.GETTER_INVOICE_DATA_CREATE]: function (state) {
+    return state.payload.invoice.data.create
+  },
+
+  [types.GETTER_INVOICE_DATA_UPDATE]: function (state) {
+    return state.payload.invoice.data.update
+  },
+
+  [types.GETTER_INVOICE_DATA_REMOVE]: function (state) {
+    return state.payload.invoice.data.remove
+  },
+
+  [types.GETTER_INVOICE_DATA_GET]: function (state) {
+    return state.payload.invoice.data.get
+  },
+
+  [types.GETTER_INVOICE_DATA_GET_ALL]: function (state) {
+    return state.payload.invoice.data.getAll
+  },
+
+  [types.GETTER_INVOICE_DATA_SEARCH]: function (state) {
+    return state.payload.invoice.data.search
+  },
+
+  [types.GETTER_INVOICE_DATA_UPDATE]: function (state) {
+    return state.payload.invoice.data.search
+  },
+
+  [types.GETTER_INVOICE_DONE]: function (state) {
+    return state.payload.invoice.done
+  },
+
+  [types.GETTER_INVOICE_ERROR]: function (state) {
+    return state.payload.invoice.error
+  },
+
+  [types.GETTER_PRICE_DATA]: function (state) {
+    return state.payload.price.data
+  },
+
+  [types.GETTER_PRICE_DATA_CREATE]: function (state) {
+    return state.payload.price.data.create
+  },
+
+  [types.GETTER_PRICE_DATA_UPDATE]: function (state) {
+    return state.payload.price.data.update
+  },
+
+  [types.GETTER_PRICE_DATA_REMOVE]: function (state) {
+    return state.payload.price.data.remove
+  },
+
+  [types.GETTER_PRICE_DATA_GET]: function (state) {
+    return state.payload.price.data.get
+  },
+
+  [types.GETTER_PRICE_DATA_GET_ALL]: function (state) {
+    return state.payload.price.data.getAll
+  },
+
+  [types.GETTER_PRICE_DATA_SEARCH]: function (state) {
+    return state.payload.price.data.search
+  },
+
+  [types.GETTER_PRICE_DATA_UPDATE]: function (state) {
+    return state.payload.price.data.search
+  },
+
+  [types.GETTER_PRICE_DONE]: function (state) {
+    return state.payload.price.done
+  },
+
+  [types.GETTER_PRICE_ERROR]: function (state) {
+    return state.payload.price.error
+  },
+
   [types.GETTER_SHIPMENT_DATA]: function (state) {
     return state.payload.shipment.data
   },
@@ -394,7 +474,27 @@ const getters = {
     return state.payload.shipment.data.create
   },
 
+  [types.GETTER_SHIPMENT_DATA_UPDATE]: function (state) {
+    return state.payload.shipment.data.update
+  },
+
+  [types.GETTER_SHIPMENT_DATA_REMOVE]: function (state) {
+    return state.payload.shipment.data.remove
+  },
+
+  [types.GETTER_SHIPMENT_DATA_GET]: function (state) {
+    return state.payload.shipment.data.get
+  },
+
+  [types.GETTER_SHIPMENT_DATA_GET_ALL]: function (state) {
+    return state.payload.shipment.data.getAll
+  },
+
   [types.GETTER_SHIPMENT_DATA_SEARCH]: function (state) {
+    return state.payload.shipment.data.search
+  },
+
+  [types.GETTER_SHIPMENT_DATA_UPDATE]: function (state) {
     return state.payload.shipment.data.search
   },
 
@@ -404,22 +504,6 @@ const getters = {
 
   [types.GETTER_SHIPMENT_ERROR]: function (state) {
     return state.payload.shipment.error
-  },
-
-  [types.GETTER_PRICE_DATA]: function (state) {
-    return state.payload.price.data
-  },
-
-  [types.GETTER_PRICE_DATA_GET]: function (state) {
-    return state.payload.price.data.get
-  },
-
-  [types.GETTER_PRICE_DONE]: function (state) {
-    return state.payload.price.done
-  },
-
-  [types.GETTER_PRICE_ERROR]: function (state) {
-    return state.payload.price.error
   }
 }
 

@@ -257,7 +257,7 @@ const actions = {
             commit(types.MUTATION_PARCEL_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'create',
                 reason: {
                   ...validations
@@ -265,7 +265,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -299,14 +299,14 @@ const actions = {
             commit(types.MUTATION_PARCEL_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'search',
                 reason: {
                 }
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -340,14 +340,14 @@ const actions = {
             commit(types.MUTATION_CATEGORY_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'getAll',
                 reason: {
                 }
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -385,7 +385,7 @@ const actions = {
             commit(types.MUTATION_RATING_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'create',
                 reason: {
                   ...validations
@@ -393,7 +393,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   },
@@ -427,46 +427,90 @@ const actions = {
             commit(types.MUTATION_RATING_DATA, {
               error: {
                 is: parsed.error,
-                message: parsed.message,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'search',
                 reason: {
                 }
               },
               done: true
             })
-            throw new Error(parsed.message)
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
           })
       })
   }
 }
 
 const getters = {
-  [types.GETTER_PARCEL_DATA]: function (state) {
-    return state.payload.parcel.data
+  [types.GETTER_RATING_DATA]: function (state) {
+    return state.payload.rating.data
   },
 
-  [types.GETTER_PARCEL_DATA_CREATE]: function (state) {
-    return state.payload.parcel.data.create
+  [types.GETTER_RATING_DATA_CREATE]: function (state) {
+    return state.payload.rating.data.create
   },
 
-  [types.GETTER_PARCEL_DATA_SEARCH]: function (state) {
-    return state.payload.parcel.data.search
+  [types.GETTER_RATING_DATA_UPDATE]: function (state) {
+    return state.payload.rating.data.update
   },
 
-  [types.GETTER_PARCEL_DONE]: function (state) {
-    return state.payload.parcel.done
+  [types.GETTER_RATING_DATA_REMOVE]: function (state) {
+    return state.payload.rating.data.remove
   },
 
-  [types.GETTER_PARCEL_ERROR]: function (state) {
-    return state.payload.parcel.error
+  [types.GETTER_RATING_DATA_GET]: function (state) {
+    return state.payload.rating.data.get
+  },
+
+  [types.GETTER_RATING_DATA_GET_ALL]: function (state) {
+    return state.payload.rating.data.getAll
+  },
+
+  [types.GETTER_RATING_DATA_SEARCH]: function (state) {
+    return state.payload.rating.data.search
+  },
+
+  [types.GETTER_RATING_DATA_UPDATE]: function (state) {
+    return state.payload.rating.data.search
+  },
+
+  [types.GETTER_RATING_DONE]: function (state) {
+    return state.payload.rating.done
+  },
+
+  [types.GETTER_RATING_ERROR]: function (state) {
+    return state.payload.rating.error
   },
 
   [types.GETTER_CATEGORY_DATA]: function (state) {
     return state.payload.category.data
   },
 
+  [types.GETTER_CATEGORY_DATA_CREATE]: function (state) {
+    return state.payload.category.data.create
+  },
+
+  [types.GETTER_CATEGORY_DATA_UPDATE]: function (state) {
+    return state.payload.category.data.update
+  },
+
+  [types.GETTER_CATEGORY_DATA_REMOVE]: function (state) {
+    return state.payload.category.data.remove
+  },
+
+  [types.GETTER_CATEGORY_DATA_GET]: function (state) {
+    return state.payload.category.data.get
+  },
+
   [types.GETTER_CATEGORY_DATA_GET_ALL]: function (state) {
     return state.payload.category.data.getAll
+  },
+
+  [types.GETTER_CATEGORY_DATA_SEARCH]: function (state) {
+    return state.payload.category.data.search
+  },
+
+  [types.GETTER_CATEGORY_DATA_UPDATE]: function (state) {
+    return state.payload.category.data.search
   },
 
   [types.GETTER_CATEGORY_DONE]: function (state) {
@@ -477,16 +521,44 @@ const getters = {
     return state.payload.category.error
   },
 
-  [types.GETTER_RATING_DATA]: function (state) {
-    return state.payload.category.data
+  [types.GETTER_PARCEL_DATA]: function (state) {
+    return state.payload.parcel.data
   },
 
-  [types.GETTER_RATING_DONE]: function (state) {
-    return state.payload.category.done
+  [types.GETTER_PARCEL_DATA_CREATE]: function (state) {
+    return state.payload.parcel.data.create
   },
 
-  [types.GETTER_RATING_ERROR]: function (state) {
-    return state.payload.category.error
+  [types.GETTER_PARCEL_DATA_UPDATE]: function (state) {
+    return state.payload.parcel.data.update
+  },
+
+  [types.GETTER_PARCEL_DATA_REMOVE]: function (state) {
+    return state.payload.parcel.data.remove
+  },
+
+  [types.GETTER_PARCEL_DATA_GET]: function (state) {
+    return state.payload.parcel.data.get
+  },
+
+  [types.GETTER_PARCEL_DATA_GET_ALL]: function (state) {
+    return state.payload.parcel.data.getAll
+  },
+
+  [types.GETTER_PARCEL_DATA_SEARCH]: function (state) {
+    return state.payload.parcel.data.search
+  },
+
+  [types.GETTER_PARCEL_DATA_UPDATE]: function (state) {
+    return state.payload.parcel.data.search
+  },
+
+  [types.GETTER_PARCEL_DONE]: function (state) {
+    return state.payload.parcel.done
+  },
+
+  [types.GETTER_PARCEL_ERROR]: function (state) {
+    return state.payload.parcel.error
   }
 }
 

@@ -248,7 +248,7 @@ export default {
             bootstrap('#profileConfirm').modal('hide')
           })
       }
-      return this.showConfirmedModal('Zmena dát', 'Pre uplatnenie zmien prosím zadajte Vaše heslo:')
+      return this.showConfirmedModal('Potvrdenie', 'Pre uplatnenie zmien prosím zadajte Vaše heslo:')
     }
   }
 }
