@@ -19,6 +19,7 @@
 import * as types from '@/store/types'
 import signIn from '@/components/auth/sub/signIn'
 import signUp from '@/components/auth/sub/signUp'
+import signOut from '@/components/auth/sub/signOut'
 import forgetPass from '@/components/auth/sub/forgetPass'
 
 export default {
@@ -43,9 +44,10 @@ export default {
     }
   },
   components: {
-    appForgetPassword: forgetPass,
+    appSignUp: signUp,
     appSignIn: signIn,
-    appSignUp: signUp
+    appSignOut: signOut,
+    appForgetPassword: forgetPass
   },
   watch: {
     '$route' (to, from) {
@@ -54,7 +56,7 @@ export default {
   },
   methods: {
     navigateContent: function (componenet = 'sign-in') {
-      if (!['sign-in', 'sign-up', 'forget-password'].includes(componenet)) {
+      if (!['sign-out', 'sign-in', 'sign-up', 'forget-password'].includes(componenet)) {
         this.$router.push({name: 'error'})
         return
       }

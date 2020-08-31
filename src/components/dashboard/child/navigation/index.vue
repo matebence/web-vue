@@ -116,7 +116,7 @@ export default {
           }, {
             itemId: 7,
             value: 'Odhlásiť sa',
-            route: 'sign-out',
+            route: '/sign-out',
             optional: {
               icon: 'sign-out-alt',
               badge: ''
