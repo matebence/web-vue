@@ -104,14 +104,10 @@ export default {
       if (this.form.values._id === undefined) {
         return this.$store.dispatch(types.ACTION_VEHICLE_CREATE, {name: this.form.values.name, courier: this.signIn.accountId, type: this.form.values.type._id})
           .then(result => {
-            return {
-              data: {
-                search: [...Object.values(this.vehicleData.search), {...result, courier: result.courier, type: this.form.values.type}]
-              }
-            }
+            return {search: [...Object.values(this.vehicleData.search), {...result, courier: result.courier, type: this.form.values.type}]}
           })
           .then(result => {
-            this.$store.commit(types.MUTATION_VEHICLE_DATA, result)
+            this.$store.commit(types.MUTATION_VEHICLE_DATA, {data: result})
             return this.$emit('crud', {component: 'app-vertical-list', icon: 'plus'})
           })
           .catch(err => console.warn(err.message))
