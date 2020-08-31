@@ -428,6 +428,7 @@ export default {
       return 1
     },
     ...mapGetters({
+      signIn: types.GETTER_SIGN_IN_DATA,
       userProfile: types.GETTER_USER_DATA_GET
     })
   },
@@ -462,10 +463,15 @@ export default {
         }
         promise
           .then(result => {
+            Object.assign(this.$data, this.$options.data.apply(this))
+            return this.$store.dispatch(types.ACTION_USER_GET, this.signIn.accountId)
+          })
+          .then(result => {
             this.showAlertModal([result !== null], ['alert-success'], ['Príkaz ne prevod penazí prebehla úspešne'])
             bootstrap('#moneyConfirm').modal('hide')
           })
           .catch(err => {
+            Object.assign(this.$data, this.$options.data.apply(this))
             this.showAlertModal([err !== null], ['alert-danger'], [err.message])
             bootstrap('#moneyConfirm').modal('hide')
           })
