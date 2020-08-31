@@ -3,7 +3,7 @@
     <ul class="tabs">
       <li
         :key="option.id"
-        @click.prevent="onSelectedOption(option)"
+        @click.prevent="onSelectedTab(option)"
         v-for="option in tab.items"
         :class="{active: activeEl.itemId === option.itemId}">{{option.value}}</li>
     </ul>
@@ -77,12 +77,12 @@ import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
 
 export default {
-  name: 'verticalList',
-  props: ['activeEl'],
   created: function () {
     return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.accountId})
-      .catch(err => console.log(err.message))
+      .catch(err => console.warn(err.message))
   },
+  name: 'verticalList',
+  props: ['activeEl'],
   data: function () {
     return {
       tab: {
@@ -105,7 +105,7 @@ export default {
   },
   watch: {
     'activeEl.itemId': function (newValue, oldValue) {
-      if (newValue === 1) this.onSelectedOption({itemId: this.activeEl.itemId, value: this.activeEl.value})
+      if (newValue === 1) this.onSelectedTab({itemId: this.activeEl.itemId, value: this.activeEl.value})
     }
   },
   computed: {
@@ -116,14 +116,14 @@ export default {
     })
   },
   methods: {
-    onSelectedOption: function (el) {
+    onSelectedTab: function (el) {
       this.activeEl.parcelId = 0
       this.activeEl.itemId = el.itemId
       this.activeEl.value = el.value
 
       if (this.activeEl.value === this.tab.items[0].value || this.activeEl.value === this.tab.items[2].value) {
         return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.accountId})
-          .catch(err => console.log(err.message))
+          .catch(err => console.warn(err.message))
       }
     },
     onSelectedParcel: function (el) {

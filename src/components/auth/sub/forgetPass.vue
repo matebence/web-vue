@@ -103,7 +103,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      forgetPasswordDone: types.GETTER_FORGET_PASSWORD_DONE
+      forgetPasswordDone: types.GETTER_FORGET_PASSWORD_DONE,
+      forgetPasswordError: types.GETTER_FORGET_PASSWORD_ERROR
     })
   },
   methods: {
@@ -118,6 +119,9 @@ export default {
         .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
     },
     onSend: function () {
+      this.forgetPasswordError.message = null
+      this.forgetPasswordError.is = false
+
       return this.$store.dispatch(types.ACTION_FORGET_PASSWORD, {email: this.components.appForgetPassword.form.values.email})
         .then(result => this.showAlertModal([result !== null], ['alert-success'], [result.message]))
         .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))

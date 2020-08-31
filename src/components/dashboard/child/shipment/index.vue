@@ -36,7 +36,6 @@ import properties from '@/components/dashboard/child/shipment/sub/properties'
 import verticalList from '@/components/dashboard/child/shipment/sub/verticalList'
 
 export default {
-  name: 'index',
   created: function () {
     this.onFetchShipments({sender: this.signIn.accountId})
   },
@@ -44,6 +43,7 @@ export default {
     this.$store.commit(types.MUTATIONS_CLEAR_PARCEL_ERRORS, {})
     this.$store.commit(types.MUTATIONS_CLEAR_RATING_ERRORS, {})
   },
+  name: 'index',
   data: function () {
     return {
       components: {
@@ -104,7 +104,7 @@ export default {
         .then(result => {
           this.components.appShipment.search = result
         })
-        .catch(err => console.log(err.message))
+        .catch(err => console.warn(err.message))
     }
   }
 }

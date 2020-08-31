@@ -31,11 +31,11 @@ import * as types from '@/store/types'
 import horizontalList from '@/components/dashboard/child/parcel/sub/horizontalList'
 
 export default {
-  name: 'courier',
-  props: ['parcel', 'courier', 'activeEl'],
   created: function () {
     return this.onSearchCourier({roles: process.env.APP_ROLE_COURIER})
   },
+  name: 'courier',
+  props: ['parcel', 'courier', 'activeEl'],
   components: {
     appHorizontalList: horizontalList
   },
@@ -51,7 +51,7 @@ export default {
         .then(result => {
           this.courier.search.user = Object.values(result)
         })
-        .catch(err => console.log(err.message))
+        .catch(err => console.warn(err.message))
     }
   }
 }

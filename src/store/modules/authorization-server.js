@@ -316,6 +316,7 @@ const actions = {
     commit(types.MUTATIONS_CLEAR_LOCATION_DATA, {})
     commit(types.MUTATIONS_CLEAR_PAYMENT_DATA, {})
     commit(types.MUTATIONS_CLEAR_PAYOUT_DATA, {})
+    commit(types.MUTATIONS_CLEAR_VEHICLE_DATA, {})
   },
 
   [types.ACTION_CHECK_BALANCE]: function ({commit, dispatch, state, rootState}, payload) {
@@ -677,7 +678,7 @@ const actions = {
             message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba'
           }
         })
-        return state.payload.activationToken.data
+        return parsed
       })
       .catch(err => {
         return err.json()

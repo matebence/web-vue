@@ -325,14 +325,14 @@ const actions = {
       .then(parsed => {
         commit(types.MUTATION_CATEGORY_DATA, {
           data: {
-            ...state.payload.parcel.data,
+            ...state.payload.category.data,
             getAll: {
               ...parsed.data
             }
           },
           done: true
         })
-        return state.payload.parcel.data.getAll
+        return state.payload.category.data.getAll
       })
       .catch(err => {
         return err.json()

@@ -70,7 +70,7 @@ export default {
           .then(result => {
             this.components.appParcel.search.shipment = Object.values(result).pop()
           })
-          .catch(err => console.log(err.message))
+          .catch(err => console.warn(err.message))
       }
     }
   }

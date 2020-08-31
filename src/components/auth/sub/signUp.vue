@@ -150,20 +150,20 @@ export default {
               confirmPassword: null,
               roles: '{}'
             }
-          },
-          appUrl: {
-            url: {
-              values: {
-                id: this.$route.params.id,
-                key: this.$route.params.key
-              }
-            }
-          },
-          appAlert: {
-            condition: [],
-            type: [],
-            text: []
           }
+        },
+        appUrl: {
+          url: {
+            values: {
+              id: this.$route.params.id,
+              key: this.$route.params.key
+            }
+          }
+        },
+        appAlert: {
+          condition: [],
+          type: [],
+          text: []
         }
       }
     }
@@ -211,6 +211,11 @@ export default {
     })
   },
   methods: {
+    showAlertModal: function (condition, type, text) {
+      this.components.appAlert.condition = condition
+      this.components.appAlert.type = type
+      this.components.appAlert.text = text
+    },
     onPageLoad: function () {
       return this.$store.dispatch(types.ACTION_ACCOUNT_ACTIVATION, {id: this.components.appUrl.url.values.id, key: this.components.appUrl.url.values.key})
         .then(result => this.showAlertModal([result !== null], ['alert-success'], [result.message]))

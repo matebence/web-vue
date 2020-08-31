@@ -134,18 +134,12 @@ export default {
       return localStorage.getItem('avatar')
     },
     ...mapGetters({
-      signIn: types.GETTER_SIGN_IN_DATA,
       userProfile: types.GETTER_USER_DATA_GET,
       allowedRoles: types.GETTER_SIGN_IN_GET_ROLE
     })
   },
   methods: {
     onSelectedNav: function (el) {
-      if (el.value === this.navigation.items[6].value) {
-        return this.$store.dispatch(types.ACTION_SIGN_OUT, {accessToken: this.signIn.accessToken})
-          .catch(err => console.log(err.message))
-      }
-
       if (this.userProfile.userId === undefined) return
       this.activeEl.itemId = el.itemId
       this.activeEl.value = el.value

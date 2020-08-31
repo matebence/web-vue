@@ -23,10 +23,6 @@
             <li v-for="user in components.appCrud.autocomplete.client" :key="user.accountId" v-if="user.accountId !== signIn.accountId" :data-accountId="user.accountId" @click.prevent="onSelectedReceiver($event.target)">{{user.firstName}} {{user.lastName}}</li>
           </ul>
         </div>
-        <small
-          id="confirmPasswordInvalid"
-          class="form-text text-muted"
-          v-show="parcelError.reason.receiver !== null">{{parcelError.reason.receiver}}</small>
       </div>
       <div class="form-group">
         <label
@@ -43,10 +39,6 @@
           <option value="null" disabled selected >Vyberte z možností</option>
           <option v-for="category in categories" :value="category" :key="category.id">{{category.name}}</option>
         </select>
-        <small
-          id="categoryInvalid"
-          class="form-text text-muted"
-          v-show="parcelError.reason.categoryId !== null">{{parcelError.reason.categoryId}}</small>
       </div>
       <div class="form-group">
         <label
@@ -63,10 +55,6 @@
           @input="$v.form.values.note.$touch()"
           :class="{valid: !$v.form.values.note.$error && $v.form.values.note.$dirty, invalid: $v.form.values.note.$error}">
         </textarea>
-        <small
-          id="noteInvalid"
-          class="form-text text-muted"
-          v-show="parcelError.reason.note !== null">{{parcelError.reason.note}}</small>
       </div>
       <div class="form-group">
         <label
@@ -82,10 +70,6 @@
           placeholder="Dľžka balíka"
           @input="$v.form.values.length.$touch()"
           :class="{valid: !$v.form.values.length.$error && $v.form.values.length.$dirty, invalid: $v.form.values.length.$error}">
-        <small
-          id="lengthInvalid"
-          class="form-text text-muted"
-          v-show="parcelError.reason.length !== null">{{parcelError.reason.length}}</small>
       </div>
       <div class="form-group">
         <label
@@ -101,10 +85,6 @@
           placeholder="Šírka balíka"
           @input="$v.form.values.width.$touch()"
           :class="{valid: !$v.form.values.width.$error && $v.form.values.width.$dirty, invalid: $v.form.values.width.$error}">
-        <small
-          id="widthInvalid"
-          class="form-text text-muted"
-          v-show="parcelError.reason.width !== null">{{parcelError.reason.width}}</small>
       </div>
       <div class="form-group">
         <label
@@ -120,10 +100,6 @@
           placeholder="Výška balíka"
           @input="$v.form.values.height.$touch()"
           :class="{valid: !$v.form.values.height.$error && $v.form.values.height.$dirty, invalid: $v.form.values.height.$error}">
-        <small
-          id="heightInvalid"
-          class="form-text text-muted"
-          v-show="parcelError.reason.height !== null">{{parcelError.reason.height}}</small>
       </div>
       <div class="form-group">
         <label
@@ -139,10 +115,6 @@
           placeholder="Hmotnosť balíka"
           @input="$v.form.values.weight.$touch()"
           :class="{valid: !$v.form.values.weight.$error && $v.form.values.weight.$dirty, invalid: $v.form.values.weight.$error}">
-        <small
-          id="weightInvalid"
-          class="form-text text-muted"
-          v-show="parcelError.reason.weight !== null">{{parcelError.reason.weight}}</small>
       </div>
       <button
         type="submit"
@@ -150,11 +122,7 @@
         :disabled="$v.$invalid"
         @click.prevent="onCreate"
         v-show="form.values.id === undefined">
-        <span
-          class="spinner-border spinner-border-sm"
-          role="status"
-          aria-hidden="true"
-          v-show="!parcelDone"></span>&nbsp;Vytvoriť
+        &nbsp;Vytvoriť
       </button>
       <button
         type="submit"
@@ -162,40 +130,24 @@
         :disabled="$v.$invalid"
         @click.prevent="onUpdate"
         v-show="form.values.id !== undefined">
-        <span
-          class="spinner-border spinner-border-sm"
-          role="status"
-          aria-hidden="true"
-          v-show="!parcelDone"></span>&nbsp;Aktualizovať
+        &nbsp;Aktualizovať
       </button>
     </form>
-    <div class="aler-wrapper">
-      <app-alert
-        :condition="components.appAlert.condition"
-        :type="components.appAlert.type"
-        :text="components.appAlert.text"/>
-    </div>
   </div>
 </template>
 
 <script>
 import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
-import alert from '@/components/common/alert'
 import {required, alphaNum, numeric} from 'vuelidate/lib/validators'
 
 export default {
-  name: 'crud',
-  props: ['form'],
   created: function () {
     return this.$store.dispatch(types.ACTION_CATEGORY_GET_ALL, {})
-      .catch(err => console.log(err.message))
+      .catch(err => console.warn(err.message))
   },
-  beforeMount: function () {
-    this.components.appAlert.condition = [(this.parcelError.message !== null && this.parcelError.from === 'create')]
-    this.components.appAlert.type = [this.parcelError.is ? 'alert-danger' : 'alert-success']
-    this.components.appAlert.text = [this.parcelError.message]
-  },
+  name: 'crud',
+  props: ['form'],
   data: function () {
     return {
       components: {
@@ -204,11 +156,6 @@ export default {
             client: {
             }
           }
-        },
-        appAlert: {
-          condition: [],
-          type: [],
-          text: []
         }
       }
     }
@@ -255,15 +202,10 @@ export default {
       }
     }
   },
-  components: {
-    appAlert: alert
-  },
   computed: {
     ...mapGetters({
       categories: types.GETTER_CATEGORY_DATA_GET_ALL,
       parcelCreate: types.GETTER_PARCEL_DATA_CREATE,
-      parcelDone: types.GETTER_PARCEL_DONE,
-      parcelError: types.GETTER_PARCEL_ERROR,
       signIn: types.GETTER_SIGN_IN_DATA
     })
   },
@@ -278,7 +220,7 @@ export default {
         .then(result => {
           this.components.appCrud.autocomplete.client = result
         })
-        .catch(err => console.log(err.message))
+        .catch(err => console.warn(err.message))
     },
     onSelectedReceiver: function ($event) {
       this.form.values.receiver.accountId = $event.dataset.accountid
@@ -287,9 +229,6 @@ export default {
     },
     onCreate: function () {
       if (this.form.values.id === undefined) {
-        this.parcelError.message = null
-        this.parcelError.is = false
-
         this.$store.commit(types.MUTATION_PARCEL_DATA, {
           data: {
             create: [...this.parcelCreate, {
@@ -304,15 +243,10 @@ export default {
     },
     onUpdate: function () {
       if (this.form.values.id !== undefined) {
-        this.parcelError.message = null
-        this.parcelError.is = false
-
         const data = this.parcelCreate.filter(e => e.id !== this.form.values.id)
         this.$store.commit(types.MUTATION_PARCEL_DATA, {
           data: {
-            create: [...data, {
-              ...this.form.values
-            }]
+            create: [...data, this.form.values]
           }
         })
         return this.$emit('crud', {component: 'app-vertical-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
@@ -414,11 +348,6 @@ export default {
     background: transparent;
     border-radius: 0;
     border-bottom: 0.1rem solid #dbdbdb;
-  }
-
-  div#crud small, .text-muted {
-    font-size: 0.8em;
-    color: #ff0000 !important;
   }
 
   div#crud input.invalid, div#crud select.invalid, div#crud textarea.invalid {

@@ -38,6 +38,14 @@ export default {
     background: #166085;
   }
 
+  .card {
+    border: none;
+  }
+
+  .spinner-border{
+    margin-bottom: 0.3rem;
+  }
+
   html {
     scroll-behavior: smooth;
     -webkit-touch-callout: none;
@@ -55,12 +63,14 @@ export default {
     font-family: Palanquin-Regular, sans-serif;
   }
 
-  p, a, li, input, select, option, textarea, label, button, small{
+  a, a:hover{
+    text-decoration: none;
     font-family: Palanquin-Medium, sans-serif;
   }
 
-  a, a:hover{
-    text-decoration: none;
+  p, li, label, small,
+  input, select, option, textarea, button {
+    font-family: Palanquin-Medium, sans-serif;
   }
 
   input, select, option, textarea {
@@ -74,14 +84,5 @@ export default {
     -webkit-appearance: none;
     -moz-appearance: textfield;
     margin: 0;
-
-  }
-
-  .card {
-    border: none;
-  }
-
-  .spinner-border{
-    margin-bottom: 0.3rem;
   }
 </style>

@@ -127,7 +127,7 @@ import {required, email} from 'vuelidate/lib/validators'
 export default {
   created: function () {
     return Promise.all([this.$store.dispatch(types.ACTION_GENDER_GET_ALL, {}), this.$store.dispatch(types.ACTION_USER_GET, this.signIn.accountId)])
-      .catch(err => console.log(err.message))
+      .catch(err => console.warn(err.message))
   },
   beforeMount: function () {
     this.components.appProfile.form.values = {...this.userProfile}

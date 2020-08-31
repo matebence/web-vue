@@ -115,7 +115,7 @@ export default {
         new H.mapevents.Behavior(new H.mapevents.MapEvents(result))
         return this.reverseGeoCode()
       })
-      .catch(err => console.log(err.message))
+      .catch(err => console.warn(err.message))
   },
   name: 'hereMap',
   props: ['parcel', 'courier'],
@@ -246,7 +246,7 @@ export default {
           const position = onSuccess.items.pop().position
           this.navigator.form[item].geo = {...position}
           if (!--isLast) coordinates(this.navigator.form)
-        }, onError => { console.log(onError) })
+        }, onError => { console.warn(onError) })
       }
     },
     reverseGeoCode: function () {
@@ -256,7 +256,7 @@ export default {
       return searchService.reverseGeocode(reverseGeocodingParameters, onSuccess => {
         const place = Object.values(onSuccess.items).pop()
         this.navigator.form.from.value = `${this.here.country.name}, ${place.address.city}`
-      }, onError => { console.log(onError) })
+      }, onError => { console.warn(onError) })
     },
     visualizeOnMap: function () {
       if (this.navigator.form.from.value.length > 2 && this.navigator.form.to.value.length > 2) {
@@ -267,7 +267,7 @@ export default {
             destination: `${coordinates.to.geo.lat},${coordinates.to.geo.lng}`
           }
           const router = this.here.platform.getRoutingService(null, 8)
-          router.calculateRoute(this.here.routingConfiguration, this.drawRoute, onError => { console.log(onError) })
+          router.calculateRoute(this.here.routingConfiguration, this.drawRoute, onError => { console.warn(onError) })
         })
       }
     },
@@ -318,7 +318,7 @@ export default {
           this.navigator.courier.price = Object.values(result).pop().value
           return this.visualizeOnMap()
         })
-        .catch(err => console.log(err.message))
+        .catch(err => console.warn(err.message))
     },
     formatPrice: function (distance, price, profit) {
       const formatter = new Intl.NumberFormat('sk-SK', {style: 'currency', currency: 'EUR'})
@@ -361,7 +361,7 @@ export default {
             if ($event.target.id === 'from') this.navigator.form.from.autoComplete = Object.values(result)
             if ($event.target.id === 'to') this.navigator.form.to.autoComplete = Object.values(result)
           })
-          .catch(err => console.log(err.message))
+          .catch(err => console.warn(err.message))
       }
     },
     onSelectPlace: function ($event) {

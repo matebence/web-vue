@@ -150,10 +150,6 @@ const getters = {
     return state.payload.place.data.search
   },
 
-  [types.GETTER_PLACE_DATA_UPDATE]: function (state) {
-    return state.payload.place.data.search
-  },
-
   [types.GETTER_PLACE_DONE]: function (state) {
     return state.payload.place.done
   },

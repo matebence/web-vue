@@ -2,16 +2,41 @@
   <div id="index">
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
+        <app-manage
+          :activeEl="components.appVehicle.activeEl" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
+        <app-properties />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import manage from '@/components/dashboard/child/vehicle/sub/manage'
+import properties from '@/components/dashboard/child/vehicle/sub/properties'
+
 export default {
-  name: 'index'
+  name: 'index',
+  data: function () {
+    return {
+      components: {
+        appVehicle: {
+          search: {
+            vehicle: {
+            }
+          },
+          activeEl: {
+            vehicleId: 0
+          }
+        }
+      }
+    }
+  },
+  components: {
+    appManage: manage,
+    appProperties: properties
+  }
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
   <div id="manage">
-    <h1>Balíky</h1>
+    <h1>Vozidlá</h1>
     <div
       v-show="!isSelected"
       id="new">
@@ -14,17 +14,17 @@
       v-show="isSelected"
       id="modify">
       <button
-        @click.prevent="activeEl.parcelId = 0">
+        @click.prevent="activeEl.vehicleId = 0">
         <font-awesome-icon
           :icon="['fas', 'ban']"/>
       </button>
       <button
-        @click.prevent="editParcel()">
+        @click.prevent="editVehicle()">
         <font-awesome-icon
           :icon="['fas', 'pen']"/>
       </button>
       <button
-        @click.prevent="removeParcel(false)">
+        @click.prevent="removeVehicle(false)">
         <font-awesome-icon
           :icon="['fas', 'trash']"/>
       </button>
@@ -36,21 +36,19 @@
         :form="components.appCreate.form"
         @crud="
           selectedComponent = $event.component;
-          selectedIcon = $event.icon;
-          activeEl.itemId = $event.nav.id;
-          activeEl.value = $event.nav.value;"/>
+          selectedIcon = $event.icon"/>
     </keep-alive>
     <div class="modal-wrapper">
       <app-modal
-        :modalId="'parcelAlert'"
+        :modalId="'vehicleAlert'"
         :text="components.appModal.text"
         :title="components.appModal.title"
         :button="components.appModal.button"/>
     </div>
     <div class="apply-wrapper">
       <app-apply
-        @applied="removeParcel($event)"
-        :applyId="'parcelApply'"
+        @applied="removeVehicle($event)"
+        :applyId="'vehicleApply'"
         :text="components.appApply.text"
         :title="components.appApply.title"
         :positiveButton="components.appApply.positiveButton"
@@ -66,10 +64,14 @@ import * as types from '@/store/types'
 
 import modal from '@/components/common/modal'
 import apply from '@/components/common/apply'
-import crud from '@/components/dashboard/child/parcel/sub/crud'
-import verticalList from '@/components/dashboard/child/parcel/sub/verticalList'
+import crud from '@/components/dashboard/child/vehicle/sub/crud'
+import verticalList from '@/components/dashboard/child/vehicle/sub/verticalList'
 
 export default {
+  created: function () {
+    return this.$store.dispatch(types.ACTION_VEHICLE_SEARCH, {courier: this.signIn.accountId})
+      .catch(err => console.warn(err.message))
+  },
   name: 'manage',
   props: ['activeEl'],
   data: function () {
@@ -86,16 +88,9 @@ export default {
           icon: 'angle-left',
           form: {
             values: {
-              receiver: {
-                name: null,
-                accountId: null
-              },
-              category: null,
-              note: null,
-              length: null,
-              width: null,
-              height: null,
-              weight: null
+              courier: null,
+              name: null,
+              type: null
             }
           }
         },
@@ -121,24 +116,24 @@ export default {
   },
   computed: {
     isSelected: function () {
-      return this.activeEl.parcelId !== 0
+      return this.activeEl.vehicleId !== 0
     },
     ...mapGetters({
-      parcelCreate: types.GETTER_PARCEL_DATA_CREATE,
-      parcelData: types.GETTER_PARCEL_DATA,
+      vehicleSearch: types.GETTER_VEHICLE_DATA_SEARCH,
+      vehicleData: types.GETTER_VEHICLE_DATA,
       signIn: types.GETTER_SIGN_IN_DATA
     })
   },
   methods: {
     manageComponenets: function () {
       if (this.selectedComponent === this.components.appCreate.name) {
-        this.components.appCreate.form.values = {receiver: {name: null, accountId: null}, category: null, note: null, length: null, width: null, height: null, weight: null}
+        this.components.appCreate.form.values = {courier: null, name: null, type: null}
         this.selectedIcon = this.components.appList.icon
         return this.components.appList.name
       }
       if (this.selectedComponent === this.components.appList.name) {
         this.selectedIcon = this.components.appCreate.icon
-        this.components.appCreate.form.values.id = undefined
+        this.components.appCreate.form.values._id = undefined
         return this.components.appCreate.name
       }
     },
@@ -146,41 +141,33 @@ export default {
       this.components.appModal.title = title
       this.components.appModal.text = text
       this.components.appModal.button = button
-      return bootstrap('#parcelAlert').modal('show')
+      return bootstrap('#vehicleAlert').modal('show')
     },
     showAppliedModal: function (title, text) {
       this.components.appApply.title = title
       this.components.appApply.text = text
       this.components.appApply.positiveButton = 'Odstrániť'
       this.components.appApply.negativeButton = 'Zrušiť'
-      return bootstrap('#parcelApply').modal('show')
+      return bootstrap('#vehicleApply').modal('show')
     },
-    editParcel: function () {
-      if (this.activeEl.parcelId > 0) {
-        return this.showAlertModal('Editovanie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné editovať.', 'Zatvoriť')
-      } else {
-        const data = this.parcelCreate.filter(e => e.id === this.activeEl.parcelId)
-        this.selectedComponent = this.manageComponenets()
-        this.activeEl.parcelId = 0
-        this.components.appCreate.form.values = data.pop()
-      }
+    editVehicle: function () {
+      const data = Object.values(this.vehicleSearch).filter(e => e._id === this.activeEl.vehicleId)
+      this.selectedComponent = this.manageComponenets()
+      this.activeEl.vehicleId = 0
+      this.components.appCreate.form.values = {...data.pop()}
     },
-    removeParcel: function (applied) {
-      if (this.activeEl.parcelId > 0) {
-        return this.showAlertModal('Odstránenie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné odstrániť.', 'Zatvoriť')
+    removeVehicle: function (applied) {
+      if (applied) {
+        const data = Object.values(this.vehicleSearch).filter(e => e._id !== this.activeEl.vehicleId)
+        this.$store.commit(types.MUTATION_VEHICLE_DATA, {
+          data: {
+            ...this.vehicleData,
+            create: data
+          }
+        })
+        this.activeEl.vehicleId = 0
       } else {
-        if (applied) {
-          const data = this.parcelCreate.filter(e => e.id !== this.activeEl.parcelId)
-          this.$store.commit(types.MUTATION_PARCEL_DATA, {
-            data: {
-              ...this.parcelData,
-              create: data
-            }
-          })
-          this.activeEl.parcelId = 0
-        } else {
-          return this.showAppliedModal('Odstránenie', 'Naozaj chcete odstrániť balík?')
-        }
+        return this.showAppliedModal('Odstránenie', 'Naozaj chcete odstrániť vozidlo?')
       }
     }
   }
