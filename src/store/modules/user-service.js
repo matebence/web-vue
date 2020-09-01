@@ -332,7 +332,7 @@ const actions = {
                 is: parsed.error,
                 message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'create',
-                reason: {}
+                reason: parsed.validations
               },
               done: true
             })
@@ -380,6 +380,48 @@ const actions = {
                 is: parsed.error,
                 message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'update',
+                reason: parsed.validations
+              },
+              done: true
+            })
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+          })
+      })
+  },
+
+  [types.ACTION_USER_GET]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_USER_DATA, {done: false})
+    return this._vm.$resource('{service}/api/users/{accountId}', {}, {
+      get: {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        }
+      }
+    }).get({service: 'user-service', accountId: payload})
+      .then(response => {
+        return response.json()
+      })
+      .then(parsed => {
+        commit(types.MUTATION_USER_DATA, {
+          data: {
+            ...state.payload.user.data,
+            get: {
+              ...parsed
+            }
+          },
+          done: true
+        })
+        return state.payload.user.data.get
+      })
+      .catch(err => {
+        return err.json()
+          .then(parsed => {
+            commit(types.MUTATION_USER_DATA, {
+              error: {
+                is: parsed.error,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
+                from: 'get',
                 reason: {}
               },
               done: true
@@ -422,48 +464,6 @@ const actions = {
                 is: parsed.error,
                 message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'search',
-                reason: {}
-              },
-              done: true
-            })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
-          })
-      })
-  },
-
-  [types.ACTION_USER_GET]: function ({commit, dispatch, state, rootState}, payload) {
-    commit(types.MUTATION_USER_DATA, {done: false})
-    return this._vm.$resource('{service}/api/users/{accountId}', {}, {
-      get: {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
-        }
-      }
-    }).get({service: 'user-service', accountId: payload})
-      .then(response => {
-        return response.json()
-      })
-      .then(parsed => {
-        commit(types.MUTATION_USER_DATA, {
-          data: {
-            ...state.payload.user.data,
-            get: {
-              ...parsed
-            }
-          },
-          done: true
-        })
-        return state.payload.user.data.get
-      })
-      .catch(err => {
-        return err.json()
-          .then(parsed => {
-            commit(types.MUTATION_USER_DATA, {
-              error: {
-                is: parsed.error,
-                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
-                from: 'get',
                 reason: {}
               },
               done: true
@@ -548,7 +548,7 @@ const actions = {
                 is: parsed.error,
                 message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'create',
-                reason: {}
+                reason: parsed.validations
               },
               done: true
             })
@@ -590,7 +590,7 @@ const actions = {
                 is: parsed.error,
                 message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'create',
-                reason: {}
+                reason: parsed.validations
               },
               done: true
             })

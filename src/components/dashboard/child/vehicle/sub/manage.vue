@@ -73,7 +73,7 @@ export default {
       .catch(err => console.warn(err.message))
   },
   name: 'manage',
-  props: ['activeEl'],
+  props: ['activeEl', 'vehicle'],
   data: function () {
     return {
       selectedComponent: 'app-vertical-list',
@@ -119,7 +119,6 @@ export default {
       return this.activeEl.vehicleId !== 0
     },
     ...mapGetters({
-      vehicleSearch: types.GETTER_VEHICLE_DATA_SEARCH,
       vehicleData: types.GETTER_VEHICLE_DATA,
       signIn: types.GETTER_SIGN_IN_DATA
     })
@@ -151,20 +150,16 @@ export default {
       return bootstrap('#vehicleApply').modal('show')
     },
     editVehicle: function () {
-      const data = Object.values(this.vehicleSearch).filter(e => e._id === this.activeEl.vehicleId)
+      const data = Object.values(this.vehicle).filter(e => e._id === this.activeEl.vehicleId)
       this.selectedComponent = this.manageComponenets()
       this.activeEl.vehicleId = 0
       this.components.appCreate.form.values = {...data.pop()}
     },
     removeVehicle: function (applied) {
       if (applied) {
-        const data = Object.values(this.vehicleSearch).filter(e => e._id !== this.activeEl.vehicleId)
-        this.$store.commit(types.MUTATION_VEHICLE_DATA, {
-          data: {
-            ...this.vehicleData,
-            create: data
-          }
-        })
+        const data = Object.values(this.vehicle).filter(e => e._id !== this.activeEl.vehicleId)
+        this.$store.dispatch(types.ACTION_VEHICLE_DELETE, {data: data, _id: this.activeEl.vehicleId})
+          .catch(err => console.warn(err.message))
         this.activeEl.vehicleId = 0
       } else {
         return this.showAppliedModal('Odstránenie', 'Naozaj chcete odstrániť vozidlo?')

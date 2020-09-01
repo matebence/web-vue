@@ -3,17 +3,24 @@
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
         <app-manage
+          :vehicle="vehicleSearch"
           :activeEl="components.appVehicle.activeEl" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
-        <app-properties />
+        <app-properties
+          :vehicle="selectedItem"
+          :activeEl="components.appVehicle.activeEl"/>
+        <app-options />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+import * as types from '@/store/types'
 import manage from '@/components/dashboard/child/vehicle/sub/manage'
+import options from '@/components/dashboard/child/vehicle/sub/options'
 import properties from '@/components/dashboard/child/vehicle/sub/properties'
 
 export default {
@@ -35,7 +42,17 @@ export default {
   },
   components: {
     appManage: manage,
+    appOptions: options,
     appProperties: properties
+  },
+  computed: {
+    selectedItem: function () {
+      if (this.components.appVehicle.activeEl.vehicleId === 0) return
+      return Object.values(this.vehicleSearch).filter(e => e._id === this.components.appVehicle.activeEl.vehicleId).pop()
+    },
+    ...mapGetters({
+      vehicleSearch: types.GETTER_VEHICLE_DATA_SEARCH
+    })
   }
 }
 </script>
@@ -45,6 +62,7 @@ export default {
   div#index div#content {
     width: 100%;
     height: 98vh;
+    overflow: auto;
   }
 
   div#index div#content {

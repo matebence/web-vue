@@ -159,7 +159,7 @@ const actions = {
         method: 'POST',
         headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}
       }
-    }).create({service: 'vehicle-service'}, payload)
+    }).create({service: 'vehicle-service'}, {name: payload.name, courier: payload.accountId, type: payload.type._id})
       .then(response => {
         return response.json()
       })
@@ -169,7 +169,8 @@ const actions = {
             ...state.payload.vehicle.data,
             create: {
               ...parsed
-            }
+            },
+            search: [...state.payload.vehicle.data.search, {...parsed, type: payload.type}]
           },
           done: true
         })
@@ -189,6 +190,91 @@ const actions = {
                 reason: {
                   ...validations
                 }
+              },
+              done: true
+            })
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+          })
+      })
+  },
+
+  [types.ACTION_VEHICLE_UPDATE]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_VEHICLE_DATA, {done: false})
+    return this._vm.$resource('{service}/api/vehicles/{_id}', {}, {
+      update: {
+        method: 'PUT',
+        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}
+      }
+    }).update({service: 'vehicle-service', _id: payload._id}, {name: payload.name, courier: payload.accountId, type: payload.type._id})
+      .then(response => {
+        commit(types.MUTATION_VEHICLE_DATA, {
+          data: {
+            ...state.payload.vehicle.data,
+            update: {
+              ...payload.data
+            },
+            search: [...Object.values(state.payload.vehicle.data.search).filter(e => e._id !== payload._id), {_id: payload._id, name: payload.name, courier: payload.accountId, type: payload.type}]
+          },
+          done: true
+        })
+        return state.payload.vehicle.data.update
+      })
+      .catch(err => {
+        return err.json()
+          .then(parsed => {
+            let validations = {}
+            parsed.validations.forEach(e => { validations[e.param] = e.msg })
+
+            commit(types.MUTATION_VEHICLE_DATA, {
+              error: {
+                is: parsed.error,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
+                from: 'update',
+                reason: {
+                  ...validations
+                }
+              },
+              done: true
+            })
+            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+          })
+      })
+  },
+
+  [types.ACTION_VEHICLE_DELETE]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_VEHICLE_DATA, {done: false})
+    return this._vm.$resource('{service}/api/vehicles/{_id}', {}, {
+      delete: {
+        method: 'DELETE',
+        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        }
+      }
+    }).delete({service: 'vehicle-service', _id: payload._id})
+      .then(response => {
+        return response.json()
+      })
+      .then(parsed => {
+        commit(types.MUTATION_VEHICLE_DATA, {
+          data: {
+            ...state.payload.vehicle.data,
+            remove: {
+              ...parsed
+            },
+            search: payload.data
+          },
+          done: true
+        })
+        return state.payload.vehicle.data.remove
+      })
+      .catch(err => {
+        return err.json()
+          .then(parsed => {
+            commit(types.MUTATION_VEHICLE_DATA, {
+              error: {
+                is: parsed.error,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
+                from: 'remove',
+                reason: {}
               },
               done: true
             })

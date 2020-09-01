@@ -1,32 +1,33 @@
 <template>
   <div id="index">
     <nav class="nav">
-      <a class="navbar-brand" href="#">
+      <router-link
+        to="/"
+        class="navbar-brand">
         <img src="@/assets/img/blesk-default-logo.png" alt="Blesk logo">
-      </a>
+      </router-link>
       <ul class="items">
         <li
           :key="nav.itemId"
           v-for="nav in navigation.items"
           @click.prevent="onSelectedNav(nav)"
           v-if="userHasRole(nav.isVisible.for)"
-          :class="{active: activeEl.itemId === nav.itemId && userProfile.userId !== undefined}"
           :id="nav.route">
-          <router-link :to="`${nav.route}`">
-            <font-awesome-icon :icon="['fas', nav.optional.icon]"/>
-            <p>{{nav.value}}&nbsp; <span class="badge badge-pill badge-danger">{{nav.optional.badge}}</span></p>
+          <router-link
+            :to="`${nav.route}`">
+              <font-awesome-icon :icon="['fas', nav.optional.icon]"/>
+              <p>{{nav.value}}&nbsp; <span class="badge badge-pill badge-danger">{{nav.optional.badge}}</span></p>
           </router-link>
         </li>
       </ul>
       <ul class="sub-items">
         <li>
-          <a href="#" :data-letters="getAvatar ? getAvatar : 'XX'"></a>
+          <p href="#" :data-letters="getAvatar ? getAvatar : 'XX'"></p>
         </li>
         <li class="settings"
           @click.prevent="onSelectedNav({itemId: 6, value: 'Nastavenia'})">
           <router-link
-            to="settings"
-            :class="{active: activeEl.itemId === 6}">
+            to="settings">
             <font-awesome-icon :icon="['fas', 'cog']"/>
             <p>Nastavenia</p>
           </router-link>
@@ -200,14 +201,15 @@ export default {
 
   div#index nav ul.items li,
   div#index nav ul.sub-items li {
-    padding-bottom: 1rem;
-    padding-top: 1rem;
-    padding-left: 1rem;
     margin-bottom: 0.5rem;
   }
 
-  div#index nav ul.items li:hover,
-  div#index nav ul.items li.active {
+  div#index nav ul.items li a {
+    padding: 1rem;
+  }
+
+  div#index nav ul.items li a:hover,
+  div#index nav ul.items li a.active {
     background: #187fb1;
     border-radius: 10rem;
   }
@@ -226,10 +228,19 @@ export default {
     padding-left: 0.5rem;
   }
 
+  div#index nav ul.sub-items li p,
+  div#index nav ul.sub-items li{
+    padding-left: 0.5rem;
+  }
+
   div#index nav ul.sub-items li a.active,
   div#index nav ul.sub-items li a:hover {
     background: #187fb1;
     border-radius: 10rem;
+  }
+
+  div#index nav ul.items li a p{
+    width: 6.7rem;
   }
 
   div#index nav ul.items li a p,
@@ -270,10 +281,15 @@ export default {
   }
 
   @media (max-width: 1200px) {
+    div#index nav > a.navbar-brand {
+      overflow: hidden;
+      height: 9rem;
+    }
+
     div#index nav > a img {
       transform: rotate(-90deg);
       left: -2.9rem;
-      top: 5%;
+      top: 24%;
     }
 
     div#index nav ul.items {
@@ -299,6 +315,10 @@ export default {
       display: none;
     }
 
+    div#index nav ul.sub-items li p {
+      padding: 0;
+    }
+
     div#index nav ul.items li a svg {
       margin: 0;
       padding: 0;
@@ -306,7 +326,6 @@ export default {
     }
 
     div#index nav ul.items li a {
-      width: 1rem;
       display: flex;
       justify-content: space-around;
     }

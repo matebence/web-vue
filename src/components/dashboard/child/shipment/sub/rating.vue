@@ -239,7 +239,7 @@ export default {
   }
 
   div#rating h1 {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     margin-left: 0.5rem;
     font-size: 2em;
     display: inline-block;
