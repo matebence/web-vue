@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-1 col-xl-2" id="navigation">
-          <app-navigation :activeEl = "navigation.activeEl" />
+          <app-navigation :activeEl = "components.appDashboard.navigation.activeEl" />
         </div>
         <div class="col-lg-11 col-xl-10" id="wrapper">
           <router-view/>
@@ -21,23 +21,27 @@ import navigation from '@/components/dashboard/child/navigation/index'
 export default {
   created: function () {
     if (this.userProfile.userId === undefined) {
-      this.navigation.activeEl = {itemId: 6, value: 'Nastavenia'}
+      this.components.appDashboard.navigation.activeEl = {itemId: 6, value: 'Nastavenia'}
       this.$router.push({path: '/dashboard/settings'})
     } else if (this.allowedRoles.includes(process.env.APP_ROLE_CLIENT)) {
-      this.navigation.activeEl = {itemId: 1, value: 'Balíky'}
+      this.components.appDashboard.navigation.activeEl = {itemId: 1, value: 'Balíky'}
       this.$router.push({path: '/dashboard/parcel'})
     } else if ([...this.allowedRoles].includes(process.env.APP_ROLE_COURIER)) {
-      this.navigation.activeEl = {itemId: 3, value: 'Klienti'}
+      this.components.appDashboard.navigation.activeEl = {itemId: 3, value: 'Klienti'}
       this.$router.push({path: '/dashboard/client'})
     } else {
-      this.$router.push({path: '/sign-in'})
+      this.$router.push({path: '/sign-out'})
     }
   },
   name: 'dashboard',
   data: function () {
     return {
-      navigation: {
-        activeEl: {
+      components: {
+        appDashboard: {
+          navigation: {
+            activeEl: {
+            }
+          }
         }
       }
     }

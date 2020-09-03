@@ -14,7 +14,7 @@
         </div>
         <app-vertical-list
           :activeEl="components.appShipment.activeEl"
-          :shipment="components.appShipment.search" />
+          :shipment="components.appShipment.shipment.search" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-properties
@@ -47,16 +47,17 @@ export default {
   data: function () {
     return {
       components: {
-        appParcel: {
-          search: {
-          }
-        },
         appShipment: {
-          search: {
+          parcel: {
+            search: {
+            }
+          },
+          shipment: {
+            search: {
+            }
           },
           activeEl: {
-            tabId: 1,
-            value: 'Vlastné',
+            itemId: 1,
             shipmentId: 0
           }
         }
@@ -70,7 +71,7 @@ export default {
   },
   watch: {
     'components.appShipment.activeEl.value': function (newValue, oldValue) {
-      this.components.appShipment.search = {}
+      this.components.appShipment.shipment.search = {}
 
       if (newValue === 'Vlastné' || newValue === 'Všetky') {
         this.onFetchShipments({sender: this.signIn.accountId})
@@ -86,8 +87,8 @@ export default {
     },
     selectedItem: function () {
       if (this.components.appShipment.activeEl.shipmentId === 0) return
-      const shipment = Object.values(this.components.appShipment.search).filter(e => e._id === this.components.appShipment.activeEl.shipmentId).pop()
-      const parcel = Object.values(this.components.appParcel.search).filter(e => e.id === shipment.parcelId).pop()
+      const shipment = Object.values(this.components.appShipment.shipment.search).filter(e => e._id === this.components.appShipment.activeEl.shipmentId).pop()
+      const parcel = Object.values(this.components.appShipment.parcel.search).filter(e => e.id === shipment.parcelId).pop()
       return {...shipment, ...parcel}
     },
     ...mapGetters({
@@ -98,11 +99,11 @@ export default {
     onFetchShipments: function (obj) {
       return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, obj)
         .then(result => {
-          this.components.appParcel.search = result
+          this.components.appShipment.parcel.search = result
           return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {parcelId: Object.values(result).map(e => e.id)})
         })
         .then(result => {
-          this.components.appShipment.search = result
+          this.components.appShipment.shipment.search = result
         })
         .catch(err => console.warn(err.message))
     }

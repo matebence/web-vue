@@ -55,7 +55,7 @@ export default {
       components: {
         appProperties: {
           _id: 'Identifikačné číslo vozidla',
-          name: 'Značka a seria vozidla',
+          name: 'Značka a séria vozidla',
           courier: {
             userName: 'Používeteľské meno kuriéra',
             email: 'Emailová adresa kuriéra'

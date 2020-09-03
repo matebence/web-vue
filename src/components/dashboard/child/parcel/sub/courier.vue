@@ -19,10 +19,8 @@
       </button>
     </form>
     <app-horizontal-list
-      :courier="courier.search"
-      :parcel="parcel.search"
-      :activeEl="activeEl"
-    />
+      :courier="courier"
+      :parcel="parcel" />
   </div>
 </template>
 
@@ -35,13 +33,13 @@ export default {
     return this.onSearchCourier({roles: process.env.APP_ROLE_COURIER})
   },
   name: 'courier',
-  props: ['parcel', 'courier', 'activeEl'],
+  props: ['parcel', 'courier'],
   components: {
     appHorizontalList: horizontalList
   },
   methods: {
     onAutoCompleteCourier: function ($event) {
-      this.courier.search.activeEl.courierId = 0
+      this.courier.activeEl.courierId = 0
       if ($event.length === 0) return this.onSearchCourier({roles: process.env.APP_ROLE_COURIER})
       if ($event.length < 3) return
       return this.onSearchCourier({firstName: $event})
@@ -51,7 +49,10 @@ export default {
         .then(result => {
           this.courier.search.user = Object.values(result)
         })
-        .catch(err => console.warn(err.message))
+        .catch(err => {
+          this.courier.search.user = null
+          console.warn(err.message)
+        })
     }
   }
 }

@@ -9,7 +9,7 @@
       <ul class="items">
         <li
           :key="nav.itemId"
-          v-for="nav in navigation.items"
+          v-for="nav in components.appNavigation.items"
           @click.prevent="onSelectedNav(nav)"
           v-if="userHasRole(nav.isVisible.for)"
           :id="nav.route">
@@ -46,87 +46,89 @@ export default {
   props: ['activeEl'],
   data: function () {
     return {
-      navigation: {
-        items: [
-          {
-            itemId: 1,
-            value: 'Balíky',
-            route: 'parcel',
-            optional: {
-              icon: 'box-open',
-              badge: ''
-            },
-            isVisible: {
-              for: [process.env.APP_ROLE_CLIENT]
+      components: {
+        appNavigation: {
+          items: [
+            {
+              itemId: 1,
+              value: 'Balíky',
+              route: 'parcel',
+              optional: {
+                icon: 'box-open',
+                badge: ''
+              },
+              isVisible: {
+                for: [process.env.APP_ROLE_CLIENT]
+              }
+            }, {
+              itemId: 2,
+              value: 'Zásielky',
+              route: 'shipment',
+              optional: {
+                icon: 'shipping-fast',
+                badge: ''
+              },
+              isVisible: {
+                for: [process.env.APP_ROLE_CLIENT]
+              }
+            }, {
+              itemId: 3,
+              value: 'Klienti',
+              route: 'client',
+              optional: {
+                icon: 'users',
+                badge: ''
+              },
+              isVisible: {
+                for: [process.env.APP_ROLE_COURIER]
+              }
+            }, {
+              itemId: 4,
+              value: 'Vozidlá',
+              route: 'vehicle',
+              optional: {
+                icon: 'car',
+                badge: ''
+              },
+              isVisible: {
+                for: [process.env.APP_ROLE_COURIER]
+              }
+            }, {
+              itemId: 5,
+              value: 'Správy',
+              route: 'message',
+              optional: {
+                icon: 'comment-dots',
+                badge: 'Nové'
+              },
+              isVisible: {
+                for: [process.env.APP_ROLE_CLIENT, process.env.APP_ROLE_COURIER]
+              }
+            }, {
+              itemId: 6,
+              value: 'Nastavenia',
+              route: 'settings',
+              optional: {
+                icon: 'cog',
+                badge: ''
+              },
+              isVisible: {
+                for: [process.env.APP_ROLE_CLIENT, process.env.APP_ROLE_COURIER]
+              }
+            }, {
+              itemId: 7,
+              value: 'Odhlásiť sa',
+              route: '/sign-out',
+              optional: {
+                icon: 'sign-out-alt',
+                badge: ''
+              },
+              isVisible: {
+                for: [process.env.APP_ROLE_CLIENT, process.env.APP_ROLE_COURIER]
+              }
             }
-          }, {
-            itemId: 2,
-            value: 'Zásielky',
-            route: 'shipment',
-            optional: {
-              icon: 'shipping-fast',
-              badge: ''
-            },
-            isVisible: {
-              for: [process.env.APP_ROLE_CLIENT]
-            }
-          }, {
-            itemId: 3,
-            value: 'Klienti',
-            route: 'client',
-            optional: {
-              icon: 'users',
-              badge: ''
-            },
-            isVisible: {
-              for: [process.env.APP_ROLE_COURIER]
-            }
-          }, {
-            itemId: 4,
-            value: 'Vozidlá',
-            route: 'vehicle',
-            optional: {
-              icon: 'car',
-              badge: ''
-            },
-            isVisible: {
-              for: [process.env.APP_ROLE_COURIER]
-            }
-          }, {
-            itemId: 5,
-            value: 'Správy',
-            route: 'message',
-            optional: {
-              icon: 'comment-dots',
-              badge: 'Nové'
-            },
-            isVisible: {
-              for: [process.env.APP_ROLE_CLIENT, process.env.APP_ROLE_COURIER]
-            }
-          }, {
-            itemId: 6,
-            value: 'Nastavenia',
-            route: 'settings',
-            optional: {
-              icon: 'cog',
-              badge: ''
-            },
-            isVisible: {
-              for: [process.env.APP_ROLE_CLIENT, process.env.APP_ROLE_COURIER]
-            }
-          }, {
-            itemId: 7,
-            value: 'Odhlásiť sa',
-            route: '/sign-out',
-            optional: {
-              icon: 'sign-out-alt',
-              badge: ''
-            },
-            isVisible: {
-              for: [process.env.APP_ROLE_CLIENT, process.env.APP_ROLE_COURIER]
-            }
-          }
-        ]
+          ]
+        }
       }
     }
   },

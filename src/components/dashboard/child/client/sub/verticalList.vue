@@ -3,43 +3,32 @@
     <ul class="tabs">
       <li
         :key="option.id"
-        @click.prevent="onSelectedOption(option)"
+        @click.prevent="onSelectedTab(option)"
         v-for="option in components.appVerticalList.items"
         :class="{active: activeEl.itemId === option.itemId}">{{option.value}}</li>
     </ul>
-    <ul class="shipments">
+    <ul class="clients">
       <li
         :key="item._id"
         @click.prevent="onSelectedShipment(item)"
-        v-for="item in shipment"
+        v-for="item in shipment.search"
         :class="{active: activeEl.shipmentId === item._id}">
-        <ul class="shipment">
+        <ul class="client">
           <li class="image">
-            <font-awesome-icon :icon="['fas', 'dolly']"/>
+            <font-awesome-icon :icon="['fas', 'location-arrow']"/>
           </li>
           <li class="summary">
             <ul>
-              <li class="status">{{item.status.name}}</li>
+              <li class="id">{{item.status.name}}</li>
               <li class="from">{{item.from.split(',').pop()}} - {{item.to.split(',').pop()}}</li>
-              <li class="number">{{item._id}}</li>
+              <li class="created">{{item.createdAt}}</li>
             </ul>
           </li>
         </ul>
       </li>
-
       <li
         class="empty-list"
-        v-if="Object.keys(shipment).length === 0 && activeEl.value === components.appVerticalList.items[0].value">
-        Zoznam je prázdny
-      </li>
-      <li
-        class="empty-list"
-        v-if="Object.keys(shipment).length === 0 && activeEl.value === components.appVerticalList.items[1].value">
-        Zoznam je prázdny
-      </li>
-      <li
-        class="empty-list"
-        v-if="Object.keys(shipment).length === 0 && activeEl.value === components.appVerticalList.items[2].value">
+        v-if="(shipment.search === null)">
         Zoznam je prázdny
       </li>
     </ul>
@@ -47,7 +36,15 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+import * as types from '@/store/types'
+
 export default {
+  created: function () {
+    return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {courier: this.signIn.accountId, status: process.env.PARCEL_NEW_STATUS_ID})
+      .then(result => { this.shipment.search = result })
+      .catch(err => console.warn(err.message))
+  },
   name: 'verticalList',
   props: ['activeEl', 'shipment'],
   data: function () {
@@ -57,26 +54,41 @@ export default {
           items: [
             {
               itemId: 1,
-              value: 'Vlastné'
+              value: 'Požiadavky',
+              id: process.env.PARCEL_NEW_STATUS_ID
             },
             {
               itemId: 2,
-              value: 'Ostatné'
+              value: 'Nevybavené',
+              id: process.env.PARCEL_ACCEPTED_STATUS_ID
             },
             {
               itemId: 3,
-              value: 'Všetky'
+              value: 'Vybavené',
+              id: process.env.PARCEL_DONE_STATUS_ID
             }
           ]
         }
       }
     }
   },
+  computed: {
+    ...mapGetters({
+      signIn: types.GETTER_SIGN_IN_DATA
+    })
+  },
   methods: {
-    onSelectedOption: function (el) {
+    onSelectedTab: function (el) {
       this.activeEl.shipmentId = 0
       this.activeEl.itemId = el.itemId
       this.activeEl.value = el.value
+
+      return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {courier: this.signIn.accountId, status: el.id})
+        .then(result => { this.shipment.search = result })
+        .catch(err => {
+          this.shipment.search = null
+          console.warn(err.message)
+        })
     },
     onSelectedShipment: function (el) {
       this.activeEl.shipmentId = el._id
@@ -109,33 +121,33 @@ export default {
     cursor: pointer;
   }
 
-  div#verticalList ul.shipments li ul.shipment ul {
+  div#verticalList ul.clients li ul.client ul {
     text-align: center;
   }
 
-  div#verticalList ul.shipments li ul.shipment ul li {
+  div#verticalList ul.clients li ul.client ul li {
     margin-left: 1rem;
   }
 
-  div#verticalList ul.shipments li.empty-list {
+  div#verticalList ul.clients li.empty-list {
     text-align: center;
     font-size: 1em;
     margin-top: 3rem;
   }
 
-  div#verticalList ul.shipments li:hover,
-  div#verticalList ul.shipments li.active {
+  div#verticalList ul.clients li:hover,
+  div#verticalList ul.clients li.active {
     background: #f1f1f1;
     border-radius: 0.5rem;
     cursor: pointer;
   }
 
-  div#verticalList ul.shipments li.empty-list:hover {
+  div#verticalList ul.clients li.empty-list:hover {
     cursor: auto;
     background: none;
   }
 
-  div#verticalList ul.shipments li ul.shipment {
+  div#verticalList ul.clients li ul.client {
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
@@ -143,7 +155,7 @@ export default {
     text-align: center;
   }
 
-  div#verticalList ul.shipments li ul.shipment li.image {
+  div#verticalList ul.clients li ul.client li.image {
     display: inline-block;
     font-size: 1.3em;
     width: 3.5rem;
@@ -155,46 +167,46 @@ export default {
     color: #176c9d;
   }
 
-  div#verticalList ul.shipments li ul.shipment li ul li.number,
-  div#verticalList ul.shipments li ul.shipment li ul li.status,
-  div#verticalList ul.shipments li ul.shipment li ul li.from {
+  div#verticalList ul.clients li ul.client li ul li.created,
+  div#verticalList ul.clients li ul.client li ul li.id,
+  div#verticalList ul.clients li ul.client li ul li.from {
     font-size: 0.9em;
     font-weight: 400;
     color: #000000;
   }
 
   @media (max-width: 1400px) {
-    div#verticalList ul.shipments li ul.shipment li.image {
+    div#verticalList ul.clients li ul.client li.image {
       display: none;
     }
 
-    div#verticalList ul.shipments li ul.shipment {
+    div#verticalList ul.clients li ul.client {
       padding: 0.5rem;
     }
 
-    div#verticalList ul.shipments li ul.shipment ul li {
+    div#verticalList ul.clients li ul.client ul li {
       margin-left: 0;
     }
 
-    div#verticalList ul.shipments li ul.shipment {
+    div#verticalList ul.clients li ul.client {
       justify-content: space-around;
     }
   }
 
   @media (max-width: 1200px) {
-    div#verticalList ul.shipments li ul.shipment li.image {
+    div#verticalList ul.clients li ul.client li.image {
       display: block;
     }
 
-    div#verticalList ul.shipments li ul.shipment {
+    div#verticalList ul.clients li ul.client {
       padding: 0;
     }
 
-    div#verticalList ul.shipments li ul.shipment ul li {
+    div#verticalList ul.clients li ul.client ul li {
       margin-left: 0.5rem;
     }
 
-    div#verticalList ul.shipments li ul.shipment {
+    div#verticalList ul.clients li ul.client {
       justify-content: end;
     }
   }
@@ -206,7 +218,7 @@ export default {
       width: 100%;
     }
 
-    div#verticalList ul.shipments li ul.shipment li.summary {
+    div#verticalList ul.clients li ul.client li.summary {
       margin: 0 auto;
     }
   }

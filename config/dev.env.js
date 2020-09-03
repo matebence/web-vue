@@ -14,6 +14,8 @@ module.exports = merge(prodEnv, {
   GRANT_TYPE_REFRESH_TOKEN: '"refresh_token"',
 
   PARCEL_NEW_STATUS_ID: '"5edf8982ca0d9d132cd3b8dd"',
+  PARCEL_ACCEPTED_STATUS_ID: '"5edf8982ca0d9d132cd3b8df"',
+  PARCEL_DONE_STATUS_ID: '"5edf8982ca0d9d132cd3b8e2"',
   COMPANY_PRICE_PROFIT_ID: '"5ef89dcd56f69d17643556e8"',
 
   APP_ROLE_CLIENT: '"ROLE_CLIENT"',

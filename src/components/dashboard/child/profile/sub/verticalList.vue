@@ -4,7 +4,7 @@
       class="settings"
       :key="setting.itemId"
       @click.prevent="onSelectedSetting(setting)"
-      v-for="setting in items">
+      v-for="setting in components.appVerticalList.items">
       <li
         :class="{active: activeEl.itemId === setting.itemId}">
         <ul class="setting">
@@ -24,24 +24,28 @@ export default {
   props: ['activeEl'],
   data: function () {
     return {
-      items: [
-        {
-          itemId: 1,
-          value: 'Profil',
-          component: 'app-profile',
-          icon: 'user'
-        }, {
-          itemId: 2,
-          value: 'Účet',
-          component: 'app-money',
-          icon: 'wallet'
-        }, {
-          itemId: 3,
-          value: 'Bezpečnosť',
-          component: 'app-security',
-          icon: 'shield-alt'
+      components: {
+        appVerticalList: {
+          items: [
+            {
+              itemId: 1,
+              value: 'Profil',
+              component: 'app-profile',
+              icon: 'user'
+            }, {
+              itemId: 2,
+              value: 'Účet',
+              component: 'app-money',
+              icon: 'wallet'
+            }, {
+              itemId: 3,
+              value: 'Bezpečnosť',
+              component: 'app-security',
+              icon: 'shield-alt'
+            }
+          ]
         }
-      ]
+      }
     }
   },
   methods: {

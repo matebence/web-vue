@@ -5,8 +5,8 @@
         <div class="form-group">
           <input
             autocomplete="off"
-            v-model="navigator.form.from.value"
-            :disabled="parcel.search.shipment.parcelId > 0 || parcel.activeEl.parcelId === 0"
+            v-model="components.appHereMap.form.from.value"
+            :disabled="parcel.search.parcelId > 0 || parcel.activeEl.parcelId === 0"
             type="text"
             class="form-control"
             id="from"
@@ -14,15 +14,15 @@
             @input="onAutoCompletePlace($event)">
           <div class="autocomplete">
             <ul>
-              <li v-for="place in navigator.form.from.autoComplete" :key="place.id" data-element="from" @click.prevent="onSelectPlace($event.target)">{{here.country.name}}, {{place.fullName}}</li>
+              <li v-for="place in components.appHereMap.form.from.autoComplete" :key="place.id" data-element="from" @click.prevent="onSelectPlace($event.target)">{{here.country.name}}, {{place.fullName}}</li>
             </ul>
           </div>
         </div>
         <div class="form-group">
           <input
             autocomplete="off"
-            v-model="navigator.form.to.value"
-            :disabled="parcel.search.shipment.parcelId > 0 || parcel.activeEl.parcelId === 0"
+            v-model="components.appHereMap.form.to.value"
+            :disabled="parcel.search.parcelId > 0 || parcel.activeEl.parcelId === 0"
             type="text"
             class="form-control"
             id="to"
@@ -30,27 +30,27 @@
             @input="onAutoCompletePlace($event)">
           <div class="autocomplete">
             <ul>
-              <li v-for="place in navigator.form.to.autoComplete" :key="place.id" data-element="to" @click.prevent="onSelectPlace($event.target)">{{here.country.name}}, {{place.fullName}}</li>
+              <li v-for="place in components.appHereMap.form.to.autoComplete" :key="place.id" data-element="to" @click.prevent="onSelectPlace($event.target)">{{here.country.name}}, {{place.fullName}}</li>
             </ul>
           </div>
         </div>
         <button
           @click.prevent="calculatePriceByDistance"
           type="submit"
-          :disabled="(parcel.search.shipment.parcelId > 0) || (navigator.form.from.value.length < 3 || navigator.form.to.value.length < 3)"
+          :disabled="(parcel.search.parcelId > 0) || (components.appHereMap.form.from.value.length < 3 || components.appHereMap.form.to.value.length < 3)"
           class="btn btn-primary">Hľadať</button>
       </form>
       <div id="summary">
         <ul>
-          <li><span>Dľžka:</span> {{formatDistance(navigator.summary.values.length)}}</li>
-          <li><span>Čas:</span> {{formatDuration(navigator.summary.values.time)}}</li>
-          <li><span>Cena:</span> {{formatPrice(navigator.summary.values.length, navigator.courier.price, navigator.company.profit)}}</li>
+          <li><span>Dľžka:</span> {{formatDistance(components.appHereMap.summary.values.length)}}</li>
+          <li><span>Čas:</span> {{formatDuration(components.appHereMap.summary.values.time)}}</li>
+          <li><span>Cena:</span> {{formatPrice(components.appHereMap.summary.values.length, components.appHereMap.courier.price, components.appHereMap.company.profit)}}</li>
         </ul>
       </div>
       <div id="finish">
         <button
           type="submit"
-          :disabled="(courier.search.activeEl.courierId === 0) || (parcel.search.shipment.parcelId > 0) || (navigator.form.from.value.length < 3 || navigator.form.to.value.length < 3)"
+          :disabled="(courier.activeEl.courierId === 0) || (parcel.search.parcelId > 0) || (components.appHereMap.form.from.value.length < 3 || components.appHereMap.form.to.value.length < 3)"
           @click.prevent="onCreate(false)"
           class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
       </div>
@@ -80,11 +80,11 @@ import 'here-js-api/scripts/mapsjs-core'
 import 'here-js-api/scripts/mapsjs-service'
 import 'here-js-api/scripts/mapsjs-mapevents'
 
-import bleskMarker from '@/assets/img/blesk-marker.png'
-import apply from '@/components/common/apply'
-import modal from '@/components/common/modal'
-import * as types from '@/store/types'
 import {mapGetters} from 'vuex'
+import * as types from '@/store/types'
+import modal from '@/components/common/modal'
+import apply from '@/components/common/apply'
+import bleskMarker from '@/assets/img/blesk-marker.png'
 
 export default {
   created: function () {
@@ -101,7 +101,7 @@ export default {
         const location = results.pop()
 
         this.here.country.name = location.country
-        this.navigator.company.profit = Number(profit.price)
+        this.components.appHereMap.company.profit = Number(profit.price)
         this.here.country.value.center = {lng: location.lon, lat: location.lat}
 
         return this.here.country.value
@@ -121,43 +121,43 @@ export default {
   props: ['parcel', 'courier'],
   data: function () {
     return {
-      navigator: {
-        form: {
-          from: {
-            value: '',
-            autoComplete: {
+      components: {
+        appHereMap: {
+          form: {
+            from: {
+              value: '',
+              autoComplete: {
+              },
+              geo: {
+                lat: 0,
+                lng: 0
+              }
             },
-            geo: {
-              lat: 0,
-              lng: 0
+            to: {
+              value: '',
+              autoComplete: {
+              },
+              geo: {
+                lat: 0,
+                lng: 0
+              }
             }
           },
-          to: {
-            value: '',
-            autoComplete: {
-            },
-            geo: {
-              lat: 0,
-              lng: 0
+          summary: {
+            isSet: false,
+            values: {
+              length: 0,
+              time: 0,
+              price: 0
             }
+          },
+          courier: {
+            price: 0.00
+          },
+          company: {
+            profit: 0.00
           }
         },
-        summary: {
-          isSet: false,
-          values: {
-            length: 0,
-            time: 0,
-            price: 0
-          }
-        },
-        courier: {
-          price: 0.00
-        },
-        company: {
-          profit: 0.00
-        }
-      },
-      components: {
         appModal: {
           text: null,
           title: null,
@@ -216,19 +216,19 @@ export default {
     appModal: modal
   },
   watch: {
-    'parcel.search.shipment.parcelId': function (newValue, oldValue) {
+    'parcel.search.parcelId': function (newValue, oldValue) {
       if (newValue === undefined) return this.removePreviousRoutes()
 
-      this.navigator.form.from.value = this.parcel.search.shipment.from
-      this.navigator.form.to.value = this.parcel.search.shipment.to
-      this.navigator.summary.isSet = true
+      this.components.appHereMap.form.from.value = this.parcel.search.from
+      this.components.appHereMap.form.to.value = this.parcel.search.to
+      this.components.appHereMap.summary.isSet = true
       return this.visualizeOnMap()
     },
     'parcel.activeEl.parcelId': function (newValue, oldValue) {
       if (newValue === 0) return this.removePreviousRoutes()
     },
-    'courier.search.activeEl.courierId': function (newValue, oldValue) {
-      if (newValue > 0 && !this.navigator.summary.isSet) return this.calculatePriceByDistance()
+    'courier.activeEl.courierId': function (newValue, oldValue) {
+      if (newValue > 0 && !this.components.appHereMap.summary.isSet) return this.calculatePriceByDistance()
     }
   },
   computed: {
@@ -239,13 +239,13 @@ export default {
   methods: {
     geoCode: function (coordinates) {
       const searchService = this.here.platform.getSearchService()
-      let isLast = Object.keys(this.navigator.form).length
-      for (const item in this.navigator.form) {
-        const geocodingParameters = {q: this.navigator.form[item].value}
+      let isLast = Object.keys(this.components.appHereMap.form).length
+      for (const item in this.components.appHereMap.form) {
+        const geocodingParameters = {q: this.components.appHereMap.form[item].value}
         searchService.geocode(geocodingParameters, onSuccess => {
           const position = onSuccess.items.pop().position
-          this.navigator.form[item].geo = {...position}
-          if (!--isLast) coordinates(this.navigator.form)
+          this.components.appHereMap.form[item].geo = {...position}
+          if (!--isLast) coordinates(this.components.appHereMap.form)
         }, onError => { console.warn(onError) })
       }
     },
@@ -255,11 +255,11 @@ export default {
       const reverseGeocodingParameters = {at: localStorage.getItem('position'), limit: '1'}
       return searchService.reverseGeocode(reverseGeocodingParameters, onSuccess => {
         const place = Object.values(onSuccess.items).pop()
-        this.navigator.form.from.value = `${this.here.country.name}, ${place.address.city}`
+        this.components.appHereMap.form.from.value = `${this.here.country.name}, ${place.address.city}`
       }, onError => { console.warn(onError) })
     },
     visualizeOnMap: function () {
-      if (this.navigator.form.from.value.length > 2 && this.navigator.form.to.value.length > 2) {
+      if (this.components.appHereMap.form.from.value.length > 2 && this.components.appHereMap.form.to.value.length > 2) {
         return this.geoCode(coordinates => {
           this.here.routingConfiguration = {
             ...this.here.routingConfiguration,
@@ -293,42 +293,42 @@ export default {
           group.addObjects([outline, arrows])
           travelSummary = section.travelSummary
         })
-        this.navigator.summary.values.time = Number(travelSummary.duration)
-        this.navigator.summary.values.length = Number(travelSummary.length)
+        this.components.appHereMap.summary.values.time = Number(travelSummary.duration)
+        this.components.appHereMap.summary.values.length = Number(travelSummary.length)
         return this.here.map.getViewModel().setLookAtData({bounds: group.getBoundingBox()}, true)
       }
     },
     removePreviousRoutes: function () {
-      this.navigator.summary.isSet = false
+      this.components.appHereMap.summary.isSet = false
 
-      this.navigator.summary.values.length = 0
-      this.navigator.summary.values.time = 0
-      this.navigator.summary.values.price = 0
+      this.components.appHereMap.summary.values.length = 0
+      this.components.appHereMap.summary.values.time = 0
+      this.components.appHereMap.summary.values.price = 0
 
-      this.navigator.form.from.value = ''
-      this.navigator.form.to.value = ''
+      this.components.appHereMap.form.from.value = ''
+      this.components.appHereMap.form.to.value = ''
 
       return this.here.map.getObjects().forEach(e => this.here.map.removeObject(e))
     },
     calculatePriceByDistance: function () {
-      if (this.courier.search.activeEl.courierId === 0) return this.showAlertModal('Upozornenie', 'Nemáte zvolené kuriéra.', 'Zatvoriť')
-      const courier = Object.values(this.courier.search.user).filter(e => e.accountId === this.courier.search.activeEl.courierId).pop()
+      if (this.courier.activeEl.courierId === 0) return this.showAlertModal('Upozornenie', 'Nemáte zvolené kuriéra.', 'Zatvoriť')
+      const courier = Object.values(this.courier.search.user).filter(e => e.accountId === this.courier.activeEl.courierId).pop()
       this.$store.dispatch(types.ACTION_PREFERENCE_SEARCH, {accountId: courier.accountId, name: 'Cena prepravy (eur/1km)'})
         .then(result => {
-          this.navigator.courier.price = Object.values(result).pop().value
+          this.components.appHereMap.courier.price = Object.values(result).pop().value
           return this.visualizeOnMap()
         })
         .catch(err => console.warn(err.message))
     },
     formatPrice: function (distance, price, profit) {
       const formatter = new Intl.NumberFormat('sk-SK', {style: 'currency', currency: 'EUR'})
-      if (!this.navigator.summary.isSet) {
+      if (!this.components.appHereMap.summary.isSet) {
         const total = parseFloat(distance / 1000 * price) + profit
         return total > profit ? formatter.format(total) : formatter.format(0)
-      } else if (this.parcel.search.shipment.price === undefined && this.navigator.summary.isSet) {
+      } else if (this.parcel.search.price === undefined && this.components.appHereMap.summary.isSet) {
         return formatter.format(0)
       } else {
-        return formatter.format(this.parcel.search.shipment.price)
+        return formatter.format(this.parcel.search.price)
       }
     },
     formatDuration: function (duration) {
@@ -352,31 +352,31 @@ export default {
     },
     onAutoCompletePlace: function ($event) {
       if ($event.target.value.length < 3 && $event.target.id === 'from') {
-        this.navigator.form.from.autoComplete = {}
+        this.components.appHereMap.form.from.autoComplete = {}
       } else if ($event.target.value.length < 3 && $event.target.id === 'to') {
-        this.navigator.form.to.autoComplete = {}
+        this.components.appHereMap.form.to.autoComplete = {}
       } else {
         return this.$store.dispatch(types.ACTION_PLACE_SEARCH, { fullName: $event.target.value })
           .then(result => {
-            if ($event.target.id === 'from') this.navigator.form.from.autoComplete = Object.values(result)
-            if ($event.target.id === 'to') this.navigator.form.to.autoComplete = Object.values(result)
+            if ($event.target.id === 'from') this.components.appHereMap.form.from.autoComplete = Object.values(result)
+            if ($event.target.id === 'to') this.components.appHereMap.form.to.autoComplete = Object.values(result)
           })
           .catch(err => console.warn(err.message))
       }
     },
     onSelectPlace: function ($event) {
       if ($event.dataset.element === 'from') {
-        this.navigator.form.from.value = $event.textContent
-        this.navigator.form.from.autoComplete = {}
+        this.components.appHereMap.form.from.value = $event.textContent
+        this.components.appHereMap.form.from.autoComplete = {}
       } else if ($event.dataset.element === 'to') {
-        this.navigator.form.to.value = $event.textContent
-        this.navigator.form.to.autoComplete = {}
+        this.components.appHereMap.form.to.value = $event.textContent
+        this.components.appHereMap.form.to.autoComplete = {}
       }
     },
     onCreate: function (applied) {
-      if (this.navigator.summary.values.time === 0 || this.navigator.summary.values.length === 0) {
+      if (this.components.appHereMap.summary.values.time === 0 || this.components.appHereMap.summary.values.length === 0) {
         return this.showAlertModal('Upozornenie', 'Dľžka cesty nie je známa.', 'Zatvoriť')
-      } else if (Number(parseFloat(this.navigator.summary.values.length / 1000 * this.navigator.courier.price).toFixed(2)) > localStorage.getItem('balance')) {
+      } else if (Number(parseFloat(this.components.appHereMap.summary.values.length / 1000 * this.components.appHereMap.courier.price).toFixed(2)) > localStorage.getItem('balance')) {
         return this.showAlertModal('Upozornenie', 'Nemáte dostatok penazí na účte.', 'Zatvoriť')
       } else {
         if (applied) {
@@ -385,7 +385,7 @@ export default {
 
           this.$store.dispatch(types.ACTION_PARCEL_CREATE, payload)
             .then(result => {
-              payload = {shipments: [{ courier: this.courier.search.activeEl.courierId, parcelId: result.id, from: this.navigator.form.from.value, to: this.navigator.form.to.value, status: process.env.PARCEL_NEW_STATUS_ID, price: Number(parseFloat(this.navigator.summary.values.length / 1000 * this.navigator.courier.price).toFixed(2)) }]}
+              payload = {shipments: [{ courier: this.courier.activeEl.courierId, parcelId: result.id, from: this.components.appHereMap.form.from.value, to: this.components.appHereMap.form.to.value, status: process.env.PARCEL_NEW_STATUS_ID, price: Number(parseFloat(this.components.appHereMap.summary.values.length / 1000 * this.components.appHereMap.courier.price).toFixed(2)) }]}
               return this.$store.dispatch(types.ACTION_SHIPMENT_CREATE, payload)
             })
             .then(result => {
@@ -467,7 +467,8 @@ export default {
     background: #f1f1f1;
   }
 
-  div#hereMap div#map form button, div#hereMap div#map div#finish button {
+  div#hereMap div#map form button,
+  div#hereMap div#map div#finish button {
     background: #176c9d;
     text-align: center;
     color: #ffffff;
@@ -478,11 +479,13 @@ export default {
     z-index: 999;
   }
 
-  div#hereMap div#map form button:hover, div#hereMap div#map div#finish button:hover {
+  div#hereMap div#map form button:hover,
+  div#hereMap div#map div#finish button:hover {
     background: #187fb1;
   }
 
-  div#hereMap div#map form button:disabled, div#hereMap div#map div#finish button:disabled {
+  div#hereMap div#map form button:disabled,
+  div#hereMap div#map div#finish button:disabled {
     background: #095174;
   }
 

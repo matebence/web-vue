@@ -3,16 +3,15 @@
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
         <app-manage
-          :activeEl="components.appParcel.activeEl" />
+          :activeEl="components.appParcel.parcel.activeEl" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-courier
-          :parcel="components.appParcel"
-          :courier="components.appCourier"
-          :activeEl="components.appParcel.activeEl"/>
+          :parcel="components.appParcel.parcel"
+          :courier="components.appParcel.courier" />
         <app-here-map
-          :parcel="components.appParcel"
-          :courier="components.appCourier" />
+          :parcel="components.appParcel.parcel"
+          :courier="components.appParcel.courier" />
       </div>
     </div>
   </div>
@@ -34,19 +33,19 @@ export default {
     return {
       components: {
         appParcel: {
-          search: {
-            shipment: {
+          parcel: {
+            search: {
+            },
+            activeEl: {
+              itemId: 1,
+              value: 'Pridelené',
+              parcelId: 0
             }
           },
-          activeEl: {
-            itemId: 1,
-            value: 'Pridelené',
-            parcelId: 0
-          }
-        },
-        appCourier: {
-          search: {
-            user: {
+          courier: {
+            search: {
+              user: {
+              }
             },
             activeEl: {
               courierId: 0
@@ -62,13 +61,13 @@ export default {
     appHereMap: hereMap
   },
   watch: {
-    'components.appParcel.activeEl.parcelId': function (newValue, oldValue) {
+    'components.appParcel.parcel.activeEl.parcelId': function (newValue, oldValue) {
       if (newValue <= 0) {
-        this.components.appParcel.search.shipment = {}
+        this.components.appParcel.parcel.search = {}
       } else {
         return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {parcelId: newValue})
           .then(result => {
-            this.components.appParcel.search.shipment = Object.values(result).pop()
+            this.components.appParcel.parcel.search = Object.values(result).pop()
           })
           .catch(err => console.warn(err.message))
       }

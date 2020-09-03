@@ -63,7 +63,7 @@ const routes = [
     component: dashboard,
     name: 'dashboard',
     beforeEnter: function (to, from, next) {
-      return store.state.authorization.payload.signIn.data.accessToken ? next() : next('/sign-in')
+      return store.state.authorization.payload.signIn.data.accessToken ? next() : next('/sign-out')
     },
     children: [
       {
@@ -77,7 +77,7 @@ const routes = [
             }
             return next()
           }
-          return next('/sign-in')
+          return next('/sign-out')
         }
       }, {
         path: 'client',
@@ -90,7 +90,7 @@ const routes = [
             }
             return next()
           }
-          return next('/sign-in')
+          return next('/sign-out')
         }
       }, {
         path: 'vehicle',
@@ -103,7 +103,7 @@ const routes = [
             }
             return next()
           }
-          return next('/sign-in')
+          return next('/sign-out')
         }
       }, {
         path: 'message',
@@ -116,7 +116,7 @@ const routes = [
             }
             return next()
           }
-          return next('/sign-in')
+          return next('/sign-out')
         }
       }, {
         path: 'shipment',
@@ -129,14 +129,14 @@ const routes = [
             }
             return next()
           }
-          return next('/sign-in')
+          return next('/sign-out')
         }
       }, {
         path: 'settings',
         name: 'settings',
         component: settings,
         beforeEnter: function (to, from, next) {
-          return (store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_CLIENT) || store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_COURIER)) ? next() : next('/sign-in')
+          return (store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_CLIENT) || store.state.authorization.payload.signIn.data.authorities.includes(process.env.APP_ROLE_COURIER)) ? next() : next('/sign-out')
         }
       }
     ]

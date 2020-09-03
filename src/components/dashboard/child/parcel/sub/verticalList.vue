@@ -4,7 +4,7 @@
       <li
         :key="option.id"
         @click.prevent="onSelectedTab(option)"
-        v-for="option in tab.items"
+        v-for="option in components.appVerticalList.items"
         :class="{active: activeEl.itemId === option.itemId}">{{option.value}}</li>
     </ul>
     <ul class="parcels">
@@ -12,11 +12,11 @@
         :key="item.id"
         @click.prevent="onSelectedParcel(item)"
         v-for="item in parcelSearch"
-        v-show="activeEl.value === tab.items[0].value || activeEl.value === tab.items[2].value"
+        v-show="activeEl.value === components.appVerticalList.items[0].value || activeEl.value === components.appVerticalList.items[2].value"
         :class="{active: activeEl.parcelId === item.id}">
         <ul class="parcel">
           <li class="image">
-            <font-awesome-icon :icon="['fas', formatIcon(tab.items[0].value)]"/>
+            <font-awesome-icon :icon="['fas', formatIcon(components.appVerticalList.items[0].value)]"/>
           </li>
           <li>
             <ul>
@@ -35,11 +35,11 @@
         :key="item.id"
         @click.prevent="onSelectedParcel(item)"
         v-for="item in parcelCreate"
-        v-show="activeEl.value === tab.items[1].value || activeEl.value === tab.items[2].value"
+        v-show="activeEl.value === components.appVerticalList.items[1].value || activeEl.value === components.appVerticalList.items[2].value"
         :class="{active: activeEl.parcelId === item.id}">
         <ul class="parcel">
           <li class="image">
-            <font-awesome-icon :icon="['fas', formatIcon(tab.items[1].value)]"/>
+            <font-awesome-icon :icon="['fas', formatIcon(components.appVerticalList.items[1].value)]"/>
           </li>
           <li>
             <ul>
@@ -55,17 +55,17 @@
 
       <li
         class="empty-list"
-        v-if="(parcelSearch !== undefined) && (Object.keys(parcelSearch).length === 0) && (activeEl.value === tab.items[0].value)">
+        v-if="(parcelSearch !== undefined) && (Object.keys(parcelSearch).length === 0) && (activeEl.value === components.appVerticalList.items[0].value)">
         Zoznam je prázdny
       </li>
       <li
         class="empty-list"
-        v-if="(parcelCreate !== undefined) && (Object.keys(parcelCreate).length === 0) && (activeEl.value === tab.items[1].value)">
+        v-if="(parcelCreate !== undefined) && (Object.keys(parcelCreate).length === 0) && (activeEl.value === components.appVerticalList.items[1].value)">
         Zoznam je prázdny
       </li>
       <li
         class="empty-list"
-        v-if="(parcelSearch !== undefined && parcelCreate !== undefined) && (Object.keys(parcelSearch).length === 0 && Object.keys(parcelCreate).length === 0) && (activeEl.value === tab.items[2].value)">
+        v-if="(parcelSearch !== undefined && parcelCreate !== undefined) && (Object.keys(parcelSearch).length === 0 && Object.keys(parcelCreate).length === 0) && (activeEl.value === components.appVerticalList.items[2].value)">
         Zoznam je prázdny
       </li>
     </ul>
@@ -85,21 +85,23 @@ export default {
   props: ['activeEl'],
   data: function () {
     return {
-      tab: {
-        items: [
-          {
-            itemId: 1,
-            value: 'Pridelené'
-          },
-          {
-            itemId: 2,
-            value: 'Nepridelené'
-          },
-          {
-            itemId: 3,
-            value: 'Všetky'
-          }
-        ]
+      components: {
+        appVerticalList: {
+          items: [
+            {
+              itemId: 1,
+              value: 'Pridelené'
+            },
+            {
+              itemId: 2,
+              value: 'Nepridelené'
+            },
+            {
+              itemId: 3,
+              value: 'Všetky'
+            }
+          ]
+        }
       }
     }
   },
@@ -121,7 +123,7 @@ export default {
       this.activeEl.itemId = el.itemId
       this.activeEl.value = el.value
 
-      if (this.activeEl.value === this.tab.items[0].value || this.activeEl.value === this.tab.items[2].value) {
+      if (this.activeEl.value === this.components.appVerticalList.items[0].value || this.activeEl.value === this.components.appVerticalList.items[2].value) {
         return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.accountId})
           .catch(err => console.warn(err.message))
       }
