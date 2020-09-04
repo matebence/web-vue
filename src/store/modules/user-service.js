@@ -336,7 +336,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.user.error.message)
           })
       })
   },
@@ -384,7 +384,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.user.error.message)
           })
       })
   },
@@ -426,7 +426,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.user.error.message)
           })
       })
   },
@@ -468,7 +468,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.user.error.message)
           })
       })
   },
@@ -510,7 +510,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.gender.error.message)
           })
       })
   },
@@ -552,7 +552,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.payout.error.message)
           })
       })
   },
@@ -594,7 +594,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.payment.error.message)
           })
       })
   }

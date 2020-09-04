@@ -2,32 +2,26 @@
   <div id="index">
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
-        <h1>Klienti</h1>
-        <div
-          v-show="isSelected"
-          id="modify">
-          <button
-            @click.prevent="components.appClient.activeEl.shipmentId = 0">
-            <font-awesome-icon
-              :icon="['fas', 'ban']"/>
-          </button>
-        </div>
-        <app-vertical-list
+        <app-manage
           :activeEl="components.appClient.activeEl"
           :shipment="components.appClient.shipment" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
-        <app-instruction />
-        <app-here-map />
+        <app-horizontal-list
+          :activeEl="components.appClient.activeEl"
+          :action="components.appClient.shipment.action"/>
+        <app-here-map
+          :activeEl="components.appClient.activeEl"
+          :shipment="components.appClient.shipment" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import manage from '@/components/dashboard/child/client/sub/manage'
 import hereMap from '@/components/dashboard/child/client/sub/hereMap'
-import instruction from '@/components/dashboard/child/client/sub/instruction'
-import verticalList from '@/components/dashboard/child/client/sub/verticalList'
+import horizontalList from '@/components/dashboard/child/client/sub/horizontalList'
 
 export default {
   name: 'index',
@@ -37,6 +31,8 @@ export default {
         appClient: {
           shipment: {
             search: {
+            },
+            action: {
             }
           },
           activeEl: {
@@ -48,59 +44,14 @@ export default {
     }
   },
   components: {
+    appManage: manage,
     appHereMap: hereMap,
-    appInstruction: instruction,
-    appVerticalList: verticalList
-  },
-  computed: {
-    isSelected: function () {
-      return this.components.appClient.activeEl.shipmentId !== 0
-    }
+    appHorizontalList: horizontalList
   }
 }
 </script>
 
 <style scoped>
-  div#index h1 {
-    margin-top: 2rem;
-    font-size: 2em;
-    display: inline-block;
-  }
-
-  div#index div#modify {
-    display: inline;
-    float: right;
-    margin-top: 1rem;
-  }
-
-  div#index div#modify button {
-    display: inline;
-    text-align: right;
-    margin-top: 1.3rem;
-    margin-right: 0.5rem;
-    background: #176c9d;
-    border: none;
-    border-radius: 50%;
-    width: 1.8rem;
-    height: 1.8rem;
-    line-height: 1.3rem;
-    text-align: center;
-    font-size: 0.9em;
-  }
-
-  div#index div#modify button:hover {
-    background: #187fb1;
-  }
-
-  div#index div#modify button:focus {
-    outline: 0;
-  }
-
-  div#index div#modify button svg {
-    font-size: 0.8em;
-    color: #ffffff;
-  }
-
   div#index div#main-content,
   div#index div#content {
     width: 100%;

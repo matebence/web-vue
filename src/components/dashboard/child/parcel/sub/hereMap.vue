@@ -65,7 +65,7 @@
     <div class="apply-wrapper">
       <app-apply
         @applied="onCreate($event)"
-        :applyId="'hereMapApply'"
+        :applyId="'hereParcelMapApply'"
         :text="components.appApply.text"
         :title="components.appApply.title"
         :positiveButton="components.appApply.positiveButton"
@@ -188,6 +188,7 @@ export default {
         routingConfiguration: {
           routingMode: 'fast',
           transportMode: 'car',
+          lang: 'sk-SK',
           return: 'polyline,turnByTurnActions,actions,instructions,travelSummary'
         },
         outline: {
@@ -348,7 +349,7 @@ export default {
       this.components.appApply.text = text
       this.components.appApply.positiveButton = 'Áno, vytvoriť'
       this.components.appApply.negativeButton = 'Zrušiť'
-      return bootstrap('#hereMapApply').modal('show')
+      return bootstrap('#hereParcelMapApply').modal('show')
     },
     onAutoCompletePlace: function ($event) {
       if ($event.target.value.length < 3 && $event.target.id === 'from') {
@@ -408,7 +409,7 @@ export default {
   div#hereMap {
     border-bottom-left-radius: 3rem;
     overflow: hidden;
-    height: 510px;
+    height: 620px;
     border-top: solid 0.08rem black;
   }
 
@@ -499,7 +500,7 @@ export default {
   div#hereMap div#map div#finish {
     z-index: 2;
     position: absolute;
-    bottom: 2rem;
+    bottom: 1rem;
     right: 2rem;
   }
 

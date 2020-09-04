@@ -291,7 +291,6 @@ export default {
   div#security {
     overflow: auto;
     height: 100%;
-    padding-bottom: 2rem;
   }
 
   div#security h1 {

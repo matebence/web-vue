@@ -21,7 +21,7 @@
             <ul>
               <li class="id">{{item.status.name}}</li>
               <li class="from">{{item.from.split(',').pop()}} - {{item.to.split(',').pop()}}</li>
-              <li class="created">{{item.createdAt}}</li>
+              <li class="created">{{formatDate(item.createdAt)}} {{formatTime(item.createdAt)}}</li>
             </ul>
           </li>
         </ul>
@@ -43,7 +43,10 @@ export default {
   created: function () {
     return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {courier: this.signIn.accountId, status: process.env.PARCEL_NEW_STATUS_ID})
       .then(result => { this.shipment.search = result })
-      .catch(err => console.warn(err.message))
+      .catch(err => {
+        this.shipment.search = null
+        console.warn(err.message)
+      })
   },
   name: 'verticalList',
   props: ['activeEl', 'shipment'],
@@ -72,6 +75,14 @@ export default {
       }
     }
   },
+  watch: {
+    'activeEl.itemId': function (newValue, oldValue) {
+      const status = this.components.appVerticalList.items.filter(e => e.itemId === newValue).pop().id
+      return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {courier: this.signIn.accountId, status: status})
+        .then(result => { this.shipment.search = result })
+        .catch(err => { console.warn(err.message) })
+    }
+  },
   computed: {
     ...mapGetters({
       signIn: types.GETTER_SIGN_IN_DATA
@@ -79,19 +90,21 @@ export default {
   },
   methods: {
     onSelectedTab: function (el) {
+      this.shipment.search = null
       this.activeEl.shipmentId = 0
-      this.activeEl.itemId = el.itemId
       this.activeEl.value = el.value
-
-      return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {courier: this.signIn.accountId, status: el.id})
-        .then(result => { this.shipment.search = result })
-        .catch(err => {
-          this.shipment.search = null
-          console.warn(err.message)
-        })
+      this.activeEl.itemId = el.itemId
     },
     onSelectedShipment: function (el) {
       this.activeEl.shipmentId = el._id
+    },
+    formatDate: function (timestamp) {
+      const date = new Date(timestamp)
+      return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+    },
+    formatTime: function (timestamp) {
+      const time = new Date(timestamp)
+      return `${time.getHours()}:${time.getMinutes()}`
     }
   }
 }
@@ -123,10 +136,6 @@ export default {
 
   div#verticalList ul.clients li ul.client ul {
     text-align: center;
-  }
-
-  div#verticalList ul.clients li ul.client ul li {
-    margin-left: 1rem;
   }
 
   div#verticalList ul.clients li.empty-list {
@@ -165,6 +174,11 @@ export default {
     border-radius: 0.5rem;
     border: solid 0.09rem #176c9d;
     color: #176c9d;
+  }
+
+  div#verticalList ul.clients li ul.client li.summary {
+    display: block;
+    margin: 0 auto;
   }
 
   div#verticalList ul.clients li ul.client li ul li.created,

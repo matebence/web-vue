@@ -115,7 +115,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.place.error.message)
           })
       })
   }

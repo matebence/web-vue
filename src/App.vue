@@ -46,6 +46,10 @@ export default {
     margin-bottom: 0.3rem;
   }
 
+  .H_copyright, .H_imprint {
+    display: none;
+  }
+
   html {
     scroll-behavior: smooth;
     -webkit-touch-callout: none;

@@ -490,7 +490,6 @@ export default {
   div#money {
     overflow: auto;
     height: 100%;
-    padding-bottom: 2rem;
   }
 
   div#money h1 {
@@ -927,6 +926,10 @@ export default {
 
     div#money .card-background {
       max-width: 20rem;
+    }
+
+    div#money .card-item-cover {
+      height: 11.5rem;
     }
 
     div#money .card-band {

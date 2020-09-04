@@ -60,7 +60,7 @@ export default {
 
 <style scoped>
   div#courier {
-    height: 220px;
+    height: 210px;
     width: fit-content;
   }
 

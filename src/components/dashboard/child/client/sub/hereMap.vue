@@ -1,21 +1,41 @@
 <template>
   <div id="hereMap">
     <div id="map" ref="map">
+      <div id="summary">
+        <ul>
+          <li><span>Dľžka:</span> {{formatDistance(components.appHereMap.summary.values.length)}}</li>
+          <li><span>Čas:</span> {{formatDuration(components.appHereMap.summary.values.time)}}</li>
+          <li><span>Cena:</span> {{formatPrice(components.appHereMap.summary.values.price)}}</li>
+        </ul>
+      </div>
       <div id="done">
         <button
           type="submit"
+          :disabled="this.activeEl.itemId !== 2 || this.activeEl.shipmentId === 0"
+          @click.prevent="onCreate(false)"
           class="btn btn-primary"><font-awesome-icon :icon="['fas', 'box']"/></button>
       </div>
+    </div>
+    <div class="apply-wrapper">
+      <app-apply
+        @applied="onCreate($event)"
+        :applyId="'hereClientMapApply'"
+        :text="components.appApply.text"
+        :title="components.appApply.title"
+        :positiveButton="components.appApply.positiveButton"
+        :negativeButton="components.appApply.negativeButton"/>
     </div>
   </div>
 </template>
 
 <script>
+import bootstrap from 'jquery'
 import 'here-js-api/scripts/mapsjs-core'
 import 'here-js-api/scripts/mapsjs-service'
 import 'here-js-api/scripts/mapsjs-mapevents'
 
 import * as types from '@/store/types'
+import apply from '@/components/common/apply'
 import bleskMarker from '@/assets/img/blesk-marker.png'
 
 export default {
@@ -37,15 +57,38 @@ export default {
       })
       .then(result => {
         new H.mapevents.Behavior(new H.mapevents.MapEvents(result))
-        return this.reverseGeoCode()
       })
       .catch(err => console.warn(err.message))
   },
   name: 'hereMap',
+  props: ['activeEl', 'shipment'],
   data: function () {
     return {
       components: {
         appHereMap: {
+          points: {
+            from: {
+              geo: {
+              }
+            },
+            to: {
+              geo: {
+              }
+            }
+          },
+          summary: {
+            values: {
+              length: 0,
+              time: 0,
+              price: 0
+            }
+          }
+        },
+        appApply: {
+          text: null,
+          title: null,
+          positiveButton: null,
+          negativeButton: null
         }
       },
       here: {
@@ -66,6 +109,7 @@ export default {
         routingConfiguration: {
           routingMode: 'fast',
           transportMode: 'car',
+          lang: 'sk-SK',
           return: 'polyline,turnByTurnActions,actions,instructions,travelSummary'
         },
         outline: {
@@ -89,66 +133,104 @@ export default {
       }
     }
   },
+  components: {
+    appApply: apply
+  },
+  watch: {
+    'activeEl.shipmentId': function (newValue, oldValue) {
+      if (this.activeEl.itemId !== 2 || this.activeEl.shipmentId === 0) return this.removePreviousRoutes()
+      this.removePreviousRoutes()
+
+      const data = Object.values(this.shipment.search).filter(e => e._id === newValue).pop()
+      this.components.appHereMap.summary.values.price = data.price
+
+      return this.visualizeOnMap({from: data.from, to: data.to})
+    }
+  },
   methods: {
-    geoCode: function (coordinates) {
+    geoCode: function (points, coordinates) {
+      let isLast = Object.keys(points).length
       const searchService = this.here.platform.getSearchService()
-      let isLast = Object.keys(this.components.appHereMap.form).length
-      for (const item in this.components.appHereMap.form) {
-        const geocodingParameters = {q: this.components.appHereMap.form[item].value}
+      for (const item in points) {
+        const geocodingParameters = {q: points[item]}
         searchService.geocode(geocodingParameters, onSuccess => {
           const position = onSuccess.items.pop().position
-          this.components.appHereMap.form[item].geo = {...position}
-          if (!--isLast) coordinates(this.components.appHereMap.form)
+          this.components.appHereMap.points[item].geo = {...position}
+          if (!--isLast) coordinates(this.components.appHereMap.points)
         }, onError => { console.warn(onError) })
       }
     },
-    reverseGeoCode: function () {
-      if (localStorage.getItem('position') === null) return
-      const searchService = this.here.platform.getSearchService()
-      const reverseGeocodingParameters = {at: localStorage.getItem('position'), limit: '1'}
-      return searchService.reverseGeocode(reverseGeocodingParameters, onSuccess => {
-        const place = Object.values(onSuccess.items).pop()
-        this.components.appHereMap.form.from.value = `${this.here.country.name}, ${place.address.city}`
-      }, onError => { console.warn(onError) })
+    visualizeOnMap: function (points) {
+      return this.geoCode(points, coordinates => {
+        this.here.routingConfiguration = {
+          ...this.here.routingConfiguration,
+          origin: `${coordinates.from.geo.lat},${coordinates.from.geo.lng}`,
+          destination: `${coordinates.to.geo.lat},${coordinates.to.geo.lng}`
+        }
+        const router = this.here.platform.getRoutingService(null, 8)
+        router.calculateRoute(this.here.routingConfiguration, this.drawRoute, onError => { console.warn(onError) })
+      })
     },
-    visualizeOnMap: function () {
-      if (this.components.appHereMap.form.from.value.length > 2 && this.components.appHereMap.form.to.value.length > 2) {
-        return this.geoCode(coordinates => {
-          this.here.routingConfiguration = {
-            ...this.here.routingConfiguration,
-            origin: `${coordinates.from.geo.lat},${coordinates.from.geo.lng}`,
-            destination: `${coordinates.to.geo.lat},${coordinates.to.geo.lng}`
-          }
-          const router = this.here.platform.getRoutingService(null, 8)
-          router.calculateRoute(this.here.routingConfiguration, this.drawRoute, onError => { console.warn(onError) })
-        })
-      }
+    removePreviousRoutes: function () {
+      this.components.appHereMap.summary.values.time = null
+      this.components.appHereMap.summary.values.price = null
+      this.components.appHereMap.summary.values.length = null
+      return this.here.map.getObjects().forEach(e => this.here.map.removeObject(e))
     },
     drawRoute: function (result) {
       if (result.routes.length) {
-        let travelSummary = null
         const group = new H.map.Group()
         const markerIcon = new H.map.Icon(bleskMarker)
 
-        result = result.routes.pop()
-        this.here.map.getObjects().forEach(e => this.here.map.removeObject(e))
+        result = result.routes.pop().sections.pop()
 
-        result.sections.forEach(section => {
-          const polyline = H.geo.LineString.fromFlexiblePolyline(section.polyline)
+        this.shipment.action = result.actions
 
-          const start = new H.map.Marker(section.departure.place.location, {icon: markerIcon})
-          const destination = new H.map.Marker(section.arrival.place.location, {icon: markerIcon})
+        const polyline = H.geo.LineString.fromFlexiblePolyline(result.polyline)
+        const start = new H.map.Marker(result.departure.place.location, {icon: markerIcon})
+        const destination = new H.map.Marker(result.arrival.place.location, {icon: markerIcon})
 
-          const outline = new H.map.Polyline(polyline, {...this.here.outline})
-          const arrows = new H.map.Polyline(polyline, {...this.here.arrows})
+        const outline = new H.map.Polyline(polyline, {...this.here.outline})
+        const arrows = new H.map.Polyline(polyline, {...this.here.arrows})
 
-          this.here.map.addObjects([group, start, destination])
-          group.addObjects([outline, arrows])
-          travelSummary = section.travelSummary
-        })
+        this.here.map.addObjects([group, start, destination])
+        group.addObjects([outline, arrows])
+
+        const travelSummary = result.travelSummary
         this.components.appHereMap.summary.values.time = Number(travelSummary.duration)
         this.components.appHereMap.summary.values.length = Number(travelSummary.length)
+
         return this.here.map.getViewModel().setLookAtData({bounds: group.getBoundingBox()}, true)
+      }
+    },
+    formatPrice: function (price) {
+      const formatter = new Intl.NumberFormat('sk-SK', {style: 'currency', currency: 'EUR'})
+      return formatter.format(price)
+    },
+    formatDuration: function (duration) {
+      return `${Math.floor(duration / 60)}min ${(duration % 60)}sec`
+    },
+    formatDistance: function (distance) {
+      return (`${parseFloat(distance / 1000).toFixed(2)}km`)
+    },
+    showAppliedModal: function (title, text) {
+      this.components.appApply.title = title
+      this.components.appApply.text = text
+      this.components.appApply.positiveButton = 'Áno, odovzdať'
+      this.components.appApply.negativeButton = 'Zrušiť'
+      return bootstrap('#hereClientMapApply').modal('show')
+    },
+    onCreate: function (applied) {
+      if (applied) {
+        const data = Object.values(this.shipment.search).filter(e => e._id === this.activeEl.shipmentId).pop()
+        return this.$store.dispatch(types.ACTION_SHIPMENT_UPDATE, {_id: data._id, courier: data.courier.courierId, parcelId: data.parcelId, from: data.from, to: data.to, status: process.env.PARCEL_DONE_STATUS_ID, price: data.price, express: data.express})
+          .then(result => {
+            this.activeEl.itemId = 3
+            this.activeEl.shipmentId = 0
+          })
+          .catch(err => console.warn(err.message))
+      } else {
+        return this.showAppliedModal('Upozornenie', 'Chystáte sa odovzdať zásielku prijmateľovi po odovzdaní zásielky, zmena už nebude možná!')
       }
     }
   }
@@ -159,7 +241,7 @@ export default {
   div#hereMap {
     border-bottom-left-radius: 3rem;
     overflow: hidden;
-    height: 510px;
+    height: 620px;
     border-top: solid 0.08rem black;
   }
 
@@ -171,7 +253,7 @@ export default {
 
   div#hereMap div.autocomplete ul {
     position: absolute;
-    width: calc(100%);
+    width: 100%;
     background: #ffffff;
     max-height: 15rem;
     overflow: auto;
@@ -211,13 +293,31 @@ export default {
   div#hereMap div#map div#done {
     z-index: 2;
     position: absolute;
-    bottom: 2rem;
+    bottom: 1rem;
     right: 2rem;
   }
 
   div#hereMap div#map div#done button {
     width: 3rem;
     height: 3rem;
+  }
+
+  div#hereMap div#map div#summary {
+    z-index: 2;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 50%;
+    text-align: center;
+    background: #ffffff;
+    border-top-left-radius: 2rem;
+    border-top-right-radius: 2rem;
+    border-left: solid 0.08rem black;
+    border-right: solid 0.08rem black;
+    border-top: solid 0.08rem black;
   }
 
   div#hereMap div#map div#summary ul li {
@@ -233,10 +333,39 @@ export default {
     font-size: 1.3em;
   }
 
+  div#hereMap div#map div#summary ul li {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-left: 1rem;
+    font-size: 1em;
+    display: inline-block;
+  }
+
+  div#hereMap div#map div#summary ul li span {
+    font-weight: 700;
+    font-size: 1.3em;
+  }
+
+  @media (max-width: 1400px) {
+    div#hereMap div#map div#summary {
+      width: 58%;
+    }
+  }
+
+  @media (max-width: 1240px) {
+    div#hereMap div#map div#summary {
+      width: 65%;
+    }
+  }
+
   @media (max-width: 1100px) {
     div#hereMap {
       border: none;
       border-top: solid 0.08rem black;
+    }
+
+    div#hereMap div#map div#summary {
+      width: 78%;
     }
   }
 
@@ -250,17 +379,21 @@ export default {
     div#hereMap div#map div#done {
       bottom: 3rem;
     }
+
+    div#hereMap div#map div#summary {
+      width: 95%;
+    }
   }
 
-  @media (max-width: 430px) {
+  @media (max-width: 428px) {
     div#hereMap div#map div#done {
       bottom: 5rem;
     }
   }
 
-  @media (max-width: 300px) {
+  @media (max-width: 290px) {
     div#hereMap div#map div#done {
-      bottom: 7.5rem;
+      bottom: 8rem;
     }
   }
 </style>

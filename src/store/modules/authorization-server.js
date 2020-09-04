@@ -385,7 +385,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.signIn.error.message)
           })
       })
   },
@@ -445,7 +445,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.signIn.error.message)
           })
       })
   },
@@ -502,7 +502,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.signIn.error.message)
           })
       })
   },
@@ -543,7 +543,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.signUp.error.message)
           })
       })
   },
@@ -587,7 +587,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.signOut.error.message)
           })
       })
   },
@@ -623,7 +623,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.forgetPassword.error.message)
           })
       })
   },
@@ -657,7 +657,7 @@ const actions = {
                 }
               }
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.recoverToken.error.message)
           })
       })
   },
@@ -691,7 +691,7 @@ const actions = {
                 }
               }
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.activationToken.error.message)
           })
       })
   }

@@ -262,7 +262,6 @@ export default {
   div#profile {
     overflow: auto;
     height: 100%;
-    padding-bottom: 2rem;
   }
 
   div#profile h1 {

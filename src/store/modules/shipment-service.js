@@ -264,7 +264,49 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.shipment.error.message)
+          })
+      })
+  },
+
+  [types.ACTION_SHIPMENT_UPDATE]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_SHIPMENT_DATA, {done: false})
+    return this._vm.$resource('{service}/api/shipments/{_id}', {}, {
+      update: {
+        method: 'PUT',
+        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}
+      }
+    }).update({service: 'shipment-service', _id: payload._id}, payload)
+      .then(response => {
+        commit(types.MUTATION_SHIPMENT_DATA, {
+          data: {
+            ...state.payload.shipment.data,
+            update: {
+              ...payload.data
+            }
+          },
+          done: true
+        })
+        return state.payload.shipment.data.update
+      })
+      .catch(err => {
+        return err.json()
+          .then(parsed => {
+            let validations = {}
+            parsed.validations.forEach(e => { validations[e.param] = e.msg })
+
+            commit(types.MUTATION_SHIPMENT_DATA, {
+              error: {
+                is: parsed.error,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
+                from: 'update',
+                reason: {
+                  ...validations
+                }
+              },
+              done: true
+            })
+            throw new Error(state.payload.shipment.error.message)
           })
       })
   },
@@ -305,7 +347,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.shipment.error.message)
           })
       })
   },
@@ -346,7 +388,7 @@ const actions = {
               },
               done: true
             })
-            throw new Error(parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba')
+            throw new Error(state.payload.price.error.message)
           })
       })
   },
