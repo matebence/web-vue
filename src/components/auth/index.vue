@@ -7,7 +7,10 @@
           <keep-alive>
             <component
               :activeEl="components.appAuth.activeEl"
-              :is="components.appAuth.activeEl.component" />
+              :is="components.appAuth.activeEl.component"
+              :appSignIn="components.appAuth.sub.appSignIn"
+              :appSignUp="components.appAuth.sub.appSignUp"
+              :appForgetPassword="components.appAuth.sub.appForgetPassword" />
           </keep-alive>
         </div>
       </div>
@@ -23,7 +26,7 @@ import signOut from '@/components/auth/sub/signOut'
 import forgetPass from '@/components/auth/sub/forgetPass'
 
 export default {
-  created () {
+  created: function () {
     return this.navigateContent(this.$route.params.component)
   },
   beforeMount: function () {
@@ -36,6 +39,66 @@ export default {
     return {
       components: {
         appAuth: {
+          sub: {
+            appSignIn: {
+              form: {
+                values: {
+                  userName: null,
+                  password: null,
+                  stayLoggedIn: false
+                }
+              },
+              alert: {
+                condition: [],
+                type: [],
+                text: []
+              }
+            },
+            appSignUp: {
+              form: {
+                values: {
+                  userName: null,
+                  email: null,
+                  password: null,
+                  confirmPassword: null,
+                  roles: '{}'
+                }
+              },
+              url: {
+                url: {
+                  values: {
+                    id: this.$route.params.id,
+                    key: this.$route.params.key
+                  }
+                }
+              },
+              alert: {
+                condition: [],
+                type: [],
+                text: []
+              }
+            },
+            appForgetPassword: {
+              form: {
+                values: {
+                  email: null
+                }
+              },
+              url: {
+                url: {
+                  values: {
+                    id: this.$route.params.id,
+                    key: this.$route.params.key
+                  }
+                }
+              },
+              alert: {
+                condition: [],
+                type: [],
+                text: []
+              }
+            }
+          },
           activeEl: {
             component: 'app-sign-in'
           }
@@ -50,13 +113,13 @@ export default {
     appForgetPassword: forgetPass
   },
   watch: {
-    '$route' (to, from) {
+    '$route': function (to, from) {
       return this.navigateContent(to.params.component)
     }
   },
   methods: {
     navigateContent: function (componenet = 'sign-in') {
-      if (!['sign-out', 'sign-in', 'sign-up', 'forget-password'].includes(componenet)) {
+      if (!['sign-in', 'sign-out', 'sign-up', 'forget-password'].includes(componenet)) {
         this.$router.push({name: 'error'})
         return
       }
@@ -67,14 +130,6 @@ export default {
 </script>
 
 <style scoped>
-  .animate__animated.animate__fadeOut {
-    --animate-duration: 0.9s;
-  }
-
-  .animate__animated.animate__fadeIn {
-    --animate-duration: 0.9s;
-  }
-
   div#auth div#wrapper {
     position: relative;
     overflow: hidden;
