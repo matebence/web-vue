@@ -14,15 +14,18 @@
         </div>
         <app-vertical-list
           :activeEl="components.appShipment.activeEl"
-          :shipment="components.appShipment.shipment.search" />
+          :shipmentData="components.appShipment.data"
+          :appVerticalList="components.appShipment.sub.appVerticalList" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-properties
+          :shipmentData="filteredShipmentData"
           :activeEl="components.appShipment.activeEl"
-          :shipment="selectedItem" />
+          :appProperties="components.appShipment.sub.appProperties" />
         <app-rating
-          :shipment="selectedItem"
-          :activeEl="components.appShipment.activeEl" />
+          :shipmentData="filteredShipmentData"
+          :activeEl="components.appShipment.activeEl"
+          :appRating="components.appShipment.sub.appRating" />
       </div>
     </div>
   </div>
@@ -31,6 +34,7 @@
 <script>
 import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
+
 import rating from '@/components/dashboard/child/shipment/sub/rating'
 import properties from '@/components/dashboard/child/shipment/sub/properties'
 import verticalList from '@/components/dashboard/child/shipment/sub/verticalList'
@@ -48,12 +52,76 @@ export default {
     return {
       components: {
         appShipment: {
-          parcel: {
-            search: {
+          sub: {
+            appVerticalList: {
+              items: [
+                {
+                  itemId: 1,
+                  value: 'Vlastné'
+                },
+                {
+                  itemId: 2,
+                  value: 'Ostatné'
+                },
+                {
+                  itemId: 3,
+                  value: 'Všetky'
+                }
+              ]
+            },
+            appRating: {
+              form: {
+                values: {
+                  status: [{
+                    id: 1,
+                    name: 'Balík bol doručený'
+                  }],
+                  description: null,
+                  rating: null,
+                  image: {
+                    name: null,
+                    base64: null
+                  },
+                  parcelId: 0
+                }
+              },
+              modal: {
+                text: null,
+                title: null,
+                button: null
+              }
+            },
+            appProperties: {
+              form: {
+                values: {
+                  from: 'Mesto vyzdivnutia zásielky',
+                  to: 'Mesto odovzdania zásielky',
+                  courier: 'Meno kuriéra',
+                  status: 'Stav zásielky',
+                  id: 'Identifikačné číslo zásielky',
+                  sender: 'Meno odosielatela',
+                  receiver: 'Meno prijímatela',
+                  invoice: {
+                    name: 'Faktúra vo forme .pdf',
+                    id: null
+                  }
+                }
+              },
+              modal: {
+                text: null,
+                title: null,
+                button: null
+              }
             }
           },
-          shipment: {
-            search: {
+          data: {
+            parcel: {
+              search: {
+              }
+            },
+            shipment: {
+              search: {
+              }
             }
           },
           activeEl: {
@@ -70,13 +138,13 @@ export default {
     appVerticalList: verticalList
   },
   watch: {
-    'components.appShipment.activeEl.value': function (newValue, oldValue) {
-      this.components.appShipment.shipment.search = {}
+    'components.appShipment.activeEl.itemId': function (newValue, oldValue) {
+      this.components.appShipment.data.shipment.search = {}
 
-      if (newValue === 'Vlastné' || newValue === 'Všetky') {
+      if (newValue === 1 || newValue === 3) {
         this.onFetchShipments({sender: this.signIn.accountId})
       }
-      if (newValue === 'Ostatné' || newValue === 'Všetky') {
+      if (newValue === 2 || newValue === 3) {
         this.onFetchShipments({receiver: this.signIn.accountId})
       }
     }
@@ -85,10 +153,10 @@ export default {
     isSelected: function () {
       return this.components.appShipment.activeEl.shipmentId !== 0
     },
-    selectedItem: function () {
+    filteredShipmentData: function () {
       if (this.components.appShipment.activeEl.shipmentId === 0) return
-      const shipment = Object.values(this.components.appShipment.shipment.search).filter(e => e._id === this.components.appShipment.activeEl.shipmentId).pop()
-      const parcel = Object.values(this.components.appShipment.parcel.search).filter(e => e.id === shipment.parcelId).pop()
+      const shipment = Object.values(this.components.appShipment.data.shipment.search).filter(e => e._id === this.components.appShipment.activeEl.shipmentId).pop()
+      const parcel = Object.values(this.components.appShipment.data.parcel.search).filter(e => e.id === shipment.parcelId).pop()
       return {...shipment, ...parcel}
     },
     ...mapGetters({
@@ -99,11 +167,11 @@ export default {
     onFetchShipments: function (obj) {
       return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, obj)
         .then(result => {
-          this.components.appShipment.parcel.search = result
+          this.components.appShipment.data.parcel.search = result
           return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {parcelId: Object.values(result).map(e => e.id)})
         })
         .then(result => {
-          this.components.appShipment.shipment.search = result
+          this.components.appShipment.data.shipment.search = result
         })
         .catch(err => console.warn(err.message))
     }

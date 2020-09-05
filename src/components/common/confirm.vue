@@ -33,8 +33,8 @@
 </template>
 
 <script>
-import * as types from '@/store/types'
 import {mapGetters} from 'vuex'
+import * as types from '@/store/types'
 
 export default {
   name: 'confirm',

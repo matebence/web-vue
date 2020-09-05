@@ -303,20 +303,22 @@ const actions = {
   },
 
   [types.CLEAR_APP_USEAGE_DATA]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATIONS_CLEAR_PREFERENCE_DATA, {})
+    commit(types.MUTATIONS_CLEAR_ACCOUNT_DATA, {})
+    commit(types.MUTATIONS_CLEAR_LOCATION_DATA, {})
     commit(types.MUTATIONS_CLEAR_PARCEL_DATA, {})
     commit(types.MUTATIONS_CLEAR_CATEGORY_DATA, {})
-    commit(types.MUTATIONS_CLEAR_GENDER_DATA, {})
     commit(types.MUTATIONS_CLEAR_RATING_DATA, {})
-    commit(types.MUTATIONS_CLEAR_USER_DATA, {})
-    commit(types.MUTATIONS_CLEAR_PREFERENCE_DATA, {})
     commit(types.MUTATIONS_CLEAR_PLACE_DATA, {})
     commit(types.MUTATIONS_CLEAR_SHIPMENT_DATA, {})
     commit(types.MUTATIONS_CLEAR_PRICE_DATA, {})
     commit(types.MUTATIONS_CLEAR_INVOICE_DATA, {})
-    commit(types.MUTATIONS_CLEAR_LOCATION_DATA, {})
-    commit(types.MUTATIONS_CLEAR_PAYMENT_DATA, {})
+    commit(types.MUTATIONS_CLEAR_USER_DATA, {})
+    commit(types.MUTATIONS_CLEAR_GENDER_DATA, {})
     commit(types.MUTATIONS_CLEAR_PAYOUT_DATA, {})
+    commit(types.MUTATIONS_CLEAR_PAYMENT_DATA, {})
     commit(types.MUTATIONS_CLEAR_VEHICLE_DATA, {})
+    commit(types.MUTATIONS_CLEAR_TYPE_ERRORS, {})
   },
 
   [types.ACTION_CHECK_BALANCE]: function ({commit, dispatch, state, rootState}, payload) {
@@ -519,7 +521,7 @@ const actions = {
       })
       .then(parsed => {
         commit(types.MUTATION_SIGN_UP_DATA, {
-          error: {
+          data: {
             is: parsed.error,
             message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
             reason: {
@@ -603,13 +605,13 @@ const actions = {
       })
       .then(parsed => {
         commit(types.MUTATION_FORGET_PASSWORD_DATA, {
-          error: {
+          data: {
             is: parsed.error,
             message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba'
           },
           done: true
         })
-        return parsed
+        return state.payload.forgetPassword.data
       })
       .catch(err => {
         return err.json()

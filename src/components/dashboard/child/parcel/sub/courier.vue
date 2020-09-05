@@ -3,29 +3,31 @@
     <h1>Kuriéri</h1>
     <form class="search">
       <input
-        autocomplete="off"
         type="text"
+        autocomplete="off"
         class="searchTerm"
         placeholder="Meno kuriéra"
-        v-model="courier.search.name"
-        :disabled="parcel.activeEl.parcelId >= 0"
+        :disabled="activeEl.parcelId >= 0"
+        v-model="parcelData.courier.search.name"
         @input="onAutoCompleteCourier($event.target.value)">
       <button
-        @click.prevent="onSearchCourier({firstName: courier.search.user.pop().firstName})"
         type="submit"
-        :disabled="parcel.activeEl.parcelId >= 0"
-        class="searchButton">
+        class="searchButton"
+        :disabled="activeEl.parcelId >= 0"
+        @click.prevent="onSearchCourier({firstName: parcelData.courier.search.user.pop().firstName})">
         <i class="fa fa-search"></i>
       </button>
     </form>
     <app-horizontal-list
-      :courier="courier"
-      :parcel="parcel" />
+      :activeEl="activeEl"
+      :parcelData="parcelData"
+      :appHorizontalList="appHorizontalList" />
   </div>
 </template>
 
 <script>
 import * as types from '@/store/types'
+
 import horizontalList from '@/components/dashboard/child/parcel/sub/horizontalList'
 
 export default {
@@ -33,13 +35,17 @@ export default {
     return this.onSearchCourier({roles: process.env.APP_ROLE_COURIER})
   },
   name: 'courier',
-  props: ['parcel', 'courier'],
+  props: ['appHorizontalList', 'parcelData', 'activeEl'],
+  data: function () {
+    return {
+    }
+  },
   components: {
     appHorizontalList: horizontalList
   },
   methods: {
     onAutoCompleteCourier: function ($event) {
-      this.courier.activeEl.courierId = 0
+      this.activeEl.courierId = 0
       if ($event.length === 0) return this.onSearchCourier({roles: process.env.APP_ROLE_COURIER})
       if ($event.length < 3) return
       return this.onSearchCourier({firstName: $event})
@@ -47,10 +53,10 @@ export default {
     onSearchCourier: function (obj) {
       return this.$store.dispatch(types.ACTION_USER_SEARCH, {roles: process.env.APP_ROLE_COURIER, ...obj})
         .then(result => {
-          this.courier.search.user = Object.values(result)
+          this.parcelData.courier.search.user = Object.values(result)
         })
         .catch(err => {
-          this.courier.search.user = null
+          this.parcelData.courier.search.user = null
           console.warn(err.message)
         })
     }

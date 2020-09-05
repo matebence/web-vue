@@ -5,9 +5,9 @@
       v-show="!isSelected"
       id="new">
       <button
-        @click.prevent="selectedComponent = manageComponenets()">
+        @click.prevent="activeEl.component = manageComponenets()">
         <font-awesome-icon
-          :icon="['fas', selectedIcon]"/>
+          :icon="['fas', activeEl.icon]"/>
       </button>
     </div>
     <div
@@ -31,34 +31,35 @@
     </div>
     <keep-alive>
       <component
-        :is="selectedComponent"
+        :is="activeEl.component"
         :activeEl="activeEl"
-        :form="components.appCreate.form"
+        :form="appManage.crud.form"
         @crud="
-          selectedComponent = $event.component;
-          selectedIcon = $event.icon"/>
+          activeEl.component = $event.component;
+          activeEl.icon = $event.icon"/>
     </keep-alive>
     <div class="modal-wrapper">
       <app-modal
         :modalId="'vehicleAlert'"
-        :text="components.appModal.text"
-        :title="components.appModal.title"
-        :button="components.appModal.button"/>
+        :text="appManage.modal.text"
+        :title="appManage.modal.title"
+        :button="appManage.modal.button"/>
     </div>
     <div class="apply-wrapper">
       <app-apply
         @applied="removeVehicle($event)"
         :applyId="'vehicleApply'"
-        :text="components.appApply.text"
-        :title="components.appApply.title"
-        :positiveButton="components.appApply.positiveButton"
-        :negativeButton="components.appApply.negativeButton"/>
+        :text="appManage.apply.text"
+        :title="appManage.apply.title"
+        :positiveButton="appManage.apply.positiveButton"
+        :negativeButton="appManage.apply.negativeButton"/>
     </div>
   </div>
 </template>
 
 <script>
 import bootstrap from 'jquery'
+
 import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
 
@@ -73,39 +74,9 @@ export default {
       .catch(err => console.warn(err.message))
   },
   name: 'manage',
-  props: ['activeEl', 'vehicle'],
+  props: ['appManage', 'vehicleData', 'activeEl'],
   data: function () {
     return {
-      selectedComponent: 'app-vertical-list',
-      selectedIcon: 'plus',
-      components: {
-        appList: {
-          name: 'app-vertical-list',
-          icon: 'plus'
-        },
-        appCreate: {
-          name: 'app-crud',
-          icon: 'angle-left',
-          form: {
-            values: {
-              courier: null,
-              name: null,
-              type: null
-            }
-          }
-        },
-        appModal: {
-          text: null,
-          title: null,
-          button: null
-        },
-        appApply: {
-          text: null,
-          title: null,
-          positiveButton: null,
-          negativeButton: null
-        }
-      }
     }
   },
   components: {
@@ -119,45 +90,44 @@ export default {
       return this.activeEl.vehicleId !== 0
     },
     ...mapGetters({
-      vehicleData: types.GETTER_VEHICLE_DATA,
       signIn: types.GETTER_SIGN_IN_DATA
     })
   },
   methods: {
     manageComponenets: function () {
-      if (this.selectedComponent === this.components.appCreate.name) {
-        this.components.appCreate.form.values = {courier: null, name: null, type: null}
-        this.selectedIcon = this.components.appList.icon
-        return this.components.appList.name
+      if (this.activeEl.component === this.appManage.crud.name) {
+        this.appManage.crud.form.values = {courier: null, name: null, type: null}
+        this.activeEl.icon = this.appManage.list.icon
+        return this.appManage.list.name
       }
-      if (this.selectedComponent === this.components.appList.name) {
-        this.selectedIcon = this.components.appCreate.icon
-        this.components.appCreate.form.values._id = undefined
-        return this.components.appCreate.name
+      if (this.activeEl.component === this.appManage.list.name) {
+        this.activeEl.icon = this.appManage.crud.icon
+        this.appManage.crud.form.values._id = undefined
+        return this.appManage.crud.name
       }
     },
     showAlertModal: function (title, text, button) {
-      this.components.appModal.title = title
-      this.components.appModal.text = text
-      this.components.appModal.button = button
+      this.appManage.modal.title = title
+      this.appManage.modal.text = text
+      this.appManage.modal.button = button
       return bootstrap('#vehicleAlert').modal('show')
     },
     showAppliedModal: function (title, text) {
-      this.components.appApply.title = title
-      this.components.appApply.text = text
-      this.components.appApply.positiveButton = 'Odstrániť'
-      this.components.appApply.negativeButton = 'Zrušiť'
+      this.appManage.apply.title = title
+      this.appManage.apply.text = text
+      this.appManage.apply.positiveButton = 'Odstrániť'
+      this.appManage.apply.negativeButton = 'Zrušiť'
       return bootstrap('#vehicleApply').modal('show')
     },
     editVehicle: function () {
-      const data = Object.values(this.vehicle).filter(e => e._id === this.activeEl.vehicleId)
-      this.selectedComponent = this.manageComponenets()
+      const data = Object.values(this.vehicleData).filter(e => e._id === this.activeEl.vehicleId)
+      this.activeEl.component = this.manageComponenets()
       this.activeEl.vehicleId = 0
-      this.components.appCreate.form.values = {...data.pop()}
+      this.appManage.crud.form.values = {...data.pop()}
     },
     removeVehicle: function (applied) {
       if (applied) {
-        const data = Object.values(this.vehicle).filter(e => e._id !== this.activeEl.vehicleId)
+        const data = Object.values(this.vehicleData).filter(e => e._id !== this.activeEl.vehicleId)
         this.$store.dispatch(types.ACTION_VEHICLE_DELETE, {data: data, _id: this.activeEl.vehicleId})
           .catch(err => console.warn(err.message))
         this.activeEl.vehicleId = 0

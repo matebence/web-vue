@@ -3,13 +3,15 @@
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
         <app-manage
-          :vehicle="vehicleSearch"
-          :activeEl="components.appVehicle.activeEl" />
+          :vehicleData="vehicleSearch"
+          :activeEl="components.appVehicle.activeEl"
+          :appManage="components.appVehicle.sub.appManage" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-properties
-          :vehicle="selectedItem"
-          :activeEl="components.appVehicle.activeEl"/>
+          :vehicleData="filteredVehicleData"
+          :activeEl="components.appVehicle.activeEl"
+          :appProperties="components.appVehicle.sub.appProperties" />
         <app-options />
       </div>
     </div>
@@ -19,6 +21,7 @@
 <script>
 import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
+
 import manage from '@/components/dashboard/child/vehicle/sub/manage'
 import options from '@/components/dashboard/child/vehicle/sub/options'
 import properties from '@/components/dashboard/child/vehicle/sub/properties'
@@ -29,12 +32,58 @@ export default {
     return {
       components: {
         appVehicle: {
-          search: {
-            vehicle: {
+          sub: {
+            appProperties: {
+              form: {
+                values: {
+                  _id: 'Identifikačné číslo vozidla',
+                  name: 'Značka a séria vozidla',
+                  courier: {
+                    userName: 'Používeteľské meno kuriéra',
+                    email: 'Emailová adresa kuriéra'
+                  },
+                  type: {
+                    _id: 'Identifikačné číslo typ vozidla',
+                    name: 'Popis typ vozidla'
+                  },
+                  createdAt: 'Dátum vytvorenia',
+                  updatedAt: 'Dátum modifikovania'
+                }
+              }
+            },
+            appManage: {
+              list: {
+                name: 'app-vertical-list',
+                icon: 'plus'
+              },
+              crud: {
+                name: 'app-crud',
+                icon: 'angle-left',
+                form: {
+                  values: {
+                    courier: null,
+                    name: null,
+                    type: null
+                  }
+                }
+              },
+              modal: {
+                text: null,
+                title: null,
+                button: null
+              },
+              apply: {
+                text: null,
+                title: null,
+                positiveButton: null,
+                negativeButton: null
+              }
             }
           },
           activeEl: {
-            vehicleId: 0
+            vehicleId: 0,
+            icon: 'plus',
+            component: 'app-vertical-list'
           }
         }
       }
@@ -46,7 +95,7 @@ export default {
     appProperties: properties
   },
   computed: {
-    selectedItem: function () {
+    filteredVehicleData: function () {
       if (this.components.appVehicle.activeEl.vehicleId === 0) return
       return Object.values(this.vehicleSearch).filter(e => e._id === this.components.appVehicle.activeEl.vehicleId).pop()
     },

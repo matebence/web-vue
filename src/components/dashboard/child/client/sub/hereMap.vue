@@ -3,9 +3,9 @@
     <div id="map" ref="map">
       <div id="summary">
         <ul>
-          <li><span>Dľžka:</span> {{formatDistance(components.appHereMap.summary.values.length)}}</li>
-          <li><span>Čas:</span> {{formatDuration(components.appHereMap.summary.values.time)}}</li>
-          <li><span>Cena:</span> {{formatPrice(components.appHereMap.summary.values.price)}}</li>
+          <li><span>Dľžka:</span> {{formatDistance(appHereMap.summary.values.length)}}</li>
+          <li><span>Čas:</span> {{formatDuration(appHereMap.summary.values.time)}}</li>
+          <li><span>Cena:</span> {{formatPrice(appHereMap.summary.values.price)}}</li>
         </ul>
       </div>
       <div id="done">
@@ -20,10 +20,10 @@
       <app-apply
         @applied="onCreate($event)"
         :applyId="'hereClientMapApply'"
-        :text="components.appApply.text"
-        :title="components.appApply.title"
-        :positiveButton="components.appApply.positiveButton"
-        :negativeButton="components.appApply.negativeButton"/>
+        :text="appHereMap.apply.text"
+        :title="appHereMap.apply.title"
+        :positiveButton="appHereMap.apply.positiveButton"
+        :negativeButton="appHereMap.apply.negativeButton"/>
     </div>
   </div>
 </template>
@@ -35,6 +35,7 @@ import 'here-js-api/scripts/mapsjs-service'
 import 'here-js-api/scripts/mapsjs-mapevents'
 
 import * as types from '@/store/types'
+
 import apply from '@/components/common/apply'
 import bleskMarker from '@/assets/img/blesk-marker.png'
 
@@ -61,36 +62,9 @@ export default {
       .catch(err => console.warn(err.message))
   },
   name: 'hereMap',
-  props: ['activeEl', 'shipment'],
+  props: ['appHereMap', 'shipmentData', 'activeEl'],
   data: function () {
     return {
-      components: {
-        appHereMap: {
-          points: {
-            from: {
-              geo: {
-              }
-            },
-            to: {
-              geo: {
-              }
-            }
-          },
-          summary: {
-            values: {
-              length: 0,
-              time: 0,
-              price: 0
-            }
-          }
-        },
-        appApply: {
-          text: null,
-          title: null,
-          positiveButton: null,
-          negativeButton: null
-        }
-      },
       here: {
         map: {
         },
@@ -141,8 +115,8 @@ export default {
       if (this.activeEl.itemId !== 2 || this.activeEl.shipmentId === 0) return this.removePreviousRoutes()
       this.removePreviousRoutes()
 
-      const data = Object.values(this.shipment.search).filter(e => e._id === newValue).pop()
-      this.components.appHereMap.summary.values.price = data.price
+      const data = Object.values(this.shipmentData.search).filter(e => e._id === newValue).pop()
+      this.appHereMap.summary.values.price = data.price
 
       return this.visualizeOnMap({from: data.from, to: data.to})
     }
@@ -155,8 +129,8 @@ export default {
         const geocodingParameters = {q: points[item]}
         searchService.geocode(geocodingParameters, onSuccess => {
           const position = onSuccess.items.pop().position
-          this.components.appHereMap.points[item].geo = {...position}
-          if (!--isLast) coordinates(this.components.appHereMap.points)
+          this.appHereMap.points[item].geo = {...position}
+          if (!--isLast) coordinates(this.appHereMap.points)
         }, onError => { console.warn(onError) })
       }
     },
@@ -172,9 +146,9 @@ export default {
       })
     },
     removePreviousRoutes: function () {
-      this.components.appHereMap.summary.values.time = null
-      this.components.appHereMap.summary.values.price = null
-      this.components.appHereMap.summary.values.length = null
+      this.appHereMap.summary.values.time = null
+      this.appHereMap.summary.values.price = null
+      this.appHereMap.summary.values.length = null
       return this.here.map.getObjects().forEach(e => this.here.map.removeObject(e))
     },
     drawRoute: function (result) {
@@ -184,7 +158,7 @@ export default {
 
         result = result.routes.pop().sections.pop()
 
-        this.shipment.action = result.actions
+        this.shipmentData.action = result.actions
 
         const polyline = H.geo.LineString.fromFlexiblePolyline(result.polyline)
         const start = new H.map.Marker(result.departure.place.location, {icon: markerIcon})
@@ -197,8 +171,8 @@ export default {
         group.addObjects([outline, arrows])
 
         const travelSummary = result.travelSummary
-        this.components.appHereMap.summary.values.time = Number(travelSummary.duration)
-        this.components.appHereMap.summary.values.length = Number(travelSummary.length)
+        this.appHereMap.summary.values.time = Number(travelSummary.duration)
+        this.appHereMap.summary.values.length = Number(travelSummary.length)
 
         return this.here.map.getViewModel().setLookAtData({bounds: group.getBoundingBox()}, true)
       }
@@ -214,15 +188,15 @@ export default {
       return (`${parseFloat(distance / 1000).toFixed(2)}km`)
     },
     showAppliedModal: function (title, text) {
-      this.components.appApply.title = title
-      this.components.appApply.text = text
-      this.components.appApply.positiveButton = 'Áno, odovzdať'
-      this.components.appApply.negativeButton = 'Zrušiť'
+      this.appHereMap.apply.title = title
+      this.appHereMap.apply.text = text
+      this.appHereMap.apply.positiveButton = 'Áno, odovzdať'
+      this.appHereMap.apply.negativeButton = 'Zrušiť'
       return bootstrap('#hereClientMapApply').modal('show')
     },
     onCreate: function (applied) {
       if (applied) {
-        const data = Object.values(this.shipment.search).filter(e => e._id === this.activeEl.shipmentId).pop()
+        const data = Object.values(this.shipmentData.search).filter(e => e._id === this.activeEl.shipmentId).pop()
         return this.$store.dispatch(types.ACTION_SHIPMENT_UPDATE, {_id: data._id, courier: data.courier.courierId, parcelId: data.parcelId, from: data.from, to: data.to, status: process.env.PARCEL_DONE_STATUS_ID, price: data.price, express: data.express})
           .then(result => {
             this.activeEl.itemId = 3

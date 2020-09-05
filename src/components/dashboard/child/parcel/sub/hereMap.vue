@@ -5,8 +5,8 @@
         <div class="form-group">
           <input
             autocomplete="off"
-            v-model="components.appHereMap.form.from.value"
-            :disabled="parcel.search.parcelId > 0 || parcel.activeEl.parcelId === 0"
+            v-model="appHereMap.form.from.value"
+            :disabled="parcelData.parcel.search.parcelId > 0 || activeEl.parcelId === 0"
             type="text"
             class="form-control"
             id="from"
@@ -14,15 +14,15 @@
             @input="onAutoCompletePlace($event)">
           <div class="autocomplete">
             <ul>
-              <li v-for="place in components.appHereMap.form.from.autoComplete" :key="place.id" data-element="from" @click.prevent="onSelectPlace($event.target)">{{here.country.name}}, {{place.fullName}}</li>
+              <li v-for="place in appHereMap.form.from.autoComplete" :key="place.id" data-element="from" @click.prevent="onSelectPlace($event.target)">{{here.country.name}}, {{place.fullName}}</li>
             </ul>
           </div>
         </div>
         <div class="form-group">
           <input
             autocomplete="off"
-            v-model="components.appHereMap.form.to.value"
-            :disabled="parcel.search.parcelId > 0 || parcel.activeEl.parcelId === 0"
+            v-model="appHereMap.form.to.value"
+            :disabled="parcelData.parcel.search.parcelId > 0 || activeEl.parcelId === 0"
             type="text"
             class="form-control"
             id="to"
@@ -30,27 +30,27 @@
             @input="onAutoCompletePlace($event)">
           <div class="autocomplete">
             <ul>
-              <li v-for="place in components.appHereMap.form.to.autoComplete" :key="place.id" data-element="to" @click.prevent="onSelectPlace($event.target)">{{here.country.name}}, {{place.fullName}}</li>
+              <li v-for="place in appHereMap.form.to.autoComplete" :key="place.id" data-element="to" @click.prevent="onSelectPlace($event.target)">{{here.country.name}}, {{place.fullName}}</li>
             </ul>
           </div>
         </div>
         <button
           @click.prevent="calculatePriceByDistance"
           type="submit"
-          :disabled="(parcel.search.parcelId > 0) || (components.appHereMap.form.from.value.length < 3 || components.appHereMap.form.to.value.length < 3)"
+          :disabled="(parcelData.parcel.search.parcelId > 0) || (appHereMap.form.from.value.length < 3 || appHereMap.form.to.value.length < 3)"
           class="btn btn-primary">Hľadať</button>
       </form>
       <div id="summary">
         <ul>
-          <li><span>Dľžka:</span> {{formatDistance(components.appHereMap.summary.values.length)}}</li>
-          <li><span>Čas:</span> {{formatDuration(components.appHereMap.summary.values.time)}}</li>
-          <li><span>Cena:</span> {{formatPrice(components.appHereMap.summary.values.length, components.appHereMap.courier.price, components.appHereMap.company.profit)}}</li>
+          <li><span>Dľžka:</span> {{formatDistance(appHereMap.summary.values.length)}}</li>
+          <li><span>Čas:</span> {{formatDuration(appHereMap.summary.values.time)}}</li>
+          <li><span>Cena:</span> {{formatPrice(appHereMap.summary.values.length, appHereMap.profit.courier, appHereMap.profit.company)}}</li>
         </ul>
       </div>
       <div id="finish">
         <button
           type="submit"
-          :disabled="(courier.activeEl.courierId === 0) || (parcel.search.parcelId > 0) || (components.appHereMap.form.from.value.length < 3 || components.appHereMap.form.to.value.length < 3)"
+          :disabled="(activeEl.courierId === 0) || (parcelData.parcel.search.parcelId > 0) || (appHereMap.form.from.value.length < 3 || appHereMap.form.to.value.length < 3)"
           @click.prevent="onCreate(false)"
           class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
       </div>
@@ -58,18 +58,18 @@
     <div class="modal-wrapper">
       <app-modal
         :modalId="'hereMapAlert'"
-        :text="components.appModal.text"
-        :title="components.appModal.title"
-        :button="components.appModal.button"/>
+        :text="appHereMap.modal.text"
+        :title="appHereMap.modal.title"
+        :button="appHereMap.modal.button"/>
     </div>
     <div class="apply-wrapper">
       <app-apply
         @applied="onCreate($event)"
         :applyId="'hereParcelMapApply'"
-        :text="components.appApply.text"
-        :title="components.appApply.title"
-        :positiveButton="components.appApply.positiveButton"
-        :negativeButton="components.appApply.negativeButton"/>
+        :text="appHereMap.apply.text"
+        :title="appHereMap.apply.title"
+        :positiveButton="appHereMap.apply.positiveButton"
+        :negativeButton="appHereMap.apply.negativeButton"/>
     </div>
   </div>
 </template>
@@ -82,6 +82,7 @@ import 'here-js-api/scripts/mapsjs-mapevents'
 
 import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
+
 import modal from '@/components/common/modal'
 import apply from '@/components/common/apply'
 import bleskMarker from '@/assets/img/blesk-marker.png'
@@ -101,7 +102,7 @@ export default {
         const location = results.pop()
 
         this.here.country.name = location.country
-        this.components.appHereMap.company.profit = Number(profit.price)
+        this.appHereMap.profit.company = Number(profit.price)
         this.here.country.value.center = {lng: location.lon, lat: location.lat}
 
         return this.here.country.value
@@ -118,58 +119,9 @@ export default {
       .catch(err => console.warn(err.message))
   },
   name: 'hereMap',
-  props: ['parcel', 'courier'],
+  props: ['appHereMap', 'parcelData', 'activeEl'],
   data: function () {
     return {
-      components: {
-        appHereMap: {
-          form: {
-            from: {
-              value: '',
-              autoComplete: {
-              },
-              geo: {
-                lat: 0,
-                lng: 0
-              }
-            },
-            to: {
-              value: '',
-              autoComplete: {
-              },
-              geo: {
-                lat: 0,
-                lng: 0
-              }
-            }
-          },
-          summary: {
-            isSet: false,
-            values: {
-              length: 0,
-              time: 0,
-              price: 0
-            }
-          },
-          courier: {
-            price: 0.00
-          },
-          company: {
-            profit: 0.00
-          }
-        },
-        appModal: {
-          text: null,
-          title: null,
-          button: null
-        },
-        appApply: {
-          text: null,
-          title: null,
-          positiveButton: null,
-          negativeButton: null
-        }
-      },
       here: {
         map: {
         },
@@ -217,19 +169,19 @@ export default {
     appModal: modal
   },
   watch: {
-    'parcel.search.parcelId': function (newValue, oldValue) {
+    'parcelData.parcel.search.parcelId': function (newValue, oldValue) {
       if (newValue === undefined) return this.removePreviousRoutes()
 
-      this.components.appHereMap.form.from.value = this.parcel.search.from
-      this.components.appHereMap.form.to.value = this.parcel.search.to
-      this.components.appHereMap.summary.isSet = true
+      this.appHereMap.form.from.value = this.parcelData.parcel.search.from
+      this.appHereMap.form.to.value = this.parcelData.parcel.search.to
+      this.appHereMap.summary.isSet = true
       return this.visualizeOnMap()
     },
-    'parcel.activeEl.parcelId': function (newValue, oldValue) {
+    'activeEl.parcelId': function (newValue, oldValue) {
       if (newValue === 0) return this.removePreviousRoutes()
     },
-    'courier.activeEl.courierId': function (newValue, oldValue) {
-      if (newValue > 0 && !this.components.appHereMap.summary.isSet) return this.calculatePriceByDistance()
+    'activeEl.courierId': function (newValue, oldValue) {
+      if (newValue > 0 && !this.appHereMap.summary.isSet) return this.calculatePriceByDistance()
     }
   },
   computed: {
@@ -240,13 +192,13 @@ export default {
   methods: {
     geoCode: function (coordinates) {
       const searchService = this.here.platform.getSearchService()
-      let isLast = Object.keys(this.components.appHereMap.form).length
-      for (const item in this.components.appHereMap.form) {
-        const geocodingParameters = {q: this.components.appHereMap.form[item].value}
+      let isLast = Object.keys(this.appHereMap.form).length
+      for (const item in this.appHereMap.form) {
+        const geocodingParameters = {q: this.appHereMap.form[item].value}
         searchService.geocode(geocodingParameters, onSuccess => {
           const position = onSuccess.items.pop().position
-          this.components.appHereMap.form[item].geo = {...position}
-          if (!--isLast) coordinates(this.components.appHereMap.form)
+          this.appHereMap.form[item].geo = {...position}
+          if (!--isLast) coordinates(this.appHereMap.form)
         }, onError => { console.warn(onError) })
       }
     },
@@ -256,11 +208,11 @@ export default {
       const reverseGeocodingParameters = {at: localStorage.getItem('position'), limit: '1'}
       return searchService.reverseGeocode(reverseGeocodingParameters, onSuccess => {
         const place = Object.values(onSuccess.items).pop()
-        this.components.appHereMap.form.from.value = `${this.here.country.name}, ${place.address.city}`
+        this.appHereMap.form.from.value = `${this.here.country.name}, ${place.address.city}`
       }, onError => { console.warn(onError) })
     },
     visualizeOnMap: function () {
-      if (this.components.appHereMap.form.from.value.length > 2 && this.components.appHereMap.form.to.value.length > 2) {
+      if (this.appHereMap.form.from.value.length > 2 && this.appHereMap.form.to.value.length > 2) {
         return this.geoCode(coordinates => {
           this.here.routingConfiguration = {
             ...this.here.routingConfiguration,
@@ -294,42 +246,42 @@ export default {
           group.addObjects([outline, arrows])
           travelSummary = section.travelSummary
         })
-        this.components.appHereMap.summary.values.time = Number(travelSummary.duration)
-        this.components.appHereMap.summary.values.length = Number(travelSummary.length)
+        this.appHereMap.summary.values.time = Number(travelSummary.duration)
+        this.appHereMap.summary.values.length = Number(travelSummary.length)
         return this.here.map.getViewModel().setLookAtData({bounds: group.getBoundingBox()}, true)
       }
     },
     removePreviousRoutes: function () {
-      this.components.appHereMap.summary.isSet = false
+      this.appHereMap.summary.isSet = false
 
-      this.components.appHereMap.summary.values.length = 0
-      this.components.appHereMap.summary.values.time = 0
-      this.components.appHereMap.summary.values.price = 0
+      this.appHereMap.summary.values.length = 0
+      this.appHereMap.summary.values.time = 0
+      this.appHereMap.summary.values.price = 0
 
-      this.components.appHereMap.form.from.value = ''
-      this.components.appHereMap.form.to.value = ''
+      this.appHereMap.form.from.value = ''
+      this.appHereMap.form.to.value = ''
 
       return this.here.map.getObjects().forEach(e => this.here.map.removeObject(e))
     },
     calculatePriceByDistance: function () {
-      if (this.courier.activeEl.courierId === 0) return this.showAlertModal('Upozornenie', 'Nemáte zvolené kuriéra.', 'Zatvoriť')
-      const courier = Object.values(this.courier.search.user).filter(e => e.accountId === this.courier.activeEl.courierId).pop()
+      if (this.activeEl.courierId === 0) return this.showAlertModal('Upozornenie', 'Nemáte zvolené kuriéra.', 'Zatvoriť')
+      const courier = Object.values(this.parcelData.courier.search.user).filter(e => e.accountId === this.activeEl.courierId).pop()
       this.$store.dispatch(types.ACTION_PREFERENCE_SEARCH, {accountId: courier.accountId, name: 'Cena prepravy (eur/1km)'})
         .then(result => {
-          this.components.appHereMap.courier.price = Object.values(result).pop().value
+          this.appHereMap.profit.courier = Object.values(result).pop().value
           return this.visualizeOnMap()
         })
         .catch(err => console.warn(err.message))
     },
     formatPrice: function (distance, price, profit) {
       const formatter = new Intl.NumberFormat('sk-SK', {style: 'currency', currency: 'EUR'})
-      if (!this.components.appHereMap.summary.isSet) {
+      if (!this.appHereMap.summary.isSet) {
         const total = parseFloat(distance / 1000 * price) + profit
         return total > profit ? formatter.format(total) : formatter.format(0)
-      } else if (this.parcel.search.price === undefined && this.components.appHereMap.summary.isSet) {
+      } else if (this.parcelData.parcel.price === undefined && this.appHereMap.summary.isSet) {
         return formatter.format(0)
       } else {
-        return formatter.format(this.parcel.search.price)
+        return formatter.format(this.parcelData.parcel.price)
       }
     },
     formatDuration: function (duration) {
@@ -339,59 +291,59 @@ export default {
       return (`${parseFloat(distance / 1000).toFixed(2)}km`)
     },
     showAlertModal: function (title, text, button) {
-      this.components.appModal.title = title
-      this.components.appModal.text = text
-      this.components.appModal.button = button
+      this.appHereMap.modal.title = title
+      this.appHereMap.modal.text = text
+      this.appHereMap.modal.button = button
       return bootstrap('#hereMapAlert').modal('show')
     },
     showAppliedModal: function (title, text) {
-      this.components.appApply.title = title
-      this.components.appApply.text = text
-      this.components.appApply.positiveButton = 'Áno, vytvoriť'
-      this.components.appApply.negativeButton = 'Zrušiť'
+      this.appHereMap.apply.title = title
+      this.appHereMap.apply.text = text
+      this.appHereMap.apply.positiveButton = 'Áno, vytvoriť'
+      this.appHereMap.apply.negativeButton = 'Zrušiť'
       return bootstrap('#hereParcelMapApply').modal('show')
     },
     onAutoCompletePlace: function ($event) {
       if ($event.target.value.length < 3 && $event.target.id === 'from') {
-        this.components.appHereMap.form.from.autoComplete = {}
+        this.appHereMap.form.from.autoComplete = {}
       } else if ($event.target.value.length < 3 && $event.target.id === 'to') {
-        this.components.appHereMap.form.to.autoComplete = {}
+        this.appHereMap.form.to.autoComplete = {}
       } else {
         return this.$store.dispatch(types.ACTION_PLACE_SEARCH, { fullName: $event.target.value })
           .then(result => {
-            if ($event.target.id === 'from') this.components.appHereMap.form.from.autoComplete = Object.values(result)
-            if ($event.target.id === 'to') this.components.appHereMap.form.to.autoComplete = Object.values(result)
+            if ($event.target.id === 'from') this.appHereMap.form.from.autoComplete = Object.values(result)
+            if ($event.target.id === 'to') this.appHereMap.form.to.autoComplete = Object.values(result)
           })
           .catch(err => console.warn(err.message))
       }
     },
     onSelectPlace: function ($event) {
       if ($event.dataset.element === 'from') {
-        this.components.appHereMap.form.from.value = $event.textContent
-        this.components.appHereMap.form.from.autoComplete = {}
+        this.appHereMap.form.from.value = $event.textContent
+        this.appHereMap.form.from.autoComplete = {}
       } else if ($event.dataset.element === 'to') {
-        this.components.appHereMap.form.to.value = $event.textContent
-        this.components.appHereMap.form.to.autoComplete = {}
+        this.appHereMap.form.to.value = $event.textContent
+        this.appHereMap.form.to.autoComplete = {}
       }
     },
     onCreate: function (applied) {
-      if (this.components.appHereMap.summary.values.time === 0 || this.components.appHereMap.summary.values.length === 0) {
+      if (this.appHereMap.summary.values.time === 0 || this.appHereMap.summary.values.length === 0) {
         return this.showAlertModal('Upozornenie', 'Dľžka cesty nie je známa.', 'Zatvoriť')
-      } else if (Number(parseFloat(this.components.appHereMap.summary.values.length / 1000 * this.components.appHereMap.courier.price).toFixed(2)) > localStorage.getItem('balance')) {
+      } else if (Number(parseFloat(this.appHereMap.summary.values.length / 1000 * this.appHereMap.profit.courier).toFixed(2)) > localStorage.getItem('balance')) {
         return this.showAlertModal('Upozornenie', 'Nemáte dostatok penazí na účte.', 'Zatvoriť')
       } else {
         if (applied) {
-          const data = Object.values(this.parcelCreate).filter(e => e.id === this.parcel.activeEl.parcelId).pop()
-          let payload = {id: this.parcel.activeEl.parcelId, data: {sender: Number(data.sender.senderId), receiver: Number(data.receiver.accountId), categoryId: data.category.id, length: Number(data.length), width: Number(data.width), height: Number(data.height), weight: Number(data.weight), note: data.note}}
+          const data = Object.values(this.parcelCreate).filter(e => e.id === this.activeEl.parcelId).pop()
+          let payload = {id: this.activeEl.parcelId, data: {sender: Number(data.sender.senderId), receiver: Number(data.receiver.accountId), categoryId: data.category.id, length: Number(data.length), width: Number(data.width), height: Number(data.height), weight: Number(data.weight), note: data.note}}
 
           this.$store.dispatch(types.ACTION_PARCEL_CREATE, payload)
             .then(result => {
-              payload = {shipments: [{ courier: this.courier.activeEl.courierId, parcelId: result.id, from: this.components.appHereMap.form.from.value, to: this.components.appHereMap.form.to.value, status: process.env.PARCEL_NEW_STATUS_ID, price: Number(parseFloat(this.components.appHereMap.summary.values.length / 1000 * this.components.appHereMap.courier.price).toFixed(2)) }]}
+              payload = {shipments: [{ courier: this.activeEl.courierId, parcelId: result.id, from: this.appHereMap.form.from.value, to: this.appHereMap.form.to.value, status: process.env.PARCEL_NEW_STATUS_ID, price: Number(parseFloat(this.appHereMap.summary.values.length / 1000 * this.appHereMap.profit.courier).toFixed(2)) }]}
               return this.$store.dispatch(types.ACTION_SHIPMENT_CREATE, payload)
             })
             .then(result => {
-              this.parcel.activeEl.itemId = 1
-              this.parcel.activeEl.value = 'Pridelené'
+              this.activeEl.itemId = 1
+              this.activeEl.value = 'Pridelené'
             })
             .catch(err => {
               return this.showAlertModal('Chyba', err.message, 'Zatvoriť')

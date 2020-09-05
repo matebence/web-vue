@@ -4,14 +4,14 @@
       <li
         :key="option.id"
         @click.prevent="onSelectedTab(option)"
-        v-for="option in components.appVerticalList.items"
+        v-for="option in appVerticalList.items"
         :class="{active: activeEl.itemId === option.itemId}">{{option.value}}</li>
     </ul>
     <ul class="clients">
       <li
         :key="item._id"
         @click.prevent="onSelectedShipment(item)"
-        v-for="item in shipment.search"
+        v-for="item in shipmentData.search"
         :class="{active: activeEl.shipmentId === item._id}">
         <ul class="client">
           <li class="image">
@@ -28,7 +28,7 @@
       </li>
       <li
         class="empty-list"
-        v-if="(shipment.search === null)">
+        v-if="(shipmentData.search === null)">
         Zoznam je prázdny
       </li>
     </ul>
@@ -42,44 +42,23 @@ import * as types from '@/store/types'
 export default {
   created: function () {
     return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {courier: this.signIn.accountId, status: process.env.PARCEL_NEW_STATUS_ID})
-      .then(result => { this.shipment.search = result })
+      .then(result => { this.shipmentData.search = result })
       .catch(err => {
-        this.shipment.search = null
+        this.shipmentData.search = null
         console.warn(err.message)
       })
   },
   name: 'verticalList',
-  props: ['activeEl', 'shipment'],
+  props: ['appVerticalList', 'shipmentData', 'activeEl'],
   data: function () {
     return {
-      components: {
-        appVerticalList: {
-          items: [
-            {
-              itemId: 1,
-              value: 'Požiadavky',
-              id: process.env.PARCEL_NEW_STATUS_ID
-            },
-            {
-              itemId: 2,
-              value: 'Nevybavené',
-              id: process.env.PARCEL_ACCEPTED_STATUS_ID
-            },
-            {
-              itemId: 3,
-              value: 'Vybavené',
-              id: process.env.PARCEL_DONE_STATUS_ID
-            }
-          ]
-        }
-      }
     }
   },
   watch: {
     'activeEl.itemId': function (newValue, oldValue) {
-      const status = this.components.appVerticalList.items.filter(e => e.itemId === newValue).pop().id
+      const status = this.appVerticalList.items.filter(e => e.itemId === newValue).pop().id
       return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {courier: this.signIn.accountId, status: status})
-        .then(result => { this.shipment.search = result })
+        .then(result => { this.shipmentData.search = result })
         .catch(err => { console.warn(err.message) })
     }
   },
@@ -90,7 +69,7 @@ export default {
   },
   methods: {
     onSelectedTab: function (el) {
-      this.shipment.search = null
+      this.shipmentData.search = null
       this.activeEl.shipmentId = 0
       this.activeEl.value = el.value
       this.activeEl.itemId = el.itemId

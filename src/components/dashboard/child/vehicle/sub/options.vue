@@ -27,7 +27,11 @@
 
 <script>
 export default {
-  name: 'options'
+  name: 'options',
+  data: function () {
+    return {
+    }
+  }
 }
 </script>
 

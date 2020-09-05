@@ -47,8 +47,8 @@ const settings = resolve => {
 }
 
 const auth = resolve => {
-  require.ensure(['@/components/auth/auth'], () => {
-    resolve(require('@/components/auth/auth'))
+  require.ensure(['@/components/auth/index'], () => {
+    resolve(require('@/components/auth/index'))
   }, 'auth')
 }
 

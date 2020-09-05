@@ -14,7 +14,11 @@
 
 <script>
 export default {
-  name: 'error'
+  name: 'error',
+  data: function () {
+    return {
+    }
+  }
 }
 </script>
 

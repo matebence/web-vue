@@ -15,7 +15,7 @@
             class="form-control"
             id="username"
             placeholder="Použivatelské meno"
-            v-model="components.appSignIn.form.values.userName">
+            v-model="appSignIn.form.values.userName">
         </div>
         <div class="form-group">
           <label for="password">
@@ -27,7 +27,7 @@
             class="form-control"
             id="password"
             placeholder="Heslo"
-            v-model="components.appSignIn.form.values.password">
+            v-model="appSignIn.form.values.password">
         </div>
         <div class="form-group">
           <label
@@ -39,10 +39,10 @@
             type="checkbox"
             class="form-check-input"
             id="stayLoggedIn"
-            v-model="components.appSignIn.form.values.stayLoggedIn">
+            v-model="appSignIn.form.values.stayLoggedIn">
           <a
             href="#"
-            @click.prevent="activeEl.component='app-forget-password'"
+            @click.prevent="onLoadComponent('forget-password')"
             id="forgetPassword">
             Zabudli ste heslo?
           </a>
@@ -51,7 +51,7 @@
           type="submit"
           class="btn btn-primary"
           :disabled="$v.$invalid"
-          @click.prevent="onSignIn">
+          @click.prevent="onSubmit">
           <span
             class="spinner-border spinner-border-sm"
             role="status"
@@ -67,14 +67,14 @@
       <a
         class="text-center signup"
         href="#"
-        @click.prevent="activeEl.component='app-sign-up'">
+        @click.prevent="onLoadComponent('sign-up')">
         Zaregistrovať sa teraz
       </a>
       <div class="alert-wrapper">
         <app-alert
-          :condition="components.appAlert.condition"
-          :type="components.appAlert.type"
-          :text="components.appAlert.text"/>
+          :condition="appSignIn.alert.condition"
+          :type="appSignIn.alert.type"
+          :text="appSignIn.alert.text"/>
       </div>
     </div>
   </div>
@@ -83,7 +83,9 @@
 <script>
 import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
+
 import alert from '@/components/common/alert'
+
 import {required} from 'vuelidate/lib/validators'
 
 export default {
@@ -94,39 +96,21 @@ export default {
   beforeMount: function () {
     this.showAlertModal([this.signOutError.message !== null], [this.signOutError.is ? 'alert-danger' : 'alert-success'], [this.signOutError.message])
   },
-  props: ['activeEl'],
   name: 'signin',
+  props: ['appSignIn', 'activeEl'],
   data: function () {
     return {
-      components: {
-        appSignIn: {
-          form: {
-            values: {
-              userName: null,
-              password: null,
-              stayLoggedIn: false
-            }
-          }
-        },
-        appAlert: {
-          condition: [],
-          type: [],
-          text: []
-        }
-      }
     }
   },
   validations: {
-    components: {
-      appSignIn: {
-        form: {
-          values: {
-            userName: {
-              required
-            },
-            password: {
-              required
-            }
+    appSignIn: {
+      form: {
+        values: {
+          userName: {
+            required
+          },
+          password: {
+            required
           }
         }
       }
@@ -137,22 +121,25 @@ export default {
   },
   computed: {
     ...mapGetters({
-      signInError: types.GETTER_SIGN_IN_ERROR,
       signInDone: types.GETTER_SIGN_IN_DONE,
+      signInError: types.GETTER_SIGN_IN_ERROR,
       signOutError: types.GETTER_SIGN_OUT_ERROR
     })
   },
   methods: {
     showAlertModal: function (condition, type, text) {
-      this.components.appAlert.condition = condition
-      this.components.appAlert.type = type
-      this.components.appAlert.text = text
+      this.appSignIn.alert.condition = condition
+      this.appSignIn.alert.type = type
+      this.appSignIn.alert.text = text
     },
-    onSignIn: function () {
+    onLoadComponent: function ($event) {
+      return this.$router.push({path: $event})
+    },
+    onSubmit: function () {
       this.signInError.message = this.signOutError.message = null
       this.signInError.is = this.signOutError.is = false
 
-      return this.$store.dispatch(types.ACTION_SIGN_IN, {grantType: process.env.GRANT_TYPE_PASSWORD, userName: this.components.appSignIn.form.values.userName, password: this.components.appSignIn.form.values.password, stayLoggedIn: this.components.appSignIn.form.values.stayLoggedIn})
+      return this.$store.dispatch(types.ACTION_SIGN_IN, {grantType: process.env.GRANT_TYPE_PASSWORD, userName: this.appSignIn.form.values.userName, password: this.appSignIn.form.values.password, stayLoggedIn: this.appSignIn.form.values.stayLoggedIn})
         .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
     }
   }

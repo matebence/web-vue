@@ -4,15 +4,17 @@
       <div class="col-lg-4 col-xl-3" id="content">
         <app-manage
           :activeEl="components.appClient.activeEl"
-          :shipment="components.appClient.shipment" />
+          :appVerticalList="components.appClient.sub.appVerticalList"
+          :shipmentData="components.appClient.data.shipment" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-horizontal-list
           :activeEl="components.appClient.activeEl"
-          :action="components.appClient.shipment.action"/>
+          :shipmentData="components.appClient.data.shipment"/>
         <app-here-map
           :activeEl="components.appClient.activeEl"
-          :shipment="components.appClient.shipment" />
+          :appHereMap="components.appClient.sub.appHereMap"
+          :shipmentData="components.appClient.data.shipment" />
       </div>
     </div>
   </div>
@@ -29,10 +31,58 @@ export default {
     return {
       components: {
         appClient: {
-          shipment: {
-            search: {
+          sub: {
+            appHereMap: {
+              points: {
+                from: {
+                  geo: {
+                  }
+                },
+                to: {
+                  geo: {
+                  }
+                }
+              },
+              summary: {
+                values: {
+                  length: 0,
+                  time: 0,
+                  price: 0
+                }
+              },
+              apply: {
+                text: null,
+                title: null,
+                positiveButton: null,
+                negativeButton: null
+              }
             },
-            action: {
+            appVerticalList: {
+              items: [
+                {
+                  itemId: 1,
+                  value: 'Požiadavky',
+                  id: process.env.PARCEL_NEW_STATUS_ID
+                },
+                {
+                  itemId: 2,
+                  value: 'Nevybavené',
+                  id: process.env.PARCEL_ACCEPTED_STATUS_ID
+                },
+                {
+                  itemId: 3,
+                  value: 'Vybavené',
+                  id: process.env.PARCEL_DONE_STATUS_ID
+                }
+              ]
+            }
+          },
+          data: {
+            shipment: {
+              search: {
+              },
+              action: {
+              }
             }
           },
           activeEl: {

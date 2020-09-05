@@ -13,6 +13,14 @@
 export default {
   name: 'alert',
   props: ['type', 'condition', 'text'],
+  data: function () {
+    return {
+      components: {
+        appAlert: {
+        }
+      }
+    }
+  },
   computed: {
     getCondition: function () {
       return [...this.condition].some(e => e === true)

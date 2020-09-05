@@ -38,18 +38,6 @@ export default {
     background: #166085;
   }
 
-  .card {
-    border: none;
-  }
-
-  .spinner-border{
-    margin-bottom: 0.3rem;
-  }
-
-  .H_copyright, .H_imprint {
-    display: none;
-  }
-
   html {
     scroll-behavior: smooth;
     -webkit-touch-callout: none;
@@ -88,5 +76,17 @@ export default {
     -webkit-appearance: none;
     -moz-appearance: textfield;
     margin: 0;
+  }
+
+  .card {
+    border: none;
+  }
+
+  .spinner-border{
+    margin-bottom: 0.3rem;
+  }
+
+  .H_copyright, .H_imprint {
+    display: none;
   }
 </style>

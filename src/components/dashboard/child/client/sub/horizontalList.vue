@@ -15,7 +15,7 @@
         v-show="isSelected">
         <li
           :key="item.length"
-          v-for="item in action">
+          v-for="item in shipmentData.action">
           <ul class="action">
             <li><font-awesome-icon :icon="['fas', formatIcon(item.action, item.direction)]"/></li>
             <li>{{item.instruction}}</li>
@@ -29,7 +29,11 @@
 <script>
 export default {
   name: 'horizontalList',
-  props: ['action', 'activeEl'],
+  props: ['shipmentData', 'activeEl'],
+  data: function () {
+    return {
+    }
+  },
   computed: {
     isSelected: function () {
       return this.activeEl.shipmentId !== 0

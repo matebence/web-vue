@@ -6,9 +6,9 @@
         <div class="col-sm-12 col-md-6">
           <label for="country">Štát</label>
           <input
-            v-model="components.appSecurity.form.place.values.country"
-            @input="$v.components.appSecurity.form.place.values.country.$touch()"
-            :class="{valid: !$v.components.appSecurity.form.place.values.country.$error && $v.components.appSecurity.form.place.values.country.$dirty, invalid: $v.components.appSecurity.form.place.values.country.$error}"
+            v-model="appSecurity.form.place.values.country"
+            @input="$v.appSecurity.form.place.values.country.$touch()"
+            :class="{valid: !$v.appSecurity.form.place.values.country.$error && $v.appSecurity.form.place.values.country.$dirty, invalid: $v.appSecurity.form.place.values.country.$error}"
             autofocus
             placeholder="Názov štátu"
             autocomplete="off"
@@ -19,9 +19,9 @@
         <div class="col-sm-12 col-md-6">
           <label for="region">Kraj</label>
           <input
-            v-model="components.appSecurity.form.place.values.region"
-            @input="$v.components.appSecurity.form.place.values.region.$touch()"
-            :class="{valid: !$v.components.appSecurity.form.place.values.region.$error && $v.components.appSecurity.form.place.values.region.$dirty, invalid: $v.components.appSecurity.form.place.values.region.$error}"
+            v-model="appSecurity.form.place.values.region"
+            @input="$v.appSecurity.form.place.values.region.$touch()"
+            :class="{valid: !$v.appSecurity.form.place.values.region.$error && $v.appSecurity.form.place.values.region.$dirty, invalid: $v.appSecurity.form.place.values.region.$error}"
             autocomplete="off"
             type="text"
             name="region"
@@ -33,9 +33,9 @@
         <div class="col-sm-12 col-md-6">
           <label for="district">Okres</label>
           <input
-            v-model="components.appSecurity.form.place.values.district"
-            @input="$v.components.appSecurity.form.place.values.district.$touch()"
-            :class="{valid: !$v.components.appSecurity.form.place.values.district.$error && $v.components.appSecurity.form.place.values.district.$dirty, invalid: $v.components.appSecurity.form.place.values.district.$error}"
+            v-model="appSecurity.form.place.values.district"
+            @input="$v.appSecurity.form.place.values.district.$touch()"
+            :class="{valid: !$v.appSecurity.form.place.values.district.$error && $v.appSecurity.form.place.values.district.$dirty, invalid: $v.appSecurity.form.place.values.district.$error}"
             autocomplete="off"
             type="text"
             name="district"
@@ -45,9 +45,9 @@
         <div class="col-sm-12 col-md-6">
           <label for="place">Mesto</label>
           <input
-            v-model="components.appSecurity.form.place.values.place"
-            @input="$v.components.appSecurity.form.place.values.place.$touch()"
-            :class="{valid: !$v.components.appSecurity.form.place.values.place.$error && $v.components.appSecurity.form.place.values.place.$dirty, invalid: $v.components.appSecurity.form.place.values.place.$error}"
+            v-model="appSecurity.form.place.values.place"
+            @input="$v.appSecurity.form.place.values.place.$touch()"
+            :class="{valid: !$v.appSecurity.form.place.values.place.$error && $v.appSecurity.form.place.values.place.$dirty, invalid: $v.appSecurity.form.place.values.place.$error}"
             autocomplete="off"
             type="text"
             name="place"
@@ -59,9 +59,9 @@
         <div class="col-sm-12 col-md-6">
           <label for="street">Adresa</label>
           <input
-            v-model="components.appSecurity.form.place.values.street"
-            @input="$v.components.appSecurity.form.place.values.street.$touch()"
-            :class="{valid: !$v.components.appSecurity.form.place.values.street.$error && $v.components.appSecurity.form.place.values.street.$dirty, invalid: $v.components.appSecurity.form.place.values.street.$error}"
+            v-model="appSecurity.form.place.values.street"
+            @input="$v.appSecurity.form.place.values.street.$touch()"
+            :class="{valid: !$v.appSecurity.form.place.values.street.$error && $v.appSecurity.form.place.values.street.$dirty, invalid: $v.appSecurity.form.place.values.street.$error}"
             autocomplete="off"
             type="text"
             name="street"
@@ -71,9 +71,9 @@
         <div class="col-sm-12 col-md-6">
           <label for="zip">PSČ</label>
           <input
-            v-model="components.appSecurity.form.place.values.zip"
-            @input="$v.components.appSecurity.form.place.values.zip.$touch()"
-            :class="{valid: !$v.components.appSecurity.form.place.values.zip.$error && $v.components.appSecurity.form.place.values.zip.$dirty, invalid: $v.components.appSecurity.form.place.values.zip.$error}"
+            v-model="appSecurity.form.place.values.zip"
+            @input="$v.appSecurity.form.place.values.zip.$touch()"
+            :class="{valid: !$v.appSecurity.form.place.values.zip.$error && $v.appSecurity.form.place.values.zip.$dirty, invalid: $v.appSecurity.form.place.values.zip.$error}"
             autocomplete="off"
             type="number"
             name="zip"
@@ -88,9 +88,9 @@
         <div class="col-sm-12 col-md-6">
           <label for="new-password">Nové heslo</label>
           <input
-            v-model="components.appSecurity.form.credentials.values.password"
-            @input="$v.components.appSecurity.form.credentials.values.password.$touch()"
-            :class="{valid: !$v.components.appSecurity.form.credentials.values.password.$error && $v.components.appSecurity.form.credentials.values.password.$dirty, invalid: $v.components.appSecurity.form.credentials.values.password.$error}"
+            v-model="appSecurity.form.credentials.values.password"
+            @input="$v.appSecurity.form.credentials.values.password.$touch()"
+            :class="{valid: !$v.appSecurity.form.credentials.values.password.$error && $v.appSecurity.form.credentials.values.password.$dirty, invalid: $v.appSecurity.form.credentials.values.password.$error}"
             autocomplete="off"
             type="password"
             name="new-password"
@@ -100,9 +100,9 @@
         <div class="col-sm-12 col-md-6">
           <label for="confirm-new-password">Potvrdenie nového hesla</label>
           <input
-            v-model="components.appSecurity.form.credentials.values.confirmPassword"
-            @input="$v.components.appSecurity.form.credentials.values.confirmPassword.$touch()"
-            :class="{valid: !$v.components.appSecurity.form.credentials.values.confirmPassword.$error && $v.components.appSecurity.form.credentials.values.confirmPassword.$dirty, invalid: $v.components.appSecurity.form.credentials.values.confirmPassword.$error}"
+            v-model="appSecurity.form.credentials.values.confirmPassword"
+            @input="$v.appSecurity.form.credentials.values.confirmPassword.$touch()"
+            :class="{valid: !$v.appSecurity.form.credentials.values.confirmPassword.$error && $v.appSecurity.form.credentials.values.confirmPassword.$dirty, invalid: $v.appSecurity.form.credentials.values.confirmPassword.$error}"
             autocomplete="off"
             type="password"
             name="confirm-new-password"
@@ -112,7 +112,7 @@
       </div>
     </div>
     <button
-      :disabled="$v.components.appSecurity.form.place.values.zip.$invalid || $v.components.appSecurity.form.place.values.street.$invalid || $v.components.appSecurity.form.place.values.place.$invalid || $v.components.appSecurity.form.place.values.district.$invalid || $v.components.appSecurity.form.place.values.region.$invalid || $v.components.appSecurity.form.place.values.country.$invalid "
+      :disabled="$v.appSecurity.form.place.values.zip.$invalid || $v.appSecurity.form.place.values.street.$invalid || $v.appSecurity.form.place.values.place.$invalid || $v.appSecurity.form.place.values.district.$invalid || $v.appSecurity.form.place.values.region.$invalid || $v.appSecurity.form.place.values.country.$invalid "
       @click.prevent="onUpdate(false)"
       type="submit"
       class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
@@ -120,113 +120,83 @@
       <app-confirm
         @confirmed="onUpdate($event)"
         :confirmId="'securityConfirm'"
-        :text="components.appConfirm.text"
-        :title="components.appConfirm.title"
-        :positiveButton="components.appConfirm.positiveButton"
-        :negativeButton="components.appConfirm.negativeButton"/>
+        :text="appSecurity.confirm.text"
+        :title="appSecurity.confirm.title"
+        :positiveButton="appSecurity.confirm.positiveButton"
+        :negativeButton="appSecurity.confirm.negativeButton"/>
     </div>
     <div id="alert-wrapper">
       <app-alert
-        :condition="components.appAlert.condition"
-        :type="components.appAlert.type"
-        :text="components.appAlert.text"/>
+        :condition="appSecurity.alert.condition"
+        :type="appSecurity.alert.type"
+        :text="appSecurity.alert.text"/>
     </div>
   </div>
 </template>
 
 <script>
 import bootstrap from 'jquery'
+
 import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
+
 import alert from '@/components/common/alert'
 import confirm from '@/components/common/confirm'
+
 import {required, numeric, sameAs} from 'vuelidate/lib/validators'
 
 export default {
   created: function () {
-    this.components.appSecurity.form.place.values = {...this.userProfile.places}
+    this.appSecurity.form.place.values = {...this.userProfile.places}
   },
   name: 'security',
+  props: ['appSecurity'],
   data: function () {
     return {
-      components: {
-        appSecurity: {
-          form: {
-            place: {
-              values: {
-                country: null,
-                region: null,
-                district: null,
-                place: null,
-                street: null,
-                zip: null
-              }
-            },
-            credentials: {
-              values: {
-                confirmPassword: null,
-                password: null
-              }
-            }
-          }
-        },
-        appConfirm: {
-          text: null,
-          title: null,
-          button: null
-        },
-        appAlert: {
-          condition: [],
-          type: [],
-          text: []
-        }
-      }
     }
   },
   validations: {
-    components: {
-      appSecurity: {
-        form: {
-          place: {
-            values: {
-              country: {
-                required,
-                alpha: value => new RegExp(/^[\D ]+$/).test(value)
-              },
-              region: {
-                required,
-                alpha: value => new RegExp(/^[\D ]+$/).test(value)
-              },
-              district: {
-                required,
-                alpha: value => new RegExp(/^[\D ]+$/).test(value)
-              },
-              place: {
-                required,
-                alpha: value => new RegExp(/^[\D ]+$/).test(value)
-              },
-              street: {
-                required,
-                alpha: value => new RegExp(/^[\D ]+[0-9]*$/).test(value)
-              },
-              zip: {
-                required,
-                numeric
-              }
+    appSecurity: {
+      form: {
+        place: {
+          values: {
+            country: {
+              required,
+              alpha: value => new RegExp(/^[\D ]+$/).test(value)
+            },
+            region: {
+              required,
+              alpha: value => new RegExp(/^[\D ]+$/).test(value)
+            },
+            district: {
+              required,
+              alpha: value => new RegExp(/^[\D ]+$/).test(value)
+            },
+            place: {
+              required,
+              alpha: value => new RegExp(/^[\D ]+$/).test(value)
+            },
+            street: {
+              required,
+              alpha: value => new RegExp(/^[\D ]+[0-9]*$/).test(value)
+            },
+            zip: {
+              required,
+              numeric
             }
-          },
-          credentials: {
-            values: {
-              confirmPassword: {
-                required,
-                sameAs: sameAs(vm => {
-                  return vm.password
-                })
-              },
-              password: {
-                required,
-                contains: value => new RegExp(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?:.{8}|.{30})/g).test(value)
-              }
+          }
+        },
+        credentials: {
+          values: {
+            confirmPassword: {
+              required,
+              sameAs: sameAs(vm => {
+                return vm.password
+              })
+            },
+            password: {
+              required,
+              contains: value => new RegExp(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?:.{8}|.{30})/g).test(value)
             }
           }
         }
@@ -245,26 +215,26 @@ export default {
   },
   methods: {
     showConfirmedModal: function (title, text) {
-      this.components.appConfirm.title = title
-      this.components.appConfirm.text = text
-      this.components.appConfirm.positiveButton = 'Potvrdiť'
-      this.components.appConfirm.negativeButton = 'Zrušiť'
+      this.appSecurity.confirm.title = title
+      this.appSecurity.confirm.text = text
+      this.appSecurity.confirm.positiveButton = 'Potvrdiť'
+      this.appSecurity.confirm.negativeButton = 'Zrušiť'
       return bootstrap('#securityConfirm').modal('show')
     },
     showAlertModal: function (condition, type, text) {
-      this.components.appAlert.condition = condition
-      this.components.appAlert.type = type
-      this.components.appAlert.text = text
+      this.appSecurity.alert.condition = condition
+      this.appSecurity.alert.type = type
+      this.appSecurity.alert.text = text
     },
     onUpdate: function ($event) {
       if ($event) {
         let promises = []
-        if (this.$v.components.appSecurity.form.place.values.zip.$dirty || this.$v.components.appSecurity.form.place.values.street.$dirty || this.$v.components.appSecurity.form.place.values.place.$dirty || this.$v.components.appSecurity.form.place.values.district.$dirty || this.$v.components.appSecurity.form.place.values.region.$dirty || this.$v.components.appSecurity.form.place.values.country.$dirty) {
-          const placeData = {accountId: this.userProfile.accountId, places: {country: this.components.appSecurity.form.place.values.country, region: this.components.appSecurity.form.place.values.region, district: this.components.appSecurity.form.place.values.district, place: this.components.appSecurity.form.place.values.place, street: this.components.appSecurity.form.place.values.street, zip: this.components.appSecurity.form.place.values.zip, code: this.userProfile.places.code}, firstName: this.userProfile.firstName, lastName: this.userProfile.lastName, gender: this.userProfile.gender, balance: this.userProfile.balance, tel: this.userProfile.tel}
+        if (this.$v.appSecurity.form.place.values.zip.$dirty || this.$v.appSecurity.form.place.values.street.$dirty || this.$v.appSecurity.form.place.values.place.$dirty || this.$v.appSecurity.form.place.values.district.$dirty || this.$v.appSecurity.form.place.values.region.$dirty || this.$v.appSecurity.form.place.values.country.$dirty) {
+          const placeData = {accountId: this.userProfile.accountId, places: {country: this.appSecurity.form.place.values.country, region: this.appSecurity.form.place.values.region, district: this.appSecurity.form.place.values.district, place: this.appSecurity.form.place.values.place, street: this.appSecurity.form.place.values.street, zip: this.appSecurity.form.place.values.zip, code: this.userProfile.places.code}, firstName: this.userProfile.firstName, lastName: this.userProfile.lastName, gender: this.userProfile.gender, balance: this.userProfile.balance, tel: this.userProfile.tel}
           promises.push(this.$store.dispatch(types.ACTION_USER_UPDATE, placeData))
         }
-        if (!this.$v.components.appSecurity.form.credentials.values.confirmPassword.$invalid || !this.$v.components.appSecurity.form.credentials.values.confirmPassword.$invalid) {
-          const accountData = {accountId: this.userProfile.accountId, userName: this.userProfile.userName, email: this.userProfile.email, ...this.components.appSecurity.form.credentials.values}
+        if (!this.$v.appSecurity.form.credentials.values.confirmPassword.$invalid || !this.$v.appSecurity.form.credentials.values.confirmPassword.$invalid) {
+          const accountData = {accountId: this.userProfile.accountId, userName: this.userProfile.userName, email: this.userProfile.email, ...this.appSecurity.form.credentials.values}
           promises.push(this.$store.dispatch(types.ACTION_ACCOUNT_UPDATE, accountData))
         }
         Promise.all(promises)

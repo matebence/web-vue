@@ -55,6 +55,7 @@
 <script>
 import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
+
 import {required} from 'vuelidate/lib/validators'
 
 export default {

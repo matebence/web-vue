@@ -3,15 +3,19 @@
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
         <app-manage
-          :activeEl="components.appParcel.parcel.activeEl" />
+          :activeEl="components.appParcel.activeEl"
+          :appManage="components.appParcel.sub.appManage"
+          :appVerticalList="components.appParcel.sub.appVerticalList" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-courier
-          :parcel="components.appParcel.parcel"
-          :courier="components.appParcel.courier" />
+          :parcelData="components.appParcel.data"
+          :activeEl="components.appParcel.activeEl"
+          :appHorizontalList="components.appParcel.sub.appHorizontalList" />
         <app-here-map
-          :parcel="components.appParcel.parcel"
-          :courier="components.appParcel.courier" />
+          :parcelData="components.appParcel.data"
+          :activeEl="components.appParcel.activeEl"
+          :appHereMap="components.appParcel.sub.appHereMap"/>
       </div>
     </div>
   </div>
@@ -19,6 +23,7 @@
 
 <script>
 import * as types from '@/store/types'
+
 import manage from '@/components/dashboard/child/parcel/sub/manage'
 import courier from '@/components/dashboard/child/parcel/sub/courier'
 import hereMap from '@/components/dashboard/child/parcel/sub/hereMap'
@@ -33,23 +38,129 @@ export default {
     return {
       components: {
         appParcel: {
-          parcel: {
-            search: {
-            },
-            activeEl: {
-              itemId: 1,
-              value: 'Pridelené',
-              parcelId: 0
-            }
-          },
-          courier: {
-            search: {
-              user: {
+          sub: {
+            appHorizontalList: {
+              modal: {
+                text: null,
+                title: null,
+                button: null
               }
             },
-            activeEl: {
-              courierId: 0
+            appHereMap: {
+              form: {
+                from: {
+                  value: '',
+                  autoComplete: {
+                  },
+                  geo: {
+                    lat: 0,
+                    lng: 0
+                  }
+                },
+                to: {
+                  value: '',
+                  autoComplete: {
+                  },
+                  geo: {
+                    lat: 0,
+                    lng: 0
+                  }
+                }
+              },
+              summary: {
+                isSet: false,
+                values: {
+                  length: 0,
+                  time: 0,
+                  price: 0
+                }
+              },
+              profit: {
+                company: 0.00,
+                courier: 0.00
+              },
+              modal: {
+                text: null,
+                title: null,
+                button: null
+              },
+              apply: {
+                text: null,
+                title: null,
+                positiveButton: null,
+                negativeButton: null
+              }
+            },
+            appManage: {
+              list: {
+                name: 'app-vertical-list',
+                icon: 'plus'
+              },
+              crud: {
+                name: 'app-crud',
+                icon: 'angle-left',
+                form: {
+                  values: {
+                    receiver: {
+                      name: null,
+                      accountId: null
+                    },
+                    category: null,
+                    note: null,
+                    length: null,
+                    width: null,
+                    height: null,
+                    weight: null
+                  }
+                }
+              },
+              modal: {
+                text: null,
+                title: null,
+                button: null
+              },
+              apply: {
+                text: null,
+                title: null,
+                positiveButton: null,
+                negativeButton: null
+              }
+            },
+            appVerticalList: {
+              items: [
+                {
+                  itemId: 1,
+                  value: 'Pridelené'
+                },
+                {
+                  itemId: 2,
+                  value: 'Nepridelené'
+                },
+                {
+                  itemId: 3,
+                  value: 'Všetky'
+                }
+              ]
             }
+          },
+          data: {
+            parcel: {
+              search: {
+              }
+            },
+            courier: {
+              search: {
+                user: {
+                }
+              }
+            }
+          },
+          activeEl: {
+            itemId: 1,
+            parcelId: 0,
+            courierId: 0,
+            icon: 'plus',
+            component: 'app-vertical-list'
           }
         }
       }
@@ -61,13 +172,13 @@ export default {
     appHereMap: hereMap
   },
   watch: {
-    'components.appParcel.parcel.activeEl.parcelId': function (newValue, oldValue) {
+    'components.appParcel.activeEl.parcelId': function (newValue, oldValue) {
       if (newValue <= 0) {
-        this.components.appParcel.parcel.search = {}
+        this.components.appParcel.data.parcel.search = {}
       } else {
         return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {parcelId: newValue})
           .then(result => {
-            this.components.appParcel.parcel.search = Object.values(result).pop()
+            this.components.appParcel.data.parcel.search = Object.values(result).pop()
           })
           .catch(err => console.warn(err.message))
       }

@@ -19,7 +19,6 @@
           </li>
         </ul>
       </li>
-
       <li
         class="empty-list"
         v-if="(vehicleSearch !== undefined) && (Object.keys(vehicleSearch).length === 0)">
@@ -36,6 +35,10 @@ import * as types from '@/store/types'
 export default {
   name: 'verticalList',
   props: ['activeEl'],
+  data: function () {
+    return {
+    }
+  },
   computed: {
     ...mapGetters({
       vehicleSearch: types.GETTER_VEHICLE_DATA_SEARCH

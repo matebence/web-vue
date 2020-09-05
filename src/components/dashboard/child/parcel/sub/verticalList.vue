@@ -4,7 +4,7 @@
       <li
         :key="option.id"
         @click.prevent="onSelectedTab(option)"
-        v-for="option in components.appVerticalList.items"
+        v-for="option in appVerticalList.items"
         :class="{active: activeEl.itemId === option.itemId}">{{option.value}}</li>
     </ul>
     <ul class="parcels">
@@ -12,11 +12,11 @@
         :key="item.id"
         @click.prevent="onSelectedParcel(item)"
         v-for="item in parcelSearch"
-        v-show="activeEl.value === components.appVerticalList.items[0].value || activeEl.value === components.appVerticalList.items[2].value"
+        v-show="activeEl.itemId === appVerticalList.items[0].itemId || activeEl.itemId === appVerticalList.items[2].itemId"
         :class="{active: activeEl.parcelId === item.id}">
         <ul class="parcel">
           <li class="image">
-            <font-awesome-icon :icon="['fas', formatIcon(components.appVerticalList.items[0].value)]"/>
+            <font-awesome-icon :icon="['fas', formatIcon(appVerticalList.items[0].value)]"/>
           </li>
           <li>
             <ul>
@@ -30,16 +30,15 @@
           </li>
         </ul>
       </li>
-
       <li
         :key="item.id"
         @click.prevent="onSelectedParcel(item)"
         v-for="item in parcelCreate"
-        v-show="activeEl.value === components.appVerticalList.items[1].value || activeEl.value === components.appVerticalList.items[2].value"
+        v-show="activeEl.itemId === appVerticalList.items[1].itemId || activeEl.itemId === appVerticalList.items[2].itemId"
         :class="{active: activeEl.parcelId === item.id}">
         <ul class="parcel">
           <li class="image">
-            <font-awesome-icon :icon="['fas', formatIcon(components.appVerticalList.items[1].value)]"/>
+            <font-awesome-icon :icon="['fas', formatIcon(appVerticalList.items[1].value)]"/>
           </li>
           <li>
             <ul>
@@ -52,20 +51,19 @@
           </li>
         </ul>
       </li>
-
       <li
         class="empty-list"
-        v-if="(parcelSearch !== undefined) && (Object.keys(parcelSearch).length === 0) && (activeEl.value === components.appVerticalList.items[0].value)">
+        v-if="(parcelSearch !== undefined) && (Object.keys(parcelSearch).length === 0) && (activeEl.itemId === appVerticalList.items[0].itemId)">
         Zoznam je prázdny
       </li>
       <li
         class="empty-list"
-        v-if="(parcelCreate !== undefined) && (Object.keys(parcelCreate).length === 0) && (activeEl.value === components.appVerticalList.items[1].value)">
+        v-if="(parcelCreate !== undefined) && (Object.keys(parcelCreate).length === 0) && (activeEl.itemId === appVerticalList.items[1].itemId)">
         Zoznam je prázdny
       </li>
       <li
         class="empty-list"
-        v-if="(parcelSearch !== undefined && parcelCreate !== undefined) && (Object.keys(parcelSearch).length === 0 && Object.keys(parcelCreate).length === 0) && (activeEl.value === components.appVerticalList.items[2].value)">
+        v-if="(parcelSearch !== undefined && parcelCreate !== undefined) && (Object.keys(parcelSearch).length === 0 && Object.keys(parcelCreate).length === 0) && (activeEl.itemId === appVerticalList.items[2].itemId)">
         Zoznam je prázdny
       </li>
     </ul>
@@ -82,32 +80,14 @@ export default {
       .catch(err => console.warn(err.message))
   },
   name: 'verticalList',
-  props: ['activeEl'],
+  props: ['appVerticalList', 'activeEl'],
   data: function () {
     return {
-      components: {
-        appVerticalList: {
-          items: [
-            {
-              itemId: 1,
-              value: 'Pridelené'
-            },
-            {
-              itemId: 2,
-              value: 'Nepridelené'
-            },
-            {
-              itemId: 3,
-              value: 'Všetky'
-            }
-          ]
-        }
-      }
     }
   },
   watch: {
     'activeEl.itemId': function (newValue, oldValue) {
-      if (newValue === 1) this.onSelectedTab({itemId: this.activeEl.itemId, value: this.activeEl.value})
+      if (newValue === 1) this.onSelectedTab({itemId: this.activeEl.itemId})
     }
   },
   computed: {
@@ -121,9 +101,8 @@ export default {
     onSelectedTab: function (el) {
       this.activeEl.parcelId = 0
       this.activeEl.itemId = el.itemId
-      this.activeEl.value = el.value
 
-      if (this.activeEl.value === this.components.appVerticalList.items[0].value || this.activeEl.value === this.components.appVerticalList.items[2].value) {
+      if (this.activeEl.itemId === this.appVerticalList.items[0].itemId || this.activeEl.itemId === this.appVerticalList.items[2].itemId) {
         return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.accountId})
           .catch(err => console.warn(err.message))
       }

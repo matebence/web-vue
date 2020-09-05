@@ -1,5 +1,5 @@
 <template>
-  <div id="auth">
+  <div id="index">
     <div id="wrapper">
       <div id="hero-video">
         <video autoplay loop muted playsinline src="@/assets/video/hero-video.mp4"/>
@@ -20,8 +20,9 @@
 
 <script>
 import * as types from '@/store/types'
-import signIn from '@/components/auth/sub/signIn'
+
 import signUp from '@/components/auth/sub/signUp'
+import signIn from '@/components/auth/sub/signIn'
 import signOut from '@/components/auth/sub/signOut'
 import forgetPass from '@/components/auth/sub/forgetPass'
 
@@ -34,7 +35,7 @@ export default {
     this.$store.commit(types.MUTATIONS_CLEAR_SIGN_IN_ERRORS, {})
     this.$store.commit(types.MUTATIONS_CLEAR_FORGET_PASSWORD_ERRORS, {})
   },
-  name: 'auth',
+  name: 'index',
   data: function () {
     return {
       components: {
@@ -130,14 +131,14 @@ export default {
 </script>
 
 <style scoped>
-  div#auth div#wrapper {
+  div#index div#wrapper {
     position: relative;
     overflow: hidden;
     min-height: 100vh;
     z-index: 1;
   }
 
-  div#auth div#hero-video:before {
+  div#index div#hero-video:before {
     content:"";
     z-index:1;
     position: absolute;
@@ -148,7 +149,7 @@ export default {
     background:linear-gradient(to right, rgba(23, 108, 157, 0.81), rgba(38, 176, 255, 0.38));
   }
 
-  div#auth div#hero-video {
+  div#index div#hero-video {
     left: 0;
     top: 0;
     height: 100vh;
@@ -158,7 +159,7 @@ export default {
     z-index: -1;
   }
 
-  div#auth div#form {
+  div#index div#form {
     position: absolute;
     top: 50%;
     right: 0;
@@ -174,7 +175,7 @@ export default {
   }
 
   @media (max-width: 1230px) {
-    div#auth div#form {
+    div#index div#form {
       padding-left: 10rem;
       padding-right: 10rem;
       z-index: 999;
@@ -186,7 +187,7 @@ export default {
   }
 
   @media (max-width: 992px) {
-    div#auth div#form {
+    div#index div#form {
       height: inherit;
       padding-left: 7rem;
       padding-right: 7rem;
@@ -194,14 +195,14 @@ export default {
   }
 
   @media (max-width: 768px) {
-    div#auth div#form {
+    div#index div#form {
       padding-left: 5rem;
       padding-right: 5rem;
     }
   }
 
   @media (max-width: 576px) {
-    div#auth div#form {
+    div#index div#form {
       padding-left: 0;
       padding-right: 0;
     }

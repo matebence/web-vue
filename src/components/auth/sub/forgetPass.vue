@@ -14,19 +14,19 @@
             type="email"
             class="form-control" id="email"
             placeholder="Emailová adresa"
-            v-model="components.appForgetPassword.form.values.email"
-            @input="$v.components.appForgetPassword.form.values.email.$touch()"
-            :class="{valid: !$v.components.appForgetPassword.form.values.email.$error && $v.components.appForgetPassword.form.values.email.$dirty, invalid: $v.components.appForgetPassword.form.values.email.$error}">
+            v-model="appForgetPassword.form.values.email"
+            @input="$v.appForgetPassword.form.values.email.$touch()"
+            :class="{valid: !$v.appForgetPassword.form.values.email.$error && $v.appForgetPassword.form.values.email.$dirty, invalid: $v.appForgetPassword.form.values.email.$error}">
           <a
             href="#"
-            @click.prevent="activeEl.component='app-sign-in'">
+            @click.prevent="onLoadComponent('sign-in')">
             Späť na prihlásenie
           </a>
         </div>
         <button
           type="submit"
           class="btn btn-primary"
-          @click.prevent="onSend"
+          @click.prevent="onSubmit"
           :disabled="$v.$invalid">
           <span
             class="spinner-border spinner-border-sm"
@@ -38,9 +38,9 @@
       </form>
       <div class="alert-wrapper">
         <app-alert
-          :condition="components.appAlert.condition"
-          :type="components.appAlert.type"
-          :text="components.appAlert.text"/>
+          :condition="appForgetPassword.alert.condition"
+          :type="appForgetPassword.alert.type"
+          :text="appForgetPassword.alert.text"/>
       </div>
     </div>
   </div>
@@ -49,50 +49,28 @@
 <script>
 import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
+
 import alert from '@/components/common/alert'
+
 import {required, email} from 'vuelidate/lib/validators'
 
 export default {
   created: function () {
     if (this.$route.params.key) return this.onPageLoad()
   },
-  props: ['activeEl'],
   name: 'forgetpass',
+  props: ['appForgetPassword', 'activeEl'],
   data: function () {
     return {
-      components: {
-        appForgetPassword: {
-          form: {
-            values: {
-              email: null
-            }
-          }
-        },
-        appUrl: {
-          url: {
-            values: {
-              id: this.$route.params.id,
-              key: this.$route.params.key
-            }
-          }
-        },
-        appAlert: {
-          condition: [],
-          type: [],
-          text: []
-        }
-      }
     }
   },
   validations: {
-    components: {
-      appForgetPassword: {
-        form: {
-          values: {
-            email: {
-              required,
-              email
-            }
+    appForgetPassword: {
+      form: {
+        values: {
+          email: {
+            required,
+            email
           }
         }
       }
@@ -109,20 +87,23 @@ export default {
   },
   methods: {
     showAlertModal: function (condition, type, text) {
-      this.components.appAlert.condition = condition
-      this.components.appAlert.type = type
-      this.components.appAlert.text = text
+      this.appForgetPassword.alert.condition = condition
+      this.appForgetPassword.alert.type = type
+      this.appForgetPassword.alert.text = text
     },
     onPageLoad: function () {
-      return this.$store.dispatch(types.ACTION_ACCOUNT_RECOVER, {id: this.components.appUrl.url.values.id, key: this.components.appUrl.url.values.key})
+      return this.$store.dispatch(types.ACTION_ACCOUNT_RECOVER, {id: this.appForgetPassword.url.url.values.id, key: this.appForgetPassword.url.url.values.key})
         .then(result => this.showAlertModal([result !== null], ['alert-success'], [result.message]))
         .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
     },
-    onSend: function () {
+    onLoadComponent: function ($event) {
+      return this.$router.push({path: $event})
+    },
+    onSubmit: function () {
       this.forgetPasswordError.message = null
       this.forgetPasswordError.is = false
 
-      return this.$store.dispatch(types.ACTION_FORGET_PASSWORD, {email: this.components.appForgetPassword.form.values.email})
+      return this.$store.dispatch(types.ACTION_FORGET_PASSWORD, {email: this.appForgetPassword.form.values.email})
         .then(result => this.showAlertModal([result !== null], ['alert-success'], [result.message]))
         .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
     }

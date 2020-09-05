@@ -4,14 +4,14 @@
       <li
         :key="option.id"
         @click.prevent="onSelectedOption(option)"
-        v-for="option in components.appVerticalList.items"
+        v-for="option in appVerticalList.items"
         :class="{active: activeEl.itemId === option.itemId}">{{option.value}}</li>
     </ul>
     <ul class="shipments">
       <li
         :key="item._id"
         @click.prevent="onSelectedShipment(item)"
-        v-for="item in shipment"
+        v-for="item in shipmentData.shipment.search"
         :class="{active: activeEl.shipmentId === item._id}">
         <ul class="shipment">
           <li class="image">
@@ -26,20 +26,19 @@
           </li>
         </ul>
       </li>
-
       <li
         class="empty-list"
-        v-if="Object.keys(shipment).length === 0 && activeEl.value === components.appVerticalList.items[0].value">
+        v-if="Object.keys(shipmentData.shipment.search).length === 0 && activeEl.itemId === appVerticalList.items[0].itemId">
         Zoznam je prázdny
       </li>
       <li
         class="empty-list"
-        v-if="Object.keys(shipment).length === 0 && activeEl.value === components.appVerticalList.items[1].value">
+        v-if="Object.keys(shipmentData.shipment.search).length === 0 && activeEl.itemId === appVerticalList.items[1].itemId">
         Zoznam je prázdny
       </li>
       <li
         class="empty-list"
-        v-if="Object.keys(shipment).length === 0 && activeEl.value === components.appVerticalList.items[2].value">
+        v-if="Object.keys(shipmentData.shipment.search).length === 0 && activeEl.itemId === appVerticalList.items[2].itemId">
         Zoznam je prázdny
       </li>
     </ul>
@@ -49,27 +48,9 @@
 <script>
 export default {
   name: 'verticalList',
-  props: ['activeEl', 'shipment'],
+  props: ['appVerticalList', 'shipmentData', 'activeEl'],
   data: function () {
     return {
-      components: {
-        appVerticalList: {
-          items: [
-            {
-              itemId: 1,
-              value: 'Vlastné'
-            },
-            {
-              itemId: 2,
-              value: 'Ostatné'
-            },
-            {
-              itemId: 3,
-              value: 'Všetky'
-            }
-          ]
-        }
-      }
     }
   },
   methods: {

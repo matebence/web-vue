@@ -18,17 +18,23 @@
     </div>
     <app-vertical-list
       :activeEl="activeEl"
-      :shipment="shipment" />
+      :shipmentData="shipmentData"
+      :appVerticalList="appVerticalList" />
   </div>
 </template>
 
 <script>
 import * as types from '@/store/types'
+
 import verticalList from '@/components/dashboard/child/client/sub/verticalList'
 
 export default {
   name: 'manage',
-  props: ['activeEl', 'shipment'],
+  props: ['appVerticalList', 'shipmentData', 'activeEl'],
+  data: function () {
+    return {
+    }
+  },
   components: {
     appVerticalList: verticalList
   },
@@ -42,7 +48,7 @@ export default {
   },
   methods: {
     onAcceptShipment: function () {
-      const data = Object.values(this.shipment.search).filter(e => e._id === this.activeEl.shipmentId).pop()
+      const data = Object.values(this.shipmentData.search).filter(e => e._id === this.activeEl.shipmentId).pop()
       return this.$store.dispatch(types.ACTION_SHIPMENT_UPDATE, {_id: data._id, courier: data.courier.courierId, parcelId: data.parcelId, from: data.from, to: data.to, status: process.env.PARCEL_ACCEPTED_STATUS_ID, price: data.price, express: data.express})
         .then(result => {
           this.activeEl.itemId = 2

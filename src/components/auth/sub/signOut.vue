@@ -14,6 +14,10 @@ export default {
       .catch(err => console.warn(err.message))
   },
   name: 'signout',
+  data: function () {
+    return {
+    }
+  },
   computed: {
     ...mapGetters({
       signIn: types.GETTER_SIGN_IN_DATA

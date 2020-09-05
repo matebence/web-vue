@@ -27,6 +27,14 @@
 export default {
   name: 'apply',
   props: ['applyId', 'title', 'text', 'positiveButton', 'negativeButton'],
+  data: function () {
+    return {
+      components: {
+        appApply: {
+        }
+      }
+    }
+  },
   methods: {
     applied: function () {
       return this.$emit('applied', true)

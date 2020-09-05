@@ -16,9 +16,9 @@
           <label for="username">Používateľské meno</label>
           <input
             disabled
-            v-model="components.appProfile.form.values.userName"
-            @input="$v.components.appProfile.form.values.userName.$touch()"
-            :class="{valid: !$v.components.appProfile.form.values.userName.$error && $v.components.appProfile.form.values.userName.$dirty, invalid: $v.components.appProfile.form.values.userName.$error}"
+            v-model="appProfile.form.values.userName"
+            @input="$v.appProfile.form.values.userName.$touch()"
+            :class="{valid: !$v.appProfile.form.values.userName.$error && $v.appProfile.form.values.userName.$dirty, invalid: $v.appProfile.form.values.userName.$error}"
             autofocus
             autocomplete="off"
             type="text"
@@ -30,9 +30,9 @@
           <label for="email">Email</label>
           <input
             disabled
-            v-model="components.appProfile.form.values.email"
-            @input="$v.components.appProfile.form.values.email.$touch()"
-            :class="{valid: !$v.components.appProfile.form.values.email.$error && $v.components.appProfile.form.values.email.$dirty, invalid: $v.components.appProfile.form.values.email.$error}"
+            v-model="appProfile.form.values.email"
+            @input="$v.appProfile.form.values.email.$touch()"
+            :class="{valid: !$v.appProfile.form.values.email.$error && $v.appProfile.form.values.email.$dirty, invalid: $v.appProfile.form.values.email.$error}"
             autocomplete="off"
             type="email"
             placeholder="Vaša emailová adresa"
@@ -44,9 +44,9 @@
         <div class="col-sm-12 col-md-6">
           <label for="firstname">Meno</label>
           <input
-            v-model="components.appProfile.form.values.firstName"
-            @input="$v.components.appProfile.form.values.firstName.$touch()"
-            :class="{valid: !$v.components.appProfile.form.values.firstName.$error && $v.components.appProfile.form.values.firstName.$dirty, invalid: $v.components.appProfile.form.values.firstName.$error}"
+            v-model="appProfile.form.values.firstName"
+            @input="$v.appProfile.form.values.firstName.$touch()"
+            :class="{valid: !$v.appProfile.form.values.firstName.$error && $v.appProfile.form.values.firstName.$dirty, invalid: $v.appProfile.form.values.firstName.$error}"
             autocomplete="off"
             type="text"
             placeholder="Vaše meno"
@@ -56,9 +56,9 @@
         <div class="col-sm-12 col-md-6">
           <label for="lastname">Priezvisko</label>
           <input
-            v-model="components.appProfile.form.values.lastName"
-            @input="$v.components.appProfile.form.values.lastName.$touch()"
-            :class="{valid: !$v.components.appProfile.form.values.lastName.$error && $v.components.appProfile.form.values.lastName.$dirty, invalid: $v.components.appProfile.form.values.lastName.$error}"
+            v-model="appProfile.form.values.lastName"
+            @input="$v.appProfile.form.values.lastName.$touch()"
+            :class="{valid: !$v.appProfile.form.values.lastName.$error && $v.appProfile.form.values.lastName.$dirty, invalid: $v.appProfile.form.values.lastName.$error}"
             autocomplete="off"
             type="text"
             placeholder="Vaše priezvisko"
@@ -70,9 +70,9 @@
         <div class="col-sm-12 col-md-6">
           <label for="tel">Telefonné číslo</label>
           <input
-            v-model="components.appProfile.form.values.tel"
-            @input="$v.components.appProfile.form.values.tel.$touch()"
-            :class="{valid: !$v.components.appProfile.form.values.tel.$error && $v.components.appProfile.form.values.tel.$dirty, invalid: $v.components.appProfile.form.values.tel.$error}"
+            v-model="appProfile.form.values.tel"
+            @input="$v.appProfile.form.values.tel.$touch()"
+            :class="{valid: !$v.appProfile.form.values.tel.$error && $v.appProfile.form.values.tel.$dirty, invalid: $v.appProfile.form.values.tel.$error}"
             autocomplete="off"
             placeholder="Vaše telefonné číslo"
             type="text"
@@ -82,9 +82,9 @@
         <div class="col-sm-12 col-md-6">
           <label for="gender">Pohlavie</label>
           <select
-            v-model="components.appProfile.form.values.gender"
-            @change="$v.components.appProfile.form.values.gender.$touch()"
-            :class="{valid: !$v.components.appProfile.form.values.gender.$error && $v.components.appProfile.form.values.gender.$dirty, invalid: $v.components.appProfile.form.values.gender.$error}"
+            v-model="appProfile.form.values.gender"
+            @change="$v.appProfile.form.values.gender.$touch()"
+            :class="{valid: !$v.appProfile.form.values.gender.$error && $v.appProfile.form.values.gender.$dirty, invalid: $v.appProfile.form.values.gender.$error}"
             class="form-control"
             id="gender">
             <option value="undefined" disabled selected>Vyberte z možností</option>
@@ -102,27 +102,29 @@
       <app-confirm
         @confirmed="onUpdate($event)"
         :confirmId="'profileConfirm'"
-        :text="components.appConfirm.text"
-        :title="components.appConfirm.title"
-        :positiveButton="components.appConfirm.positiveButton"
-        :negativeButton="components.appConfirm.negativeButton"/>
+        :text="appProfile.confirm.text"
+        :title="appProfile.confirm.title"
+        :positiveButton="appProfile.confirm.positiveButton"
+        :negativeButton="appProfile.confirm.negativeButton"/>
     </div>
     <div id="alert-wrapper">
       <app-alert
-        :condition="components.appAlert.condition"
-        :type="components.appAlert.type"
-        :text="components.appAlert.text"/>
+        :condition="appProfile.alert.condition"
+        :type="appProfile.alert.type"
+        :text="appProfile.alert.text"/>
     </div>
   </div>
 </template>
 
 <script>
 import bootstrap from 'jquery'
+import {required, email} from 'vuelidate/lib/validators'
+
 import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
+
 import alert from '@/components/common/alert'
 import confirm from '@/components/common/confirm'
-import {required, email} from 'vuelidate/lib/validators'
 
 export default {
   created: function () {
@@ -130,66 +132,41 @@ export default {
       .catch(err => console.warn(err.message))
   },
   beforeMount: function () {
-    this.components.appProfile.form.values = {...this.userProfile}
+    this.appProfile.form.values = {...this.userProfile}
   },
   name: 'profile',
+  props: ['appProfile'],
   data: function () {
     return {
-      components: {
-        appProfile: {
-          form: {
-            values: {
-              userName: null,
-              email: null,
-              firstName: null,
-              lastName: null,
-              tel: null,
-              gender: null
-            }
-          }
-        },
-        appConfirm: {
-          text: null,
-          title: null,
-          button: null
-        },
-        appAlert: {
-          condition: [],
-          type: [],
-          text: []
-        }
-      }
     }
   },
   validations: {
-    components: {
-      appProfile: {
-        form: {
-          values: {
-            userName: {
-              required,
-              username: value => new RegExp(/^[a-z.]+$/).test(value)
-            },
-            email: {
-              required,
-              email
-            },
-            firstName: {
-              required,
-              alpha: value => new RegExp(/^[\D ]+$/).test(value)
-            },
-            lastName: {
-              required,
-              alpha: value => new RegExp(/^[\D ]+$/).test(value)
-            },
-            tel: {
-              required,
-              telNumber: value => new RegExp(/^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[-. ]?)?((?:\(?\d{1,}\)?[-. ]?){0,})(?:[-. ]?(?:#|ext\.?|extension|x)[-. ]?(\d+))?$/).test(value)
-            },
-            gender: {
-              required,
-              alpha: value => new RegExp(/^[\D ]+$/).test(value)
-            }
+    appProfile: {
+      form: {
+        values: {
+          userName: {
+            required,
+            username: value => new RegExp(/^[a-z.]+$/).test(value)
+          },
+          email: {
+            required,
+            email
+          },
+          firstName: {
+            required,
+            alpha: value => new RegExp(/^[\D ]+$/).test(value)
+          },
+          lastName: {
+            required,
+            alpha: value => new RegExp(/^[\D ]+$/).test(value)
+          },
+          tel: {
+            required,
+            telNumber: value => new RegExp(/^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[-. ]?)?((?:\(?\d{1,}\)?[-. ]?){0,})(?:[-. ]?(?:#|ext\.?|extension|x)[-. ]?(\d+))?$/).test(value)
+          },
+          gender: {
+            required,
+            alpha: value => new RegExp(/^[\D ]+$/).test(value)
           }
         }
       }
@@ -224,20 +201,20 @@ export default {
   },
   methods: {
     showConfirmedModal: function (title, text) {
-      this.components.appConfirm.title = title
-      this.components.appConfirm.text = text
-      this.components.appConfirm.positiveButton = 'Potvrdiť'
-      this.components.appConfirm.negativeButton = 'Zrušiť'
+      this.appProfile.confirm.title = title
+      this.appProfile.confirm.text = text
+      this.appProfile.confirm.positiveButton = 'Potvrdiť'
+      this.appProfile.confirm.negativeButton = 'Zrušiť'
       return bootstrap('#profileConfirm').modal('show')
     },
     showAlertModal: function (condition, type, text) {
-      this.components.appAlert.condition = condition
-      this.components.appAlert.type = type
-      this.components.appAlert.text = text
+      this.appProfile.alert.condition = condition
+      this.appProfile.alert.type = type
+      this.appProfile.alert.text = text
     },
     onUpdate: function ($event) {
       if ($event) {
-        const data = {accountId: this.userProfile.accountId, places: {country: this.userProfile.places.country, region: this.userProfile.places.region, district: this.userProfile.places.district, place: this.userProfile.places.place, street: this.userProfile.places.street, zip: this.userProfile.places.zip, code: this.userProfile.places.code}, firstName: this.components.appProfile.form.values.firstName, lastName: this.components.appProfile.form.values.lastName, gender: this.components.appProfile.form.values.gender, balance: this.userProfile.balance, tel: this.components.appProfile.form.values.tel}
+        const data = {accountId: this.userProfile.accountId, places: {country: this.userProfile.places.country, region: this.userProfile.places.region, district: this.userProfile.places.district, place: this.userProfile.places.place, street: this.userProfile.places.street, zip: this.userProfile.places.zip, code: this.userProfile.places.code}, firstName: this.appProfile.form.values.firstName, lastName: this.appProfile.form.values.lastName, gender: this.appProfile.form.values.gender, balance: this.userProfile.balance, tel: this.appProfile.form.values.tel}
         return this.$store.dispatch(types.ACTION_USER_UPDATE, data)
           .then(result => {
             this.showAlertModal([result !== null], ['alert-success'], ['Údaje sa úspešne aktualizovali'])
@@ -292,8 +269,8 @@ export default {
     margin-top: 2rem;
   }
 
-  div#profile div.body label,
-  div#profile h2 {
+  div#profile h2,
+  div#profile div.body label {
     font-size: 1.2em;
     font-weight: 900;
     color: #979797;

@@ -5,9 +5,9 @@
       v-show="!isSelected"
       id="new">
       <button
-        @click.prevent="selectedComponent = manageComponenets()">
+        @click.prevent="activeEl.component = manageComponenets()">
         <font-awesome-icon
-          :icon="['fas', selectedIcon]"/>
+          :icon="['fas', activeEl.icon]"/>
       </button>
     </div>
     <div
@@ -31,36 +31,38 @@
     </div>
     <keep-alive>
       <component
-        :is="selectedComponent"
         :activeEl="activeEl"
-        :form="components.appCreate.form"
+        :is="activeEl.component"
+        :form="appManage.crud.form"
+        :appVerticalList="appVerticalList"
         @crud="
-          selectedComponent = $event.component;
-          selectedIcon = $event.icon;
+          activeEl.component = $event.component;
+          activeEl.icon = $event.icon;
           activeEl.itemId = $event.nav.id;
           activeEl.value = $event.nav.value;"/>
     </keep-alive>
     <div class="modal-wrapper">
       <app-modal
         :modalId="'parcelAlert'"
-        :text="components.appModal.text"
-        :title="components.appModal.title"
-        :button="components.appModal.button"/>
+        :text="appManage.modal.text"
+        :title="appManage.modal.title"
+        :button="appManage.modal.button"/>
     </div>
     <div class="apply-wrapper">
       <app-apply
         @applied="removeParcel($event)"
         :applyId="'parcelApply'"
-        :text="components.appApply.text"
-        :title="components.appApply.title"
-        :positiveButton="components.appApply.positiveButton"
-        :negativeButton="components.appApply.negativeButton"/>
+        :text="appManage.apply.text"
+        :title="appManage.apply.title"
+        :positiveButton="appManage.apply.positiveButton"
+        :negativeButton="appManage.apply.negativeButton"/>
     </div>
   </div>
 </template>
 
 <script>
 import bootstrap from 'jquery'
+
 import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
 
@@ -71,46 +73,9 @@ import verticalList from '@/components/dashboard/child/parcel/sub/verticalList'
 
 export default {
   name: 'manage',
-  props: ['activeEl'],
+  props: ['appVerticalList', 'appManage', 'activeEl'],
   data: function () {
     return {
-      selectedComponent: 'app-vertical-list',
-      selectedIcon: 'plus',
-      components: {
-        appList: {
-          name: 'app-vertical-list',
-          icon: 'plus'
-        },
-        appCreate: {
-          name: 'app-crud',
-          icon: 'angle-left',
-          form: {
-            values: {
-              receiver: {
-                name: null,
-                accountId: null
-              },
-              category: null,
-              note: null,
-              length: null,
-              width: null,
-              height: null,
-              weight: null
-            }
-          }
-        },
-        appModal: {
-          text: null,
-          title: null,
-          button: null
-        },
-        appApply: {
-          text: null,
-          title: null,
-          positiveButton: null,
-          negativeButton: null
-        }
-      }
     }
   },
   components: {
@@ -131,28 +96,28 @@ export default {
   },
   methods: {
     manageComponenets: function () {
-      if (this.selectedComponent === this.components.appCreate.name) {
-        this.components.appCreate.form.values = {receiver: {name: null, accountId: null}, category: null, note: null, length: null, width: null, height: null, weight: null}
-        this.selectedIcon = this.components.appList.icon
-        return this.components.appList.name
+      if (this.activeEl.component === this.appManage.crud.name) {
+        this.appManage.crud.form.values = {receiver: {name: null, accountId: null}, category: null, note: null, length: null, width: null, height: null, weight: null}
+        this.activeEl.icon = this.appManage.list.icon
+        return this.appManage.list.name
       }
-      if (this.selectedComponent === this.components.appList.name) {
-        this.selectedIcon = this.components.appCreate.icon
-        this.components.appCreate.form.values.id = undefined
-        return this.components.appCreate.name
+      if (this.activeEl.component === this.appManage.list.name) {
+        this.activeEl.icon = this.appManage.crud.icon
+        this.appManage.crud.form.values.id = undefined
+        return this.appManage.crud.name
       }
     },
     showAlertModal: function (title, text, button) {
-      this.components.appModal.title = title
-      this.components.appModal.text = text
-      this.components.appModal.button = button
+      this.appManage.modal.title = title
+      this.appManage.modal.text = text
+      this.appManage.modal.button = button
       return bootstrap('#parcelAlert').modal('show')
     },
     showAppliedModal: function (title, text) {
-      this.components.appApply.title = title
-      this.components.appApply.text = text
-      this.components.appApply.positiveButton = 'Odstrániť'
-      this.components.appApply.negativeButton = 'Zrušiť'
+      this.appManage.apply.title = title
+      this.appManage.apply.text = text
+      this.appManage.apply.positiveButton = 'Odstrániť'
+      this.appManage.apply.negativeButton = 'Zrušiť'
       return bootstrap('#parcelApply').modal('show')
     },
     editParcel: function () {
@@ -160,9 +125,9 @@ export default {
         return this.showAlertModal('Editovanie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné editovať.', 'Zatvoriť')
       } else {
         const data = this.parcelCreate.filter(e => e.id === this.activeEl.parcelId)
-        this.selectedComponent = this.manageComponenets()
+        this.activeEl.component = this.manageComponenets()
         this.activeEl.parcelId = 0
-        this.components.appCreate.form.values = data.pop()
+        this.appManage.crud.form.values = data.pop()
       }
     },
     removeParcel: function (applied) {

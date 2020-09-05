@@ -12,10 +12,10 @@
               placeholder="5356 5631 1265 7895"
               :disabled="getBankFormValues"
               type="text"
-              v-mask="components.appMoney.placeHolder.standard"
-              v-model="components.appMoney.form.card.values.number"
-              @input="$v.components.appMoney.form.card.values.number.$touch()"
-              :class="{valid: !$v.components.appMoney.form.card.values.number.$error && $v.components.appMoney.form.card.values.number.$dirty, invalid: $v.components.appMoney.form.card.values.number.$error}"
+              v-mask="appMoney.placeHolder.standard"
+              v-model="appMoney.form.card.values.number"
+              @input="$v.appMoney.form.card.values.number.$touch()"
+              :class="{valid: !$v.appMoney.form.card.values.number.$error && $v.appMoney.form.card.values.number.$dirty, invalid: $v.appMoney.form.card.values.number.$error}"
               @blur="onBlur"
               data-ref="cardNumber"
               autocomplete="off">
@@ -27,9 +27,9 @@
               type="text"
               :disabled="getBankFormValues"
               placeholder="Meno Priezvisko"
-              v-model="components.appMoney.form.card.values.name"
-              @input="$v.components.appMoney.form.card.values.name.$touch()"
-              :class="{valid: !$v.components.appMoney.form.card.values.name.$error && $v.components.appMoney.form.card.values.name.$dirty, invalid: $v.components.appMoney.form.card.values.name.$error}"
+              v-model="appMoney.form.card.values.name"
+              @input="$v.appMoney.form.card.values.name.$touch()"
+              :class="{valid: !$v.appMoney.form.card.values.name.$error && $v.appMoney.form.card.values.name.$dirty, invalid: $v.appMoney.form.card.values.name.$error}"
               @blur="onBlur"
               data-ref="cardName"
               autocomplete="off">
@@ -44,9 +44,9 @@
                     type="number"
                     :disabled="getBankFormValues"
                     placeholder="05"
-                    v-model="components.appMoney.form.card.values.month"
-                    @input="$v.components.appMoney.form.card.values.month.$touch()"
-                    :class="{valid: !$v.components.appMoney.form.card.values.month.$error && $v.components.appMoney.form.card.values.month.$dirty, invalid: $v.components.appMoney.form.card.values.month.$error}"
+                    v-model="appMoney.form.card.values.month"
+                    @input="$v.appMoney.form.card.values.month.$touch()"
+                    :class="{valid: !$v.appMoney.form.card.values.month.$error && $v.appMoney.form.card.values.month.$dirty, invalid: $v.appMoney.form.card.values.month.$error}"
                     @blur="onBlur"
                     data-ref="cardDate"
                     autocomplete="off">
@@ -60,9 +60,9 @@
                     type="number"
                     placeholder="2021"
                     :disabled="getBankFormValues"
-                    @input="$v.components.appMoney.form.card.values.year.$touch()"
-                    :class="{valid: !$v.components.appMoney.form.card.values.year.$error && $v.components.appMoney.form.card.values.year.$dirty, invalid: $v.components.appMoney.form.card.values.year.$error}"
-                    v-model="components.appMoney.form.card.values.year"
+                    @input="$v.appMoney.form.card.values.year.$touch()"
+                    :class="{valid: !$v.appMoney.form.card.values.year.$error && $v.appMoney.form.card.values.year.$dirty, invalid: $v.appMoney.form.card.values.year.$error}"
+                    v-model="appMoney.form.card.values.year"
                     @blur="onBlur"
                     data-ref="cardDate"
                     autocomplete="off">
@@ -82,9 +82,9 @@
                     placeholder="000"
                     :disabled="getBankFormValues"
                     maxlength="4"
-                    @input="$v.components.appMoney.form.card.values.cvv.$touch()"
-                    :class="{valid: !$v.components.appMoney.form.card.values.cvv.$error && $v.components.appMoney.form.card.values.cvv.$dirty, invalid: $v.components.appMoney.form.card.values.cvv.$error}"
-                    v-model="components.appMoney.form.card.values.cvv"
+                    @input="$v.appMoney.form.card.values.cvv.$touch()"
+                    :class="{valid: !$v.appMoney.form.card.values.cvv.$error && $v.appMoney.form.card.values.cvv.$dirty, invalid: $v.appMoney.form.card.values.cvv.$error}"
+                    v-model="appMoney.form.card.values.cvv"
                     @focus="onFlip(true)"
                     @blur="onFlip(false)"
                     autocomplete="off">
@@ -96,9 +96,9 @@
                   <input
                     placeholder="10.00"
                     :disabled="getBankFormValues"
-                    v-model="components.appMoney.form.card.values.amount"
-                    @input="$v.components.appMoney.form.card.values.amount.$touch()"
-                    :class="{valid: !$v.components.appMoney.form.card.values.amount.$error && $v.components.appMoney.form.card.values.amount.$dirty, invalid: $v.components.appMoney.form.card.values.amount.$error}"
+                    v-model="appMoney.form.card.values.amount"
+                    @input="$v.appMoney.form.card.values.amount.$touch()"
+                    :class="{valid: !$v.appMoney.form.card.values.amount.$error && $v.appMoney.form.card.values.amount.$dirty, invalid: $v.appMoney.form.card.values.amount.$error}"
                     id="credit-card-amount"
                     type="number"
                     autocomplete="off">
@@ -110,7 +110,7 @@
         <div class="col-md-7">
           <div
             class="card"
-            :class="{ '-active' : components.appMoney.is.flip }">
+            :class="{ '-active' : appMoney.is.flip }">
             <div class="card-item-side -front">
               <div class="card-item-cover">
                 <img src="@/assets/img/card-background.png" class="card-background">
@@ -130,15 +130,15 @@
                   <template
                     v-if="getCardType === 'amex'">
                  <span
-                   v-for="(n, $index) in components.appMoney.placeHolder.amex"
+                   v-for="(n, $index) in appMoney.placeHolder.amex"
                    :key="$index">
                     <div
                       class="card-number-item"
-                      v-if="$index > 4 && $index < 14 && components.appMoney.form.card.values.number.length > $index && n.trim() !== ''">*</div>
+                      v-if="$index > 4 && $index < 14 && appMoney.form.card.values.number.length > $index && n.trim() !== ''">*</div>
                     <div
                       class="card-number-item"
                       :class="{ '-active' : n.trim() === '' }"
-                      :key="$index" v-else-if="components.appMoney.form.card.values.number.length > $index">{{components.appMoney.form.card.values.number[$index]}}</div>
+                      :key="$index" v-else-if="appMoney.form.card.values.number.length > $index">{{appMoney.form.card.values.number[$index]}}</div>
                     <div
                       class="card-number-item"
                       :class="{ '-active' : n.trim() === '' }"
@@ -149,14 +149,14 @@
                   <template
                     v-else>
                 <span
-                  v-for="(n, $index) in components.appMoney.placeHolder.standard" :key="$index">
+                  v-for="(n, $index) in appMoney.placeHolder.standard" :key="$index">
                     <div
                       class="card-number-item"
-                      v-if="$index > 4 && $index < 15 && components.appMoney.form.card.values.number.length > $index && n.trim() !== ''">*</div>
+                      v-if="$index > 4 && $index < 15 && appMoney.form.card.values.number.length > $index && n.trim() !== ''">*</div>
                     <div
                       class="card-number-item"
                       :class="{ '-active' : n.trim() === '' }"
-                      :key="$index" v-else-if="components.appMoney.form.card.values.number.length > $index">{{components.appMoney.form.card.values.number[$index]}}</div>
+                      :key="$index" v-else-if="appMoney.form.card.values.number.length > $index">{{appMoney.form.card.values.number[$index]}}</div>
                     <div
                       class="card-number-item"
                       :class="{ '-active' : n.trim() === '' }"
@@ -170,11 +170,11 @@
                     <div class="card-holder">Card Holder</div>
                     <div
                       class="card-name"
-                      v-if="components.appMoney.form.card.values.name.length"
+                      v-if="appMoney.form.card.values.name.length"
                       key="1">
                       <span
                         class="card-nameItem"
-                        v-for="(n, $index) in components.appMoney.form.card.values.name.replace(/\s\s+/g, ' ')" v-if="$index === $index" :key="$index + 1">{{n}}</span>
+                        v-for="(n, $index) in appMoney.form.card.values.name.replace(/\s\s+/g, ' ')" v-if="$index === $index" :key="$index + 1">{{n}}</span>
                     </div>
                     <div
                       class="card-name"
@@ -185,8 +185,8 @@
                     <label class="card-date-title">Expires</label>
                     <label class="card-date-item">
                     <span
-                      v-if="components.appMoney.form.card.values.month"
-                      :key="components.appMoney.form.card.values.month">{{components.appMoney.form.card.values.month}}</span>
+                      v-if="appMoney.form.card.values.month"
+                      :key="appMoney.form.card.values.month">{{appMoney.form.card.values.month}}</span>
                       <span
                         v-else
                         key="2">MM</span>
@@ -194,8 +194,8 @@
                     /
                     <label class="card-date-item">
                     <span
-                      v-if="components.appMoney.form.card.values.year"
-                      :key="components.appMoney.form.card.values.year">{{String(components.appMoney.form.card.values.year).slice(2,4)}}</span>
+                      v-if="appMoney.form.card.values.year"
+                      :key="appMoney.form.card.values.year">{{String(appMoney.form.card.values.year).slice(2,4)}}</span>
                       <span
                         v-else
                         key="2">YY</span>
@@ -215,7 +215,7 @@
                 <div class="card-cvv-title">CVV</div>
                 <div class="card-cvv-band">
               <span
-                v-for="(n, $index) in components.appMoney.form.card.values.cvv"
+                v-for="(n, $index) in appMoney.form.card.values.cvv"
                 :key="$index">*</span></div>
                 <div class="card-type">
                   <img
@@ -235,11 +235,11 @@
             <label for="iban">IBAN</label>
             <input
               :disabled="getCardFormValues"
-              v-model="components.appMoney.form.bank.values.number"
+              v-model="appMoney.form.bank.values.number"
               placeholder="SK53 0000 0053 4567 7898"
-              v-mask="components.appMoney.placeHolder.iban"
-              @input="$v.components.appMoney.form.bank.values.number.$touch()"
-              :class="{valid: !$v.components.appMoney.form.bank.values.number.$error && $v.components.appMoney.form.bank.values.number.$dirty, invalid: $v.components.appMoney.form.bank.values.number.$error}"
+              v-mask="appMoney.placeHolder.iban"
+              @input="$v.appMoney.form.bank.values.number.$touch()"
+              :class="{valid: !$v.appMoney.form.bank.values.number.$error && $v.appMoney.form.bank.values.number.$dirty, invalid: $v.appMoney.form.bank.values.number.$error}"
               id="iban"
               type="text"
               autocomplete="off">
@@ -248,10 +248,10 @@
             <label for="iban-amount">Suma</label>
             <input
               :disabled="getCardFormValues"
-              v-model="components.appMoney.form.bank.values.amount"
+              v-model="appMoney.form.bank.values.amount"
               placeholder="0.00"
-              @input="$v.components.appMoney.form.bank.values.amount.$touch()"
-              :class="{valid: !$v.components.appMoney.form.bank.values.amount.$error && $v.components.appMoney.form.bank.values.amount.$dirty, invalid: $v.components.appMoney.form.bank.values.amount.$error}"
+              @input="$v.appMoney.form.bank.values.amount.$touch()"
+              :class="{valid: !$v.appMoney.form.bank.values.amount.$error && $v.appMoney.form.bank.values.amount.$dirty, invalid: $v.appMoney.form.bank.values.amount.$error}"
               id="iban-amount"
               type="number"
               autocomplete="off">
@@ -261,125 +261,86 @@
     </div>
     <button
       @click.prevent="onCreate(false)"
-      :disabled="($v.components.appMoney.form.card.values.name.$invalid || $v.components.appMoney.form.card.values.number.$invalid || $v.components.appMoney.form.card.values.month.$invalid || $v.components.appMoney.form.card.values.year.$invalid || $v.components.appMoney.form.card.values.cvv.$invalid || $v.components.appMoney.form.card.values.amount.$invalid) && ($v.components.appMoney.form.bank.values.number.$invalid || $v.components.appMoney.form.bank.values.amount.$invalid)"
+      :disabled="($v.appMoney.form.card.values.name.$invalid || $v.appMoney.form.card.values.number.$invalid || $v.appMoney.form.card.values.month.$invalid || $v.appMoney.form.card.values.year.$invalid || $v.appMoney.form.card.values.cvv.$invalid || $v.appMoney.form.card.values.amount.$invalid) && ($v.appMoney.form.bank.values.number.$invalid || $v.appMoney.form.bank.values.amount.$invalid)"
       type="submit"
       class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
     <div id="confirm-wrapper">
       <app-confirm
         @confirmed="onCreate($event)"
         :confirmId="'moneyConfirm'"
-        :text="components.appConfirm.text"
-        :title="components.appConfirm.title"
-        :positiveButton="components.appConfirm.positiveButton"
-        :negativeButton="components.appConfirm.negativeButton"/>
+        :text="appMoney.confirm.text"
+        :title="appMoney.confirm.title"
+        :positiveButton="appMoney.confirm.positiveButton"
+        :negativeButton="appMoney.confirm.negativeButton"/>
     </div>
     <div id="alert-wrapper">
       <app-alert
-        :condition="components.appAlert.condition"
-        :type="components.appAlert.type"
-        :text="components.appAlert.text"/>
+        :condition="appMoney.alert.condition"
+        :type="appMoney.alert.type"
+        :text="appMoney.alert.text"/>
     </div>
   </div>
 </template>
 
 <script>
 import bootstrap from 'jquery'
+
 import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
+
 import alert from '@/components/common/alert'
 import confirm from '@/components/common/confirm'
+
 import {required, numeric, decimal} from 'vuelidate/lib/validators'
 
 export default {
   name: 'money',
+  props: ['appMoney'],
   data: function () {
     return {
-      components: {
-        appMoney: {
-          form: {
-            card: {
-              values: {
-                name: '',
-                number: '',
-                month: '',
-                year: '',
-                cvv: '',
-                amount: ''
-              }
-            },
-            bank: {
-              values: {
-                number: '',
-                amount: ''
-              }
-            }
-          },
-          placeHolder: {
-            year: new Date().getFullYear(),
-            standard: '#### #### #### ####',
-            iban: 'AA## #### #### #### ####'
-          },
-          is: {
-            flip: false,
-            focus: false
-          }
-        },
-        appConfirm: {
-          text: null,
-          title: null,
-          button: null
-        },
-        appAlert: {
-          condition: [],
-          type: [],
-          text: []
-        }
-      }
     }
   },
   validations: {
-    components: {
-      appMoney: {
-        form: {
-          card: {
-            values: {
-              name: {
-                required,
-                name: value => new RegExp(/^[\D ]+$/).test(value)
-              },
-              number: {
-                required,
-                card: value => new RegExp(/^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/).test(value.replaceAll(' ', ''))
-              },
-              month: {
-                required,
-                month: value => new RegExp(/^(0?[1-9]|1[012])$/).test(value)
-              },
-              year: {
-                required,
-                year: value => new RegExp(/^\d{4}$/).test(value) && value >= new Date().getFullYear()
-              },
-              cvv: {
-                required,
-                numeric
-              },
-              amount: {
-                required,
-                decimal
-              }
+    appMoney: {
+      form: {
+        card: {
+          values: {
+            name: {
+              required,
+              name: value => new RegExp(/^[\D ]+$/).test(value)
+            },
+            number: {
+              required,
+              card: value => new RegExp(/^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/).test(value.replaceAll(' ', ''))
+            },
+            month: {
+              required,
+              month: value => new RegExp(/^(0?[1-9]|1[012])$/).test(value)
+            },
+            year: {
+              required,
+              year: value => new RegExp(/^\d{4}$/).test(value) && value >= new Date().getFullYear()
+            },
+            cvv: {
+              required,
+              numeric
+            },
+            amount: {
+              required,
+              decimal
             }
-          },
-          bank: {
-            values: {
-              number: {
-                required,
-                iban: value => new RegExp(/^[A-Z]+[ 0-9]+$/).test(value)
-              },
-              amount: {
-                required,
-                decimal,
-                minValue: value => value > 9
-              }
+          }
+        },
+        bank: {
+          values: {
+            number: {
+              required,
+              iban: value => new RegExp(/^[A-Z]+[ 0-9]+$/).test(value)
+            },
+            amount: {
+              required,
+              decimal,
+              minValue: value => value > 9
             }
           }
         }
@@ -387,9 +348,9 @@ export default {
     }
   },
   watch: {
-    'components.appMoney.form.card.values.year' () {
-      if (this.components.appMoney.form.card.values.month < this.getCardMonth) {
-        this.components.appMoney.form.card.values.month = ''
+    'appMoney.form.card.values.year' () {
+      if (this.appMoney.form.card.values.month < this.getCardMonth) {
+        this.appMoney.form.card.values.month = ''
       }
     }
   },
@@ -399,7 +360,7 @@ export default {
   },
   computed: {
     getCardType: function () {
-      let carNumber = this.components.appMoney.form.card.values.number
+      let carNumber = this.appMoney.form.card.values.number
       let pattern = new RegExp('^4')
       if (carNumber.match(pattern) !== null) return 'card-visa'
 
@@ -418,13 +379,13 @@ export default {
       return 'card-visa'
     },
     getCardFormValues: function () {
-      return Object.values(this.components.appMoney.form.card.values).some(e => e !== '')
+      return Object.values(this.appMoney.form.card.values).some(e => e !== '')
     },
     getBankFormValues: function () {
-      return Object.values(this.components.appMoney.form.bank.values).some(e => e !== '')
+      return Object.values(this.appMoney.form.bank.values).some(e => e !== '')
     },
     getCardMonth: function () {
-      if (this.components.appMoney.form.card.values.year === this.components.appMoney.placeHolder.year) return new Date().getMonth() + 1
+      if (this.appMoney.form.card.values.year === this.appMoney.placeHolder.year) return new Date().getMonth() + 1
       return 1
     },
     ...mapGetters({
@@ -434,31 +395,31 @@ export default {
   },
   methods: {
     onFlip: function (status) {
-      this.components.appMoney.is.flip = status
+      this.appMoney.is.flip = status
     },
     onBlur: function () {
-      this.components.appMoney.is.focus = false
+      this.appMoney.is.focus = false
     },
     showConfirmedModal: function (title, text) {
-      this.components.appConfirm.title = title
-      this.components.appConfirm.text = text
-      this.components.appConfirm.positiveButton = 'Potvrdiť'
-      this.components.appConfirm.negativeButton = 'Zrušiť'
+      this.appMoney.confirm.title = title
+      this.appMoney.confirm.text = text
+      this.appMoney.confirm.positiveButton = 'Potvrdiť'
+      this.appMoney.confirm.negativeButton = 'Zrušiť'
       return bootstrap('#moneyConfirm').modal('show')
     },
     showAlertModal: function (condition, type, text) {
-      this.components.appAlert.condition = condition
-      this.components.appAlert.type = type
-      this.components.appAlert.text = text
+      this.appMoney.alert.condition = condition
+      this.appMoney.alert.type = type
+      this.appMoney.alert.text = text
     },
     onCreate: function ($event) {
       if ($event) {
         let promise
-        if (!this.$v.components.appMoney.form.card.values.name.$invalid || !this.$v.components.appMoney.form.card.values.number.$invalid || !this.$v.components.appMoney.form.card.values.month.$invalid || !this.$v.components.appMoney.form.card.values.year.$invalid || !this.$v.components.appMoney.form.card.values.cvv.$invalid || !this.$v.components.appMoney.form.card.values.amount.$invalid) {
-          const paymentData = {users: {accountId: this.userProfile.accountId}, creditCard: this.components.appMoney.form.card.values.number.replaceAll(' ', ''), expMonth: this.components.appMoney.form.card.values.month, expYear: this.components.appMoney.form.card.values.year, cvc: this.components.appMoney.form.card.values.cvv, amount: this.components.appMoney.form.card.values.amount, currency: 'EUR'}
+        if (!this.$v.appMoney.form.card.values.name.$invalid || !this.$v.appMoney.form.card.values.number.$invalid || !this.$v.appMoney.form.card.values.month.$invalid || !this.$v.appMoney.form.card.values.year.$invalid || !this.$v.appMoney.form.card.values.cvv.$invalid || !this.$v.appMoney.form.card.values.amount.$invalid) {
+          const paymentData = {users: {accountId: this.userProfile.accountId}, creditCard: this.appMoney.form.card.values.number.replaceAll(' ', ''), expMonth: this.appMoney.form.card.values.month, expYear: this.appMoney.form.card.values.year, cvc: this.appMoney.form.card.values.cvv, amount: this.appMoney.form.card.values.amount, currency: 'EUR'}
           promise = this.$store.dispatch(types.ACTION_PAYMENT_CREATE, paymentData)
-        } else if (!this.$v.components.appMoney.form.bank.values.number.$invalid || !this.$v.components.appMoney.form.bank.values.amount.$invalid) {
-          const payoutData = {users: {accountId: this.userProfile.accountId}, iban: this.components.appMoney.form.bank.values.number, amount: this.components.appMoney.form.bank.values.amount}
+        } else if (!this.$v.appMoney.form.bank.values.number.$invalid || !this.$v.appMoney.form.bank.values.amount.$invalid) {
+          const payoutData = {users: {accountId: this.userProfile.accountId}, iban: this.appMoney.form.bank.values.number, amount: this.appMoney.form.bank.values.amount}
           promise = this.$store.dispatch(types.ACTION_PAYOUT_CREATE, payoutData)
         }
         promise

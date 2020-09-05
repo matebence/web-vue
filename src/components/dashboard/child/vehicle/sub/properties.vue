@@ -5,41 +5,41 @@
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <h2>Identifikačné číslo</h2>
-          <p>{{components.appProperties._id}}</p>
+          <p>{{appProperties.form.values._id}}</p>
         </div>
         <div class="col-sm-12 col-md-6">
           <h2>Názov vozidla</h2>
-          <p>{{components.appProperties.name}}</p>
+          <p>{{appProperties.form.values.name}}</p>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <h2>Kuriér</h2>
-          <p>{{components.appProperties.courier.userName}}</p>
+          <p>{{appProperties.form.values.courier.userName}}</p>
         </div>
         <div class="col-sm-12 col-md-6">
           <h2>Email</h2>
-          <p>{{components.appProperties.courier.email}}</p>
+          <p>{{appProperties.form.values.courier.email}}</p>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <h2>Typ vozidla</h2>
-          <p>{{components.appProperties.type.name}}</p>
+          <p>{{appProperties.form.values.type.name}}</p>
         </div>
         <div class="col-sm-12 col-md-6">
           <h2>Identifikačné číslo typu</h2>
-          <p>{{components.appProperties.type._id}}</p>
+          <p>{{appProperties.form.values.type._id}}</p>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <h2>Bol vytvorený</h2>
-          <p>{{formatDateTime(components.appProperties.createdAt)}}</p>
+          <p>{{formatDateTime(appProperties.form.values.createdAt)}}</p>
         </div>
         <div class="col-sm-12 col-md-6">
           <h2>Naposledy modifikovaný</h2>
-          <p>{{formatDateTime(components.appProperties.updatedAt)}}</p>
+          <p>{{formatDateTime(appProperties.form.values.updatedAt)}}</p>
         </div>
       </div>
     </div>
@@ -49,38 +49,22 @@
 <script>
 export default {
   name: 'properties',
-  props: ['activeEl', 'vehicle'],
+  props: ['appProperties', 'vehicleData', 'activeEl'],
   data: function () {
     return {
-      components: {
-        appProperties: {
-          _id: 'Identifikačné číslo vozidla',
-          name: 'Značka a séria vozidla',
-          courier: {
-            userName: 'Používeteľské meno kuriéra',
-            email: 'Emailová adresa kuriéra'
-          },
-          type: {
-            _id: 'Identifikačné číslo typ vozidla',
-            name: 'Popis typ vozidla'
-          },
-          createdAt: 'Dátum vytvorenia',
-          updatedAt: 'Dátum modifikovania'
-        }
-      }
     }
   },
   watch: {
     'activeEl.vehicleId': function (newValue, oldValue) {
       if (this.activeEl.vehicleId === 0) return Object.assign(this.$data, this.$options.data.apply(this))
-      this.components.appProperties = this.vehicle
+      this.appProperties.form.values = this.vehicleData
     }
   },
   methods: {
     formatDateTime: function (timestamp) {
       const dateTime = new Date(timestamp)
-      if (timestamp === this.components.appProperties.updatedAt) return this.components.appProperties.updatedAt
-      if (timestamp === this.components.appProperties.createdAt) return this.components.appProperties.createdAt
+      if (timestamp === this.appProperties.form.values.updatedAt) return this.appProperties.form.values.updatedAt
+      if (timestamp === this.appProperties.form.values.createdAt) return this.appProperties.form.values.createdAt
       return `${dateTime.getDate()}/${dateTime.getMonth()}/${dateTime.getFullYear()} - ${dateTime.getHours()}:${dateTime.getMinutes()}`
     }
   }

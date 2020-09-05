@@ -11,8 +11,8 @@
               autofocus
               autocomplete="off"
               :disabled="activeEl.shipmentId === 0"
-              v-model="components.appRating.form.values.rating"
-              @input="$v.components.appRating.form.values.rating.$touch()"
+              v-model="appRating.form.values.rating"
+              @input="$v.appRating.form.values.rating.$touch()"
               id="star-5"
               type="radio"
               name="rating"
@@ -26,8 +26,8 @@
             <input
               autocomplete="off"
               :disabled="activeEl.shipmentId === 0"
-              v-model="components.appRating.form.values.rating"
-              @input="$v.components.appRating.form.values.rating.$touch()"
+              v-model="appRating.form.values.rating"
+              @input="$v.appRating.form.values.rating.$touch()"
               id="star-4"
               type="radio"
               name="rating"
@@ -41,8 +41,8 @@
             <input
               autocomplete="off"
               :disabled="activeEl.shipmentId === 0"
-              v-model="components.appRating.form.values.rating"
-              @input="$v.components.appRating.form.values.rating.$touch()"
+              v-model="appRating.form.values.rating"
+              @input="$v.appRating.form.values.rating.$touch()"
               id="star-3"
               type="radio"
               name="rating"
@@ -56,8 +56,8 @@
             <input
               autocomplete="off"
               :disabled="activeEl.shipmentId === 0"
-              v-model="components.appRating.form.values.rating"
-              @input="$v.components.appRating.form.values.rating.$touch()"
+              v-model="appRating.form.values.rating"
+              @input="$v.appRating.form.values.rating.$touch()"
               id="star-2"
               type="radio"
               name="rating"
@@ -71,8 +71,8 @@
             <input
               autocomplete="off"
               :disabled="activeEl.shipmentId === 0"
-              v-model="components.appRating.form.values.rating"
-              @input="$v.components.appRating.form.values.rating.$touch()"
+              v-model="appRating.form.values.rating"
+              @input="$v.appRating.form.values.rating.$touch()"
               id="star-1"
               type="radio"
               name="rating"
@@ -95,26 +95,35 @@
               type="file"
               name="image"
               id="image"
-              @change="[$v.components.appRating.form.values.image.base64.$touch(), $v.components.appRating.form.values.image.name.$touch(), onFileChange($event)]"/>
+              @change="[$v.appRating.form.values.image.base64.$touch(), $v.appRating.form.values.image.name.$touch(), onFileChange($event)]"/>
             <font-awesome-icon :icon="['fas', 'image']"/>
           </label>
           <p
-            :class="{valid: !$v.components.appRating.form.values.image.base64.$error && $v.components.appRating.form.values.image.base64.$dirty && !$v.components.appRating.form.values.image.name.$error && $v.components.appRating.form.values.image.name.$dirty, invalid: $v.components.appRating.form.values.image.base64.$error && $v.components.appRating.form.values.image.name.$error}">
-            {{components.appRating.form.values.image.name}}</p>
+            :class="{valid: !$v.appRating.form.values.image.base64.$error && $v.appRating.form.values.image.base64.$dirty && !$v.appRating.form.values.image.name.$error && $v.appRating.form.values.image.name.$dirty, invalid: $v.appRating.form.values.image.base64.$error && $v.appRating.form.values.image.name.$error}">
+            {{appRating.form.values.image.name}}</p>
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-12 col-md-6">
           <h2>Poznámka</h2>
           <textarea
-            v-model="components.appRating.form.values.description"
-            @input="$v.components.appRating.form.values.description.$touch()"
-            :class="{valid: !$v.components.appRating.form.values.description.$error && $v.components.appRating.form.values.description.$dirty, invalid: $v.components.appRating.form.values.description.$error}"
+            v-model="appRating.form.values.description"
+            @input="$v.appRating.form.values.description.$touch()"
+            :class="{valid: !$v.appRating.form.values.description.$error && $v.appRating.form.values.description.$dirty, invalid: $v.appRating.form.values.description.$error}"
             :disabled="activeEl.shipmentId === 0"
             name="description"
             id="description"
             cols="30"
             rows="2"></textarea>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <h2>Status</h2>
+          <select
+            name="status"
+            disabled
+            id="status">
+            <option v-for="item in appRating.form.values.status" :value="item" :key="item.id">{{item.name}}</option>
+          </select>
         </div>
       </div>
     </div>
@@ -126,69 +135,50 @@
     <div class="modal-wrapper">
       <app-modal
         :modalId="'ratingAlert'"
-        :text="components.appModal.text"
-        :title="components.appModal.title"
-        :button="components.appModal.button"/>
+        :text="appRating.modal.text"
+        :title="appRating.modal.title"
+        :button="appRating.modal.button"/>
     </div>
   </div>
 </template>
 
 <script>
 import bootstrap from 'jquery'
+
 import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
+
 import modal from '@/components/common/modal'
+
 import {required, numeric} from 'vuelidate/lib/validators'
 
 export default {
   name: 'rating',
-  props: ['activeEl', 'shipment'],
+  props: ['appRating', 'shipmentData', 'activeEl'],
   data: function () {
     return {
-      components: {
-        appRating: {
-          form: {
-            values: {
-              description: null,
-              rating: null,
-              image: {
-                name: null,
-                base64: null
-              },
-              parcelId: 0
-            }
-          }
-        },
-        appModal: {
-          text: null,
-          title: null,
-          button: null
-        }
-      }
     }
   },
   validations: {
-    components: {
-      appRating: {
-        form: {
-          values: {
-            description: {
+    appRating: {
+      form: {
+        values: {
+          description: {
+            required,
+            alpha: value => new RegExp(/^[\D ]+$/).test(value)
+          },
+          rating: {
+            required,
+            numeric
+          },
+          image: {
+            name: {
               required,
-              alpha: value => new RegExp(/^[\D ]+$/).test(value)
+              file: value => new RegExp(/^[\w-]+.(jpg|png|gif)$/).test(value)
             },
-            rating: {
+            base64: {
               required,
-              numeric
-            },
-            image: {
-              name: {
-                required,
-                file: value => new RegExp(/^[\w-]+.(jpg|png|gif)$/).test(value)
-              },
-              base64: {
-                required,
-                encoded: value => new RegExp(/(data:image\/[^;]+;base64[^"]+)/).test(value)
-              }
+              encoded: value => new RegExp(/(data:image\/[^;]+;base64[^"]+)/).test(value)
             }
           }
         }
@@ -205,26 +195,31 @@ export default {
   },
   methods: {
     showAlertModal: function (title, text, button) {
-      this.components.appModal.title = title
-      this.components.appModal.text = text
-      this.components.appModal.button = button
+      this.appRating.modal.title = title
+      this.appRating.modal.text = text
+      this.appRating.modal.button = button
       return bootstrap('#ratingAlert').modal('show')
     },
     onFileChange: function ($event) {
       const fileData = $event.target.files[0]
       const fileReader = new FileReader()
-      fileReader.onloadend = () => { this.components.appRating.form.values.image.base64 = fileReader.result }
+      fileReader.onloadend = () => { this.appRating.form.values.image.base64 = fileReader.result }
       fileReader.readAsDataURL(fileData)
-      this.components.appRating.form.values.image.name = fileData.name
+      this.appRating.form.values.image.name = fileData.name
     },
     onCreate: function () {
-      if (this.shipment.sender.senderId === this.signIn.accountId) return this.showAlertModal('Informácia', 'Recenzia zásielky je možná iba zo strany prijmateľa.', 'Zatvoriť')
-      this.$store.dispatch(types.ACTION_RATING_SEARCH, {parcelId: this.shipment.parcelId})
+      if (this.shipmentData.sender.senderId === this.signIn.accountId) return this.showAlertModal('Informácia', 'Recenzia zásielky je možná iba zo strany prijmateľa.', 'Zatvoriť')
+      this.$store.dispatch(types.ACTION_RATING_SEARCH, {parcelId: this.shipmentData.parcelId})
         .then(result => {
           if (Object.values(result).length > 0) throw new Error('Pre daný balík už ste podali recenziu.')
-          return this.$store.dispatch(types.ACTION_RATING_CREATE, {description: this.components.appRating.form.values.description, rating: this.components.appRating.form.values.rating, image: this.components.appRating.form.values.image.base64, parcelId: this.shipment.parcelId})
+          return this.$store.dispatch(types.ACTION_RATING_CREATE, {description: this.appRating.form.values.description, rating: this.appRating.form.values.rating, image: this.appRating.form.values.image.base64, parcelId: this.shipmentData.parcelId})
         })
-        .then(result => this.showAlertModal('Informácia', 'Ďakujeme za Vašu recenziu. Údaje sme úspešne spracovali.', 'Zatvoriť'))
+        .then(result => {
+          return this.$store.dispatch(types.ACTION_SHIPMENT_UPDATE, {_id: this.shipmentData._id, courier: this.shipmentData.courier.courierId, parcelId: this.shipmentData.parcelId, from: this.shipmentData.from, to: this.shipmentData.to, status: process.env.PARCEL_RATED_STATUS_ID, price: this.shipmentData.price, express: this.shipmentData.express})
+        })
+        .then(result => {
+          this.showAlertModal('Informácia', 'Ďakujeme za Vašu recenziu. Údaje sme úspešne spracovali.', 'Zatvoriť')
+        })
         .catch(err => this.showAlertModal('Upozornenie', err.message, 'Zatvoriť'))
     }
   }
@@ -282,12 +277,27 @@ export default {
   }
 
   div#rating textarea {
-    width: 70%;
     margin-top: 0.5rem;
     border: none;
     background: transparent;
     border-radius: 0;
     border-bottom: 0.1rem solid #dbdbdb;
+  }
+
+  div#rating select {
+    background: #ffffff;
+    font-size: 0.9em;
+    width: 16.5rem;
+    height: 3rem;
+    display: block;
+    border: none;
+    border-radius: 0;
+    color: #6c757d;
+    border-bottom: 0.1rem solid #dbdbdb;
+  }
+
+  div#crud option {
+    background: #ffffff;
   }
 
   div#rating label.image-upload + p {
@@ -366,6 +376,12 @@ export default {
 
   div#rating textarea.valid {
     border-bottom: 0.1rem solid #008000;
+  }
+
+  @media (max-width: 1200px) {
+    div#rating button {
+      bottom: 0;
+    }
   }
 
   @media (max-width: 768px) {

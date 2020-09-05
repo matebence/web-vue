@@ -5,87 +5,69 @@
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <h2>Odkiaľ</h2>
-          <p>{{components.appProperties.from}}</p>
+          <p>{{appProperties.form.values.from}}</p>
         </div>
         <div class="col-sm-12 col-md-6">
           <h2>Kam</h2>
-          <p>{{components.appProperties.to}}</p>
+          <p>{{appProperties.form.values.to}}</p>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <h2>Kuriér</h2>
-          <p>{{components.appProperties.courier}}</p>
+          <p>{{appProperties.form.values.courier}}</p>
         </div>
         <div class="col-sm-12 col-md-6">
           <h2>Stav</h2>
-          <p>{{components.appProperties.status}}</p>
+          <p>{{appProperties.form.values.status}}</p>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <h2>Identifikačné číslo</h2>
-          <p>{{components.appProperties.id}}</p>
+          <p>{{appProperties.form.values.id}}</p>
         </div>
         <div class="col-sm-12 col-md-6">
           <h2>Faktúra</h2>
           <a
             href="invoice/download"
             @click.prevent="onDownload"
-          >{{components.appProperties.invoice.name}}</a>
+          >{{appProperties.form.values.invoice.name}}</a>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <h2>Odosielateľ</h2>
-          <p>{{components.appProperties.sender}}</p>
+          <p>{{appProperties.form.values.sender}}</p>
         </div>
         <div class="col-sm-12 col-md-6">
           <h2>Prijímateľ</h2>
-          <p>{{components.appProperties.receiver}}</p>
+          <p>{{appProperties.form.values.receiver}}</p>
         </div>
       </div>
     </div>
     <div class="modal-wrapper">
       <app-modal
         :modalId="'propertiesAlert'"
-        :text="components.appModal.text"
-        :title="components.appModal.title"
-        :button="components.appModal.button"/>
+        :text="appProperties.modal.text"
+        :title="appProperties.modal.title"
+        :button="appProperties.modal.button"/>
     </div>
   </div>
 </template>
 
 <script>
 import bootstrap from 'jquery'
+
 import * as types from '@/store/types'
+
 import modal from '@/components/common/modal'
 
 export default {
   name: 'properties',
-  props: ['activeEl', 'shipment', 'parcel'],
+  props: ['appProperties', 'shipmentData', 'activeEl'],
   data: function () {
     return {
-      components: {
-        appProperties: {
-          from: 'Mesto vyzdivnutia zásielky',
-          to: 'Mesto odovzdania zásielky',
-          courier: 'Meno kuriéra',
-          status: 'Stav zásielky',
-          id: 'Identifikačné číslo zásielky',
-          sender: 'Meno odosielatela',
-          receiver: 'Meno prijímatela',
-          invoice: {
-            name: 'Faktúra vo forme .pdf',
-            id: null
-          }
-        },
-        appModal: {
-          text: null,
-          title: null,
-          button: null
-        }
-      }
     }
   },
   components: {
@@ -94,19 +76,19 @@ export default {
   watch: {
     'activeEl.shipmentId': function (newValue, oldValue) {
       if (this.activeEl.shipmentId === 0) return Object.assign(this.$data, this.$options.data.apply(this))
-      this.components.appProperties = {from: this.shipment.from, to: this.shipment.to, courier: this.shipment.courier.userName, status: this.shipment.status.name, id: this.shipment._id, invoice: {name: this.shipment.invoice.invoice, id: this.shipment.invoice._id}, sender: this.shipment.sender.name, receiver: this.shipment.receiver.name}
+      this.appProperties.form.values = {from: this.shipmentData.from, to: this.shipmentData.to, courier: this.shipmentData.courier.userName, status: this.shipmentData.status.name, id: this.shipmentData._id, invoice: {name: this.shipmentData.invoice.invoice, id: this.shipmentData.invoice._id}, sender: this.shipmentData.sender.name, receiver: this.shipmentData.receiver.name}
     }
   },
   methods: {
     onDownload: function () {
       if (this.activeEl.shipmentId === 0) return this.showAlertModal('Upozornenie', 'Nemáte zvolenú zásielku.', 'Zatvoriť')
-      this.$store.dispatch(types.ACTION_INVOICE_DOWNLOAD, this.components.appProperties.invoice.id)
+      this.$store.dispatch(types.ACTION_INVOICE_DOWNLOAD, this.appProperties.form.values.invoice.id)
         .catch(err => this.showAlertModal('Informácia', err.message, 'Zatvoriť'))
     },
     showAlertModal: function (title, text, button) {
-      this.components.appModal.title = title
-      this.components.appModal.text = text
-      this.components.appModal.button = button
+      this.appProperties.modal.title = title
+      this.appProperties.modal.text = text
+      this.appProperties.modal.button = button
       return bootstrap('#propertiesAlert').modal('show')
     }
   }
