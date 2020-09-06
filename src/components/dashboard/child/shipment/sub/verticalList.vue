@@ -1,5 +1,6 @@
 <template>
   <div id="verticalList">
+    <h1>Zásielky</h1>
     <ul class="tabs">
       <li
         :key="option.id"
@@ -67,6 +68,12 @@ export default {
 </script>
 
 <style scoped>
+  div#verticalList h1 {
+    margin-top: 2rem;
+    font-size: 2em;
+    display: inline-block;
+  }
+
   div#verticalList ul.tabs {
     margin-top: 2rem;
     margin-bottom: 2rem;

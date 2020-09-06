@@ -2,16 +2,29 @@
   <div id="index">
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
+        <app-vertical-list />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
+        <app-message />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import message from '@/components/dashboard/child/message/sub/message'
+import verticalList from '@/components/dashboard/child/message/sub/verticalList'
+
 export default {
-  name: 'index'
+  name: 'index',
+  data: function () {
+    return {
+    }
+  },
+  components: {
+    appMessage: message,
+    appVerticalList: verticalList
+  }
 }
 </script>
 

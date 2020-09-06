@@ -1,6 +1,5 @@
 <template>
   <div id="manage">
-    <h1>Vozidlá</h1>
     <div
       v-show="!isSelected"
       id="new">
@@ -140,12 +139,6 @@ export default {
 </script>
 
 <style scoped>
-  div#manage h1 {
-    margin-top: 2rem;
-    font-size: 2em;
-    display: inline-block;
-  }
-
   div#manage div#new, div#manage div#modify {
     display: inline;
     float: right;

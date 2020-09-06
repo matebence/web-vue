@@ -1,6 +1,5 @@
 <template>
   <div id="manage">
-    <h1>Klienti</h1>
     <div
       v-show="isSelected"
       id="modify">
@@ -61,12 +60,6 @@ export default {
 </script>
 
 <style scoped>
-  div#manage h1 {
-    margin-top: 2rem;
-    font-size: 2em;
-    display: inline-block;
-  }
-
   div#manage div#modify {
     display: inline;
     float: right;

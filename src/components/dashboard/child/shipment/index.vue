@@ -2,7 +2,6 @@
   <div id="index">
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
-        <h1>Zásielky</h1>
         <div
           v-show="isSelected"
           id="modify">
@@ -180,12 +179,6 @@ export default {
 </script>
 
 <style scoped>
-  div#index h1 {
-    margin-top: 2rem;
-    font-size: 2em;
-    display: inline-block;
-  }
-
   div#index div#modify {
     display: inline;
     float: right;

@@ -1,5 +1,6 @@
 <template>
   <div id="verticalList">
+    <h1>Nastavenia</h1>
     <ul
       class="settings"
       :key="setting.itemId"
@@ -37,8 +38,11 @@ export default {
 </script>
 
 <style scoped>
-  div#verticalList {
+  div#verticalList h1 {
     margin-top: 2rem;
+    margin-bottom: 2rem;
+    font-size: 2em;
+    display: inline-block;
   }
 
   div#verticalList ul.settings li ul.setting ul {

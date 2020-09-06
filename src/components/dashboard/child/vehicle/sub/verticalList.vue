@@ -1,5 +1,6 @@
 <template>
   <div id="verticalList">
+    <h1>Vozidlá</h1>
     <ul class="vehicles">
       <li
         :key="item._id"
@@ -63,8 +64,11 @@ export default {
 </script>
 
 <style scoped>
-  div#verticalList {
+  div#manage h1 {
     margin-top: 2rem;
+    margin-bottom: 2rem;
+    font-size: 2em;
+    display: inline-block;
   }
 
   div#verticalList ul.vehicles li ul.vehicle ul {

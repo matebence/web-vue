@@ -2,7 +2,6 @@
   <div id="index">
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
-        <h1>Nastavenia</h1>
         <app-vertical-list
           :activeEl="components.appSettings.activeEl"
           :appVerticalList="components.appSettings.sub.appVerticalList" />
@@ -172,12 +171,6 @@ export default {
 </script>
 
 <style scoped>
-  div#index h1 {
-    margin-top: 2rem;
-    font-size: 2em;
-    display: inline-block;
-  }
-
   div#index div#main-content,
   div#index div#content {
     width: 100%;
