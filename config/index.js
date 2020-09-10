@@ -4,7 +4,7 @@ const path = require('path')
 
 module.exports = {
   dev: {
-    assetsSubDirectory: 'static',
+    assetsSubDirectory: '',
     assetsPublicPath: '/',
     proxyTable: {},
 
@@ -27,7 +27,7 @@ module.exports = {
     index: path.resolve(__dirname, '../dist/index.html'),
 
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static',
+    assetsSubDirectory: '',
     assetsPublicPath: '/',
 
     productionSourceMap: true,

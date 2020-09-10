@@ -190,7 +190,7 @@ export default {
       return `${this.userProfile.firstName} ${this.userProfile.lastName}`
     },
     getAvatar: function () {
-      return localStorage.getItem('avatar')
+      return JSON.parse(localStorage.getItem('accountData')).avatar
     },
     ...mapGetters({
       signIn: types.GETTER_SIGN_IN_DATA,

@@ -6,19 +6,13 @@
 
 <script>
 import 'bootstrap/dist/css/bootstrap.min.css'
-import 'animate.css/animate.min.css'
 import '@/assets/fonts/fonts.css'
 import '@/assets/css/reset.css'
 
 export default {
-  created: function () {
-    if (navigator.geolocation) navigator.geolocation.getCurrentPosition(this.onLocationSuccess)
-  },
   name: 'App',
-  methods: {
-    onLocationSuccess: function (position) {
-      const userPosition = `${position.coords.latitude},${position.coords.longitude},${position.coords.accuracy}`
-      localStorage.setItem('position', userPosition)
+  data: function () {
+    return {
     }
   }
 }

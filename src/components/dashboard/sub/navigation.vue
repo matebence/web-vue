@@ -50,7 +50,7 @@ export default {
   },
   computed: {
     getAvatar: function () {
-      return localStorage.getItem('avatar')
+      return JSON.parse(localStorage.getItem('accountData')).avatar
     },
     ...mapGetters({
       userProfile: types.GETTER_USER_DATA_GET,

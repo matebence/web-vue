@@ -2,6 +2,7 @@ import Vuex from 'vuex'
 import Vue from 'vue'
 
 import authorization from './modules/authorization-server'
+import messaging from './modules/messaging-service'
 import shipment from './modules/shipment-service'
 import location from './modules/location-service'
 import account from './modules/account-service'
@@ -15,6 +16,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
     authorization,
+    messaging,
     shipment,
     location,
     account,

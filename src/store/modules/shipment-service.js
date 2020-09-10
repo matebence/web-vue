@@ -456,10 +456,6 @@ const getters = {
     return state.payload.invoice.data.search
   },
 
-  [types.GETTER_INVOICE_DATA_UPDATE]: function (state) {
-    return state.payload.invoice.data.search
-  },
-
   [types.GETTER_INVOICE_DONE]: function (state) {
     return state.payload.invoice.done
   },
@@ -496,10 +492,6 @@ const getters = {
     return state.payload.price.data.search
   },
 
-  [types.GETTER_PRICE_DATA_UPDATE]: function (state) {
-    return state.payload.price.data.search
-  },
-
   [types.GETTER_PRICE_DONE]: function (state) {
     return state.payload.price.done
   },
@@ -533,10 +525,6 @@ const getters = {
   },
 
   [types.GETTER_SHIPMENT_DATA_SEARCH]: function (state) {
-    return state.payload.shipment.data.search
-  },
-
-  [types.GETTER_SHIPMENT_DATA_UPDATE]: function (state) {
     return state.payload.shipment.data.search
   },
 

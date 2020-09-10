@@ -469,10 +469,6 @@ const getters = {
     return state.payload.rating.data.search
   },
 
-  [types.GETTER_RATING_DATA_UPDATE]: function (state) {
-    return state.payload.rating.data.search
-  },
-
   [types.GETTER_RATING_DONE]: function (state) {
     return state.payload.rating.done
   },
@@ -509,10 +505,6 @@ const getters = {
     return state.payload.category.data.search
   },
 
-  [types.GETTER_CATEGORY_DATA_UPDATE]: function (state) {
-    return state.payload.category.data.search
-  },
-
   [types.GETTER_CATEGORY_DONE]: function (state) {
     return state.payload.category.done
   },
@@ -546,10 +538,6 @@ const getters = {
   },
 
   [types.GETTER_PARCEL_DATA_SEARCH]: function (state) {
-    return state.payload.parcel.data.search
-  },
-
-  [types.GETTER_PARCEL_DATA_UPDATE]: function (state) {
     return state.payload.parcel.data.search
   },
 

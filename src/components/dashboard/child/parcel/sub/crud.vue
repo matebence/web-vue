@@ -1,5 +1,8 @@
 <template>
   <div id="crud">
+    <br/><br/>
+    <h1 v-if="form.values.id === undefined">Nový balíky</h1>
+    <h1 v-else>Aktualizovať balíky</h1>
     <form>
       <div class="form-group">
         <label
@@ -121,7 +124,7 @@
         class="btn btn-primary"
         :disabled="$v.$invalid"
         @click.prevent="onCreate"
-        v-show="form.values.id === undefined">
+        v-if="form.values.id === undefined">
         &nbsp;Vytvoriť
       </button>
       <button
@@ -129,7 +132,7 @@
         class="btn btn-primary"
         :disabled="$v.$invalid"
         @click.prevent="onUpdate"
-        v-show="form.values.id !== undefined">
+        v-else>
         &nbsp;Aktualizovať
       </button>
     </form>
@@ -258,6 +261,11 @@ export default {
 </script>
 
 <style scoped>
+  div#crud h1 {
+    font-size: 2em;
+    display: inline;
+  }
+
   div#crud form {
     margin-top: 1rem;
     padding: 0.5rem;

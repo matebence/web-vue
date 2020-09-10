@@ -301,10 +301,6 @@ const getters = {
     return state.payload.account.data.search
   },
 
-  [types.GETTER_ACCOUNT_DATA_UPDATE]: function (state) {
-    return state.payload.account.data.search
-  },
-
   [types.GETTER_ACCOUNT_DONE]: function (state) {
     return state.payload.account.done
   },

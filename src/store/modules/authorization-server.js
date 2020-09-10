@@ -296,16 +296,24 @@ const actions = {
   },
 
   [types.ACTION_SETUP_AVATAR]: function ({commit, dispatch, state, rootState}, payload) {
-    if (localStorage.getItem('avatar') === null) {
-      localStorage.setItem('avatar', `${payload.firstName.substr(0, 1)}${payload.lastName.substr(0, 1)}`)
+    let data = localStorage.getItem('accountData')
+
+    if (!data) return
+    data = JSON.parse(data)
+
+    if (data.avatar === undefined) {
+      localStorage.setItem('accountData', JSON.stringify({...data, avatar: `${payload.firstName.substr(0, 1)}${payload.lastName.substr(0, 1)}`}))
     }
-    return localStorage.getItem('avatar')
+    return `${payload.firstName.substr(0, 1)}${payload.lastName.substr(0, 1)}`
   },
 
   [types.CLEAR_APP_USEAGE_DATA]: function ({commit, dispatch, state, rootState}, payload) {
     commit(types.MUTATIONS_CLEAR_PREFERENCE_DATA, {})
     commit(types.MUTATIONS_CLEAR_ACCOUNT_DATA, {})
     commit(types.MUTATIONS_CLEAR_LOCATION_DATA, {})
+    commit(types.MUTATIONS_CLEAR_STATUS_DATA, {})
+    commit(types.MUTATIONS_CLEAR_CONVERSATION_DATA, {})
+    commit(types.MUTATIONS_CLEAR_COMMUNICATION_DATA, {})
     commit(types.MUTATIONS_CLEAR_PARCEL_DATA, {})
     commit(types.MUTATIONS_CLEAR_CATEGORY_DATA, {})
     commit(types.MUTATIONS_CLEAR_RATING_DATA, {})
@@ -322,10 +330,15 @@ const actions = {
   },
 
   [types.ACTION_CHECK_BALANCE]: function ({commit, dispatch, state, rootState}, payload) {
-    if (localStorage.getItem('balance') === null) {
-      localStorage.setItem('balance', Number(payload.balance))
+    let data = localStorage.getItem('accountData')
+
+    if (!data) return
+    data = JSON.parse(data)
+
+    if (data.balance === undefined) {
+      localStorage.setItem('accountData', JSON.stringify({...data, balance: Number(payload.balance)}))
     }
-    return localStorage.getItem('balance')
+    return Number(payload.balance)
   },
 
   [types.ACTION_CHECK_PROFILE]: function ({commit, dispatch, state, rootState}, payload) {
@@ -337,10 +350,12 @@ const actions = {
   },
 
   [types.ACTION_AUTO_SIGN_IN]: function ({commit, dispatch, state, rootState}, payload) {
-    const data = localStorage.getItem('accountData')
-    if (!data) return
+    let data = localStorage.getItem('accountData')
 
-    const expirationDate = localStorage.getItem('expirationDate')
+    if (!data) return
+    data = JSON.parse(data)
+
+    const expirationDate = data.expirationDate
     const accountData = JSON.parse(data)
 
     if (new Date() >= expirationDate) return
@@ -350,7 +365,7 @@ const actions = {
       },
       done: true
     })
-    return Promise.all([dispatch(types.ACTION_START_AUTH_TIMER, Number(new Date(localStorage.getItem('expirationDate')).getTime() / 1000) - Number(new Date().getTime() / 1000)), dispatch(types.ACTION_CHECK_PROFILE)
+    return Promise.all([dispatch(types.ACTION_START_AUTH_TIMER, Number(new Date(expirationDate).getTime() / 1000) - Number(new Date().getTime() / 1000)), dispatch(types.ACTION_CHECK_PROFILE)
     ])
       .then(result => {
         router.push({path: '/dashboard'})
@@ -426,9 +441,7 @@ const actions = {
           done: true
         })
 
-        localStorage.setItem('accountData', JSON.stringify(accountData))
-        localStorage.setItem('expirationDate', new Date(new Date().getTime() + parsed.expires_in * 1000))
-
+        localStorage.setItem('accountData', JSON.stringify({...accountData, expirationDate: new Date(new Date().getTime() + parsed.expires_in * 1000)}))
         return Promise.all([dispatch(types.ACTION_CHECK_PROFILE), dispatch(types.ACTION_START_AUTH_TIMER, parsed.expires_in)])
       })
       .then(result => {
@@ -486,9 +499,7 @@ const actions = {
           done: true
         })
 
-        localStorage.setItem('accountData', JSON.stringify(accountData))
-        localStorage.setItem('expirationDate', new Date(new Date().getTime() + parsed.expires_in * 1000))
-
+        localStorage.setItem('accountData', JSON.stringify({...accountData, expirationDate: new Date(new Date().getTime() + parsed.expires_in * 1000)}))
         dispatch(types.ACTION_START_AUTH_TIMER, parsed.expires_in)
         return state.payload.signIn.data
       })
@@ -564,7 +575,7 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
-        localStorage.clear()
+        localStorage.removeItem('accountData')
         dispatch(types.CLEAR_APP_USEAGE_DATA)
 
         commit(types.MUTATION_SIGN_OUT_DATA, {

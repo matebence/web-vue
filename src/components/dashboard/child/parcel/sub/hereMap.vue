@@ -203,9 +203,10 @@ export default {
       }
     },
     reverseGeoCode: function () {
-      if (localStorage.getItem('position') === null) return
+      const browserData = JSON.parse(localStorage.getItem('browserData'))
+      if (browserData.position === undefined) return
       const searchService = this.here.platform.getSearchService()
-      const reverseGeocodingParameters = {at: localStorage.getItem('position'), limit: '1'}
+      const reverseGeocodingParameters = {at: `${browserData.position.latitude},${browserData.position.longitude},${browserData.position.accuracy}`, limit: '1'}
       return searchService.reverseGeocode(reverseGeocodingParameters, onSuccess => {
         const place = Object.values(onSuccess.items).pop()
         this.appHereMap.form.from.value = `${this.here.country.name}, ${place.address.city}`
@@ -329,7 +330,7 @@ export default {
     onCreate: function (applied) {
       if (this.appHereMap.summary.values.time === 0 || this.appHereMap.summary.values.length === 0) {
         return this.showAlertModal('Upozornenie', 'Dľžka cesty nie je známa.', 'Zatvoriť')
-      } else if (Number(parseFloat(this.appHereMap.summary.values.length / 1000 * this.appHereMap.profit.courier).toFixed(2)) > localStorage.getItem('balance')) {
+      } else if (Number(parseFloat(this.appHereMap.summary.values.length / 1000 * this.appHereMap.profit.courier).toFixed(2)) > JSON.parse(localStorage.getItem('accountData')).balance) {
         return this.showAlertModal('Upozornenie', 'Nemáte dostatok penazí na účte.', 'Zatvoriť')
       } else {
         if (applied) {

@@ -629,10 +629,6 @@ const getters = {
     return state.payload.user.data.search
   },
 
-  [types.GETTER_USER_DATA_UPDATE]: function (state) {
-    return state.payload.user.data.search
-  },
-
   [types.GETTER_USER_DONE]: function (state) {
     return state.payload.user.done
   },
@@ -666,10 +662,6 @@ const getters = {
   },
 
   [types.GETTER_PAYOUT_DATA_SEARCH]: function (state) {
-    return state.payload.payout.data.search
-  },
-
-  [types.GETTER_PAYOUT_DATA_UPDATE]: function (state) {
     return state.payload.payout.data.search
   },
 
@@ -709,10 +701,6 @@ const getters = {
     return state.payload.payment.data.search
   },
 
-  [types.GETTER_PAYMENT_DATA_UPDATE]: function (state) {
-    return state.payload.payment.data.search
-  },
-
   [types.GETTER_PAYMENT_DONE]: function (state) {
     return state.payload.payment.done
   },
@@ -746,10 +734,6 @@ const getters = {
   },
 
   [types.GETTER_GENDER_DATA_SEARCH]: function (state) {
-    return state.payload.gender.data.search
-  },
-
-  [types.GETTER_GENDER_DATA_UPDATE]: function (state) {
     return state.payload.gender.data.search
   },
 

@@ -1,14 +1,16 @@
-import Vue from 'vue'
-import App from './App'
-import store from './store'
 import router from './router'
+import store from './store'
+import App from './App'
+import Vue from 'vue'
 
 import 'bootstrap'
 
-import './mask'
-import './resource'
-import './vuelidate'
 import './vueawesome'
+import './vuelidate'
+import './firebase'
+import './position'
+import './resource'
+import './mask'
 
 Vue.config.productionTip = false
 
