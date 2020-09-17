@@ -17,9 +17,8 @@
 
 <script>
 import {mapGetters} from 'vuex'
-import SockJS from 'sockjs-client'
-import Stomp from 'webstomp-client'
 import * as types from '@/store/types'
+import WebSocket from '@/websocket/index'
 
 import navigation from '@/components/dashboard/sub/navigation'
 
@@ -39,7 +38,7 @@ export default {
     }
   },
   beforeMount: function () {
-    this.onSocketInitialized()
+    WebSocket.onInitialize(this.onConnected)
   },
   name: 'dashboard',
   data: function () {
@@ -130,10 +129,6 @@ export default {
               ]
             }
           },
-          state: {
-            sockjs: null,
-            stompjs: null
-          },
           activeEl: {
           }
         }
@@ -150,16 +145,19 @@ export default {
     })
   },
   methods: {
-    onSocketInitialized: function () {
-      this.components.appDashboard.state.sockjs = new SockJS(process.env.HOST_BLESK_WEBSOCKET)
-      this.components.appDashboard.state.stompjs = Stomp.over(this.components.appDashboard.state.sockjs)
-      this.components.appDashboard.state.stompjs.connect({}, this.onConnected, this.onDisconnected)
-    },
     onConnected: function () {
-      console.log('onConnected')
+      let accountData = localStorage.getItem('accountData')
+      let browserData = localStorage.getItem('browserData')
+
+      if (!accountData || !browserData) return
+      accountData = JSON.parse(accountData)
+      browserData = JSON.parse(browserData)
+
+      WebSocket.data.stompClient.subscribe(`/status`, this.onPayload)
+      WebSocket.data.stompClient.send(`/websocket-service/state`, JSON.stringify({status: {userName: accountData.userName, state: process.env.APP_STATUS_ONLINE, token: browserData.browserId}, accessToken: {token: accountData.accessToken}}, {}))
     },
-    onDisconnected: function () {
-      console.log('onDisconnected')
+    onPayload: function (payload) {
+      console.log(JSON.parse(payload.body))
     }
   }
 }

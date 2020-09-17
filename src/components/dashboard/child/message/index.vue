@@ -2,7 +2,9 @@
   <div id="index">
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
-        <app-vertical-list />
+        <app-vertical-list
+          :userData="components.appMessage.data"
+          :activeEl="components.appMessage.activeEl" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-message />
@@ -19,6 +21,21 @@ export default {
   name: 'index',
   data: function () {
     return {
+      components: {
+        appMessage: {
+          sub: {
+          },
+          data: {
+            user: {
+              search: {
+              }
+            }
+          },
+          activeEl: {
+            participentId: 0,
+          }
+        }
+      }
     }
   },
   components: {

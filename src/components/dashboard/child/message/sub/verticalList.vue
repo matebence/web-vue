@@ -4,20 +4,30 @@
     <form id="searchForm">
       <div class="form-input">
         <font-awesome-icon :icon="['fas', 'search']"/>
-        <input type="text" name="search" id="search" autocomplete="off" placeholder="Zadajte používateľské meno">
+        <input
+          type="text"
+          name="search"
+          id="search"
+          autocomplete="off"
+          @focus="onAutoCompleteParticipent('')"
+          placeholder="Zadajte používateľské meno"
+          @input="onAutoCompleteParticipent($event.target.value)">
       </div>
     </form>
-    <ul class="messages">
-      <li class="active">
-        <ul class="message">
+    <ul class="participents">
+      <li
+        :key="item.userId"
+        v-for="item in userData.user.search"
+        @click.prevent="onSelectedParticipent(item)">
+        <ul class="participent">
           <li class="image">
             <font-awesome-icon :icon="['fas', 'user']"/>
           </li>
           <li class="summary">
             <ul>
-              <li class="status">michalvelky</li>
-              <li class="from">Lorem ipsum dolor sit</li>
-              <li class="number">6/8/2020 12:08</li>
+              <li class="userName">{{item.userName}}</li>
+              <li class="country">{{item.places.country}}</li>
+              <li class="region">{{item.places.region}}</li>
             </ul>
           </li>
         </ul>
@@ -28,10 +38,43 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+import * as types from '@/store/types'
+
 export default {
   name: 'verticalList',
+  props: ['userData', 'activeEl'],
   data: function () {
     return {
+    }
+  },
+  computed: {
+    ...mapGetters({
+      signIn: types.GETTER_SIGN_IN_DATA
+    })
+  },
+  methods: {
+    onAutoCompleteParticipent: function ($event) {
+      this.activeEl.participentId = 0
+      if ($event.length === 0) return this.onSearchParticipent({roles: this.onSearchParticipentCriteria()})
+      if ($event.length < 3) return
+      return this.onSearchParticipent({firstName: $event})
+    },
+    onSearchParticipent: function (obj) {
+      return this.$store.dispatch(types.ACTION_USER_SEARCH, {roles: this.onSearchParticipentCriteria(), ...obj})
+        .then(result => {
+          this.userData.user.search = Object.values(result)
+        })
+        .catch(err => {
+          this.userData.user.search = null
+          console.warn(err.participent)
+        })
+    },
+    onSelectedParticipent: function (el) {
+      this.userData.user.search = []
+    },
+    onSearchParticipentCriteria: function () {
+      return this.signIn.authorities.find(e => true) === process.env.APP_ROLE_COURIER ? process.env.APP_ROLE_CLIENT : process.env.APP_ROLE_COURIER
     }
   }
 }
@@ -66,29 +109,29 @@ export default {
     border-radius: 0.6rem;
   }
 
-  div#verticalList ul.messages li ul.message ul {
+  div#verticalList ul.participents li ul.participent ul {
     text-align: left;
   }
 
-  div#verticalList ul.messages li.empty-list {
+  div#verticalList ul.participents li.empty-list {
     text-align: center;
     font-size: 1em;
     margin-top: 3rem;
   }
 
-  div#verticalList ul.messages li:hover,
-  div#verticalList ul.messages li.active {
+  div#verticalList ul.participents li:hover,
+  div#verticalList ul.participents li.active {
     background: #f1f1f1;
     border-radius: 0.5rem;
     cursor: pointer;
   }
 
-  div#verticalList ul.messages li.empty-list:hover {
+  div#verticalList ul.participents li.empty-list:hover {
     cursor: auto;
     background: none;
   }
 
-  div#verticalList ul.messages li ul.message {
+  div#verticalList ul.participents li ul.participent {
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
@@ -96,7 +139,7 @@ export default {
     text-align: center;
   }
 
-  div#verticalList ul.messages li ul.message li.image {
+  div#verticalList ul.participents li ul.participent li.image {
     display: inline-block;
     font-size: 1.3em;
     width: 3.5rem;
@@ -108,56 +151,56 @@ export default {
     color: #176c9d;
   }
 
-  div#verticalList ul.messages li ul.message li.summary {
+  div#verticalList ul.participents li ul.participent li.summary {
     margin-left: 1rem;
   }
 
-  div#verticalList ul.messages li ul.message li ul li.number,
-  div#verticalList ul.messages li ul.message li ul li.status,
-  div#verticalList ul.messages li ul.message li ul li.from {
+  div#verticalList ul.participents li ul.participent li ul li.region,
+  div#verticalList ul.participents li ul.participent li ul li.userName,
+  div#verticalList ul.participents li ul.participent li ul li.country {
     font-size: 0.9em;
     font-weight: 400;
     color: #000000;
   }
 
   @media (max-width: 1400px) {
-    div#verticalList ul.messages li ul.message li.image {
+    div#verticalList ul.participents li ul.participent li.image {
       display: none;
     }
 
-    div#verticalList ul.messages li ul.message {
+    div#verticalList ul.participents li ul.participent {
       padding: 0.5rem;
     }
 
-    div#verticalList ul.messages li ul.message ul li {
+    div#verticalList ul.participents li ul.participent ul li {
       margin-left: 0;
     }
 
-    div#verticalList ul.messages li ul.message {
+    div#verticalList ul.participents li ul.participent {
       justify-content: space-around;
     }
   }
 
   @media (max-width: 1200px) {
-    div#verticalList ul.messages li ul.message li.image {
+    div#verticalList ul.participents li ul.participent li.image {
       display: block;
     }
 
-    div#verticalList ul.messages li ul.message {
+    div#verticalList ul.participents li ul.participent {
       padding: 0;
     }
 
-    div#verticalList ul.messages li ul.message ul li {
+    div#verticalList ul.participents li ul.participent ul li {
       margin-left: 0.5rem;
     }
 
-    div#verticalList ul.messages li ul.message {
+    div#verticalList ul.participents li ul.participent {
       justify-content: end;
     }
   }
 
   @media (max-width: 992px) {
-    div#verticalList ul.messages li ul.message li.summary {
+    div#verticalList ul.participents li ul.participent li.summary {
       margin: 0 auto;
     }
   }
