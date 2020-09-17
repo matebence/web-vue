@@ -64,7 +64,6 @@ export default {
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
-    justify-content: end;
     text-align: center;
   }
 
