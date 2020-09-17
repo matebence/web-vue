@@ -3,7 +3,7 @@
     <div id="message-header">
       <h1>michalvelky <span class="dot"></span></h1>
     </div>
-    <div id="message-panel">
+    <div id="message-panel" ref="messagePanel">
       <div class="text">
         <p class="sender">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
       </div>
@@ -60,6 +60,10 @@
 
 <script>
 export default {
+  mounted: function () {
+    const messageDisplay = this.$refs.messagePanel;
+    messageDisplay.scrollTop = messageDisplay.scrollHeight;
+  },
   name: 'message',
   data: function () {
     return {
