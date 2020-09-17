@@ -9,6 +9,7 @@ module.exports = merge(prodEnv, {
   HOST_IP_API: '"http://ip-api.com"',
   HOST_IPIFY: '"https://api.ipify.org"',
   HOST_BLESK: '"http://192.168.99.100:8765"',
+  HOST_BLESK_WEBSOCKET: '"http://192.168.99.100:8765/websocket"',
 
   GRANT_TYPE_PASSWORD: '"password"',
   GRANT_TYPE_REFRESH_TOKEN: '"refresh_token"',

@@ -17,6 +17,8 @@
 
 <script>
 import {mapGetters} from 'vuex'
+import SockJS from 'sockjs-client'
+import Stomp from 'webstomp-client'
 import * as types from '@/store/types'
 
 import navigation from '@/components/dashboard/sub/navigation'
@@ -35,6 +37,9 @@ export default {
     } else {
       this.$router.push({path: '/sign-out'})
     }
+  },
+  beforeMount: function () {
+    this.onSocketInitialized()
   },
   name: 'dashboard',
   data: function () {
@@ -125,6 +130,10 @@ export default {
               ]
             }
           },
+          state: {
+            sockjs: null,
+            stompjs: null
+          },
           activeEl: {
           }
         }
@@ -139,6 +148,19 @@ export default {
       userProfile: types.GETTER_USER_DATA_GET,
       allowedRoles: types.GETTER_SIGN_IN_GET_ROLE
     })
+  },
+  methods: {
+    onSocketInitialized: function () {
+      this.components.appDashboard.state.sockjs = new SockJS(process.env.HOST_BLESK_WEBSOCKET)
+      this.components.appDashboard.state.stompjs = Stomp.over(this.components.appDashboard.state.sockjs)
+      this.components.appDashboard.state.stompjs.connect({}, this.onConnected, this.onDisconnected)
+    },
+    onConnected: function () {
+      console.log('onConnected')
+    },
+    onDisconnected: function () {
+      console.log('onDisconnected')
+    }
   }
 }
 </script>

@@ -61,8 +61,8 @@
 <script>
 export default {
   mounted: function () {
-    const messageDisplay = this.$refs.messagePanel;
-    messageDisplay.scrollTop = messageDisplay.scrollHeight;
+    const messageDisplay = this.$refs.messagePanel
+    messageDisplay.scrollTop = messageDisplay.scrollHeight
   },
   name: 'message',
   data: function () {

@@ -356,12 +356,11 @@ const actions = {
     data = JSON.parse(data)
 
     const expirationDate = data.expirationDate
-    const accountData = JSON.parse(data)
 
     if (new Date() >= expirationDate) return
     commit(types.MUTATIONS_SIGN_IN_DATA, {
       data: {
-        ...accountData
+        ...data
       },
       done: true
     })
