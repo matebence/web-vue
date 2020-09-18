@@ -157,7 +157,15 @@ export default {
       WebSocket.data.stompClient.send(`/websocket-service/state`, JSON.stringify({status: {userName: accountData.userName, state: process.env.APP_STATUS_ONLINE, token: browserData.browserId}, accessToken: {token: accountData.accessToken}}, {}))
     },
     onPayload: function (payload) {
-      console.log(JSON.parse(payload.body))
+      let accountData = localStorage.getItem('accountData')
+
+      if (!accountData || !payload) return
+      payload = JSON.parse(payload.body)
+      accountData = JSON.parse(accountData)
+
+      if (accountData.userName === payload.userName) {
+        localStorage.setItem('accountData', JSON.stringify({...accountData, status: payload.statusId}))
+      }
     }
   }
 }

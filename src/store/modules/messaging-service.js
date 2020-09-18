@@ -264,6 +264,47 @@ const actions = {
       })
   },
 
+  [types.ACTION_STATUS_SEARCH]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_STATUS_DATA, {done: false})
+    return this._vm.$resource('{service}/api/status/search', {}, {
+      search: {
+        method: 'POST',
+        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        }
+      }
+    }).search({service: 'messaging-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: {...payload}})
+      .then(response => {
+        return response.json()
+      })
+      .then(parsed => {
+        commit(types.MUTATION_STATUS_DATA, {
+          data: {
+            ...state.payload.status.data,
+            search: {
+              ...parsed._embedded.statusList
+            }
+          },
+          done: true
+        })
+        return state.payload.status.data.search
+      })
+      .catch(err => {
+        return err.json()
+          .then(parsed => {
+            commit(types.MUTATION_STATUS_DATA, {
+              error: {
+                is: parsed.error,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
+                from: 'search',
+                reason: {}
+              },
+              done: true
+            })
+            throw new Error(state.payload.status.error.message)
+          })
+      })
+  },
+
   [types.ACTION_CONVERSATION_CREATE]: function ({commit, dispatch, state, rootState}, payload) {
     commit(types.MUTATION_CONVERSATION_DATA, {done: false})
     return this._vm.$resource('{service}/api/conversations', {}, {
@@ -312,7 +353,7 @@ const actions = {
         headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
         }
       }
-    }).search({service: 'shipment-service'}, {pagination: {pageNumber: 1, pageSize: 10}, search: {...payload}})
+    }).search({service: 'messaging-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: {...payload}})
       .then(response => {
         return response.json()
       })
@@ -393,7 +434,7 @@ const actions = {
         headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
         }
       }
-    }).search({service: 'shipment-service'}, {pagination: {pageNumber: 1, pageSize: 10}, search: {...payload}})
+    }).search({service: 'messaging-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: {...payload}})
       .then(response => {
         return response.json()
       })

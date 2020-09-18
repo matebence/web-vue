@@ -9,6 +9,7 @@
           name="search"
           id="search"
           autocomplete="off"
+          @blur="onClearParticipent()"
           @focus="onAutoCompleteParticipent('')"
           placeholder="Zadajte používateľské meno"
           @input="onAutoCompleteParticipent($event.target.value)">
@@ -21,7 +22,7 @@
         @click.prevent="onSelectedParticipent(item)">
         <ul class="participent">
           <li class="image">
-            <font-awesome-icon :icon="['fas', 'user']"/>
+            <font-awesome-icon :icon="['fas', 'user-plus']"/>
           </li>
           <li class="summary">
             <ul>
@@ -38,7 +39,6 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
 
 export default {
@@ -47,11 +47,6 @@ export default {
   data: function () {
     return {
     }
-  },
-  computed: {
-    ...mapGetters({
-      signIn: types.GETTER_SIGN_IN_DATA
-    })
   },
   methods: {
     onAutoCompleteParticipent: function ($event) {
@@ -67,14 +62,31 @@ export default {
         })
         .catch(err => {
           this.userData.user.search = null
-          console.warn(err.participent)
+          console.warn(err.message)
         })
     },
     onSelectedParticipent: function (el) {
-      this.userData.user.search = []
+      return this.$store.dispatch(types.ACTION_STATUS_SEARCH, {userName: el.userName})
+        .then(result => {
+          let accountData = localStorage.getItem('accountData')
+          if (!accountData || !result) return
+          result = Object.values(result).pop()
+          accountData = JSON.parse(accountData)
+          return this.$store.dispatch(types.ACTION_CONVERSATION_CREATE, {participants: [{accountId: accountData.accountId, status: {statusId: accountData.status}, userName: accountData.userName, lastConversionId: null, lastReadedConversionId: null}, {accountId: el.accountId, status: {statusId: result.statusId}, userName: el.userName, lastConversionId: null, lastReadedConversionId: null}]})
+        })
+        .then(result => console.log(result))
+        .catch(err => console.warn(err.message))
+    },
+    onClearParticipent: function (el) {
+      setTimeout(() => {
+        this.userData.user.search = []
+      }, 200)
     },
     onSearchParticipentCriteria: function () {
-      return this.signIn.authorities.find(e => true) === process.env.APP_ROLE_COURIER ? process.env.APP_ROLE_CLIENT : process.env.APP_ROLE_COURIER
+      let accountData = localStorage.getItem('accountData')
+      if (!accountData) return
+      accountData = JSON.parse(accountData)
+      return accountData.authorities.find(e => true) === process.env.APP_ROLE_COURIER ? process.env.APP_ROLE_CLIENT : process.env.APP_ROLE_COURIER
     }
   }
 }
@@ -135,7 +147,6 @@ export default {
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
-    justify-content: end;
     text-align: center;
   }
 

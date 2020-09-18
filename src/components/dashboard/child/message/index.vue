@@ -32,7 +32,7 @@ export default {
             }
           },
           activeEl: {
-            participentId: 0,
+            participentId: 0
           }
         }
       }
