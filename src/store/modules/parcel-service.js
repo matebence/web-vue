@@ -282,6 +282,8 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
+        if (Object.keys(parsed).length < 2) return state.payload.parcel.data.search
+
         commit(types.MUTATION_PARCEL_DATA, {
           data: {
             ...state.payload.parcel.data,
@@ -323,6 +325,8 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
+        if (Object.keys(parsed).length < 2) return state.payload.category.data.getAll
+
         commit(types.MUTATION_CATEGORY_DATA, {
           data: {
             ...state.payload.category.data,
@@ -410,6 +414,8 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
+        if (Object.keys(parsed).length < 2) return state.payload.rating.data.search
+
         commit(types.MUTATION_RATING_DATA, {
           data: {
             ...state.payload.rating.data,

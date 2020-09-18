@@ -296,6 +296,8 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
+        if (Object.keys(parsed).length < 2) return state.payload.vehicle.data.search
+
         commit(types.MUTATION_VEHICLE_DATA, {
           data: {
             ...state.payload.vehicle.data,
@@ -377,6 +379,8 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
+        if (Object.keys(parsed).length < 2) return state.payload.type.data.getAll
+
         commit(types.MUTATION_TYPE_DATA, {
           data: {
             ...state.payload.type.data,

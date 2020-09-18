@@ -445,6 +445,8 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
+        if (Object.keys(parsed).length < 2) return state.payload.user.data.search
+
         commit(types.MUTATION_USER_DATA, {
           data: {
             ...state.payload.user.data,
@@ -487,6 +489,8 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
+        if (Object.keys(parsed).length < 2) return state.payload.gender.data.getAll
+
         commit(types.MUTATION_GENDER_DATA, {
           data: {
             ...state.payload.gender.data,

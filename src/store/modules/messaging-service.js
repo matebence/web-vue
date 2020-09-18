@@ -277,6 +277,8 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
+        if (Object.keys(parsed).length < 2) return state.payload.status.data.search
+
         commit(types.MUTATION_STATUS_DATA, {
           data: {
             ...state.payload.status.data,
@@ -358,11 +360,13 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
+        if (Object.keys(parsed).length < 2) return state.payload.conversation.data.search
+
         commit(types.MUTATION_CONVERSATION_DATA, {
           data: {
             ...state.payload.conversation.data,
             search: {
-              ...parsed.data
+              ...parsed._embedded.conversationsList
             }
           },
           done: true
@@ -439,6 +443,8 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
+        if (Object.keys(parsed).length < 2) return state.payload.communication.data.search
+
         commit(types.MUTATION_COMMUNICATION_DATA, {
           data: {
             ...state.payload.communication.data,

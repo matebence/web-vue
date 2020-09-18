@@ -15,10 +15,12 @@
           @input="onAutoCompleteParticipent($event.target.value)">
       </div>
     </form>
-    <ul class="participents">
+    <ul
+      id="searchList"
+      class="participents">
       <li
         :key="item.userId"
-        v-for="item in userData.user.search"
+        v-for="item in userData.search"
         @click.prevent="onSelectedParticipent(item)">
         <ul class="participent">
           <li class="image">
@@ -33,7 +35,38 @@
           </li>
         </ul>
       </li>
-      <!--<li>Zoznam je prázdny </li>-->
+      <li
+        class="empty-list"
+        v-show="!appVerticalList.form.visible"
+        v-if="(Object.keys(userData.search).length === 0)">
+        Zoznam je prázdny
+      </li>
+    </ul>
+    <ul
+      class="participents"
+      id="conversationList"
+      v-show="appVerticalList.form.visible">
+      <li
+        :key="item.conversationId"
+        v-for="item in conversationData.search">
+        <ul class="participent">
+          <li class="image">
+            <font-awesome-icon :icon="['fas', 'user']"/>
+          </li>
+          <li class="summary">
+            <ul>
+              <li class="userName">{{formatUsername(item.participants)}}</li>
+              <li class="state">{{formatState(item.participants)}}</li>
+              <li class="createdAt">{{formatDate(item.participants)}} {{formatTime(item.participants)}}</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li
+        class="empty-list"
+        v-if="(Object.keys(conversationData.search).length === 0)">
+        Zoznam je prázdny
+      </li>
     </ul>
   </div>
 </template>
@@ -43,7 +76,7 @@ import * as types from '@/store/types'
 
 export default {
   name: 'verticalList',
-  props: ['userData', 'activeEl'],
+  props: ['userData', 'accountData', 'conversationData', 'appVerticalList', 'activeEl'],
   data: function () {
     return {
     }
@@ -51,6 +84,7 @@ export default {
   methods: {
     onAutoCompleteParticipent: function ($event) {
       this.activeEl.participentId = 0
+      this.appVerticalList.form.visible = false
       if ($event.length === 0) return this.onSearchParticipent({roles: this.onSearchParticipentCriteria()})
       if ($event.length < 3) return
       return this.onSearchParticipent({firstName: $event})
@@ -58,35 +92,49 @@ export default {
     onSearchParticipent: function (obj) {
       return this.$store.dispatch(types.ACTION_USER_SEARCH, {roles: this.onSearchParticipentCriteria(), ...obj})
         .then(result => {
-          this.userData.user.search = Object.values(result)
+          if (Object.keys(this.conversationData.search).length === 0) {
+            this.userData.search = Object.values(result)
+          } else {
+            const existingConversations = [].concat.apply([], this.conversationData.search.map(a => a.participants)).filter(b => b.accountId !== this.accountData.accountId).map(c => c.accountId)
+            this.userData.search = Object.values(result).filter(e => !existingConversations.includes(e.accountId))
+          }
         })
-        .catch(err => {
-          this.userData.user.search = null
-          console.warn(err.message)
-        })
+        .catch(err => console.warn(err.message))
     },
     onSelectedParticipent: function (el) {
       return this.$store.dispatch(types.ACTION_STATUS_SEARCH, {userName: el.userName})
         .then(result => {
-          let accountData = localStorage.getItem('accountData')
-          if (!accountData || !result) return
+          if (!result) return
           result = Object.values(result).pop()
-          accountData = JSON.parse(accountData)
-          return this.$store.dispatch(types.ACTION_CONVERSATION_CREATE, {participants: [{accountId: accountData.accountId, status: {statusId: accountData.status}, userName: accountData.userName, lastConversionId: null, lastReadedConversionId: null}, {accountId: el.accountId, status: {statusId: result.statusId}, userName: el.userName, lastConversionId: null, lastReadedConversionId: null}]})
+          return this.$store.dispatch(types.ACTION_CONVERSATION_CREATE, {participants: [{accountId: this.accountData.accountId, status: {statusId: this.accountData.status}, userName: this.accountData.userName, lastConversionId: null, lastReadedConversionId: null}, {accountId: el.accountId, status: {statusId: result.statusId}, userName: el.userName, lastConversionId: null, lastReadedConversionId: null}]})
         })
         .then(result => console.log(result))
         .catch(err => console.warn(err.message))
     },
-    onClearParticipent: function (el) {
+    onClearParticipent: function () {
       setTimeout(() => {
-        this.userData.user.search = []
+        this.appVerticalList.form.visible = true
+        this.userData.search = []
       }, 200)
     },
     onSearchParticipentCriteria: function () {
-      let accountData = localStorage.getItem('accountData')
-      if (!accountData) return
-      accountData = JSON.parse(accountData)
-      return accountData.authorities.find(e => true) === process.env.APP_ROLE_COURIER ? process.env.APP_ROLE_CLIENT : process.env.APP_ROLE_COURIER
+      return this.accountData.authorities.find(e => true) === process.env.APP_ROLE_COURIER ? process.env.APP_ROLE_CLIENT : process.env.APP_ROLE_COURIER
+    },
+    formatUsername: function (userName) {
+      return userName.filter(e => e.accountId !== this.accountData.accountId).find(e => true).status.userName
+    },
+    formatState: function (state) {
+      return state.filter(e => e.accountId !== this.accountData.accountId).find(e => true).status.state
+    },
+    formatDate: function (timestamp) {
+      timestamp = timestamp.filter(e => e.accountId !== this.accountData.accountId).find(e => true).status.createdAt
+      const date = new Date(timestamp)
+      return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+    },
+    formatTime: function (timestamp) {
+      timestamp = timestamp.filter(e => e.accountId !== this.accountData.accountId).find(e => true).status.createdAt
+      const time = new Date(timestamp)
+      return `${time.getHours()}:${time.getMinutes()}`
     }
   }
 }
@@ -150,6 +198,10 @@ export default {
     text-align: center;
   }
 
+  div#verticalList ul.participents li ul.participent ul {
+    text-align: center;
+  }
+
   div#verticalList ul.participents li ul.participent li.image {
     display: inline-block;
     font-size: 1.3em;
@@ -163,12 +215,14 @@ export default {
   }
 
   div#verticalList ul.participents li ul.participent li.summary {
-    margin-left: 1rem;
+    margin: 0 auto;
   }
 
+  div#verticalList ul.participents li ul.participent li ul li.state,
   div#verticalList ul.participents li ul.participent li ul li.region,
+  div#verticalList ul.participents li ul.participent li ul li.country,
   div#verticalList ul.participents li ul.participent li ul li.userName,
-  div#verticalList ul.participents li ul.participent li ul li.country {
+  div#verticalList ul.participents li ul.participent li ul li.createdAt {
     font-size: 0.9em;
     font-weight: 400;
     color: #000000;

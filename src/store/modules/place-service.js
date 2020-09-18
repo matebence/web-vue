@@ -92,6 +92,8 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
+        if (Object.keys(parsed).length < 2) return state.payload.place.data.search
+
         commit(types.MUTATION_PLACE_DATA, {
           data: {
             ...state.payload.place.data,

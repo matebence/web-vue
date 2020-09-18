@@ -324,6 +324,8 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
+        if (Object.keys(parsed).length < 2) return state.payload.shipment.data.search
+
         commit(types.MUTATION_SHIPMENT_DATA, {
           data: {
             ...state.payload.shipment.data,

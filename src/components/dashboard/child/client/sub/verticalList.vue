@@ -29,7 +29,7 @@
       </li>
       <li
         class="empty-list"
-        v-if="(shipmentData.search === null)">
+        v-if="Object.keys(shipmentData.search).length === 0">
         Zoznam je prázdny
       </li>
     </ul>
@@ -45,7 +45,7 @@ export default {
     return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {courier: this.signIn.accountId, status: process.env.PARCEL_NEW_STATUS_ID})
       .then(result => { this.shipmentData.search = result })
       .catch(err => {
-        this.shipmentData.search = null
+        this.shipmentData.search = {}
         console.warn(err.message)
       })
   },
@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     onSelectedTab: function (el) {
-      this.shipmentData.search = null
+      this.shipmentData.search = {}
       this.activeEl.shipmentId = 0
       this.activeEl.value = el.value
       this.activeEl.itemId = el.itemId

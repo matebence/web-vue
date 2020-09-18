@@ -207,6 +207,8 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
+        if (Object.keys(parsed).length < 2) return state.payload.preference.data.search
+
         commit(types.MUTATION_PREFERENCE_DATA, {
           data: {
             ...state.payload.preference.data,

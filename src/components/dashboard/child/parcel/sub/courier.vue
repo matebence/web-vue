@@ -55,10 +55,7 @@ export default {
         .then(result => {
           this.parcelData.courier.search.user = Object.values(result)
         })
-        .catch(err => {
-          this.parcelData.courier.search.user = null
-          console.warn(err.message)
-        })
+        .catch(err => console.warn(err.message))
     }
   }
 }
