@@ -59,7 +59,8 @@ const error = resolve => {
 }
 
 const routes = [
-  {path: '/dashboard',
+  {
+    path: '/dashboard',
     component: dashboard,
     name: 'dashboard',
     beforeEnter: function (to, from, next) {

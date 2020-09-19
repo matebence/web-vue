@@ -13,13 +13,12 @@
 </template>
 
 <script>
-export default {
-  name: 'error',
-  data: function () {
-    return {
+  export default {
+    name: 'error',
+    data: function () {
+      return {}
     }
   }
-}
 </script>
 
 <style scoped>

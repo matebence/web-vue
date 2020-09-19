@@ -4,73 +4,52 @@ const state = {
   payload: {
     status: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     },
     conversation: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     },
     communication: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -88,25 +67,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_STATUS_DATA]: function (state, data) {
     state.payload.status = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -119,8 +91,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -136,25 +107,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_CONVERSATION_DATA]: function (state, data) {
     state.payload.conversation = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -167,8 +131,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -184,25 +147,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_COMMUNICATION_DATA]: function (state, data) {
     state.payload.communication = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -215,8 +171,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -269,7 +224,8 @@ const actions = {
     return this._vm.$resource('{service}/api/status/search', {}, {
       search: {
         method: 'POST',
-        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        headers: {
+          'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
         }
       }
     }).search({service: 'messaging-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: {...payload}})
@@ -352,7 +308,8 @@ const actions = {
     return this._vm.$resource('{service}/api/conversations/search', {}, {
       search: {
         method: 'POST',
-        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        headers: {
+          'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
         }
       }
     }).search({service: 'messaging-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: {...payload}})
@@ -435,7 +392,8 @@ const actions = {
     return this._vm.$resource('{service}/api/communications/search', {}, {
       search: {
         method: 'POST',
-        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        headers: {
+          'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
         }
       }
     }).search({service: 'messaging-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: {...payload}})

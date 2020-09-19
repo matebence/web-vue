@@ -19,18 +19,17 @@
 </template>
 
 <script>
-export default {
-  name: 'modal',
-  props: ['modalId', 'title', 'text', 'button'],
-  data: function () {
-    return {
-      components: {
-        appModal: {
+  export default {
+    name: 'modal',
+    props: ['modalId', 'title', 'text', 'button'],
+    data: function () {
+      return {
+        components: {
+          appModal: {}
         }
       }
     }
   }
-}
 </script>
 
 <style scoped>

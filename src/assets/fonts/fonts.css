@@ -1,28 +1,34 @@
 @font-face {
-    font-family: Palanquin-Bold;
-    src: url(Palanquin/Palanquin-Bold.ttf);
+  font-family: Palanquin-Bold;
+  src: url(Palanquin/Palanquin-Bold.ttf);
 }
+
 @font-face {
-    font-family: Palanquin-ExtraLight;
-    src: url(Palanquin/Palanquin-ExtraLight.ttf);
+  font-family: Palanquin-ExtraLight;
+  src: url(Palanquin/Palanquin-ExtraLight.ttf);
 }
+
 @font-face {
-    font-family: Palanquin-Light;
-    src: url(Palanquin/Palanquin-Light.ttf);
+  font-family: Palanquin-Light;
+  src: url(Palanquin/Palanquin-Light.ttf);
 }
+
 @font-face {
-    font-family: Palanquin-Medium;
-    src: url(Palanquin/Palanquin-Medium.ttf);
+  font-family: Palanquin-Medium;
+  src: url(Palanquin/Palanquin-Medium.ttf);
 }
+
 @font-face {
-    font-family: Palanquin-Regular;
-    src: url(Palanquin/Palanquin-Regular.ttf);
+  font-family: Palanquin-Regular;
+  src: url(Palanquin/Palanquin-Regular.ttf);
 }
+
 @font-face {
-    font-family: Palanquin-SemiBold;
-    src: url(Palanquin/Palanquin-SemiBold.ttf);
+  font-family: Palanquin-SemiBold;
+  src: url(Palanquin/Palanquin-SemiBold.ttf);
 }
+
 @font-face {
-    font-family: Palanquin-Thin;
-    src: url(Palanquin/Palanquin-Thin.ttf);
+  font-family: Palanquin-Thin;
+  src: url(Palanquin/Palanquin-Thin.ttf);
 }

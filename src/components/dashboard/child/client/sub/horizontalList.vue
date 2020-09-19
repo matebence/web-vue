@@ -6,18 +6,22 @@
           v-show="!isSelected">
         <li>
           <ul class="action">
-            <li><font-awesome-icon :icon="['fas', 'map-marker-alt']"/></li>
+            <li>
+              <font-awesome-icon :icon="['fas', 'map-marker-alt']"/>
+            </li>
             <li>Navigácia je pripravená na použitie. Zvoľte zásielku pre spustenie inštrukcií.</li>
           </ul>
         </li>
       </ul>
       <ul class="actions"
-        v-show="isSelected">
+          v-show="isSelected">
         <li
           :key="item.length"
           v-for="item in shipmentData.action">
           <ul class="action">
-            <li><font-awesome-icon :icon="['fas', formatIcon(item.action, item.direction)]"/></li>
+            <li>
+              <font-awesome-icon :icon="['fas', formatIcon(item.action, item.direction)]"/>
+            </li>
             <li>{{item.instruction}}</li>
           </ul>
         </li>
@@ -27,55 +31,54 @@
 </template>
 
 <script>
-export default {
-  name: 'horizontalList',
-  props: ['shipmentData', 'activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  computed: {
-    isSelected: function () {
-      return this.activeEl.shipmentId !== 0
-    }
-  },
-  methods: {
-    formatIcon: function (action, direction = '') {
-      switch (`${action} ${direction}`.trim()) {
-        case 'depart':
-          return 'map-marker-alt'
-        case 'turn right':
-          return 'chevron-circle-right'
-        case 'turn left':
-          return 'chevron-circle-left'
-        case 'keep right':
-          return 'chevron-circle-right'
-        case 'keep left':
-          return 'chevron-circle-left'
-        case 'continue':
-          return 'chevron-circle-up'
-        case 'roundaboutExit right':
-          return 'sync-alt'
-        case 'roundaboutExit left':
-          return 'sync-alt'
-        case 'roundaboutPass right':
-          return 'sync-alt'
-        case 'roundaboutPass left':
-          return 'sync-alt'
-        case 'exit left':
-          return 'times-circle'
-        case 'exit right':
-          return 'times-circle'
-        case 'ramp left':
-          return 'times-circle'
-        case 'ramp right':
-          return 'times-circle'
-        case 'arrive':
-          return 'map-marker-alt'
+  export default {
+    name: 'horizontalList',
+    props: ['shipmentData', 'activeEl'],
+    data: function () {
+      return {}
+    },
+    computed: {
+      isSelected: function () {
+        return this.activeEl.shipmentId !== 0
+      }
+    },
+    methods: {
+      formatIcon: function (action, direction = '') {
+        switch (`${action} ${direction}`.trim()) {
+          case 'depart':
+            return 'map-marker-alt'
+          case 'turn right':
+            return 'chevron-circle-right'
+          case 'turn left':
+            return 'chevron-circle-left'
+          case 'keep right':
+            return 'chevron-circle-right'
+          case 'keep left':
+            return 'chevron-circle-left'
+          case 'continue':
+            return 'chevron-circle-up'
+          case 'roundaboutExit right':
+            return 'sync-alt'
+          case 'roundaboutExit left':
+            return 'sync-alt'
+          case 'roundaboutPass right':
+            return 'sync-alt'
+          case 'roundaboutPass left':
+            return 'sync-alt'
+          case 'exit left':
+            return 'times-circle'
+          case 'exit right':
+            return 'times-circle'
+          case 'ramp left':
+            return 'times-circle'
+          case 'ramp right':
+            return 'times-circle'
+          case 'arrive':
+            return 'map-marker-alt'
+        }
       }
     }
   }
-}
 </script>
 
 <style scoped>

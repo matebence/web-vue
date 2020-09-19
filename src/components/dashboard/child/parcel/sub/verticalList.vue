@@ -6,7 +6,8 @@
         :key="option.id"
         @click.prevent="onSelectedTab(option)"
         v-for="option in appVerticalList.items"
-        :class="{active: activeEl.itemId === option.itemId}">{{option.value}}</li>
+        :class="{active: activeEl.itemId === option.itemId}">{{option.value}}
+      </li>
     </ul>
     <ul class="parcels">
       <li
@@ -21,7 +22,8 @@
           </li>
           <li>
             <ul>
-              <li class="number" v-if="onNewItemCreated(item.createdAt)"><span class="badge badge-pill badge-danger">Nové</span></li>
+              <li class="number" v-if="onNewItemCreated(item.createdAt)"><span class="badge badge-pill badge-danger">Nové</span>
+              </li>
               <li class="number" v-else>Číslo balíka: {{item.id}}</li>
               <li class="created">{{formatDate(item.createdAt)}}<br>{{formatTime(item.createdAt)}}</li>
             </ul>
@@ -72,80 +74,79 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
+  import * as types from '@/store/types'
 
-export default {
-  created: function () {
-    return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.accountId})
-      .catch(err => console.warn(err.message))
-  },
-  name: 'verticalList',
-  props: ['appVerticalList', 'activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  watch: {
-    'activeEl.itemId': function (newValue, oldValue) {
-      if (newValue === 1) this.onSelectedTab({itemId: this.activeEl.itemId})
-    }
-  },
-  computed: {
-    ...mapGetters({
-      signIn: types.GETTER_SIGN_IN_DATA,
-      parcelSearch: types.GETTER_PARCEL_DATA_SEARCH,
-      parcelCreate: types.GETTER_PARCEL_DATA_CREATE
-    })
-  },
-  methods: {
-    onSelectedTab: function (el) {
-      this.activeEl.parcelId = 0
-      this.activeEl.itemId = el.itemId
-
-      if (this.activeEl.itemId === this.appVerticalList.items[0].itemId || this.activeEl.itemId === this.appVerticalList.items[2].itemId) {
-        return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.accountId})
-          .catch(err => console.warn(err.message))
+  export default {
+    created: function () {
+      return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.accountId})
+        .catch(err => console.warn(err.message))
+    },
+    name: 'verticalList',
+    props: ['appVerticalList', 'activeEl'],
+    data: function () {
+      return {}
+    },
+    watch: {
+      'activeEl.itemId': function (newValue, oldValue) {
+        if (newValue === 1) this.onSelectedTab({itemId: this.activeEl.itemId})
       }
     },
-    onSelectedParcel: function (el) {
-      this.activeEl.parcelId = el.id
+    computed: {
+      ...mapGetters({
+        signIn: types.GETTER_SIGN_IN_DATA,
+        parcelSearch: types.GETTER_PARCEL_DATA_SEARCH,
+        parcelCreate: types.GETTER_PARCEL_DATA_CREATE
+      })
     },
-    onNewItemCreated: function (timestamp) {
-      const current = Number(new Date().getTime()) / 1000
-      const parcel = Number(new Date(timestamp).getTime()) / 1000
-      return current - parcel < 60
-    },
-    formatDate: function (timestamp) {
-      const date = new Date(timestamp)
-      return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
-    },
-    formatTime: function (timestamp) {
-      const time = new Date(timestamp)
-      return `${time.getHours()}:${time.getMinutes()}`
-    },
-    formatIcon: function (icon) {
-      switch (icon) {
-        case 'Dokumenty':
-          return 'file'
-        case 'Drogéria':
-          return 'spray-can'
-        case 'Elektronika':
-          return 'plug'
-        case 'Iné':
-          return 'question-circle'
-        case 'Oblečenie':
-          return 'tshirt'
-        case 'Potraviny':
-          return 'utensils'
-        case 'Pridelené':
-          return 'box'
-        case 'Nepridelené':
-          return 'box-open'
+    methods: {
+      onSelectedTab: function (el) {
+        this.activeEl.parcelId = 0
+        this.activeEl.itemId = el.itemId
+
+        if (this.activeEl.itemId === this.appVerticalList.items[0].itemId || this.activeEl.itemId === this.appVerticalList.items[2].itemId) {
+          return this.$store.dispatch(types.ACTION_PARCEL_SEARCH, {sender: this.signIn.accountId})
+            .catch(err => console.warn(err.message))
+        }
+      },
+      onSelectedParcel: function (el) {
+        this.activeEl.parcelId = el.id
+      },
+      onNewItemCreated: function (timestamp) {
+        const current = Number(new Date().getTime()) / 1000
+        const parcel = Number(new Date(timestamp).getTime()) / 1000
+        return current - parcel < 60
+      },
+      formatDate: function (timestamp) {
+        const date = new Date(timestamp)
+        return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+      },
+      formatTime: function (timestamp) {
+        const time = new Date(timestamp)
+        return `${time.getHours()}:${time.getMinutes()}`
+      },
+      formatIcon: function (icon) {
+        switch (icon) {
+          case 'Dokumenty':
+            return 'file'
+          case 'Drogéria':
+            return 'spray-can'
+          case 'Elektronika':
+            return 'plug'
+          case 'Iné':
+            return 'question-circle'
+          case 'Oblečenie':
+            return 'tshirt'
+          case 'Potraviny':
+            return 'utensils'
+          case 'Pridelené':
+            return 'box'
+          case 'Nepridelené':
+            return 'box-open'
+        }
       }
     }
   }
-}
 </script>
 
 <style scoped>

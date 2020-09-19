@@ -5,17 +5,16 @@
 </template>
 
 <script>
-import 'bootstrap/dist/css/bootstrap.min.css'
-import '@/assets/fonts/fonts.css'
-import '@/assets/css/reset.css'
+  import 'bootstrap/dist/css/bootstrap.min.css'
+  import '@/assets/fonts/fonts.css'
+  import '@/assets/css/reset.css'
 
-export default {
-  name: 'App',
-  data: function () {
-    return {
+  export default {
+    name: 'App',
+    data: function () {
+      return {}
     }
   }
-}
 </script>
 
 <style>
@@ -41,7 +40,7 @@ export default {
     user-select: none;
   }
 
-  h1, h2, h3{
+  h1, h2, h3 {
     font-family: Palanquin-Bold, sans-serif;
   }
 
@@ -49,7 +48,7 @@ export default {
     font-family: Palanquin-Regular, sans-serif;
   }
 
-  a, a:hover{
+  a, a:hover {
     text-decoration: none;
     font-family: Palanquin-Medium, sans-serif;
   }
@@ -76,7 +75,7 @@ export default {
     border: none;
   }
 
-  .spinner-border{
+  .spinner-border {
     margin-bottom: 0.3rem;
   }
 

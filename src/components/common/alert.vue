@@ -10,29 +10,28 @@
 </template>
 
 <script>
-export default {
-  name: 'alert',
-  props: ['type', 'condition', 'text'],
-  data: function () {
-    return {
-      components: {
-        appAlert: {
+  export default {
+    name: 'alert',
+    props: ['type', 'condition', 'text'],
+    data: function () {
+      return {
+        components: {
+          appAlert: {}
         }
       }
-    }
-  },
-  computed: {
-    getCondition: function () {
-      return [...this.condition].some(e => e === true)
     },
-    getText: function () {
-      return [...this.text].filter(e => e !== null)
-    },
-    getType: function () {
-      return [...this.type].filter(e => e !== null)
+    computed: {
+      getCondition: function () {
+        return [...this.condition].some(e => e === true)
+      },
+      getText: function () {
+        return [...this.text].filter(e => e !== null)
+      },
+      getType: function () {
+        return [...this.type].filter(e => e !== null)
+      }
     }
   }
-}
 </script>
 
 <style scoped>

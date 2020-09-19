@@ -6,7 +6,8 @@
         :key="option.id"
         @click.prevent="onSelectedOption(option)"
         v-for="option in appVerticalList.items"
-        :class="{active: activeEl.itemId === option.itemId}">{{option.value}}</li>
+        :class="{active: activeEl.itemId === option.itemId}">{{option.value}}
+      </li>
     </ul>
     <ul class="shipments">
       <li
@@ -47,24 +48,23 @@
 </template>
 
 <script>
-export default {
-  name: 'verticalList',
-  props: ['appVerticalList', 'shipmentData', 'activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  methods: {
-    onSelectedOption: function (el) {
-      this.activeEl.shipmentId = 0
-      this.activeEl.itemId = el.itemId
-      this.activeEl.value = el.value
+  export default {
+    name: 'verticalList',
+    props: ['appVerticalList', 'shipmentData', 'activeEl'],
+    data: function () {
+      return {}
     },
-    onSelectedShipment: function (el) {
-      this.activeEl.shipmentId = el._id
+    methods: {
+      onSelectedOption: function (el) {
+        this.activeEl.shipmentId = 0
+        this.activeEl.itemId = el.itemId
+        this.activeEl.value = el.value
+      },
+      onSelectedShipment: function (el) {
+        this.activeEl.shipmentId = el._id
+      }
     }
   }
-}
 </script>
 
 <style scoped>

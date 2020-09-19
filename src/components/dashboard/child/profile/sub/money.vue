@@ -121,7 +121,8 @@
                     src="@/assets/img/card-chip.png"
                     class="card-chip">
                   <div class="card-type">
-                    <img :src="require(`@/assets/img/${getCardType}.png`)" v-if="getCardType" :key="getCardType" alt="" class="card-typeImg">
+                    <img :src="require(`@/assets/img/${getCardType}.png`)" v-if="getCardType" :key="getCardType" alt=""
+                         class="card-typeImg">
                   </div>
                 </div>
                 <label
@@ -138,7 +139,8 @@
                     <div
                       class="card-number-item"
                       :class="{ '-active' : n.trim() === '' }"
-                      :key="$index" v-else-if="appMoney.form.card.values.number.length > $index">{{appMoney.form.card.values.number[$index]}}</div>
+                      :key="$index"
+                      v-else-if="appMoney.form.card.values.number.length > $index">{{appMoney.form.card.values.number[$index]}}</div>
                     <div
                       class="card-number-item"
                       :class="{ '-active' : n.trim() === '' }"
@@ -156,7 +158,8 @@
                     <div
                       class="card-number-item"
                       :class="{ '-active' : n.trim() === '' }"
-                      :key="$index" v-else-if="appMoney.form.card.values.number.length > $index">{{appMoney.form.card.values.number[$index]}}</div>
+                      :key="$index"
+                      v-else-if="appMoney.form.card.values.number.length > $index">{{appMoney.form.card.values.number[$index]}}</div>
                     <div
                       class="card-number-item"
                       :class="{ '-active' : n.trim() === '' }"
@@ -174,12 +177,14 @@
                       key="1">
                       <span
                         class="card-nameItem"
-                        v-for="(n, $index) in appMoney.form.card.values.name.replace(/\s\s+/g, ' ')" v-if="$index === $index" :key="$index + 1">{{n}}</span>
+                        v-for="(n, $index) in appMoney.form.card.values.name.replace(/\s\s+/g, ' ')"
+                        v-if="$index === $index" :key="$index + 1">{{n}}</span>
                     </div>
                     <div
                       class="card-name"
                       v-else
-                      key="2">Celé meno</div>
+                      key="2">Celé meno
+                    </div>
                   </label>
                   <div class="card-date" ref="cardDate">
                     <label class="card-date-title">Expires</label>
@@ -195,7 +200,7 @@
                     <label class="card-date-item">
                     <span
                       v-if="appMoney.form.card.values.year"
-                      :key="appMoney.form.card.values.year">{{String(appMoney.form.card.values.year).slice(2,4)}}</span>
+                      :key="appMoney.form.card.values.year">{{String(appMoney.form.card.values.year).slice(2, 4)}}</span>
                       <span
                         v-else
                         key="2">YY</span>
@@ -263,7 +268,9 @@
       @click.prevent="onCreate(false)"
       :disabled="($v.appMoney.form.card.values.name.$invalid || $v.appMoney.form.card.values.number.$invalid || $v.appMoney.form.card.values.month.$invalid || $v.appMoney.form.card.values.year.$invalid || $v.appMoney.form.card.values.cvv.$invalid || $v.appMoney.form.card.values.amount.$invalid) && ($v.appMoney.form.bank.values.number.$invalid || $v.appMoney.form.bank.values.amount.$invalid)"
       type="submit"
-      class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
+      class="btn btn-primary">
+      <font-awesome-icon :icon="['fas', 'check']"/>
+    </button>
     <div id="confirm-wrapper">
       <app-confirm
         @confirmed="onCreate($event)"
@@ -283,164 +290,175 @@
 </template>
 
 <script>
-import bootstrap from 'jquery'
+  import bootstrap from 'jquery'
 
-import {mapGetters} from 'vuex'
-import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
+  import * as types from '@/store/types'
 
-import alert from '@/components/common/alert'
-import confirm from '@/components/common/confirm'
+  import alert from '@/components/common/alert'
+  import confirm from '@/components/common/confirm'
 
-import {required, numeric, decimal} from 'vuelidate/lib/validators'
+  import {required, numeric, decimal} from 'vuelidate/lib/validators'
 
-export default {
-  name: 'money',
-  props: ['appMoney'],
-  data: function () {
-    return {
-    }
-  },
-  validations: {
-    appMoney: {
-      form: {
-        card: {
-          values: {
-            name: {
-              required,
-              name: value => new RegExp(/^[\D ]+$/).test(value)
-            },
-            number: {
-              required,
-              card: value => new RegExp(/^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/).test(value.replaceAll(' ', ''))
-            },
-            month: {
-              required,
-              month: value => new RegExp(/^(0?[1-9]|1[012])$/).test(value)
-            },
-            year: {
-              required,
-              year: value => new RegExp(/^\d{4}$/).test(value) && value >= new Date().getFullYear()
-            },
-            cvv: {
-              required,
-              numeric
-            },
-            amount: {
-              required,
-              decimal
+  export default {
+    name: 'money',
+    props: ['appMoney'],
+    data: function () {
+      return {}
+    },
+    validations: {
+      appMoney: {
+        form: {
+          card: {
+            values: {
+              name: {
+                required,
+                name: value => new RegExp(/^[\D ]+$/).test(value)
+              },
+              number: {
+                required,
+                card: value => new RegExp(/^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/).test(value.replaceAll(' ', ''))
+              },
+              month: {
+                required,
+                month: value => new RegExp(/^(0?[1-9]|1[012])$/).test(value)
+              },
+              year: {
+                required,
+                year: value => new RegExp(/^\d{4}$/).test(value) && value >= new Date().getFullYear()
+              },
+              cvv: {
+                required,
+                numeric
+              },
+              amount: {
+                required,
+                decimal
+              }
             }
-          }
-        },
-        bank: {
-          values: {
-            number: {
-              required,
-              iban: value => new RegExp(/^[A-Z]+[ 0-9]+$/).test(value)
-            },
-            amount: {
-              required,
-              decimal,
-              minValue: value => value > 9
+          },
+          bank: {
+            values: {
+              number: {
+                required,
+                iban: value => new RegExp(/^[A-Z]+[ 0-9]+$/).test(value)
+              },
+              amount: {
+                required,
+                decimal,
+                minValue: value => value > 9
+              }
             }
           }
         }
       }
-    }
-  },
-  watch: {
-    'appMoney.form.card.values.year' () {
-      if (this.appMoney.form.card.values.month < this.getCardMonth) {
-        this.appMoney.form.card.values.month = ''
-      }
-    }
-  },
-  components: {
-    appConfirm: confirm,
-    appAlert: alert
-  },
-  computed: {
-    getCardType: function () {
-      let carNumber = this.appMoney.form.card.values.number
-      let pattern = new RegExp('^4')
-      if (carNumber.match(pattern) !== null) return 'card-visa'
-
-      pattern = new RegExp('^(34|37)')
-      if (carNumber.match(pattern) !== null) return 'card-amex'
-
-      pattern = new RegExp('^5[1-5]')
-      if (carNumber.match(pattern) !== null) return 'card-mastercard'
-
-      pattern = new RegExp('^6011')
-      if (carNumber.match(pattern) !== null) return 'card-discover'
-
-      pattern = new RegExp('^9792')
-      if (carNumber.match(pattern) !== null) return 'card-troy'
-
-      return 'card-visa'
     },
-    getCardFormValues: function () {
-      return Object.values(this.appMoney.form.card.values).some(e => e !== '')
+    components: {
+      appConfirm: confirm,
+      appAlert: alert
     },
-    getBankFormValues: function () {
-      return Object.values(this.appMoney.form.bank.values).some(e => e !== '')
-    },
-    getCardMonth: function () {
-      if (this.appMoney.form.card.values.year === this.appMoney.placeHolder.year) return new Date().getMonth() + 1
-      return 1
-    },
-    ...mapGetters({
-      signIn: types.GETTER_SIGN_IN_DATA,
-      userProfile: types.GETTER_USER_DATA_GET
-    })
-  },
-  methods: {
-    onFlip: function (status) {
-      this.appMoney.is.flip = status
-    },
-    onBlur: function () {
-      this.appMoney.is.focus = false
-    },
-    showConfirmedModal: function (title, text) {
-      this.appMoney.confirm.title = title
-      this.appMoney.confirm.text = text
-      this.appMoney.confirm.positiveButton = 'Potvrdiť'
-      this.appMoney.confirm.negativeButton = 'Zrušiť'
-      return bootstrap('#moneyConfirm').modal('show')
-    },
-    showAlertModal: function (condition, type, text) {
-      this.appMoney.alert.condition = condition
-      this.appMoney.alert.type = type
-      this.appMoney.alert.text = text
-    },
-    onCreate: function ($event) {
-      if ($event) {
-        let promise
-        if (!this.$v.appMoney.form.card.values.name.$invalid || !this.$v.appMoney.form.card.values.number.$invalid || !this.$v.appMoney.form.card.values.month.$invalid || !this.$v.appMoney.form.card.values.year.$invalid || !this.$v.appMoney.form.card.values.cvv.$invalid || !this.$v.appMoney.form.card.values.amount.$invalid) {
-          const paymentData = {users: {accountId: this.userProfile.accountId}, creditCard: this.appMoney.form.card.values.number.replaceAll(' ', ''), expMonth: this.appMoney.form.card.values.month, expYear: this.appMoney.form.card.values.year, cvc: this.appMoney.form.card.values.cvv, amount: this.appMoney.form.card.values.amount, currency: 'EUR'}
-          promise = this.$store.dispatch(types.ACTION_PAYMENT_CREATE, paymentData)
-        } else if (!this.$v.appMoney.form.bank.values.number.$invalid || !this.$v.appMoney.form.bank.values.amount.$invalid) {
-          const payoutData = {users: {accountId: this.userProfile.accountId}, iban: this.appMoney.form.bank.values.number, amount: this.appMoney.form.bank.values.amount}
-          promise = this.$store.dispatch(types.ACTION_PAYOUT_CREATE, payoutData)
+    watch: {
+      'appMoney.form.card.values.year' () {
+        if (this.appMoney.form.card.values.month < this.getCardMonth) {
+          this.appMoney.form.card.values.month = ''
         }
-        promise
-          .then(result => {
-            Object.assign(this.$data, this.$options.data.apply(this))
-            return this.$store.dispatch(types.ACTION_USER_GET, this.signIn.accountId)
-          })
-          .then(result => {
-            this.showAlertModal([result !== null], ['alert-success'], ['Príkaz ne prevod penazí prebehla úspešne'])
-            bootstrap('#moneyConfirm').modal('hide')
-          })
-          .catch(err => {
-            Object.assign(this.$data, this.$options.data.apply(this))
-            this.showAlertModal([err !== null], ['alert-danger'], [err.message])
-            bootstrap('#moneyConfirm').modal('hide')
-          })
       }
-      return this.showConfirmedModal('Potvrdenie', 'Pre uplatnenie zmien prosím zadajte Vaše heslo:')
+    },
+    computed: {
+      getCardType: function () {
+        let carNumber = this.appMoney.form.card.values.number
+        let pattern = new RegExp('^4')
+        if (carNumber.match(pattern) !== null) return 'card-visa'
+
+        pattern = new RegExp('^(34|37)')
+        if (carNumber.match(pattern) !== null) return 'card-amex'
+
+        pattern = new RegExp('^5[1-5]')
+        if (carNumber.match(pattern) !== null) return 'card-mastercard'
+
+        pattern = new RegExp('^6011')
+        if (carNumber.match(pattern) !== null) return 'card-discover'
+
+        pattern = new RegExp('^9792')
+        if (carNumber.match(pattern) !== null) return 'card-troy'
+
+        return 'card-visa'
+      },
+      getCardFormValues: function () {
+        return Object.values(this.appMoney.form.card.values).some(e => e !== '')
+      },
+      getBankFormValues: function () {
+        return Object.values(this.appMoney.form.bank.values).some(e => e !== '')
+      },
+      getCardMonth: function () {
+        if (this.appMoney.form.card.values.year === this.appMoney.placeHolder.year) return new Date().getMonth() + 1
+        return 1
+      },
+      ...mapGetters({
+        signIn: types.GETTER_SIGN_IN_DATA,
+        userProfile: types.GETTER_USER_DATA_GET
+      })
+    },
+    methods: {
+      onFlip: function (status) {
+        this.appMoney.is.flip = status
+      },
+      onBlur: function () {
+        this.appMoney.is.focus = false
+      },
+      showConfirmedModal: function (title, text) {
+        this.appMoney.confirm.title = title
+        this.appMoney.confirm.text = text
+        this.appMoney.confirm.positiveButton = 'Potvrdiť'
+        this.appMoney.confirm.negativeButton = 'Zrušiť'
+        return bootstrap('#moneyConfirm').modal('show')
+      },
+      showAlertModal: function (condition, type, text) {
+        this.appMoney.alert.condition = condition
+        this.appMoney.alert.type = type
+        this.appMoney.alert.text = text
+      },
+      onCreate: function ($event) {
+        if ($event) {
+          let promise
+          if (!this.$v.appMoney.form.card.values.name.$invalid || !this.$v.appMoney.form.card.values.number.$invalid || !this.$v.appMoney.form.card.values.month.$invalid || !this.$v.appMoney.form.card.values.year.$invalid || !this.$v.appMoney.form.card.values.cvv.$invalid || !this.$v.appMoney.form.card.values.amount.$invalid) {
+            const paymentData = {
+              users: {accountId: this.userProfile.accountId},
+              creditCard: this.appMoney.form.card.values.number.replaceAll(' ', ''),
+              expMonth: this.appMoney.form.card.values.month,
+              expYear: this.appMoney.form.card.values.year,
+              cvc: this.appMoney.form.card.values.cvv,
+              amount: this.appMoney.form.card.values.amount,
+              currency: 'EUR'
+            }
+            promise = this.$store.dispatch(types.ACTION_PAYMENT_CREATE, paymentData)
+          } else if (!this.$v.appMoney.form.bank.values.number.$invalid || !this.$v.appMoney.form.bank.values.amount.$invalid) {
+            const payoutData = {
+              users: {accountId: this.userProfile.accountId},
+              iban: this.appMoney.form.bank.values.number,
+              amount: this.appMoney.form.bank.values.amount
+            }
+            promise = this.$store.dispatch(types.ACTION_PAYOUT_CREATE, payoutData)
+          }
+          promise
+            .then(result => {
+              Object.assign(this.$data, this.$options.data.apply(this))
+              return this.$store.dispatch(types.ACTION_USER_GET, this.signIn.accountId)
+            })
+            .then(result => {
+              this.showAlertModal([result !== null], ['alert-success'], ['Príkaz ne prevod penazí prebehla úspešne'])
+              bootstrap('#moneyConfirm').modal('hide')
+            })
+            .catch(err => {
+              Object.assign(this.$data, this.$options.data.apply(this))
+              this.showAlertModal([err !== null], ['alert-danger'], [err.message])
+              bootstrap('#moneyConfirm').modal('hide')
+            })
+        }
+        return this.showConfirmedModal('Potvrdenie', 'Pre uplatnenie zmien prosím zadajte Vaše heslo:')
+      }
     }
   }
-}
 </script>
 
 <style scoped>

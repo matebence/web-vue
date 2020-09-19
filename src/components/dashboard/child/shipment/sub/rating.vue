@@ -16,7 +16,7 @@
               id="star-5"
               type="radio"
               name="rating"
-              value="5" />
+              value="5"/>
             <label
               :class="{disabled: activeEl.shipmentId === 0}"
               for="star-5"
@@ -31,7 +31,7 @@
               id="star-4"
               type="radio"
               name="rating"
-              value="4" />
+              value="4"/>
             <label
               :class="{disabled: activeEl.shipmentId === 0}"
               for="star-4"
@@ -46,7 +46,7 @@
               id="star-3"
               type="radio"
               name="rating"
-              value="3" />
+              value="3"/>
             <label
               :class="{disabled: activeEl.shipmentId === 0}"
               for="star-3"
@@ -61,7 +61,7 @@
               id="star-2"
               type="radio"
               name="rating"
-              value="2" />
+              value="2"/>
             <label
               :class="{disabled: activeEl.shipmentId === 0}"
               for="star-2"
@@ -76,7 +76,7 @@
               id="star-1"
               type="radio"
               name="rating"
-              value="1" />
+              value="1"/>
             <label
               :class="{disabled: activeEl.shipmentId === 0}"
               for="star-1"
@@ -131,7 +131,9 @@
       type="submit"
       :disabled="$v.$invalid || activeEl.shipmentId === 0"
       @click.prevent="onCreate"
-      class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
+      class="btn btn-primary">
+      <font-awesome-icon :icon="['fas', 'check']"/>
+    </button>
     <div class="modal-wrapper">
       <app-modal
         :modalId="'ratingAlert'"
@@ -143,87 +145,102 @@
 </template>
 
 <script>
-import bootstrap from 'jquery'
+  import bootstrap from 'jquery'
 
-import {mapGetters} from 'vuex'
-import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
+  import * as types from '@/store/types'
 
-import modal from '@/components/common/modal'
+  import modal from '@/components/common/modal'
 
-import {required, numeric} from 'vuelidate/lib/validators'
+  import {required, numeric} from 'vuelidate/lib/validators'
 
-export default {
-  name: 'rating',
-  props: ['appRating', 'shipmentData', 'activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  validations: {
-    appRating: {
-      form: {
-        values: {
-          description: {
-            required,
-            alpha: value => new RegExp(/^[\D ]+$/).test(value)
-          },
-          rating: {
-            required,
-            numeric
-          },
-          image: {
-            name: {
+  export default {
+    name: 'rating',
+    props: ['appRating', 'shipmentData', 'activeEl'],
+    data: function () {
+      return {}
+    },
+    validations: {
+      appRating: {
+        form: {
+          values: {
+            description: {
               required,
-              file: value => new RegExp(/^[\w-]+.(jpg|png|gif)$/).test(value)
+              alpha: value => new RegExp(/^[\D ]+$/).test(value)
             },
-            base64: {
+            rating: {
               required,
-              encoded: value => new RegExp(/(data:image\/[^;]+;base64[^"]+)/).test(value)
+              numeric
+            },
+            image: {
+              name: {
+                required,
+                file: value => new RegExp(/^[\w-]+.(jpg|png|gif)$/).test(value)
+              },
+              base64: {
+                required,
+                encoded: value => new RegExp(/(data:image\/[^;]+;base64[^"]+)/).test(value)
+              }
             }
           }
         }
       }
-    }
-  },
-  components: {
-    appModal: modal
-  },
-  computed: {
-    ...mapGetters({
-      signIn: types.GETTER_SIGN_IN_DATA
-    })
-  },
-  methods: {
-    showAlertModal: function (title, text, button) {
-      this.appRating.modal.title = title
-      this.appRating.modal.text = text
-      this.appRating.modal.button = button
-      return bootstrap('#ratingAlert').modal('show')
     },
-    onFileChange: function ($event) {
-      const fileData = $event.target.files[0]
-      const fileReader = new FileReader()
-      fileReader.onloadend = () => { this.appRating.form.values.image.base64 = fileReader.result }
-      fileReader.readAsDataURL(fileData)
-      this.appRating.form.values.image.name = fileData.name
+    components: {
+      appModal: modal
     },
-    onCreate: function () {
-      if (this.shipmentData.sender.senderId === this.signIn.accountId) return this.showAlertModal('Informácia', 'Recenzia zásielky je možná iba zo strany prijmateľa.', 'Zatvoriť')
-      this.$store.dispatch(types.ACTION_RATING_SEARCH, {parcelId: this.shipmentData.parcelId})
-        .then(result => {
-          if (Object.values(result).length > 0) throw new Error('Pre daný balík už ste podali recenziu.')
-          return this.$store.dispatch(types.ACTION_RATING_CREATE, {description: this.appRating.form.values.description, rating: this.appRating.form.values.rating, image: this.appRating.form.values.image.base64, parcelId: this.shipmentData.parcelId})
-        })
-        .then(result => {
-          return this.$store.dispatch(types.ACTION_SHIPMENT_UPDATE, {_id: this.shipmentData._id, courier: this.shipmentData.courier.courierId, parcelId: this.shipmentData.parcelId, from: this.shipmentData.from, to: this.shipmentData.to, status: process.env.PARCEL_RATED_STATUS_ID, price: this.shipmentData.price, express: this.shipmentData.express})
-        })
-        .then(result => {
-          this.showAlertModal('Informácia', 'Ďakujeme za Vašu recenziu. Údaje sme úspešne spracovali.', 'Zatvoriť')
-        })
-        .catch(err => this.showAlertModal('Upozornenie', err.message, 'Zatvoriť'))
+    computed: {
+      ...mapGetters({
+        signIn: types.GETTER_SIGN_IN_DATA
+      })
+    },
+    methods: {
+      showAlertModal: function (title, text, button) {
+        this.appRating.modal.title = title
+        this.appRating.modal.text = text
+        this.appRating.modal.button = button
+        return bootstrap('#ratingAlert').modal('show')
+      },
+      onFileChange: function ($event) {
+        const fileData = $event.target.files[0]
+        const fileReader = new FileReader()
+        fileReader.onloadend = () => {
+          this.appRating.form.values.image.base64 = fileReader.result
+        }
+        fileReader.readAsDataURL(fileData)
+        this.appRating.form.values.image.name = fileData.name
+      },
+      onCreate: function () {
+        if (this.shipmentData.sender.senderId === this.signIn.accountId) return this.showAlertModal('Informácia', 'Recenzia zásielky je možná iba zo strany prijmateľa.', 'Zatvoriť')
+        this.$store.dispatch(types.ACTION_RATING_SEARCH, {parcelId: this.shipmentData.parcelId})
+          .then(result => {
+            if (Object.values(result).length > 0) throw new Error('Pre daný balík už ste podali recenziu.')
+            return this.$store.dispatch(types.ACTION_RATING_CREATE, {
+              description: this.appRating.form.values.description,
+              rating: this.appRating.form.values.rating,
+              image: this.appRating.form.values.image.base64,
+              parcelId: this.shipmentData.parcelId
+            })
+          })
+          .then(result => {
+            return this.$store.dispatch(types.ACTION_SHIPMENT_UPDATE, {
+              _id: this.shipmentData._id,
+              courier: this.shipmentData.courier.courierId,
+              parcelId: this.shipmentData.parcelId,
+              from: this.shipmentData.from,
+              to: this.shipmentData.to,
+              status: process.env.PARCEL_RATED_STATUS_ID,
+              price: this.shipmentData.price,
+              express: this.shipmentData.express
+            })
+          })
+          .then(result => {
+            this.showAlertModal('Informácia', 'Ďakujeme za Vašu recenziu. Údaje sme úspešne spracovali.', 'Zatvoriť')
+          })
+          .catch(err => this.showAlertModal('Upozornenie', err.message, 'Zatvoriť'))
+      }
     }
   }
-}
 </script>
 
 <style scoped>

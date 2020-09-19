@@ -6,7 +6,8 @@
         :key="option.id"
         @click.prevent="onSelectedTab(option)"
         v-for="option in appVerticalList.items"
-        :class="{active: activeEl.itemId === option.itemId}">{{option.value}}</li>
+        :class="{active: activeEl.itemId === option.itemId}">{{option.value}}
+      </li>
     </ul>
     <ul class="clients">
       <li
@@ -37,57 +38,65 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
+  import * as types from '@/store/types'
 
-export default {
-  created: function () {
-    return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {courier: this.signIn.accountId, status: process.env.PARCEL_NEW_STATUS_ID})
-      .then(result => { this.shipmentData.search = result })
-      .catch(err => {
-        this.shipmentData.search = {}
-        console.warn(err.message)
+  export default {
+    created: function () {
+      return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {
+        courier: this.signIn.accountId,
+        status: process.env.PARCEL_NEW_STATUS_ID
       })
-  },
-  name: 'verticalList',
-  props: ['appVerticalList', 'shipmentData', 'activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  watch: {
-    'activeEl.itemId': function (newValue, oldValue) {
-      const status = this.appVerticalList.items.filter(e => e.itemId === newValue).pop().id
-      return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {courier: this.signIn.accountId, status: status})
-        .then(result => { this.shipmentData.search = result })
-        .catch(err => { console.warn(err.message) })
-    }
-  },
-  computed: {
-    ...mapGetters({
-      signIn: types.GETTER_SIGN_IN_DATA
-    })
-  },
-  methods: {
-    onSelectedTab: function (el) {
-      this.shipmentData.search = {}
-      this.activeEl.shipmentId = 0
-      this.activeEl.value = el.value
-      this.activeEl.itemId = el.itemId
+        .then(result => {
+          this.shipmentData.search = result
+        })
+        .catch(err => {
+          this.shipmentData.search = {}
+          console.warn(err.message)
+        })
     },
-    onSelectedShipment: function (el) {
-      this.activeEl.shipmentId = el._id
+    name: 'verticalList',
+    props: ['appVerticalList', 'shipmentData', 'activeEl'],
+    data: function () {
+      return {}
     },
-    formatDate: function (timestamp) {
-      const date = new Date(timestamp)
-      return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+    watch: {
+      'activeEl.itemId': function (newValue, oldValue) {
+        const status = this.appVerticalList.items.filter(e => e.itemId === newValue).pop().id
+        return this.$store.dispatch(types.ACTION_SHIPMENT_SEARCH, {courier: this.signIn.accountId, status: status})
+          .then(result => {
+            this.shipmentData.search = result
+          })
+          .catch(err => {
+            console.warn(err.message)
+          })
+      }
     },
-    formatTime: function (timestamp) {
-      const time = new Date(timestamp)
-      return `${time.getHours()}:${time.getMinutes()}`
+    computed: {
+      ...mapGetters({
+        signIn: types.GETTER_SIGN_IN_DATA
+      })
+    },
+    methods: {
+      onSelectedTab: function (el) {
+        this.shipmentData.search = {}
+        this.activeEl.shipmentId = 0
+        this.activeEl.value = el.value
+        this.activeEl.itemId = el.itemId
+      },
+      onSelectedShipment: function (el) {
+        this.activeEl.shipmentId = el._id
+      },
+      formatDate: function (timestamp) {
+        const date = new Date(timestamp)
+        return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+      },
+      formatTime: function (timestamp) {
+        const time = new Date(timestamp)
+        return `${time.getHours()}:${time.getMinutes()}`
+      }
     }
   }
-}
 </script>
 
 <style scoped>

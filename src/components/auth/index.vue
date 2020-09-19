@@ -10,7 +10,7 @@
               :is="components.appAuth.activeEl.component"
               :appSignIn="components.appAuth.sub.appSignIn"
               :appSignUp="components.appAuth.sub.appSignUp"
-              :appForgetPassword="components.appAuth.sub.appForgetPassword" />
+              :appForgetPassword="components.appAuth.sub.appForgetPassword"/>
           </keep-alive>
         </div>
       </div>
@@ -19,115 +19,115 @@
 </template>
 
 <script>
-import * as types from '@/store/types'
+  import * as types from '@/store/types'
 
-import signUp from '@/components/auth/sub/signUp'
-import signIn from '@/components/auth/sub/signIn'
-import signOut from '@/components/auth/sub/signOut'
-import forgetPass from '@/components/auth/sub/forgetPass'
+  import signUp from '@/components/auth/sub/signUp'
+  import signIn from '@/components/auth/sub/signIn'
+  import signOut from '@/components/auth/sub/signOut'
+  import forgetPass from '@/components/auth/sub/forgetPass'
 
-export default {
-  created: function () {
-    return this.navigateContent(this.$route.params.component)
-  },
-  beforeMount: function () {
-    this.$store.commit(types.MUTATIONS_CLEAR_SIGN_UP_ERRORS, {})
-    this.$store.commit(types.MUTATIONS_CLEAR_SIGN_IN_ERRORS, {})
-    this.$store.commit(types.MUTATIONS_CLEAR_FORGET_PASSWORD_ERRORS, {})
-  },
-  name: 'index',
-  data: function () {
-    return {
-      components: {
-        appAuth: {
-          sub: {
-            appSignIn: {
-              form: {
-                values: {
-                  userName: null,
-                  password: null,
-                  stayLoggedIn: false
+  export default {
+    created: function () {
+      return this.navigateContent(this.$route.params.component)
+    },
+    beforeMount: function () {
+      this.$store.commit(types.MUTATIONS_CLEAR_SIGN_UP_ERRORS, {})
+      this.$store.commit(types.MUTATIONS_CLEAR_SIGN_IN_ERRORS, {})
+      this.$store.commit(types.MUTATIONS_CLEAR_FORGET_PASSWORD_ERRORS, {})
+    },
+    name: 'index',
+    data: function () {
+      return {
+        components: {
+          appAuth: {
+            sub: {
+              appSignIn: {
+                form: {
+                  values: {
+                    userName: null,
+                    password: null,
+                    stayLoggedIn: false
+                  }
+                },
+                alert: {
+                  condition: [],
+                  type: [],
+                  text: []
                 }
               },
-              alert: {
-                condition: [],
-                type: [],
-                text: []
+              appSignUp: {
+                form: {
+                  values: {
+                    userName: null,
+                    email: null,
+                    password: null,
+                    confirmPassword: null,
+                    roles: '{}'
+                  }
+                },
+                url: {
+                  url: {
+                    values: {
+                      id: this.$route.params.id,
+                      key: this.$route.params.key
+                    }
+                  }
+                },
+                alert: {
+                  condition: [],
+                  type: [],
+                  text: []
+                }
+              },
+              appForgetPassword: {
+                form: {
+                  values: {
+                    email: null
+                  }
+                },
+                url: {
+                  url: {
+                    values: {
+                      id: this.$route.params.id,
+                      key: this.$route.params.key
+                    }
+                  }
+                },
+                alert: {
+                  condition: [],
+                  type: [],
+                  text: []
+                }
               }
             },
-            appSignUp: {
-              form: {
-                values: {
-                  userName: null,
-                  email: null,
-                  password: null,
-                  confirmPassword: null,
-                  roles: '{}'
-                }
-              },
-              url: {
-                url: {
-                  values: {
-                    id: this.$route.params.id,
-                    key: this.$route.params.key
-                  }
-                }
-              },
-              alert: {
-                condition: [],
-                type: [],
-                text: []
-              }
-            },
-            appForgetPassword: {
-              form: {
-                values: {
-                  email: null
-                }
-              },
-              url: {
-                url: {
-                  values: {
-                    id: this.$route.params.id,
-                    key: this.$route.params.key
-                  }
-                }
-              },
-              alert: {
-                condition: [],
-                type: [],
-                text: []
-              }
+            activeEl: {
+              component: 'app-sign-in'
             }
-          },
-          activeEl: {
-            component: 'app-sign-in'
           }
         }
       }
-    }
-  },
-  components: {
-    appSignUp: signUp,
-    appSignIn: signIn,
-    appSignOut: signOut,
-    appForgetPassword: forgetPass
-  },
-  watch: {
-    '$route': function (to, from) {
-      return this.navigateContent(to.params.component)
-    }
-  },
-  methods: {
-    navigateContent: function (componenet = 'sign-in') {
-      if (!['sign-in', 'sign-out', 'sign-up', 'forget-password'].includes(componenet)) {
-        this.$router.push({name: 'error'})
-        return
+    },
+    components: {
+      appSignUp: signUp,
+      appSignIn: signIn,
+      appSignOut: signOut,
+      appForgetPassword: forgetPass
+    },
+    watch: {
+      '$route': function (to, from) {
+        return this.navigateContent(to.params.component)
       }
-      this.components.appAuth.activeEl.component = `app-${componenet}`
+    },
+    methods: {
+      navigateContent: function (componenet = 'sign-in') {
+        if (!['sign-in', 'sign-out', 'sign-up', 'forget-password'].includes(componenet)) {
+          this.$router.push({name: 'error'})
+          return
+        }
+        this.components.appAuth.activeEl.component = `app-${componenet}`
+      }
     }
   }
-}
 </script>
 
 <style scoped>
@@ -139,14 +139,14 @@ export default {
   }
 
   div#index div#hero-video:before {
-    content:"";
-    z-index:1;
+    content: "";
+    z-index: 1;
     position: absolute;
-    top:0;
-    right:0;
-    left:0;
-    bottom:0;
-    background:linear-gradient(to right, rgba(23, 108, 157, 0.81), rgba(38, 176, 255, 0.38));
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background: linear-gradient(to right, rgba(23, 108, 157, 0.81), rgba(38, 176, 255, 0.38));
   }
 
   div#index div#hero-video {

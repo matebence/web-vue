@@ -4,25 +4,18 @@ const state = {
   payload: {
     place: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -40,25 +33,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_PLACE_DATA]: function (state, data) {
     state.payload.place = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -71,8 +57,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }

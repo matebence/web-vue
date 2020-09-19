@@ -21,7 +21,8 @@
           <small
             id="userNameInvalid"
             class="form-text text-muted"
-            v-show="signUpError.reason.userName !== null">{{signUpError.reason.userName}}</small>
+            v-show="signUpError.reason.userName !== null">{{signUpError.reason.userName}}
+          </small>
         </div>
         <div class="form-group">
           <label
@@ -40,7 +41,8 @@
           <small
             id="emailInvalid"
             class="form-text text-muted"
-            v-show="signUpError.reason.email !== null">{{signUpError.reason.email}}</small>
+            v-show="signUpError.reason.email !== null">{{signUpError.reason.email}}
+          </small>
         </div>
         <div class="form-group">
           <label
@@ -60,7 +62,8 @@
           <small
             id="passwordInvalid"
             class="form-text text-muted"
-            v-show="signUpError.reason.password !== null">{{signUpError.reason.password}}</small>
+            v-show="signUpError.reason.password !== null">{{signUpError.reason.password}}
+          </small>
         </div>
         <div class="form-group">
           <label
@@ -80,7 +83,8 @@
           <small
             id="confirmPasswordInvalid"
             class="form-text text-muted"
-            v-show="signUpError.reason.password !== null">{{signUpError.reason.password}}</small>
+            v-show="signUpError.reason.password !== null">{{signUpError.reason.password}}
+          </small>
         </div>
         <div class="form-group">
           <label
@@ -127,90 +131,98 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
+  import * as types from '@/store/types'
 
-import alert from '@/components/common/alert'
+  import alert from '@/components/common/alert'
 
-import {required, email, alphaNum, sameAs} from 'vuelidate/lib/validators'
+  import {required, email, alphaNum, sameAs} from 'vuelidate/lib/validators'
 
-export default {
-  created: function () {
-    if (this.$route.params.key) return this.onPageLoad()
-  },
-  name: 'signup',
-  props: ['appSignUp', 'activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  validations: {
-    appSignUp: {
-      form: {
-        values: {
-          userName: {
-            required,
-            alphaNum
-          },
-          email: {
-            required,
-            email
-          },
-          confirmPassword: {
-            required,
-            sameAs: sameAs(vm => {
-              return vm.password
-            })
-          },
-          password: {
-            required,
-            contains: value => new RegExp(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?:.{8}|.{30})/g).test(value)
-          },
-          roles: {
-            required,
-            allowed: value => value === '{"roleId": 3, "name": "ROLE_CLIENT"}' || value === '{"roleId": 4, "name": "ROLE_COURIER"}'
+  export default {
+    created: function () {
+      if (this.$route.params.key) return this.onPageLoad()
+    },
+    name: 'signup',
+    props: ['appSignUp', 'activeEl'],
+    data: function () {
+      return {}
+    },
+    validations: {
+      appSignUp: {
+        form: {
+          values: {
+            userName: {
+              required,
+              alphaNum
+            },
+            email: {
+              required,
+              email
+            },
+            confirmPassword: {
+              required,
+              sameAs: sameAs(vm => {
+                return vm.password
+              })
+            },
+            password: {
+              required,
+              contains: value => new RegExp(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?:.{8}|.{30})/g).test(value)
+            },
+            roles: {
+              required,
+              allowed: value => value === '{"roleId": 3, "name": "ROLE_CLIENT"}' || value === '{"roleId": 4, "name": "ROLE_COURIER"}'
+            }
           }
         }
       }
-    }
-  },
-  components: {
-    appAlert: alert
-  },
-  computed: {
-    ...mapGetters({
-      signUpDone: types.GETTER_SIGN_UP_DONE,
-      signUpError: types.GETTER_SIGN_UP_ERROR,
-      activationTokenError: types.GETTER_ACCOUNT_ACTIVATION_ERROR
-    })
-  },
-  methods: {
-    showAlertModal: function (condition, type, text) {
-      this.appSignUp.alert.condition = condition
-      this.appSignUp.alert.type = type
-      this.appSignUp.alert.text = text
     },
-    onPageLoad: function () {
-      return this.$store.dispatch(types.ACTION_ACCOUNT_ACTIVATION, {id: this.appSignUp.url.url.values.id, key: this.appSignUp.url.url.values.key})
-        .then(result => this.showAlertModal([result !== null], ['alert-success'], [result.message]))
-        .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
+    components: {
+      appAlert: alert
     },
-    onLoadComponent: function ($event) {
-      return this.$router.push({path: $event})
+    computed: {
+      ...mapGetters({
+        signUpDone: types.GETTER_SIGN_UP_DONE,
+        signUpError: types.GETTER_SIGN_UP_ERROR,
+        activationTokenError: types.GETTER_ACCOUNT_ACTIVATION_ERROR
+      })
     },
-    onSubmit: function () {
-      this.signUpError.message = this.activationTokenError.message = null
-      this.signUpError.is = this.activationTokenError.is = false
-
-      return this.$store.dispatch(types.ACTION_SIGN_UP, {userName: this.appSignUp.form.values.userName, email: this.appSignUp.form.values.email, password: this.appSignUp.form.values.password, confirmPassword: this.appSignUp.form.values.confirmPassword, roles: JSON.parse(this.appSignUp.form.values.roles)})
-        .then(result => {
-          console.log(result)
-          this.showAlertModal([result !== null], ['alert-success'], [result.message])
+    methods: {
+      showAlertModal: function (condition, type, text) {
+        this.appSignUp.alert.condition = condition
+        this.appSignUp.alert.type = type
+        this.appSignUp.alert.text = text
+      },
+      onPageLoad: function () {
+        return this.$store.dispatch(types.ACTION_ACCOUNT_ACTIVATION, {
+          id: this.appSignUp.url.url.values.id,
+          key: this.appSignUp.url.url.values.key
         })
-        .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
+          .then(result => this.showAlertModal([result !== null], ['alert-success'], [result.message]))
+          .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
+      },
+      onLoadComponent: function ($event) {
+        return this.$router.push({path: $event})
+      },
+      onSubmit: function () {
+        this.signUpError.message = this.activationTokenError.message = null
+        this.signUpError.is = this.activationTokenError.is = false
+
+        return this.$store.dispatch(types.ACTION_SIGN_UP, {
+          userName: this.appSignUp.form.values.userName,
+          email: this.appSignUp.form.values.email,
+          password: this.appSignUp.form.values.password,
+          confirmPassword: this.appSignUp.form.values.confirmPassword,
+          roles: JSON.parse(this.appSignUp.form.values.roles)
+        })
+          .then(result => {
+            console.log(result)
+            this.showAlertModal([result !== null], ['alert-success'], [result.message])
+          })
+          .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
+      }
     }
   }
-}
 </script>
 
 <style scoped>
@@ -311,7 +323,7 @@ export default {
     border-bottom: 0.1rem solid #ff0000;
   }
 
-  div#signup div input.valid, div#signup div select.valid  {
+  div#signup div input.valid, div#signup div select.valid {
     border-bottom: 0.1rem solid #008000;
   }
 

@@ -4,49 +4,35 @@ const state = {
   payload: {
     preference: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     },
     account: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -64,25 +50,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_PREFERENCE_DATA]: function (state, data) {
     state.payload.preference = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -95,8 +74,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -112,25 +90,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_ACCOUNT_DATA]: function (state, data) {
     state.payload.account = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -143,8 +114,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -199,7 +169,8 @@ const actions = {
     return this._vm.$resource('{service}/api/preferences/search', {}, {
       search: {
         method: 'POST',
-        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        headers: {
+          'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
         }
       }
     }).search({service: 'account-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: {...payload}})

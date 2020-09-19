@@ -4,73 +4,52 @@ const state = {
   payload: {
     parcel: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     },
     category: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     },
     rating: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -92,8 +71,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -102,25 +80,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_PARCEL_DATA]: function (state, data) {
     state.payload.parcel = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -140,8 +111,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -150,25 +120,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_CATEGORY_DATA]: function (state, data) {
     state.payload.category = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -188,8 +151,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -198,25 +160,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_RATING_DATA]: function (state, data) {
     state.payload.rating = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -229,7 +184,8 @@ const actions = {
     return this._vm.$resource('{service}/api/parcels', {}, {
       create: {
         method: 'POST',
-        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        headers: {
+          'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
         }
       }
     }).create({service: 'parcel-service'}, {canceled: false, ...payload.data})
@@ -252,7 +208,9 @@ const actions = {
         return err.json()
           .then(parsed => {
             let validations = {}
-            parsed.validations.forEach(e => { validations[e.param] = e.msg })
+            parsed.validations.forEach(e => {
+              validations[e.param] = e.msg
+            })
 
             commit(types.MUTATION_PARCEL_DATA, {
               error: {
@@ -277,7 +235,11 @@ const actions = {
         method: 'POST',
         headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}
       }
-    }).search({service: 'parcel-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: payload, orderBy: {id: 'desc'}})
+    }).search({service: 'parcel-service'}, {
+      pagination: {pageNumber: 0, pageSize: 10},
+      search: payload,
+      orderBy: {id: 'desc'}
+    })
       .then(response => {
         return response.json()
       })
@@ -303,8 +265,7 @@ const actions = {
                 is: parsed.error,
                 message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'search',
-                reason: {
-                }
+                reason: {}
               },
               done: true
             })
@@ -346,8 +307,7 @@ const actions = {
                 is: parsed.error,
                 message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'getAll',
-                reason: {
-                }
+                reason: {}
               },
               done: true
             })
@@ -361,7 +321,8 @@ const actions = {
     return this._vm.$resource('{service}/api/ratings', {}, {
       create: {
         method: 'POST',
-        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        headers: {
+          'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
         }
       }
     }).create({service: 'parcel-service'}, {...payload})
@@ -384,7 +345,9 @@ const actions = {
         return err.json()
           .then(parsed => {
             let validations = {}
-            parsed.validations.forEach(e => { validations[e.param] = e.msg })
+            parsed.validations.forEach(e => {
+              validations[e.param] = e.msg
+            })
 
             commit(types.MUTATION_RATING_DATA, {
               error: {
@@ -435,8 +398,7 @@ const actions = {
                 is: parsed.error,
                 message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'search',
-                reason: {
-                }
+                reason: {}
               },
               done: true
             })

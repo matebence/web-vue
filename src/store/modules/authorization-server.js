@@ -5,68 +5,56 @@ import router from '@/router'
 const state = {
   payload: {
     signIn: {
-      data: {
-      },
+      data: {},
       error: {
         is: false,
         message: null,
-        reason: {
-        }
+        reason: {}
       },
       done: true
     },
     signUp: {
-      data: {
-      },
+      data: {},
       error: {
         is: false,
         message: null,
-        reason: {
-        }
+        reason: {}
       },
       done: true
     },
     signOut: {
-      data: {
-      },
+      data: {},
       error: {
         is: false,
         message: null,
-        reason: {
-        }
+        reason: {}
       },
       done: true
     },
     forgetPassword: {
-      data: {
-      },
+      data: {},
       error: {
         is: false,
         message: null,
-        reason: {
-        }
+        reason: {}
       },
       done: true
     },
     recoverToken: {
-      data: {
-      },
+      data: {},
       error: {
         is: false,
         message: null,
-        reason: {
-        }
+        reason: {}
       },
       done: true
     },
     activationToken: {
-      data: {
-      },
+      data: {},
       error: {
         is: false,
         message: null,
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -87,8 +75,7 @@ const mutations = {
       error: {
         is: false,
         message: null,
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -96,13 +83,11 @@ const mutations = {
 
   [types.MUTATIONS_CLEAR_SIGN_IN_DATA]: function (state, data) {
     state.payload.signIn = {
-      data: {
-      },
+      data: {},
       error: {
         is: false,
         message: null,
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -121,8 +106,7 @@ const mutations = {
       error: {
         is: false,
         message: null,
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -130,13 +114,11 @@ const mutations = {
 
   [types.MUTATIONS_CLEAR_SIGN_UP_DATA]: function (state, data) {
     state.payload.signUp = {
-      data: {
-      },
+      data: {},
       error: {
         is: false,
         message: null,
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -155,8 +137,7 @@ const mutations = {
       error: {
         is: false,
         message: null,
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -164,13 +145,11 @@ const mutations = {
 
   [types.MUTATIONS_CLEAR_SIGN_OUT_DATA]: function (state, data) {
     state.payload.signOut = {
-      data: {
-      },
+      data: {},
       error: {
         is: false,
         message: null,
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -189,8 +168,7 @@ const mutations = {
       error: {
         is: false,
         message: null,
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -198,13 +176,11 @@ const mutations = {
 
   [types.MUTATIONS_CLEAR_FORGET_PASSWORD_DATA]: function (state, data) {
     state.payload.forgetPassword = {
-      data: {
-      },
+      data: {},
       error: {
         is: false,
         message: null,
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -223,8 +199,7 @@ const mutations = {
       error: {
         is: false,
         message: null,
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -232,13 +207,11 @@ const mutations = {
 
   [types.MUTATIONS_CLEAR_ACCOUNT_RECOVER_DATA]: function (state, data) {
     state.payload.recoverToken = {
-      data: {
-      },
+      data: {},
       error: {
         is: false,
         message: null,
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -257,8 +230,7 @@ const mutations = {
       error: {
         is: false,
         message: null,
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -266,8 +238,7 @@ const mutations = {
 
   [types.MUTATIONS_CLEAR_ACCOUNT_ACTIVATION_DATA]: function (state, data) {
     state.payload.activationToken = {
-      data: {
-      },
+      data: {},
       error: {
         is: false,
         message: null
@@ -302,7 +273,10 @@ const actions = {
     data = JSON.parse(data)
 
     if (data.avatar === undefined) {
-      localStorage.setItem('accountData', JSON.stringify({...data, avatar: `${payload.firstName.substr(0, 1)}${payload.lastName.substr(0, 1)}`}))
+      localStorage.setItem('accountData', JSON.stringify({
+        ...data,
+        avatar: `${payload.firstName.substr(0, 1)}${payload.lastName.substr(0, 1)}`
+      }))
     }
     return `${payload.firstName.substr(0, 1)}${payload.lastName.substr(0, 1)}`
   },
@@ -385,7 +359,11 @@ const actions = {
       }
     }, {
       emulateJSON: true
-    }).performSignIn({service: 'authorization-server'}, {grant_type: payload.grantType, username: payload.userName, password: payload.password})
+    }).performSignIn({service: 'authorization-server'}, {
+      grant_type: payload.grantType,
+      username: payload.userName,
+      password: payload.password
+    })
       .then(response => {
         return true
       })
@@ -396,8 +374,7 @@ const actions = {
               error: {
                 is: parsed.error,
                 message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
-                reason: {
-                }
+                reason: {}
               },
               done: true
             })
@@ -417,7 +394,11 @@ const actions = {
       }
     }, {
       emulateJSON: true
-    }).performSignIn({service: 'authorization-server'}, {grant_type: payload.grantType, username: payload.userName, password: payload.password})
+    }).performSignIn({service: 'authorization-server'}, {
+      grant_type: payload.grantType,
+      username: payload.userName,
+      password: payload.password
+    })
       .then(response => {
         return response.json()
       })
@@ -440,7 +421,10 @@ const actions = {
           done: true
         })
 
-        localStorage.setItem('accountData', JSON.stringify({...accountData, expirationDate: new Date(new Date().getTime() + parsed.expires_in * 1000)}))
+        localStorage.setItem('accountData', JSON.stringify({
+          ...accountData,
+          expirationDate: new Date(new Date().getTime() + parsed.expires_in * 1000)
+        }))
         return Promise.all([dispatch(types.ACTION_CHECK_PROFILE), dispatch(types.ACTION_START_AUTH_TIMER, parsed.expires_in)])
       })
       .then(result => {
@@ -454,8 +438,7 @@ const actions = {
               error: {
                 is: parsed.error,
                 message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
-                reason: {
-                }
+                reason: {}
               },
               done: true
             })
@@ -475,7 +458,10 @@ const actions = {
       }
     }, {
       emulateJSON: true
-    }).refreshAuthorizationToken({service: 'authorization-server'}, {grant_type: payload.grantType, refresh_token: payload.refreshToken})
+    }).refreshAuthorizationToken({service: 'authorization-server'}, {
+      grant_type: payload.grantType,
+      refresh_token: payload.refreshToken
+    })
       .then(response => {
         return response.json()
       })
@@ -498,7 +484,10 @@ const actions = {
           done: true
         })
 
-        localStorage.setItem('accountData', JSON.stringify({...accountData, expirationDate: new Date(new Date().getTime() + parsed.expires_in * 1000)}))
+        localStorage.setItem('accountData', JSON.stringify({
+          ...accountData,
+          expirationDate: new Date(new Date().getTime() + parsed.expires_in * 1000)
+        }))
         dispatch(types.ACTION_START_AUTH_TIMER, parsed.expires_in)
         return state.payload.signIn.data
       })
@@ -509,8 +498,7 @@ const actions = {
               error: {
                 is: parsed.error,
                 message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
-                reason: {
-                }
+                reason: {}
               },
               done: true
             })
@@ -525,7 +513,13 @@ const actions = {
       performSignUp: {
         method: 'POST'
       }
-    }).performSignUp({service: 'authorization-server'}, {userName: payload.userName, email: payload.email, password: payload.password, confirmPassword: payload.confirmPassword, accountRoles: [{roles: payload.roles}]})
+    }).performSignUp({service: 'authorization-server'}, {
+      userName: payload.userName,
+      email: payload.email,
+      password: payload.password,
+      confirmPassword: payload.confirmPassword,
+      accountRoles: [{roles: payload.roles}]
+    })
       .then(response => {
         return response.json()
       })
@@ -594,8 +588,7 @@ const actions = {
               error: {
                 is: parsed.error,
                 message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
-                reason: {
-                }
+                reason: {}
               },
               done: true
             })
@@ -605,10 +598,11 @@ const actions = {
   },
 
   [types.ACTION_FORGET_PASSWORD]: function ({commit, dispatch, state, rootState}, payload) {
-    commit(types.MUTATION_FORGET_PASSWORD_DATA, { done: false })
+    commit(types.MUTATION_FORGET_PASSWORD_DATA, {done: false})
     return this._vm.$resource('{service}/forgetpassword', {}, {
       recoverPassword: {
-        method: 'POST'}
+        method: 'POST'
+      }
     }).recoverPassword({service: 'authorization-server'}, {email: payload.email})
       .then(response => {
         return response.json()
@@ -630,8 +624,7 @@ const actions = {
               error: {
                 is: parsed.error,
                 message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
-                reason: {
-                }
+                reason: {}
               },
               done: true
             })
@@ -641,11 +634,18 @@ const actions = {
   },
 
   [types.ACTION_ACCOUNT_RECOVER]: function ({commit, dispatch, state, rootState}, payload) {
-    commit(types.MUTATION_ACCOUNT_RECOVER_DATA, { done: false })
+    commit(types.MUTATION_ACCOUNT_RECOVER_DATA, {done: false})
     return this._vm.$resource('{service}/forgetpassword/{account}/{id}/{token}/{key}', {}, {
       verifyRecoverToken: {
-        method: 'GET'}
-    }).verifyRecoverToken({service: 'authorization-server', account: 'account', id: payload.id, token: 'token', key: payload.key})
+        method: 'GET'
+      }
+    }).verifyRecoverToken({
+      service: 'authorization-server',
+      account: 'account',
+      id: payload.id,
+      token: 'token',
+      key: payload.key
+    })
       .then(response => {
         return response.json()
       })
@@ -665,8 +665,7 @@ const actions = {
               error: {
                 is: parsed.error,
                 message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
-                reason: {
-                }
+                reason: {}
               }
             })
             throw new Error(state.payload.recoverToken.error.message)
@@ -675,11 +674,18 @@ const actions = {
   },
 
   [types.ACTION_ACCOUNT_ACTIVATION]: function ({commit, dispatch, state, rootState}, payload) {
-    commit(types.MUTATION_ACCOUNT_ACTIVATION_DATA, { done: false })
+    commit(types.MUTATION_ACCOUNT_ACTIVATION_DATA, {done: false})
     return this._vm.$resource('{service}/signup/{account}/{id}/{token}/{key}', {}, {
       verifyActivationToken: {
-        method: 'GET' }
-    }).verifyActivationToken({service: 'authorization-server', account: 'account', id: payload.id, token: 'token', key: payload.key})
+        method: 'GET'
+      }
+    }).verifyActivationToken({
+      service: 'authorization-server',
+      account: 'account',
+      id: payload.id,
+      token: 'token',
+      key: payload.key
+    })
       .then(response => {
         return response.json()
       })
@@ -699,8 +705,7 @@ const actions = {
               error: {
                 is: parsed.error,
                 message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
-                reason: {
-                }
+                reason: {}
               }
             })
             throw new Error(state.payload.activationToken.error.message)

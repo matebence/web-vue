@@ -24,7 +24,7 @@
             type="text"
             placeholder="Vaše používateľské meno"
             name="username"
-            id="username" />
+            id="username"/>
         </div>
         <div class="col-sm-12 col-md-6">
           <label for="email">Email</label>
@@ -37,7 +37,7 @@
             type="email"
             placeholder="Vaša emailová adresa"
             name="email"
-            id="email" />
+            id="email"/>
         </div>
       </div>
       <div class="row body">
@@ -51,7 +51,7 @@
             type="text"
             placeholder="Vaše meno"
             name="firstname"
-            id="firstname" />
+            id="firstname"/>
         </div>
         <div class="col-sm-12 col-md-6">
           <label for="lastname">Priezvisko</label>
@@ -63,7 +63,7 @@
             type="text"
             placeholder="Vaše priezvisko"
             name="lastname"
-            id="lastname" />
+            id="lastname"/>
         </div>
       </div>
       <div class="row body">
@@ -77,7 +77,7 @@
             placeholder="Vaše telefonné číslo"
             type="text"
             name="tel"
-            id="tel" />
+            id="tel"/>
         </div>
         <div class="col-sm-12 col-md-6">
           <label for="gender">Pohlavie</label>
@@ -97,7 +97,9 @@
       @click.prevent="onUpdate(false)"
       :disabled="$v.$invalid"
       type="submit"
-      class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
+      class="btn btn-primary">
+      <font-awesome-icon :icon="['fas', 'check']"/>
+    </button>
     <div id="confirm-wrapper">
       <app-confirm
         @confirmed="onUpdate($event)"
@@ -117,118 +119,132 @@
 </template>
 
 <script>
-import bootstrap from 'jquery'
-import {required, email} from 'vuelidate/lib/validators'
+  import bootstrap from 'jquery'
+  import {required, email} from 'vuelidate/lib/validators'
 
-import {mapGetters} from 'vuex'
-import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
+  import * as types from '@/store/types'
 
-import alert from '@/components/common/alert'
-import confirm from '@/components/common/confirm'
+  import alert from '@/components/common/alert'
+  import confirm from '@/components/common/confirm'
 
-export default {
-  created: function () {
-    return Promise.all([this.$store.dispatch(types.ACTION_GENDER_GET_ALL, {}), this.$store.dispatch(types.ACTION_USER_GET, this.signIn.accountId)])
-      .catch(err => console.warn(err.message))
-  },
-  beforeMount: function () {
-    this.appProfile.form.values = {...this.userProfile}
-  },
-  name: 'profile',
-  props: ['appProfile'],
-  data: function () {
-    return {
-    }
-  },
-  validations: {
-    appProfile: {
-      form: {
-        values: {
-          userName: {
-            required,
-            username: value => new RegExp(/^[a-z.]+$/).test(value)
-          },
-          email: {
-            required,
-            email
-          },
-          firstName: {
-            required,
-            alpha: value => new RegExp(/^[\D ]+$/).test(value)
-          },
-          lastName: {
-            required,
-            alpha: value => new RegExp(/^[\D ]+$/).test(value)
-          },
-          tel: {
-            required,
-            telNumber: value => new RegExp(/^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[-. ]?)?((?:\(?\d{1,}\)?[-. ]?){0,})(?:[-. ]?(?:#|ext\.?|extension|x)[-. ]?(\d+))?$/).test(value)
-          },
-          gender: {
-            required,
-            alpha: value => new RegExp(/^[\D ]+$/).test(value)
+  export default {
+    created: function () {
+      return Promise.all([this.$store.dispatch(types.ACTION_GENDER_GET_ALL, {}), this.$store.dispatch(types.ACTION_USER_GET, this.signIn.accountId)])
+        .catch(err => console.warn(err.message))
+    },
+    beforeMount: function () {
+      this.appProfile.form.values = {...this.userProfile}
+    },
+    name: 'profile',
+    props: ['appProfile'],
+    data: function () {
+      return {}
+    },
+    validations: {
+      appProfile: {
+        form: {
+          values: {
+            userName: {
+              required,
+              username: value => new RegExp(/^[a-z.]+$/).test(value)
+            },
+            email: {
+              required,
+              email
+            },
+            firstName: {
+              required,
+              alpha: value => new RegExp(/^[\D ]+$/).test(value)
+            },
+            lastName: {
+              required,
+              alpha: value => new RegExp(/^[\D ]+$/).test(value)
+            },
+            tel: {
+              required,
+              telNumber: value => new RegExp(/^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[-. ]?)?((?:\(?\d{1,}\)?[-. ]?){0,})(?:[-. ]?(?:#|ext\.?|extension|x)[-. ]?(\d+))?$/).test(value)
+            },
+            gender: {
+              required,
+              alpha: value => new RegExp(/^[\D ]+$/).test(value)
+            }
           }
         }
       }
-    }
-  },
-  components: {
-    appConfirm: confirm,
-    appAlert: alert
-  },
-  computed: {
-    getBalance: function () {
-      if (!this.userProfile.balance) return Number.parseFloat(0.00).toFixed(2)
-      return this.userProfile.balance.toFixed(2)
     },
-    getPosition: function () {
-      if (!this.userProfile.places || !this.userProfile.places.country || !this.userProfile.places.region || !this.userProfile.places.district || !this.userProfile.places.place) return 'Poloha nie je známa alebo nie je nastavená'
-      return `${this.userProfile.places.country}, ${this.userProfile.places.region}, ${this.userProfile.places.district}, ${this.userProfile.places.place}`
+    components: {
+      appConfirm: confirm,
+      appAlert: alert
     },
-    getUser: function () {
-      if (!this.userProfile.firstName || !this.userProfile.lastName) return 'Používateľ'
-      return `${this.userProfile.firstName} ${this.userProfile.lastName}`
+    computed: {
+      getBalance: function () {
+        if (!this.userProfile.balance) return Number.parseFloat(0.00).toFixed(2)
+        return this.userProfile.balance.toFixed(2)
+      },
+      getPosition: function () {
+        if (!this.userProfile.places || !this.userProfile.places.country || !this.userProfile.places.region || !this.userProfile.places.district || !this.userProfile.places.place) return 'Poloha nie je známa alebo nie je nastavená'
+        return `${this.userProfile.places.country}, ${this.userProfile.places.region}, ${this.userProfile.places.district}, ${this.userProfile.places.place}`
+      },
+      getUser: function () {
+        if (!this.userProfile.firstName || !this.userProfile.lastName) return 'Používateľ'
+        return `${this.userProfile.firstName} ${this.userProfile.lastName}`
+      },
+      getAvatar: function () {
+        return JSON.parse(localStorage.getItem('accountData')).avatar
+      },
+      ...mapGetters({
+        signIn: types.GETTER_SIGN_IN_DATA,
+        userError: types.GETTER_USER_ERROR,
+        userProfile: types.GETTER_USER_DATA_GET,
+        genders: types.GETTER_GENDER_DATA_GET_ALL
+      })
     },
-    getAvatar: function () {
-      return JSON.parse(localStorage.getItem('accountData')).avatar
-    },
-    ...mapGetters({
-      signIn: types.GETTER_SIGN_IN_DATA,
-      userError: types.GETTER_USER_ERROR,
-      userProfile: types.GETTER_USER_DATA_GET,
-      genders: types.GETTER_GENDER_DATA_GET_ALL
-    })
-  },
-  methods: {
-    showConfirmedModal: function (title, text) {
-      this.appProfile.confirm.title = title
-      this.appProfile.confirm.text = text
-      this.appProfile.confirm.positiveButton = 'Potvrdiť'
-      this.appProfile.confirm.negativeButton = 'Zrušiť'
-      return bootstrap('#profileConfirm').modal('show')
-    },
-    showAlertModal: function (condition, type, text) {
-      this.appProfile.alert.condition = condition
-      this.appProfile.alert.type = type
-      this.appProfile.alert.text = text
-    },
-    onUpdate: function ($event) {
-      if ($event) {
-        const data = {accountId: this.userProfile.accountId, places: {country: this.userProfile.places.country, region: this.userProfile.places.region, district: this.userProfile.places.district, place: this.userProfile.places.place, street: this.userProfile.places.street, zip: this.userProfile.places.zip, code: this.userProfile.places.code}, firstName: this.appProfile.form.values.firstName, lastName: this.appProfile.form.values.lastName, gender: this.appProfile.form.values.gender, balance: this.userProfile.balance, tel: this.appProfile.form.values.tel}
-        return this.$store.dispatch(types.ACTION_USER_UPDATE, data)
-          .then(result => {
-            this.showAlertModal([result !== null], ['alert-success'], ['Údaje sa úspešne aktualizovali'])
-            bootstrap('#profileConfirm').modal('hide')
-          })
-          .catch(err => {
-            this.showAlertModal([err !== null], ['alert-danger'], [err.message])
-            bootstrap('#profileConfirm').modal('hide')
-          })
+    methods: {
+      showConfirmedModal: function (title, text) {
+        this.appProfile.confirm.title = title
+        this.appProfile.confirm.text = text
+        this.appProfile.confirm.positiveButton = 'Potvrdiť'
+        this.appProfile.confirm.negativeButton = 'Zrušiť'
+        return bootstrap('#profileConfirm').modal('show')
+      },
+      showAlertModal: function (condition, type, text) {
+        this.appProfile.alert.condition = condition
+        this.appProfile.alert.type = type
+        this.appProfile.alert.text = text
+      },
+      onUpdate: function ($event) {
+        if ($event) {
+          const data = {accountId: this.userProfile.accountId,
+            places: {
+              country: this.userProfile.places.country,
+              region: this.userProfile.places.region,
+              district: this.userProfile.places.district,
+              place: this.userProfile.places.place,
+              street: this.userProfile.places.street,
+              zip: this.userProfile.places.zip,
+              code: this.userProfile.places.code
+            },
+            firstName: this.appProfile.form.values.firstName,
+            lastName: this.appProfile.form.values.lastName,
+            gender: this.appProfile.form.values.gender,
+            balance: this.userProfile.balance,
+            tel: this.appProfile.form.values.tel
+          }
+          return this.$store.dispatch(types.ACTION_USER_UPDATE, data)
+            .then(result => {
+              this.showAlertModal([result !== null], ['alert-success'], ['Údaje sa úspešne aktualizovali'])
+              bootstrap('#profileConfirm').modal('hide')
+            })
+            .catch(err => {
+              this.showAlertModal([err !== null], ['alert-danger'], [err.message])
+              bootstrap('#profileConfirm').modal('hide')
+            })
+        }
+        return this.showConfirmedModal('Potvrdenie', 'Pre uplatnenie zmien prosím zadajte Vaše heslo:')
       }
-      return this.showConfirmedModal('Potvrdenie', 'Pre uplatnenie zmien prosím zadajte Vaše heslo:')
     }
   }
-}
 </script>
 
 <style scoped>
@@ -359,12 +375,12 @@ export default {
   }
 
   div#profile div.body input.invalid,
-  div#profile div.body select.invalid{
+  div#profile div.body select.invalid {
     border-bottom: 0.1rem solid #ff0000;
   }
 
   div#profile div.body input.valid,
-  div#profile div.body select.valid{
+  div#profile div.body select.valid {
     border-bottom: 0.1rem solid #008000;
   }
 

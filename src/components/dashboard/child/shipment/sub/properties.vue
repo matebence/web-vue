@@ -57,42 +57,50 @@
 </template>
 
 <script>
-import bootstrap from 'jquery'
+  import bootstrap from 'jquery'
 
-import * as types from '@/store/types'
+  import * as types from '@/store/types'
 
-import modal from '@/components/common/modal'
+  import modal from '@/components/common/modal'
 
-export default {
-  name: 'properties',
-  props: ['appProperties', 'shipmentData', 'activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  components: {
-    appModal: modal
-  },
-  watch: {
-    'activeEl.shipmentId': function (newValue, oldValue) {
-      if (this.activeEl.shipmentId === 0) return Object.assign(this.$data, this.$options.data.apply(this))
-      this.appProperties.form.values = {from: this.shipmentData.from, to: this.shipmentData.to, courier: this.shipmentData.courier.userName, status: this.shipmentData.status.name, id: this.shipmentData._id, invoice: {name: this.shipmentData.invoice.invoice, id: this.shipmentData.invoice._id}, sender: this.shipmentData.sender.name, receiver: this.shipmentData.receiver.name}
-    }
-  },
-  methods: {
-    onDownload: function () {
-      if (this.activeEl.shipmentId === 0) return this.showAlertModal('Upozornenie', 'Nemáte zvolenú zásielku.', 'Zatvoriť')
-      this.$store.dispatch(types.ACTION_INVOICE_DOWNLOAD, this.appProperties.form.values.invoice.id)
-        .catch(err => this.showAlertModal('Informácia', err.message, 'Zatvoriť'))
+  export default {
+    name: 'properties',
+    props: ['appProperties', 'shipmentData', 'activeEl'],
+    data: function () {
+      return {}
     },
-    showAlertModal: function (title, text, button) {
-      this.appProperties.modal.title = title
-      this.appProperties.modal.text = text
-      this.appProperties.modal.button = button
-      return bootstrap('#propertiesAlert').modal('show')
+    components: {
+      appModal: modal
+    },
+    watch: {
+      'activeEl.shipmentId': function (newValue, oldValue) {
+        if (this.activeEl.shipmentId === 0) return Object.assign(this.$data, this.$options.data.apply(this))
+        this.appProperties.form.values = {
+          from: this.shipmentData.from,
+          to: this.shipmentData.to,
+          courier: this.shipmentData.courier.userName,
+          status: this.shipmentData.status.name,
+          id: this.shipmentData._id,
+          invoice: {name: this.shipmentData.invoice.invoice, id: this.shipmentData.invoice._id},
+          sender: this.shipmentData.sender.name,
+          receiver: this.shipmentData.receiver.name
+        }
+      }
+    },
+    methods: {
+      onDownload: function () {
+        if (this.activeEl.shipmentId === 0) return this.showAlertModal('Upozornenie', 'Nemáte zvolenú zásielku.', 'Zatvoriť')
+        this.$store.dispatch(types.ACTION_INVOICE_DOWNLOAD, this.appProperties.form.values.invoice.id)
+          .catch(err => this.showAlertModal('Informácia', err.message, 'Zatvoriť'))
+      },
+      showAlertModal: function (title, text, button) {
+        this.appProperties.modal.title = title
+        this.appProperties.modal.text = text
+        this.appProperties.modal.button = button
+        return bootstrap('#propertiesAlert').modal('show')
+      }
     }
   }
-}
 </script>
 
 <style scoped>
@@ -123,7 +131,7 @@ export default {
     word-break: break-all;
   }
 
-  div#properties a:hover{
+  div#properties a:hover {
     color: #616161;
   }
 

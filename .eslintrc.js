@@ -17,8 +17,8 @@ module.exports = {
     'vue'
   ],
   rules: {
-    'generator-star-spacing': 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    "no-new": 0
+    "no-new": 0,
+    'indent': 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   }
 }

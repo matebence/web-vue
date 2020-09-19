@@ -20,21 +20,20 @@
 </template>
 
 <script>
-export default {
-  name: 'verticalList',
-  props: ['appVerticalList', 'activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  methods: {
-    onSelectedSetting: function (el) {
-      this.activeEl.value = el.value
-      this.activeEl.itemId = el.itemId
-      this.activeEl.component = el.component
+  export default {
+    name: 'verticalList',
+    props: ['appVerticalList', 'activeEl'],
+    data: function () {
+      return {}
+    },
+    methods: {
+      onSelectedSetting: function (el) {
+        this.activeEl.value = el.value
+        this.activeEl.itemId = el.itemId
+        this.activeEl.component = el.component
+      }
     }
   }
-}
 </script>
 
 <style scoped>

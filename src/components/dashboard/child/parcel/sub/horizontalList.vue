@@ -23,42 +23,41 @@
 </template>
 
 <script>
-import bootstrap from 'jquery'
+  import bootstrap from 'jquery'
 
-import modal from '@/components/common/modal'
+  import modal from '@/components/common/modal'
 
-export default {
-  name: 'list',
-  props: ['appHorizontalList', 'parcelData', 'activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  components: {
-    appModal: modal
-  },
-  watch: {
-    'parcelData.parcel.search.courier.courierId': function (newValue, oldValue) {
-      this.activeEl.courierId = newValue
+  export default {
+    name: 'list',
+    props: ['appHorizontalList', 'parcelData', 'activeEl'],
+    data: function () {
+      return {}
     },
-    'activeEl.parcelId': function (newValue, oldValue) {
-      if (newValue <= 0) this.activeEl.courierId = 0
-    }
-  },
-  methods: {
-    showAlertModal: function (title, text, button) {
-      this.appHorizontalList.modal.title = title
-      this.appHorizontalList.modal.text = text
-      this.appHorizontalList.modal.button = button
-      return bootstrap('#courierAlert').modal('show')
+    components: {
+      appModal: modal
     },
-    onSelectedCourier: function (el) {
-      if (this.activeEl.parcelId > 0) return
-      if (this.activeEl.parcelId === 0) return this.showAlertModal('Upozornenie', 'Nemáte zvolený balík.', 'Zatvoriť')
-      this.activeEl.courierId = el.accountId
+    watch: {
+      'parcelData.parcel.search.courier.courierId': function (newValue, oldValue) {
+        this.activeEl.courierId = newValue
+      },
+      'activeEl.parcelId': function (newValue, oldValue) {
+        if (newValue <= 0) this.activeEl.courierId = 0
+      }
+    },
+    methods: {
+      showAlertModal: function (title, text, button) {
+        this.appHorizontalList.modal.title = title
+        this.appHorizontalList.modal.text = text
+        this.appHorizontalList.modal.button = button
+        return bootstrap('#courierAlert').modal('show')
+      },
+      onSelectedCourier: function (el) {
+        if (this.activeEl.parcelId > 0) return
+        if (this.activeEl.parcelId === 0) return this.showAlertModal('Upozornenie', 'Nemáte zvolený balík.', 'Zatvoriť')
+        this.activeEl.courierId = el.accountId
+      }
     }
   }
-}
 </script>
 
 <style scoped>

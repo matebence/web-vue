@@ -4,97 +4,69 @@ const state = {
   payload: {
     user: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     },
     gender: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     },
     payout: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     },
     payment: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -112,25 +84,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_USER_DATA]: function (state, data) {
     state.payload.user = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -143,8 +108,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -160,25 +124,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_GENDER_DATA]: function (state, data) {
     state.payload.gender = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -191,8 +148,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -208,25 +164,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_PAYOUT_DATA]: function (state, data) {
     state.payload.payout = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -239,8 +188,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -256,25 +204,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_PAYMENT_DATA]: function (state, data) {
     state.payload.payment = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -287,8 +228,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -440,7 +380,7 @@ const actions = {
           'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
         }
       }
-    }).search({service: 'user-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: { ...payload }})
+    }).search({service: 'user-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: {...payload}})
       .then(response => {
         return response.json()
       })

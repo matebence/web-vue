@@ -26,13 +26,12 @@
 </template>
 
 <script>
-export default {
-  name: 'options',
-  data: function () {
-    return {
+  export default {
+    name: 'options',
+    data: function () {
+      return {}
     }
   }
-}
 </script>
 
 <style scoped>
@@ -63,7 +62,7 @@ export default {
     word-break: break-all;
   }
 
-  div#options a:hover{
+  div#options a:hover {
     color: #616161;
   }
 </style>

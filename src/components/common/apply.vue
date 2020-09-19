@@ -15,7 +15,8 @@
               id="positive"
               type="button"
               data-dismiss="modal"
-              @click.prevent="applied()">{{positiveButton}}</button>
+              @click.prevent="applied()">{{positiveButton}}
+            </button>
           </div>
         </div>
       </div>
@@ -24,23 +25,22 @@
 </template>
 
 <script>
-export default {
-  name: 'apply',
-  props: ['applyId', 'title', 'text', 'positiveButton', 'negativeButton'],
-  data: function () {
-    return {
-      components: {
-        appApply: {
+  export default {
+    name: 'apply',
+    props: ['applyId', 'title', 'text', 'positiveButton', 'negativeButton'],
+    data: function () {
+      return {
+        components: {
+          appApply: {}
         }
       }
-    }
-  },
-  methods: {
-    applied: function () {
-      return this.$emit('applied', true)
+    },
+    methods: {
+      applied: function () {
+        return this.$emit('applied', true)
+      }
     }
   }
-}
 </script>
 
 <style scoped>

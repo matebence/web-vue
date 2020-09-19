@@ -28,7 +28,7 @@
           v-model="form.values.type"
           @change="$v.form.values.type.$touch()"
           :class="{valid: !$v.form.values.type.$error && $v.form.values.type.$dirty, invalid: $v.form.values.type.$error}">
-          <option value="null" disabled selected >Vyberte z možností</option>
+          <option value="null" disabled selected>Vyberte z možností</option>
           <option v-for="type in types" :value="type" :key="type._id">{{type.name}}</option>
         </select>
       </div>
@@ -53,70 +53,69 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
+  import * as types from '@/store/types'
 
-import {required} from 'vuelidate/lib/validators'
+  import {required} from 'vuelidate/lib/validators'
 
-export default {
-  created: function () {
-    return this.$store.dispatch(types.ACTION_TYPE_GET_ALL, {})
-      .catch(err => console.warn(err.message))
-  },
-  name: 'crud',
-  props: ['form'],
-  data: function () {
-    return {
-      components: {
-        appCrud: {
-          autocomplete: {
-            client: {
+  export default {
+    created: function () {
+      return this.$store.dispatch(types.ACTION_TYPE_GET_ALL, {})
+        .catch(err => console.warn(err.message))
+    },
+    name: 'crud',
+    props: ['form'],
+    data: function () {
+      return {
+        components: {
+          appCrud: {
+            autocomplete: {
+              client: {}
             }
           }
         }
       }
-    }
-  },
-  validations: {
-    form: {
-      values: {
-        name: {
-          required,
-          alpha: value => new RegExp(/^[\D ]+$/).test(value)
-        },
-        type: {
-          _id: {
+    },
+    validations: {
+      form: {
+        values: {
+          name: {
             required,
-            mongo: value => new RegExp(/^[0-9a-fA-F]{24}$/).test(value)
+            alpha: value => new RegExp(/^[\D ]+$/).test(value)
+          },
+          type: {
+            _id: {
+              required,
+              mongo: value => new RegExp(/^[0-9a-fA-F]{24}$/).test(value)
+            }
           }
         }
       }
-    }
-  },
-  computed: {
-    ...mapGetters({
-      vehicleData: types.GETTER_VEHICLE_DATA,
-      types: types.GETTER_TYPE_DATA_GET_ALL,
-      signIn: types.GETTER_SIGN_IN_DATA
-    })
-  },
-  methods: {
-    onCreate: function () {
-      if (this.form.values._id === undefined) {
-        return this.$store.dispatch(types.ACTION_VEHICLE_CREATE, {...this.form.values, ...this.signIn})
-          .then(result => this.$emit('crud', {component: 'app-vertical-list', icon: 'plus'}))
-          .catch(err => console.warn(err.message))
-      }
     },
-    onUpdate: function () {
-      if (this.form.values._id !== undefined) {
-        return this.$store.dispatch(types.ACTION_VEHICLE_UPDATE, {...this.form.values, ...this.signIn})
-          .then(result => this.$emit('crud', {component: 'app-vertical-list', icon: 'plus'}))
-          .catch(err => console.warn(err.message))
+    computed: {
+      ...mapGetters({
+        vehicleData: types.GETTER_VEHICLE_DATA,
+        types: types.GETTER_TYPE_DATA_GET_ALL,
+        signIn: types.GETTER_SIGN_IN_DATA
+      })
+    },
+    methods: {
+      onCreate: function () {
+        if (this.form.values._id === undefined) {
+          return this.$store.dispatch(types.ACTION_VEHICLE_CREATE, {...this.form.values, ...this.signIn})
+            .then(result => this.$emit('crud', {component: 'app-vertical-list', icon: 'plus'}))
+            .catch(err => console.warn(err.message))
+        }
+      },
+      onUpdate: function () {
+        if (this.form.values._id !== undefined) {
+          return this.$store.dispatch(types.ACTION_VEHICLE_UPDATE, {...this.form.values, ...this.signIn})
+            .then(result => this.$emit('crud', {component: 'app-vertical-list', icon: 'plus'}))
+            .catch(err => console.warn(err.message))
+        }
       }
     }
   }
-}
 </script>
 
 <style scoped>
@@ -201,6 +200,7 @@ export default {
     padding: 0.8rem;
     border: solid 0.01rem #dbdbdb;
   }
+
   div#crud #autocomplete ul li:hover {
     cursor: pointer;
     background: #f1f1f1;

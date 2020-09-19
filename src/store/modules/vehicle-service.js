@@ -4,49 +4,35 @@ const state = {
   payload: {
     vehicle: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     },
     type: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -64,25 +50,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_VEHICLE_DATA]: function (state, data) {
     state.payload.vehicle = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -95,8 +74,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -112,25 +90,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_TYPE_DATA]: function (state, data) {
     state.payload.type = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -143,8 +114,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -180,7 +150,9 @@ const actions = {
         return err.json()
           .then(parsed => {
             let validations = {}
-            parsed.validations.forEach(e => { validations[e.param] = e.msg })
+            parsed.validations.forEach(e => {
+              validations[e.param] = e.msg
+            })
 
             commit(types.MUTATION_VEHICLE_DATA, {
               error: {
@@ -205,7 +177,11 @@ const actions = {
         method: 'PUT',
         headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}
       }
-    }).update({service: 'vehicle-service', _id: payload._id}, {name: payload.name, courier: payload.accountId, type: payload.type._id})
+    }).update({service: 'vehicle-service', _id: payload._id}, {
+      name: payload.name,
+      courier: payload.accountId,
+      type: payload.type._id
+    })
       .then(response => {
         commit(types.MUTATION_VEHICLE_DATA, {
           data: {
@@ -213,7 +189,12 @@ const actions = {
             update: {
               ...payload.data
             },
-            search: [...Object.values(state.payload.vehicle.data.search).filter(e => e._id !== payload._id), {_id: payload._id, name: payload.name, courier: payload.accountId, type: payload.type}]
+            search: [...Object.values(state.payload.vehicle.data.search).filter(e => e._id !== payload._id), {
+              _id: payload._id,
+              name: payload.name,
+              courier: payload.accountId,
+              type: payload.type
+            }]
           },
           done: true
         })
@@ -223,7 +204,9 @@ const actions = {
         return err.json()
           .then(parsed => {
             let validations = {}
-            parsed.validations.forEach(e => { validations[e.param] = e.msg })
+            parsed.validations.forEach(e => {
+              validations[e.param] = e.msg
+            })
 
             commit(types.MUTATION_VEHICLE_DATA, {
               error: {
@@ -246,7 +229,8 @@ const actions = {
     return this._vm.$resource('{service}/api/vehicles/{_id}', {}, {
       delete: {
         method: 'DELETE',
-        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        headers: {
+          'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
         }
       }
     }).delete({service: 'vehicle-service', _id: payload._id})
@@ -288,7 +272,8 @@ const actions = {
     return this._vm.$resource('{service}/api/vehicles/search', {}, {
       search: {
         method: 'POST',
-        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        headers: {
+          'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
         }
       }
     }).search({service: 'vehicle-service'}, {pagination: {pageNumber: 1, pageSize: 10}, search: {...payload}})
@@ -331,7 +316,8 @@ const actions = {
     return this._vm.$resource('{service}/api/vehicles/{_id}', {}, {
       get: {
         method: 'GET',
-        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        headers: {
+          'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
         }
       }
     }).get({service: 'vehicle-service', _id: payload})
@@ -400,8 +386,7 @@ const actions = {
                 is: parsed.error,
                 message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'getAll',
-                reason: {
-                }
+                reason: {}
               },
               done: true
             })

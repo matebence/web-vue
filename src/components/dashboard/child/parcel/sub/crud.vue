@@ -23,7 +23,10 @@
           :class="{valid: !$v.form.values.receiver.name.$error && $v.form.values.receiver.name.$dirty, invalid: $v.form.values.receiver.name.$error}">
         <div id="autocomplete">
           <ul>
-            <li v-for="user in components.appCrud.autocomplete.client" :key="user.accountId" v-if="user.accountId !== signIn.accountId" :data-accountId="user.accountId" @click.prevent="onSelectedReceiver($event.target)">{{user.firstName}} {{user.lastName}}</li>
+            <li v-for="user in components.appCrud.autocomplete.client" :key="user.accountId"
+                v-if="user.accountId !== signIn.accountId" :data-accountId="user.accountId"
+                @click.prevent="onSelectedReceiver($event.target)">{{user.firstName}} {{user.lastName}}
+            </li>
           </ul>
         </div>
       </div>
@@ -39,7 +42,7 @@
           v-model="form.values.category"
           @change="$v.form.values.category.$touch()"
           :class="{valid: !$v.form.values.category.$error && $v.form.values.category.$dirty, invalid: $v.form.values.category.$error}">
-          <option value="null" disabled selected >Vyberte z možností</option>
+          <option value="null" disabled selected>Vyberte z možností</option>
           <option v-for="category in categories" :value="category" :key="category.id">{{category.name}}</option>
         </select>
       </div>
@@ -140,124 +143,123 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
+  import * as types from '@/store/types'
 
-import {required, alphaNum, numeric} from 'vuelidate/lib/validators'
+  import {required, alphaNum, numeric} from 'vuelidate/lib/validators'
 
-export default {
-  created: function () {
-    return this.$store.dispatch(types.ACTION_CATEGORY_GET_ALL, {})
-      .catch(err => console.warn(err.message))
-  },
-  name: 'crud',
-  props: ['form'],
-  data: function () {
-    return {
-      components: {
-        appCrud: {
-          autocomplete: {
-            client: {
+  export default {
+    created: function () {
+      return this.$store.dispatch(types.ACTION_CATEGORY_GET_ALL, {})
+        .catch(err => console.warn(err.message))
+    },
+    name: 'crud',
+    props: ['form'],
+    data: function () {
+      return {
+        components: {
+          appCrud: {
+            autocomplete: {
+              client: {}
             }
           }
         }
       }
-    }
-  },
-  validations: {
-    form: {
-      values: {
-        receiver: {
-          name: {
-            required,
-            alpha: value => new RegExp(/^[\D ]+$/).test(value)
+    },
+    validations: {
+      form: {
+        values: {
+          receiver: {
+            name: {
+              required,
+              alpha: value => new RegExp(/^[\D ]+$/).test(value)
+            },
+            accountId: {
+              required,
+              numeric
+            }
           },
-          accountId: {
+          category: {
+            id: {
+              required,
+              numeric
+            }
+          },
+          note: {
+            required,
+            alphaNum
+          },
+          length: {
+            required,
+            numeric
+          },
+          width: {
+            required,
+            numeric
+          },
+          height: {
+            required,
+            numeric
+          },
+          weight: {
             required,
             numeric
           }
-        },
-        category: {
-          id: {
-            required,
-            numeric
-          }
-        },
-        note: {
-          required,
-          alphaNum
-        },
-        length: {
-          required,
-          numeric
-        },
-        width: {
-          required,
-          numeric
-        },
-        height: {
-          required,
-          numeric
-        },
-        weight: {
-          required,
-          numeric
+        }
+      }
+    },
+    computed: {
+      ...mapGetters({
+        categories: types.GETTER_CATEGORY_DATA_GET_ALL,
+        parcelCreate: types.GETTER_PARCEL_DATA_CREATE,
+        signIn: types.GETTER_SIGN_IN_DATA
+      })
+    },
+    methods: {
+      onAutoCompleteReceiver: function ($event) {
+        if ($event.length === 0) return this.searchCourier({roles: process.env.APP_ROLE_CLIENT})
+        if ($event.length < 3) return
+        return this.onSearchReceiver({firstName: $event, roles: process.env.APP_ROLE_CLIENT})
+      },
+      onSearchReceiver: function (obj) {
+        return this.$store.dispatch(types.ACTION_USER_SEARCH, {...obj})
+          .then(result => {
+            this.components.appCrud.autocomplete.client = result
+          })
+          .catch(err => console.warn(err.message))
+      },
+      onSelectedReceiver: function ($event) {
+        this.form.values.receiver.accountId = $event.dataset.accountid
+        this.form.values.receiver.name = $event.textContent
+        this.components.appCrud.autocomplete.client = {}
+      },
+      onCreate: function () {
+        if (this.form.values.id === undefined) {
+          this.$store.commit(types.MUTATION_PARCEL_DATA, {
+            data: {
+              create: [...this.parcelCreate, {
+                ...this.form.values,
+                sender: {senderId: this.signIn.accountId},
+                id: Date.now() * -1
+              }]
+            }
+          })
+          return this.$emit('crud', {component: 'app-vertical-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
+        }
+      },
+      onUpdate: function () {
+        if (this.form.values.id !== undefined) {
+          const data = this.parcelCreate.filter(e => e.id !== this.form.values.id)
+          this.$store.commit(types.MUTATION_PARCEL_DATA, {
+            data: {
+              create: [...data, this.form.values]
+            }
+          })
+          return this.$emit('crud', {component: 'app-vertical-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
         }
       }
     }
-  },
-  computed: {
-    ...mapGetters({
-      categories: types.GETTER_CATEGORY_DATA_GET_ALL,
-      parcelCreate: types.GETTER_PARCEL_DATA_CREATE,
-      signIn: types.GETTER_SIGN_IN_DATA
-    })
-  },
-  methods: {
-    onAutoCompleteReceiver: function ($event) {
-      if ($event.length === 0) return this.searchCourier({roles: process.env.APP_ROLE_CLIENT})
-      if ($event.length < 3) return
-      return this.onSearchReceiver({firstName: $event, roles: process.env.APP_ROLE_CLIENT})
-    },
-    onSearchReceiver: function (obj) {
-      return this.$store.dispatch(types.ACTION_USER_SEARCH, {...obj})
-        .then(result => {
-          this.components.appCrud.autocomplete.client = result
-        })
-        .catch(err => console.warn(err.message))
-    },
-    onSelectedReceiver: function ($event) {
-      this.form.values.receiver.accountId = $event.dataset.accountid
-      this.form.values.receiver.name = $event.textContent
-      this.components.appCrud.autocomplete.client = {}
-    },
-    onCreate: function () {
-      if (this.form.values.id === undefined) {
-        this.$store.commit(types.MUTATION_PARCEL_DATA, {
-          data: {
-            create: [...this.parcelCreate, {
-              ...this.form.values,
-              sender: {senderId: this.signIn.accountId},
-              id: Date.now() * -1
-            }]
-          }
-        })
-        return this.$emit('crud', {component: 'app-vertical-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
-      }
-    },
-    onUpdate: function () {
-      if (this.form.values.id !== undefined) {
-        const data = this.parcelCreate.filter(e => e.id !== this.form.values.id)
-        this.$store.commit(types.MUTATION_PARCEL_DATA, {
-          data: {
-            create: [...data, this.form.values]
-          }
-        })
-        return this.$emit('crud', {component: 'app-vertical-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
-      }
-    }
   }
-}
 </script>
 
 <style scoped>
@@ -347,6 +349,7 @@ export default {
     padding: 0.8rem;
     border: solid 0.01rem #dbdbdb;
   }
+
   div#crud #autocomplete ul li:hover {
     cursor: pointer;
     background: #f1f1f1;

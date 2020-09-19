@@ -4,7 +4,7 @@
       v-show="isSelected"
       id="modify">
       <button
-      @click.prevent="activeEl.shipmentId = 0">
+        @click.prevent="activeEl.shipmentId = 0">
         <font-awesome-icon
           :icon="['fas', 'ban']"/>
       </button>
@@ -18,45 +18,53 @@
     <app-vertical-list
       :activeEl="activeEl"
       :shipmentData="shipmentData"
-      :appVerticalList="appVerticalList" />
+      :appVerticalList="appVerticalList"/>
   </div>
 </template>
 
 <script>
-import * as types from '@/store/types'
+  import * as types from '@/store/types'
 
-import verticalList from '@/components/dashboard/child/client/sub/verticalList'
+  import verticalList from '@/components/dashboard/child/client/sub/verticalList'
 
-export default {
-  name: 'manage',
-  props: ['appVerticalList', 'shipmentData', 'activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  components: {
-    appVerticalList: verticalList
-  },
-  computed: {
-    isSelected: function () {
-      return this.activeEl.shipmentId !== 0
+  export default {
+    name: 'manage',
+    props: ['appVerticalList', 'shipmentData', 'activeEl'],
+    data: function () {
+      return {}
     },
-    isNewRequeste: function () {
-      return this.activeEl.itemId === 1
-    }
-  },
-  methods: {
-    onAcceptShipment: function () {
-      const data = Object.values(this.shipmentData.search).filter(e => e._id === this.activeEl.shipmentId).pop()
-      return this.$store.dispatch(types.ACTION_SHIPMENT_UPDATE, {_id: data._id, courier: data.courier.courierId, parcelId: data.parcelId, from: data.from, to: data.to, status: process.env.PARCEL_ACCEPTED_STATUS_ID, price: data.price, express: data.express})
-        .then(result => {
-          this.activeEl.itemId = 2
-          this.activeEl.shipmentId = 0
+    components: {
+      appVerticalList: verticalList
+    },
+    computed: {
+      isSelected: function () {
+        return this.activeEl.shipmentId !== 0
+      },
+      isNewRequeste: function () {
+        return this.activeEl.itemId === 1
+      }
+    },
+    methods: {
+      onAcceptShipment: function () {
+        const data = Object.values(this.shipmentData.search).filter(e => e._id === this.activeEl.shipmentId).pop()
+        return this.$store.dispatch(types.ACTION_SHIPMENT_UPDATE, {
+          _id: data._id,
+          courier: data.courier.courierId,
+          parcelId: data.parcelId,
+          from: data.from,
+          to: data.to,
+          status: process.env.PARCEL_ACCEPTED_STATUS_ID,
+          price: data.price,
+          express: data.express
         })
-        .catch(err => console.warn(err.message))
+          .then(result => {
+            this.activeEl.itemId = 2
+            this.activeEl.shipmentId = 0
+          })
+          .catch(err => console.warn(err.message))
+      }
     }
   }
-}
 </script>
 
 <style scoped>
@@ -94,7 +102,7 @@ export default {
     color: #ffffff;
   }
 
-  @media (max-width: 1290px){
+  @media (max-width: 1290px) {
     div#manage div#modify button {
       width: 1.5rem;
       height: 1.5rem;

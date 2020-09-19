@@ -47,28 +47,27 @@
 </template>
 
 <script>
-export default {
-  name: 'properties',
-  props: ['appProperties', 'vehicleData', 'activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  watch: {
-    'activeEl.vehicleId': function (newValue, oldValue) {
-      if (this.activeEl.vehicleId === 0) return Object.assign(this.$data, this.$options.data.apply(this))
-      this.appProperties.form.values = this.vehicleData
-    }
-  },
-  methods: {
-    formatDateTime: function (timestamp) {
-      const dateTime = new Date(timestamp)
-      if (timestamp === this.appProperties.form.values.updatedAt) return this.appProperties.form.values.updatedAt
-      if (timestamp === this.appProperties.form.values.createdAt) return this.appProperties.form.values.createdAt
-      return `${dateTime.getDate()}/${dateTime.getMonth()}/${dateTime.getFullYear()} - ${dateTime.getHours()}:${dateTime.getMinutes()}`
+  export default {
+    name: 'properties',
+    props: ['appProperties', 'vehicleData', 'activeEl'],
+    data: function () {
+      return {}
+    },
+    watch: {
+      'activeEl.vehicleId': function (newValue, oldValue) {
+        if (this.activeEl.vehicleId === 0) return Object.assign(this.$data, this.$options.data.apply(this))
+        this.appProperties.form.values = this.vehicleData
+      }
+    },
+    methods: {
+      formatDateTime: function (timestamp) {
+        const dateTime = new Date(timestamp)
+        if (timestamp === this.appProperties.form.values.updatedAt) return this.appProperties.form.values.updatedAt
+        if (timestamp === this.appProperties.form.values.createdAt) return this.appProperties.form.values.createdAt
+        return `${dateTime.getDate()}/${dateTime.getMonth()}/${dateTime.getFullYear()} - ${dateTime.getHours()}:${dateTime.getMinutes()}`
+      }
     }
   }
-}
 </script>
 
 <style scoped>

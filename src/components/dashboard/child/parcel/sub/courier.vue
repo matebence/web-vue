@@ -21,44 +21,43 @@
     <app-horizontal-list
       :activeEl="activeEl"
       :parcelData="parcelData"
-      :appHorizontalList="appHorizontalList" />
+      :appHorizontalList="appHorizontalList"/>
   </div>
 </template>
 
 <script>
-import * as types from '@/store/types'
+  import * as types from '@/store/types'
 
-import horizontalList from '@/components/dashboard/child/parcel/sub/horizontalList'
+  import horizontalList from '@/components/dashboard/child/parcel/sub/horizontalList'
 
-export default {
-  created: function () {
-    return this.onSearchCourier({roles: process.env.APP_ROLE_COURIER})
-  },
-  name: 'courier',
-  props: ['appHorizontalList', 'parcelData', 'activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  components: {
-    appHorizontalList: horizontalList
-  },
-  methods: {
-    onAutoCompleteCourier: function ($event) {
-      this.activeEl.courierId = 0
-      if ($event.length === 0) return this.onSearchCourier({roles: process.env.APP_ROLE_COURIER})
-      if ($event.length < 3) return
-      return this.onSearchCourier({firstName: $event})
+  export default {
+    created: function () {
+      return this.onSearchCourier({roles: process.env.APP_ROLE_COURIER})
     },
-    onSearchCourier: function (obj) {
-      return this.$store.dispatch(types.ACTION_USER_SEARCH, {roles: process.env.APP_ROLE_COURIER, ...obj})
-        .then(result => {
-          this.parcelData.courier.search.user = Object.values(result)
-        })
-        .catch(err => console.warn(err.message))
+    name: 'courier',
+    props: ['appHorizontalList', 'parcelData', 'activeEl'],
+    data: function () {
+      return {}
+    },
+    components: {
+      appHorizontalList: horizontalList
+    },
+    methods: {
+      onAutoCompleteCourier: function ($event) {
+        this.activeEl.courierId = 0
+        if ($event.length === 0) return this.onSearchCourier({roles: process.env.APP_ROLE_COURIER})
+        if ($event.length < 3) return
+        return this.onSearchCourier({firstName: $event})
+      },
+      onSearchCourier: function (obj) {
+        return this.$store.dispatch(types.ACTION_USER_SEARCH, {roles: process.env.APP_ROLE_COURIER, ...obj})
+          .then(result => {
+            this.parcelData.courier.search.user = Object.values(result)
+          })
+          .catch(err => console.warn(err.message))
+      }
     }
   }
-}
 </script>
 
 <style scoped>

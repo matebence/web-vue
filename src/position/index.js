@@ -1,7 +1,11 @@
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(position => {
     let data = localStorage.getItem('browserData')
-    const userPosition = {latitude: position.coords.latitude, longitude: position.coords.longitude, accuracy: position.coords.accuracy}
+    const userPosition = {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+      accuracy: position.coords.accuracy
+    }
 
     if (!data) {
       localStorage.setItem('browserData', JSON.stringify({position: userPosition}))

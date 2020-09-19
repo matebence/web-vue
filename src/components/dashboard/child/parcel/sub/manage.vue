@@ -60,95 +60,102 @@
 </template>
 
 <script>
-import bootstrap from 'jquery'
+  import bootstrap from 'jquery'
 
-import {mapGetters} from 'vuex'
-import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
+  import * as types from '@/store/types'
 
-import modal from '@/components/common/modal'
-import apply from '@/components/common/apply'
-import crud from '@/components/dashboard/child/parcel/sub/crud'
-import verticalList from '@/components/dashboard/child/parcel/sub/verticalList'
+  import modal from '@/components/common/modal'
+  import apply from '@/components/common/apply'
+  import crud from '@/components/dashboard/child/parcel/sub/crud'
+  import verticalList from '@/components/dashboard/child/parcel/sub/verticalList'
 
-export default {
-  name: 'manage',
-  props: ['appVerticalList', 'appManage', 'activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  components: {
-    appCrud: crud,
-    appModal: modal,
-    appApply: apply,
-    appVerticalList: verticalList
-  },
-  computed: {
-    isSelected: function () {
-      return this.activeEl.parcelId !== 0
+  export default {
+    name: 'manage',
+    props: ['appVerticalList', 'appManage', 'activeEl'],
+    data: function () {
+      return {}
     },
-    ...mapGetters({
-      parcelCreate: types.GETTER_PARCEL_DATA_CREATE,
-      parcelData: types.GETTER_PARCEL_DATA,
-      signIn: types.GETTER_SIGN_IN_DATA
-    })
-  },
-  methods: {
-    manageComponenets: function () {
-      if (this.activeEl.component === this.appManage.crud.name) {
-        this.appManage.crud.form.values = {receiver: {name: null, accountId: null}, category: null, note: null, length: null, width: null, height: null, weight: null}
-        this.activeEl.icon = this.appManage.list.icon
-        return this.appManage.list.name
-      }
-      if (this.activeEl.component === this.appManage.list.name) {
-        this.activeEl.icon = this.appManage.crud.icon
-        this.appManage.crud.form.values.id = undefined
-        return this.appManage.crud.name
-      }
+    components: {
+      appCrud: crud,
+      appModal: modal,
+      appApply: apply,
+      appVerticalList: verticalList
     },
-    showAlertModal: function (title, text, button) {
-      this.appManage.modal.title = title
-      this.appManage.modal.text = text
-      this.appManage.modal.button = button
-      return bootstrap('#parcelAlert').modal('show')
+    computed: {
+      isSelected: function () {
+        return this.activeEl.parcelId !== 0
+      },
+      ...mapGetters({
+        parcelCreate: types.GETTER_PARCEL_DATA_CREATE,
+        parcelData: types.GETTER_PARCEL_DATA,
+        signIn: types.GETTER_SIGN_IN_DATA
+      })
     },
-    showAppliedModal: function (title, text) {
-      this.appManage.apply.title = title
-      this.appManage.apply.text = text
-      this.appManage.apply.positiveButton = 'Odstrániť'
-      this.appManage.apply.negativeButton = 'Zrušiť'
-      return bootstrap('#parcelApply').modal('show')
-    },
-    editParcel: function () {
-      if (this.activeEl.parcelId > 0) {
-        return this.showAlertModal('Editovanie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné editovať.', 'Zatvoriť')
-      } else {
-        const data = this.parcelCreate.filter(e => e.id === this.activeEl.parcelId)
-        this.activeEl.component = this.manageComponenets()
-        this.activeEl.parcelId = 0
-        this.appManage.crud.form.values = data.pop()
-      }
-    },
-    removeParcel: function (applied) {
-      if (this.activeEl.parcelId > 0) {
-        return this.showAlertModal('Odstránenie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné odstrániť.', 'Zatvoriť')
-      } else {
-        if (applied) {
-          const data = this.parcelCreate.filter(e => e.id !== this.activeEl.parcelId)
-          this.$store.commit(types.MUTATION_PARCEL_DATA, {
-            data: {
-              ...this.parcelData,
-              create: data
-            }
-          })
-          this.activeEl.parcelId = 0
+    methods: {
+      manageComponenets: function () {
+        if (this.activeEl.component === this.appManage.crud.name) {
+          this.appManage.crud.form.values = {
+            receiver: {name: null, accountId: null},
+            category: null,
+            note: null,
+            length: null,
+            width: null,
+            height: null,
+            weight: null
+          }
+          this.activeEl.icon = this.appManage.list.icon
+          return this.appManage.list.name
+        }
+        if (this.activeEl.component === this.appManage.list.name) {
+          this.activeEl.icon = this.appManage.crud.icon
+          this.appManage.crud.form.values.id = undefined
+          return this.appManage.crud.name
+        }
+      },
+      showAlertModal: function (title, text, button) {
+        this.appManage.modal.title = title
+        this.appManage.modal.text = text
+        this.appManage.modal.button = button
+        return bootstrap('#parcelAlert').modal('show')
+      },
+      showAppliedModal: function (title, text) {
+        this.appManage.apply.title = title
+        this.appManage.apply.text = text
+        this.appManage.apply.positiveButton = 'Odstrániť'
+        this.appManage.apply.negativeButton = 'Zrušiť'
+        return bootstrap('#parcelApply').modal('show')
+      },
+      editParcel: function () {
+        if (this.activeEl.parcelId > 0) {
+          return this.showAlertModal('Editovanie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné editovať.', 'Zatvoriť')
         } else {
-          return this.showAppliedModal('Odstránenie', 'Naozaj chcete odstrániť balík?')
+          const data = this.parcelCreate.filter(e => e.id === this.activeEl.parcelId)
+          this.activeEl.component = this.manageComponenets()
+          this.activeEl.parcelId = 0
+          this.appManage.crud.form.values = data.pop()
+        }
+      },
+      removeParcel: function (applied) {
+        if (this.activeEl.parcelId > 0) {
+          return this.showAlertModal('Odstránenie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné odstrániť.', 'Zatvoriť')
+        } else {
+          if (applied) {
+            const data = this.parcelCreate.filter(e => e.id !== this.activeEl.parcelId)
+            this.$store.commit(types.MUTATION_PARCEL_DATA, {
+              data: {
+                ...this.parcelData,
+                create: data
+              }
+            })
+            this.activeEl.parcelId = 0
+          } else {
+            return this.showAppliedModal('Odstránenie', 'Naozaj chcete odstrániť balík?')
+          }
         }
       }
     }
   }
-}
 </script>
 
 <style scoped>
@@ -190,7 +197,7 @@ export default {
     color: #ffffff;
   }
 
-  @media (max-width: 1290px){
+  @media (max-width: 1290px) {
     div#manage div#new button,
     div#manage div#modify button {
       width: 1.5rem;

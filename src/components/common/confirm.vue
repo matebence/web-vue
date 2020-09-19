@@ -24,7 +24,8 @@
             <button
               id="positive"
               type="button"
-              @click.prevent="confirmed()">{{positiveButton}}</button>
+              @click.prevent="confirmed()">{{positiveButton}}
+            </button>
           </div>
         </div>
       </div>
@@ -33,45 +34,50 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
+  import * as types from '@/store/types'
 
-export default {
-  name: 'confirm',
-  props: ['confirmId', 'title', 'text', 'positiveButton', 'negativeButton'],
-  data: function () {
-    return {
-      components: {
-        appConfirm: {
-          form: {
-            values: {
-              password: null
-            },
-            is: {
-              valid: false
+  export default {
+    name: 'confirm',
+    props: ['confirmId', 'title', 'text', 'positiveButton', 'negativeButton'],
+    data: function () {
+      return {
+        components: {
+          appConfirm: {
+            form: {
+              values: {
+                password: null
+              },
+              is: {
+                valid: false
+              }
             }
           }
         }
       }
-    }
-  },
-  computed: {
-    ...mapGetters({
-      signIn: types.GETTER_SIGN_IN_DATA
-    })
-  },
-  methods: {
-    confirmed: function () {
-      return this.$store.dispatch(types.ACTION_CONFIRM_CHANGES, {grantType: process.env.GRANT_TYPE_PASSWORD, userName: this.signIn.userName, password: this.components.appConfirm.form.values.password, stayLoggedIn: this.signIn.stayLoggedIn})
-        .then(result => {
-          return this.$emit('confirmed', result)
+    },
+    computed: {
+      ...mapGetters({
+        signIn: types.GETTER_SIGN_IN_DATA
+      })
+    },
+    methods: {
+      confirmed: function () {
+        return this.$store.dispatch(types.ACTION_CONFIRM_CHANGES, {
+          grantType: process.env.GRANT_TYPE_PASSWORD,
+          userName: this.signIn.userName,
+          password: this.components.appConfirm.form.values.password,
+          stayLoggedIn: this.signIn.stayLoggedIn
         })
-        .catch(err => {
-          this.components.appConfirm.form.is.valid = !!err.message
-        })
+          .then(result => {
+            return this.$emit('confirmed', result)
+          })
+          .catch(err => {
+            this.components.appConfirm.form.is.valid = !!err.message
+          })
+      }
     }
   }
-}
 </script>
 
 <style scoped>

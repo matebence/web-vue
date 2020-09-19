@@ -3,8 +3,7 @@ import * as types from '@/store/types'
 const state = {
   payload: {
     location: {
-      data: {
-      },
+      data: {},
       error: {
         from: ''
       }
@@ -23,8 +22,7 @@ const mutations = {
   [types.MUTATIONS_CLEAR_LOCATION_DATA]: function (state, data) {
     state.payload = {
       location: {
-        data: {
-        },
+        data: {},
         error: {
           from: ''
         }
@@ -46,7 +44,7 @@ const actions = {
   [types.ACTION_LOCATION_GET]: function ({commit, dispatch, state, rootState}) {
     return fetch(`${process.env.HOST_IPIFY}?format=json`)
       .then(response => response.json())
-      .then(({ ip }) => fetch(`${process.env.HOST_IP_API}/json/${ip}`, {method: 'GET'}))
+      .then(({ip}) => fetch(`${process.env.HOST_IP_API}/json/${ip}`, {method: 'GET'}))
       .then(response => response.json())
       .then(location => {
         commit(types.MUTATION_LOCATION_DATA, {

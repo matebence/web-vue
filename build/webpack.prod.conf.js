@@ -47,8 +47,8 @@ const webpackConfig = merge(baseWebpackConfig, {
     }),
     new OptimizeCSSPlugin({
       cssProcessorOptions: config.build.productionSourceMap
-        ? { safe: true, map: { inline: false } }
-        : { safe: true }
+        ? {safe: true, map: {inline: false}}
+        : {safe: true}
     }),
     new HtmlWebpackPlugin({
       filename: config.build.index,

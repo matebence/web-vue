@@ -14,7 +14,7 @@
             autocomplete="off"
             type="text"
             name="country"
-            id="country" />
+            id="country"/>
         </div>
         <div class="col-sm-12 col-md-6">
           <label for="region">Kraj</label>
@@ -26,7 +26,7 @@
             type="text"
             name="region"
             placeholder="Názov kraja"
-            id="region" />
+            id="region"/>
         </div>
       </div>
       <div class="row">
@@ -40,7 +40,7 @@
             type="text"
             name="district"
             placeholder="Názov okresu"
-            id="district" />
+            id="district"/>
         </div>
         <div class="col-sm-12 col-md-6">
           <label for="place">Mesto</label>
@@ -52,7 +52,7 @@
             type="text"
             name="place"
             placeholder="Názov mesta"
-            id="place" />
+            id="place"/>
         </div>
       </div>
       <div class="row">
@@ -66,7 +66,7 @@
             type="text"
             name="street"
             placeholder="Ulica"
-            id="street" />
+            id="street"/>
         </div>
         <div class="col-sm-12 col-md-6">
           <label for="zip">PSČ</label>
@@ -78,7 +78,7 @@
             type="number"
             name="zip"
             placeholder="PSČ"
-            id="zip" />
+            id="zip"/>
         </div>
       </div>
     </div>
@@ -95,7 +95,7 @@
             type="password"
             name="new-password"
             value=""
-            id="new-password" />
+            id="new-password"/>
         </div>
         <div class="col-sm-12 col-md-6">
           <label for="confirm-new-password">Potvrdenie nového hesla</label>
@@ -107,7 +107,7 @@
             type="password"
             name="confirm-new-password"
             value=""
-            id="confirm-new-password" />
+            id="confirm-new-password"/>
         </div>
       </div>
     </div>
@@ -115,7 +115,9 @@
       :disabled="$v.appSecurity.form.place.values.zip.$invalid || $v.appSecurity.form.place.values.street.$invalid || $v.appSecurity.form.place.values.place.$invalid || $v.appSecurity.form.place.values.district.$invalid || $v.appSecurity.form.place.values.region.$invalid || $v.appSecurity.form.place.values.country.$invalid "
       @click.prevent="onUpdate(false)"
       type="submit"
-      class="btn btn-primary"><font-awesome-icon :icon="['fas', 'check']"/></button>
+      class="btn btn-primary">
+      <font-awesome-icon :icon="['fas', 'check']"/>
+    </button>
     <div id="confirm-wrapper">
       <app-confirm
         @confirmed="onUpdate($event)"
@@ -135,122 +137,142 @@
 </template>
 
 <script>
-import bootstrap from 'jquery'
+  import bootstrap from 'jquery'
 
-import {mapGetters} from 'vuex'
-import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
+  import * as types from '@/store/types'
 
-import alert from '@/components/common/alert'
-import confirm from '@/components/common/confirm'
+  import alert from '@/components/common/alert'
+  import confirm from '@/components/common/confirm'
 
-import {required, numeric, sameAs} from 'vuelidate/lib/validators'
+  import {required, numeric, sameAs} from 'vuelidate/lib/validators'
 
-export default {
-  created: function () {
-    this.appSecurity.form.place.values = {...this.userProfile.places}
-  },
-  name: 'security',
-  props: ['appSecurity'],
-  data: function () {
-    return {
-    }
-  },
-  validations: {
-    appSecurity: {
-      form: {
-        place: {
-          values: {
-            country: {
-              required,
-              alpha: value => new RegExp(/^[\D ]+$/).test(value)
-            },
-            region: {
-              required,
-              alpha: value => new RegExp(/^[\D ]+$/).test(value)
-            },
-            district: {
-              required,
-              alpha: value => new RegExp(/^[\D ]+$/).test(value)
-            },
-            place: {
-              required,
-              alpha: value => new RegExp(/^[\D ]+$/).test(value)
-            },
-            street: {
-              required,
-              alpha: value => new RegExp(/^[\D ]+[0-9]*$/).test(value)
-            },
-            zip: {
-              required,
-              numeric
+  export default {
+    created: function () {
+      this.appSecurity.form.place.values = {...this.userProfile.places}
+    },
+    name: 'security',
+    props: ['appSecurity'],
+    data: function () {
+      return {}
+    },
+    validations: {
+      appSecurity: {
+        form: {
+          place: {
+            values: {
+              country: {
+                required,
+                alpha: value => new RegExp(/^[\D ]+$/).test(value)
+              },
+              region: {
+                required,
+                alpha: value => new RegExp(/^[\D ]+$/).test(value)
+              },
+              district: {
+                required,
+                alpha: value => new RegExp(/^[\D ]+$/).test(value)
+              },
+              place: {
+                required,
+                alpha: value => new RegExp(/^[\D ]+$/).test(value)
+              },
+              street: {
+                required,
+                alpha: value => new RegExp(/^[\D ]+[0-9]*$/).test(value)
+              },
+              zip: {
+                required,
+                numeric
+              }
             }
-          }
-        },
-        credentials: {
-          values: {
-            confirmPassword: {
-              required,
-              sameAs: sameAs(vm => {
-                return vm.password
-              })
-            },
-            password: {
-              required,
-              contains: value => new RegExp(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?:.{8}|.{30})/g).test(value)
+          },
+          credentials: {
+            values: {
+              confirmPassword: {
+                required,
+                sameAs: sameAs(vm => {
+                  return vm.password
+                })
+              },
+              password: {
+                required,
+                contains: value => new RegExp(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?:.{8}|.{30})/g).test(value)
+              }
             }
           }
         }
       }
-    }
-  },
-  components: {
-    appConfirm: confirm,
-    appAlert: alert
-  },
-  computed: {
-    ...mapGetters({
-      userProfile: types.GETTER_USER_DATA_GET,
-      genders: types.GETTER_GENDER_DATA_GET_ALL
-    })
-  },
-  methods: {
-    showConfirmedModal: function (title, text) {
-      this.appSecurity.confirm.title = title
-      this.appSecurity.confirm.text = text
-      this.appSecurity.confirm.positiveButton = 'Potvrdiť'
-      this.appSecurity.confirm.negativeButton = 'Zrušiť'
-      return bootstrap('#securityConfirm').modal('show')
     },
-    showAlertModal: function (condition, type, text) {
-      this.appSecurity.alert.condition = condition
-      this.appSecurity.alert.type = type
-      this.appSecurity.alert.text = text
+    components: {
+      appConfirm: confirm,
+      appAlert: alert
     },
-    onUpdate: function ($event) {
-      if ($event) {
-        let promises = []
-        if (this.$v.appSecurity.form.place.values.zip.$dirty || this.$v.appSecurity.form.place.values.street.$dirty || this.$v.appSecurity.form.place.values.place.$dirty || this.$v.appSecurity.form.place.values.district.$dirty || this.$v.appSecurity.form.place.values.region.$dirty || this.$v.appSecurity.form.place.values.country.$dirty) {
-          const placeData = {accountId: this.userProfile.accountId, places: {country: this.appSecurity.form.place.values.country, region: this.appSecurity.form.place.values.region, district: this.appSecurity.form.place.values.district, place: this.appSecurity.form.place.values.place, street: this.appSecurity.form.place.values.street, zip: this.appSecurity.form.place.values.zip, code: this.userProfile.places.code}, firstName: this.userProfile.firstName, lastName: this.userProfile.lastName, gender: this.userProfile.gender, balance: this.userProfile.balance, tel: this.userProfile.tel}
-          promises.push(this.$store.dispatch(types.ACTION_USER_UPDATE, placeData))
+    computed: {
+      ...mapGetters({
+        userProfile: types.GETTER_USER_DATA_GET,
+        genders: types.GETTER_GENDER_DATA_GET_ALL
+      })
+    },
+    methods: {
+      showConfirmedModal: function (title, text) {
+        this.appSecurity.confirm.title = title
+        this.appSecurity.confirm.text = text
+        this.appSecurity.confirm.positiveButton = 'Potvrdiť'
+        this.appSecurity.confirm.negativeButton = 'Zrušiť'
+        return bootstrap('#securityConfirm').modal('show')
+      },
+      showAlertModal: function (condition, type, text) {
+        this.appSecurity.alert.condition = condition
+        this.appSecurity.alert.type = type
+        this.appSecurity.alert.text = text
+      },
+      onUpdate: function ($event) {
+        if ($event) {
+          let promises = []
+          if (this.$v.appSecurity.form.place.values.zip.$dirty || this.$v.appSecurity.form.place.values.street.$dirty || this.$v.appSecurity.form.place.values.place.$dirty || this.$v.appSecurity.form.place.values.district.$dirty || this.$v.appSecurity.form.place.values.region.$dirty || this.$v.appSecurity.form.place.values.country.$dirty) {
+            const placeData = {
+              accountId: this.userProfile.accountId,
+              places: {
+                country: this.appSecurity.form.place.values.country,
+                region: this.appSecurity.form.place.values.region,
+                district: this.appSecurity.form.place.values.district,
+                place: this.appSecurity.form.place.values.place,
+                street: this.appSecurity.form.place.values.street,
+                zip: this.appSecurity.form.place.values.zip,
+                code: this.userProfile.places.code
+              },
+              firstName: this.userProfile.firstName,
+              lastName: this.userProfile.lastName,
+              gender: this.userProfile.gender,
+              balance: this.userProfile.balance,
+              tel: this.userProfile.tel
+            }
+            promises.push(this.$store.dispatch(types.ACTION_USER_UPDATE, placeData))
+          }
+          if (!this.$v.appSecurity.form.credentials.values.confirmPassword.$invalid || !this.$v.appSecurity.form.credentials.values.confirmPassword.$invalid) {
+            const accountData = {
+              accountId: this.userProfile.accountId,
+              userName: this.userProfile.userName,
+              email: this.userProfile.email,
+              ...this.appSecurity.form.credentials.values
+            }
+            promises.push(this.$store.dispatch(types.ACTION_ACCOUNT_UPDATE, accountData))
+          }
+          Promise.all(promises)
+            .then(result => {
+              this.showAlertModal([result !== null], ['alert-success'], ['Údaje sa úspešne aktualizovali'])
+              bootstrap('#securityConfirm').modal('hide')
+            })
+            .catch(err => {
+              this.showAlertModal([err !== null], ['alert-danger'], [err.message])
+              bootstrap('#securityConfirm').modal('hide')
+            })
         }
-        if (!this.$v.appSecurity.form.credentials.values.confirmPassword.$invalid || !this.$v.appSecurity.form.credentials.values.confirmPassword.$invalid) {
-          const accountData = {accountId: this.userProfile.accountId, userName: this.userProfile.userName, email: this.userProfile.email, ...this.appSecurity.form.credentials.values}
-          promises.push(this.$store.dispatch(types.ACTION_ACCOUNT_UPDATE, accountData))
-        }
-        Promise.all(promises)
-          .then(result => {
-            this.showAlertModal([result !== null], ['alert-success'], ['Údaje sa úspešne aktualizovali'])
-            bootstrap('#securityConfirm').modal('hide')
-          })
-          .catch(err => {
-            this.showAlertModal([err !== null], ['alert-danger'], [err.message])
-            bootstrap('#securityConfirm').modal('hide')
-          })
+        return this.showConfirmedModal('Potvrdenie', 'Pre uplatnenie zmien prosím zadajte Vaše heslo:')
       }
-      return this.showConfirmedModal('Potvrdenie', 'Pre uplatnenie zmien prosím zadajte Vaše heslo:')
     }
   }
-}
 </script>
 
 <style scoped>

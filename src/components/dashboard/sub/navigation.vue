@@ -15,8 +15,8 @@
           :id="nav.route">
           <router-link
             :to="`${nav.route}`">
-              <font-awesome-icon :icon="['fas', nav.optional.icon]"/>
-              <p>{{nav.value}}&nbsp; <span class="badge badge-pill badge-danger">{{nav.optional.badge}}</span></p>
+            <font-awesome-icon :icon="['fas', nav.optional.icon]"/>
+            <p>{{nav.value}}&nbsp; <span class="badge badge-pill badge-danger">{{nav.optional.badge}}</span></p>
           </router-link>
         </li>
       </ul>
@@ -25,7 +25,7 @@
           <p href="#" :data-letters="getAvatar ? getAvatar : 'XX'"></p>
         </li>
         <li class="settings"
-          @click.prevent="onSelectedNav({itemId: 6, value: 'Nastavenia'})">
+            @click.prevent="onSelectedNav({itemId: 6, value: 'Nastavenia'})">
           <router-link
             to="settings">
             <font-awesome-icon :icon="['fas', 'cog']"/>
@@ -38,44 +38,43 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
+  import * as types from '@/store/types'
 
-export default {
-  name: 'navigation',
-  props: ['appNavigation', 'activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  computed: {
-    getAvatar: function () {
-      return JSON.parse(localStorage.getItem('accountData')).avatar
+  export default {
+    name: 'navigation',
+    props: ['appNavigation', 'activeEl'],
+    data: function () {
+      return {}
     },
-    ...mapGetters({
-      userProfile: types.GETTER_USER_DATA_GET,
-      allowedRoles: types.GETTER_SIGN_IN_GET_ROLE
-    })
-  },
-  methods: {
-    onSelectedNav: function (el) {
-      if (this.userProfile.userId === undefined) return
-      this.activeEl.itemId = el.itemId
-      this.activeEl.value = el.value
+    computed: {
+      getAvatar: function () {
+        return JSON.parse(localStorage.getItem('accountData')).avatar
+      },
+      ...mapGetters({
+        userProfile: types.GETTER_USER_DATA_GET,
+        allowedRoles: types.GETTER_SIGN_IN_GET_ROLE
+      })
     },
-    userHasRole: function (role) {
-      return [...this.allowedRoles].some(e => role.includes(e))
+    methods: {
+      onSelectedNav: function (el) {
+        if (this.userProfile.userId === undefined) return
+        this.activeEl.itemId = el.itemId
+        this.activeEl.value = el.value
+      },
+      userHasRole: function (role) {
+        return [...this.allowedRoles].some(e => role.includes(e))
+      }
     }
   }
-}
 </script>
 
 <style scoped>
   div#navigation nav {
-      width: 100%;
-      height: 100vh;
-      align-items: center;
-      overflow: auto;
+    width: 100%;
+    height: 100vh;
+    align-items: center;
+    overflow: auto;
   }
 
   div#navigation nav > a {
@@ -147,7 +146,7 @@ export default {
   }
 
   div#navigation nav ul.sub-items li p,
-  div#navigation nav ul.sub-items li{
+  div#navigation nav ul.sub-items li {
     padding-left: 0.5rem;
   }
 
@@ -157,7 +156,7 @@ export default {
     border-radius: 10rem;
   }
 
-  div#navigation nav ul.items li a p{
+  div#navigation nav ul.items li a p {
     width: 6.7rem;
   }
 

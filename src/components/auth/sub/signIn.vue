@@ -81,69 +81,73 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
+  import * as types from '@/store/types'
 
-import alert from '@/components/common/alert'
+  import alert from '@/components/common/alert'
 
-import {required} from 'vuelidate/lib/validators'
+  import {required} from 'vuelidate/lib/validators'
 
-export default {
-  created: function () {
-    return this.$store.dispatch(types.ACTION_AUTO_SIGN_IN)
-      .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
-  },
-  beforeMount: function () {
-    this.showAlertModal([this.signOutError.message !== null], [this.signOutError.is ? 'alert-danger' : 'alert-success'], [this.signOutError.message])
-  },
-  name: 'signin',
-  props: ['appSignIn', 'activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  validations: {
-    appSignIn: {
-      form: {
-        values: {
-          userName: {
-            required
-          },
-          password: {
-            required
+  export default {
+    created: function () {
+      return this.$store.dispatch(types.ACTION_AUTO_SIGN_IN)
+        .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
+    },
+    beforeMount: function () {
+      this.showAlertModal([this.signOutError.message !== null], [this.signOutError.is ? 'alert-danger' : 'alert-success'], [this.signOutError.message])
+    },
+    name: 'signin',
+    props: ['appSignIn', 'activeEl'],
+    data: function () {
+      return {}
+    },
+    validations: {
+      appSignIn: {
+        form: {
+          values: {
+            userName: {
+              required
+            },
+            password: {
+              required
+            }
           }
         }
       }
-    }
-  },
-  components: {
-    appAlert: alert
-  },
-  computed: {
-    ...mapGetters({
-      signInDone: types.GETTER_SIGN_IN_DONE,
-      signInError: types.GETTER_SIGN_IN_ERROR,
-      signOutError: types.GETTER_SIGN_OUT_ERROR
-    })
-  },
-  methods: {
-    showAlertModal: function (condition, type, text) {
-      this.appSignIn.alert.condition = condition
-      this.appSignIn.alert.type = type
-      this.appSignIn.alert.text = text
     },
-    onLoadComponent: function ($event) {
-      return this.$router.push({path: $event})
+    components: {
+      appAlert: alert
     },
-    onSubmit: function () {
-      this.signInError.message = this.signOutError.message = null
-      this.signInError.is = this.signOutError.is = false
+    computed: {
+      ...mapGetters({
+        signInDone: types.GETTER_SIGN_IN_DONE,
+        signInError: types.GETTER_SIGN_IN_ERROR,
+        signOutError: types.GETTER_SIGN_OUT_ERROR
+      })
+    },
+    methods: {
+      showAlertModal: function (condition, type, text) {
+        this.appSignIn.alert.condition = condition
+        this.appSignIn.alert.type = type
+        this.appSignIn.alert.text = text
+      },
+      onLoadComponent: function ($event) {
+        return this.$router.push({path: $event})
+      },
+      onSubmit: function () {
+        this.signInError.message = this.signOutError.message = null
+        this.signInError.is = this.signOutError.is = false
 
-      return this.$store.dispatch(types.ACTION_SIGN_IN, {grantType: process.env.GRANT_TYPE_PASSWORD, userName: this.appSignIn.form.values.userName, password: this.appSignIn.form.values.password, stayLoggedIn: this.appSignIn.form.values.stayLoggedIn})
-        .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
+        return this.$store.dispatch(types.ACTION_SIGN_IN, {
+          grantType: process.env.GRANT_TYPE_PASSWORD,
+          userName: this.appSignIn.form.values.userName,
+          password: this.appSignIn.form.values.password,
+          stayLoggedIn: this.appSignIn.form.values.stayLoggedIn
+        })
+          .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
+      }
     }
   }
-}
 </script>
 
 <style scoped>
@@ -176,7 +180,7 @@ export default {
     color: #176c9d;
   }
 
-  div#signin a#forgetPassword{
+  div#signin a#forgetPassword {
     display: inline;
     float: right;
   }

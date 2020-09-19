@@ -30,37 +30,36 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
+  import * as types from '@/store/types'
 
-export default {
-  name: 'verticalList',
-  props: ['activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  computed: {
-    ...mapGetters({
-      vehicleSearch: types.GETTER_VEHICLE_DATA_SEARCH
-    })
-  },
-  methods: {
-    onSelectedVehicle: function (el) {
-      this.activeEl.vehicleId = el._id
+  export default {
+    name: 'verticalList',
+    props: ['activeEl'],
+    data: function () {
+      return {}
     },
-    formatIcon: function (icon) {
-      switch (icon) {
-        case 'Bicykel':
-          return 'bicycle'
-        case 'Osobné motorové vozidlo':
-          return 'car-side'
-        case 'Nákladné motorové vozidlo':
-          return 'truck'
+    computed: {
+      ...mapGetters({
+        vehicleSearch: types.GETTER_VEHICLE_DATA_SEARCH
+      })
+    },
+    methods: {
+      onSelectedVehicle: function (el) {
+        this.activeEl.vehicleId = el._id
+      },
+      formatIcon: function (icon) {
+        switch (icon) {
+          case 'Bicykel':
+            return 'bicycle'
+          case 'Osobné motorové vozidlo':
+            return 'car-side'
+          case 'Nákladné motorové vozidlo':
+            return 'truck'
+        }
       }
     }
   }
-}
 </script>
 
 <style scoped>

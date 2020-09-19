@@ -5,7 +5,7 @@
         <app-manage
           :activeEl="components.appClient.activeEl"
           :appVerticalList="components.appClient.sub.appVerticalList"
-          :shipmentData="components.appClient.data.shipment" />
+          :shipmentData="components.appClient.data.shipment"/>
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-horizontal-list
@@ -14,91 +14,87 @@
         <app-here-map
           :activeEl="components.appClient.activeEl"
           :appHereMap="components.appClient.sub.appHereMap"
-          :shipmentData="components.appClient.data.shipment" />
+          :shipmentData="components.appClient.data.shipment"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import manage from '@/components/dashboard/child/client/sub/manage'
-import hereMap from '@/components/dashboard/child/client/sub/hereMap'
-import horizontalList from '@/components/dashboard/child/client/sub/horizontalList'
+  import manage from '@/components/dashboard/child/client/sub/manage'
+  import hereMap from '@/components/dashboard/child/client/sub/hereMap'
+  import horizontalList from '@/components/dashboard/child/client/sub/horizontalList'
 
-export default {
-  name: 'index',
-  data: function () {
-    return {
-      components: {
-        appClient: {
-          sub: {
-            appHereMap: {
-              points: {
-                from: {
-                  geo: {
+  export default {
+    name: 'index',
+    data: function () {
+      return {
+        components: {
+          appClient: {
+            sub: {
+              appHereMap: {
+                points: {
+                  from: {
+                    geo: {}
+                  },
+                  to: {
+                    geo: {}
                   }
                 },
-                to: {
-                  geo: {
+                summary: {
+                  values: {
+                    length: 0,
+                    time: 0,
+                    price: 0
                   }
+                },
+                apply: {
+                  text: null,
+                  title: null,
+                  positiveButton: null,
+                  negativeButton: null
                 }
               },
-              summary: {
-                values: {
-                  length: 0,
-                  time: 0,
-                  price: 0
-                }
-              },
-              apply: {
-                text: null,
-                title: null,
-                positiveButton: null,
-                negativeButton: null
+              appVerticalList: {
+                items: [
+                  {
+                    itemId: 1,
+                    value: 'Požiadavky',
+                    id: process.env.PARCEL_NEW_STATUS_ID
+                  },
+                  {
+                    itemId: 2,
+                    value: 'Nevybavené',
+                    id: process.env.PARCEL_ACCEPTED_STATUS_ID
+                  },
+                  {
+                    itemId: 3,
+                    value: 'Vybavené',
+                    id: process.env.PARCEL_DONE_STATUS_ID
+                  }
+                ]
               }
             },
-            appVerticalList: {
-              items: [
-                {
-                  itemId: 1,
-                  value: 'Požiadavky',
-                  id: process.env.PARCEL_NEW_STATUS_ID
-                },
-                {
-                  itemId: 2,
-                  value: 'Nevybavené',
-                  id: process.env.PARCEL_ACCEPTED_STATUS_ID
-                },
-                {
-                  itemId: 3,
-                  value: 'Vybavené',
-                  id: process.env.PARCEL_DONE_STATUS_ID
-                }
-              ]
-            }
-          },
-          data: {
-            shipment: {
-              search: {
-              },
-              action: {
+            data: {
+              shipment: {
+                search: {},
+                action: {}
               }
+            },
+            activeEl: {
+              itemId: 1,
+              shipmentId: 0
             }
-          },
-          activeEl: {
-            itemId: 1,
-            shipmentId: 0
           }
         }
       }
+    },
+    components: {
+      appManage: manage,
+      appHereMap: hereMap,
+      appHorizontalList: horizontalList
     }
-  },
-  components: {
-    appManage: manage,
-    appHereMap: hereMap,
-    appHorizontalList: horizontalList
   }
-}
 </script>
 
 <style scoped>

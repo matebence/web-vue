@@ -74,81 +74,104 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
+  import * as types from '@/store/types'
 
-export default {
-  name: 'verticalList',
-  props: ['userData', 'accountData', 'appVerticalList', 'activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  computed: {
-    ...mapGetters({
-      conversationSearch: types.GETTER_CONVERSATION_DATA_SEARCH
-    })
-  },
-  methods: {
-    onAutoCompleteParticipent: function ($event) {
-      this.activeEl.conversationId = 0
-      this.appVerticalList.form.visible = false
-      if ($event.length === 0) return this.onSearchParticipent({roles: this.onSearchParticipentCriteria()})
-      if ($event.length < 3) return
-      return this.onSearchParticipent({firstName: $event})
+  export default {
+    name: 'verticalList',
+    props: ['userData', 'accountData', 'appVerticalList', 'activeEl'],
+    data: function () {
+      return {}
     },
-    onSearchParticipent: function (obj) {
-      return this.$store.dispatch(types.ACTION_USER_SEARCH, {roles: this.onSearchParticipentCriteria(), ...obj})
-        .then(result => {
-          if (Object.keys(this.conversationSearch).length === 0) {
-            this.userData.search = Object.values(result)
-          } else {
-            const existingConversations = [].concat.apply([], Object.values(this.conversationSearch).map(a => a.participants)).filter(b => b.accountId !== this.accountData.accountId).map(c => c.accountId)
-            this.userData.search = Object.values(result).filter(e => !existingConversations.includes(e.accountId))
-          }
-        })
-        .catch(err => console.warn(err.message))
+    computed: {
+      ...mapGetters({
+        conversationData: types.GETTER_CONVERSATION_DATA,
+        conversationSearch: types.GETTER_CONVERSATION_DATA_SEARCH
+      })
     },
-    onSelectedParticipent: function (el) {
-      return this.$store.dispatch(types.ACTION_STATUS_SEARCH, {userName: el.userName})
-        .then(result => {
-          if (!result) return
-          result = Object.values(result).pop()
-          return this.$store.dispatch(types.ACTION_CONVERSATION_CREATE, {participants: [{accountId: this.accountData.accountId, status: {statusId: this.accountData.status, userName: this.accountData.userName}, lastConversionId: null, lastReadedConversionId: null}, {accountId: el.accountId, status: {statusId: result.statusId, state: result.state, userName: el.userName}, lastConversionId: null, lastReadedConversionId: null}]})
-        })
-        .then(result => { this.conversationSearch.push(result) })
-        .catch(err => console.warn(err.message))
-    },
-    onClearParticipent: function () {
-      setTimeout(() => {
-        this.appVerticalList.form.visible = true
-        this.userData.search = []
-      }, 200)
-    },
-    onSearchParticipentCriteria: function () {
-      return this.accountData.authorities.find(e => true) === process.env.APP_ROLE_COURIER ? process.env.APP_ROLE_CLIENT : process.env.APP_ROLE_COURIER
-    },
-    onSelectedConversation: function (el) {
-      this.activeEl.conversationId = el.conversationId
-    },
-    formatUsername: function (userName) {
-      return userName.filter(e => e.accountId !== this.accountData.accountId).find(e => true).status.userName
-    },
-    formatState: function (state) {
-      return state.filter(e => e.accountId !== this.accountData.accountId).find(e => true).status.state
-    },
-    formatDate: function (timestamp) {
-      timestamp = timestamp.filter(e => e.accountId !== this.accountData.accountId).find(e => true).status.createdAt
-      const date = new Date(timestamp)
-      return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
-    },
-    formatTime: function (timestamp) {
-      timestamp = timestamp.filter(e => e.accountId !== this.accountData.accountId).find(e => true).status.createdAt
-      const time = new Date(timestamp)
-      return `${time.getHours()}:${time.getMinutes()}`
+    methods: {
+      onAutoCompleteParticipent: function ($event) {
+        this.activeEl.conversationId = 0
+        this.appVerticalList.form.visible = false
+        if ($event.length === 0) return this.onSearchParticipent({roles: this.onSearchParticipentCriteria()})
+        if ($event.length < 3) return
+        return this.onSearchParticipent({firstName: $event})
+      },
+      onSearchParticipent: function (obj) {
+        return this.$store.dispatch(types.ACTION_USER_SEARCH, {roles: this.onSearchParticipentCriteria(), ...obj})
+          .then(result => {
+            if (Object.keys(this.conversationSearch).length === 0) {
+              this.userData.search = Object.values(result)
+            } else {
+              const existingConversations = [].concat.apply([], Object.values(this.conversationSearch).map(a => a.participants)).filter(b => b.accountId !== this.accountData.accountId).map(c => c.accountId)
+              this.userData.search = Object.values(result).filter(e => !existingConversations.includes(e.accountId))
+            }
+          })
+          .catch(err => console.warn(err.message))
+      },
+      onSelectedParticipent: function (el) {
+        return this.$store.dispatch(types.ACTION_STATUS_SEARCH, {userName: el.userName})
+          .then(result => {
+            if (!result) return
+            result = Object.values(result).pop()
+            return this.$store.dispatch(types.ACTION_CONVERSATION_CREATE, {
+              participants: [{
+                accountId: this.accountData.accountId,
+                status: {statusId: this.accountData.status, userName: this.accountData.userName},
+                lastConversionId: null,
+                lastReadedConversionId: null
+              }, {
+                accountId: el.accountId,
+                status: {statusId: result.statusId, state: result.state, userName: el.userName},
+                lastConversionId: null,
+                lastReadedConversionId: null
+              }]
+            })
+          })
+          .then(result => {
+            let data = Object.values(this.conversationSearch)
+            data.push(result)
+            this.$store.commit(types.MUTATION_CONVERSATION_DATA, {
+              data: {
+                ...this.conversationData,
+                search: {
+                  ...data
+                }
+              }
+            })
+          })
+          .catch(err => console.warn(err.message))
+      },
+      onClearParticipent: function () {
+        setTimeout(() => {
+          this.appVerticalList.form.visible = true
+          this.userData.search = []
+        }, 200)
+      },
+      onSearchParticipentCriteria: function () {
+        return this.accountData.authorities.find(e => true) === process.env.APP_ROLE_COURIER ? process.env.APP_ROLE_CLIENT : process.env.APP_ROLE_COURIER
+      },
+      onSelectedConversation: function (el) {
+        this.activeEl.conversationId = el.conversationId
+      },
+      formatUsername: function (userName) {
+        return userName.filter(e => e.accountId !== this.accountData.accountId).find(e => true).status.userName
+      },
+      formatState: function (state) {
+        return state.filter(e => e.accountId !== this.accountData.accountId).find(e => true).status.state
+      },
+      formatDate: function (timestamp) {
+        timestamp = timestamp.filter(e => e.accountId !== this.accountData.accountId).find(e => true).status.createdAt
+        const date = new Date(timestamp)
+        return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+      },
+      formatTime: function (timestamp) {
+        timestamp = timestamp.filter(e => e.accountId !== this.accountData.accountId).find(e => true).status.createdAt
+        const time = new Date(timestamp)
+        return `${time.getHours()}:${time.getMinutes()}`
+      }
     }
   }
-}
 </script>
 
 <style scoped>

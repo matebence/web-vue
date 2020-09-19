@@ -47,68 +47,70 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
+  import * as types from '@/store/types'
 
-import alert from '@/components/common/alert'
+  import alert from '@/components/common/alert'
 
-import {required, email} from 'vuelidate/lib/validators'
+  import {required, email} from 'vuelidate/lib/validators'
 
-export default {
-  created: function () {
-    if (this.$route.params.key) return this.onPageLoad()
-  },
-  name: 'forgetpass',
-  props: ['appForgetPassword', 'activeEl'],
-  data: function () {
-    return {
-    }
-  },
-  validations: {
-    appForgetPassword: {
-      form: {
-        values: {
-          email: {
-            required,
-            email
+  export default {
+    created: function () {
+      if (this.$route.params.key) return this.onPageLoad()
+    },
+    name: 'forgetpass',
+    props: ['appForgetPassword', 'activeEl'],
+    data: function () {
+      return {}
+    },
+    validations: {
+      appForgetPassword: {
+        form: {
+          values: {
+            email: {
+              required,
+              email
+            }
           }
         }
       }
-    }
-  },
-  components: {
-    appAlert: alert
-  },
-  computed: {
-    ...mapGetters({
-      forgetPasswordDone: types.GETTER_FORGET_PASSWORD_DONE,
-      forgetPasswordError: types.GETTER_FORGET_PASSWORD_ERROR
-    })
-  },
-  methods: {
-    showAlertModal: function (condition, type, text) {
-      this.appForgetPassword.alert.condition = condition
-      this.appForgetPassword.alert.type = type
-      this.appForgetPassword.alert.text = text
     },
-    onPageLoad: function () {
-      return this.$store.dispatch(types.ACTION_ACCOUNT_RECOVER, {id: this.appForgetPassword.url.url.values.id, key: this.appForgetPassword.url.url.values.key})
-        .then(result => this.showAlertModal([result !== null], ['alert-success'], [result.message]))
-        .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
+    components: {
+      appAlert: alert
     },
-    onLoadComponent: function ($event) {
-      return this.$router.push({path: $event})
+    computed: {
+      ...mapGetters({
+        forgetPasswordDone: types.GETTER_FORGET_PASSWORD_DONE,
+        forgetPasswordError: types.GETTER_FORGET_PASSWORD_ERROR
+      })
     },
-    onSubmit: function () {
-      this.forgetPasswordError.message = null
-      this.forgetPasswordError.is = false
+    methods: {
+      showAlertModal: function (condition, type, text) {
+        this.appForgetPassword.alert.condition = condition
+        this.appForgetPassword.alert.type = type
+        this.appForgetPassword.alert.text = text
+      },
+      onPageLoad: function () {
+        return this.$store.dispatch(types.ACTION_ACCOUNT_RECOVER, {
+          id: this.appForgetPassword.url.url.values.id,
+          key: this.appForgetPassword.url.url.values.key
+        })
+          .then(result => this.showAlertModal([result !== null], ['alert-success'], [result.message]))
+          .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
+      },
+      onLoadComponent: function ($event) {
+        return this.$router.push({path: $event})
+      },
+      onSubmit: function () {
+        this.forgetPasswordError.message = null
+        this.forgetPasswordError.is = false
 
-      return this.$store.dispatch(types.ACTION_FORGET_PASSWORD, {email: this.appForgetPassword.form.values.email})
-        .then(result => this.showAlertModal([result !== null], ['alert-success'], [result.message]))
-        .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
+        return this.$store.dispatch(types.ACTION_FORGET_PASSWORD, {email: this.appForgetPassword.form.values.email})
+          .then(result => this.showAlertModal([result !== null], ['alert-success'], [result.message]))
+          .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
+      }
     }
   }
-}
 </script>
 
 <style scoped>

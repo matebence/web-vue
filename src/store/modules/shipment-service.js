@@ -4,73 +4,52 @@ const state = {
   payload: {
     shipment: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     },
     price: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     },
     invoice: {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -88,25 +67,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_SHIPMENT_DATA]: function (state, data) {
     state.payload.shipment = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -119,8 +91,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -136,25 +107,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_PRICE_DATA]: function (state, data) {
     state.payload.price = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -167,8 +131,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -184,25 +147,18 @@ const mutations = {
   [types.MUTATIONS_CLEAR_INVOICE_DATA]: function (state, data) {
     state.payload.invoice = {
       data: {
-        create: {
-        },
-        update: {
-        },
-        remove: {
-        },
-        get: {
-        },
-        getAll: {
-        },
-        search: {
-        }
+        create: {},
+        update: {},
+        remove: {},
+        get: {},
+        getAll: {},
+        search: {}
       },
       error: {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -215,8 +171,7 @@ const mutations = {
         is: false,
         message: null,
         from: '',
-        reason: {
-        }
+        reason: {}
       },
       done: true
     }
@@ -231,7 +186,7 @@ const actions = {
         method: 'POST',
         headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`}
       }
-    }).create({service: 'shipment-service'}, {shipments: payload.shipments.map(e => ({ ...e, express: false }))})
+    }).create({service: 'shipment-service'}, {shipments: payload.shipments.map(e => ({...e, express: false}))})
       .then(response => {
         return response.json()
       })
@@ -251,7 +206,9 @@ const actions = {
         return err.json()
           .then(parsed => {
             let validations = {}
-            parsed.validations.forEach(e => { validations[e.param] = e.msg })
+            parsed.validations.forEach(e => {
+              validations[e.param] = e.msg
+            })
 
             commit(types.MUTATION_SHIPMENT_DATA, {
               error: {
@@ -293,7 +250,9 @@ const actions = {
         return err.json()
           .then(parsed => {
             let validations = {}
-            parsed.validations.forEach(e => { validations[e.param] = e.msg })
+            parsed.validations.forEach(e => {
+              validations[e.param] = e.msg
+            })
 
             commit(types.MUTATION_SHIPMENT_DATA, {
               error: {
@@ -316,7 +275,8 @@ const actions = {
     return this._vm.$resource('{service}/api/shipments/search', {}, {
       search: {
         method: 'POST',
-        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        headers: {
+          'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
         }
       }
     }).search({service: 'shipment-service'}, {pagination: {pageNumber: 1, pageSize: 10}, search: {...payload}})
@@ -359,7 +319,8 @@ const actions = {
     return this._vm.$resource('{service}/api/prices/{_id}', {}, {
       get: {
         method: 'GET',
-        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        headers: {
+          'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
         }
       }
     }).get({service: 'shipment-service', _id: payload})
@@ -401,7 +362,8 @@ const actions = {
       get: {
         method: 'GET',
         responseType: 'arraybuffer',
-        headers: {'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        headers: {
+          'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
         }
       }
     }).get({service: 'shipment-service', _id: payload})
