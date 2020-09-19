@@ -16,6 +16,7 @@
 </template>
 
 <script>
+  import CryptoJS from 'crypto-js'
   import {mapGetters} from 'vuex'
   import * as types from '@/store/types'
   import WebSocket from '@/websocket/index'
@@ -168,6 +169,7 @@
     methods: {
       onConnected: function () {
         WebSocket.data.stompClient.subscribe(`/status`, this.onStateListener)
+        WebSocket.data.stompClient.subscribe(`/conversation/${CryptoJS.MD5(this.components.appDashboard.data.account.userName).toString()}`, this.onConversationListener)
         WebSocket.data.stompClient.send(`/websocket-service/state`, JSON.stringify({
           status: {
             userName: this.components.appDashboard.data.account.userName,
@@ -186,7 +188,7 @@
             ...this.components.appDashboard.data.account,
             status: payload.statusId
           }))
-          Object.values(this.components.appDashboard.data.conversation.search).forEach(e => WebSocket.data.stompClient.subscribe(`/conversations/${e.conversationId}`, this.onConversationListener))
+          Object.values(this.components.appDashboard.data.conversation.search).forEach(e => WebSocket.data.stompClient.subscribe(`/communication/${e.conversationId}`, this.onCommunicationListener))
         } else {
           let userStatusChange = Object.values(this.components.appDashboard.data.conversation.search).filter(a => a.participants.filter(b => b.status.statusId === payload.statusId)).pop()
           if (!userStatusChange) return
@@ -209,7 +211,9 @@
         }
       },
       onConversationListener: function (payload) {
-        console.log('here')
+        console.log(payload)
+      },
+      onCommunicationListener: function (payload) {
         console.log(payload)
       }
     }

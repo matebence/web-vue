@@ -74,8 +74,10 @@
 </template>
 
 <script>
+  import CryptoJS from 'crypto-js'
   import {mapGetters} from 'vuex'
   import * as types from '@/store/types'
+  import WebSocket from '@/websocket/index'
 
   export default {
     name: 'verticalList',
@@ -130,6 +132,17 @@
           })
           .then(result => {
             let data = Object.values(this.conversationSearch)
+            WebSocket.data.stompClient.send(`/websocket-service/conversation/${CryptoJS.MD5(el.userName).toString()}/sendConversation`, JSON.stringify({
+              chanel: {
+                from: this.accountData.userName,
+                to: el.userName,
+                conversationId: result.conversationId
+              },
+              accessToken: {
+                token: this.accountData.accessToken
+              }
+            }, {}))
+
             data.push(result)
             this.$store.commit(types.MUTATION_CONVERSATION_DATA, {
               data: {

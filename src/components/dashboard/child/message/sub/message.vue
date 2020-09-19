@@ -125,7 +125,7 @@
     methods: {
       onSend: function () {
         if (this.appMessage.form.conversation.length < 3) return
-        WebSocket.data.stompClient.send(`/websocket-service/conversations/${this.onSelectedConversation.conversationId}/sendMessage`, JSON.stringify({
+        WebSocket.data.stompClient.send(`/websocket-service/communication/${this.onSelectedConversation.conversationId}/sendCommunication`, JSON.stringify({
           communications: {
             userName: this.accountData.userName,
             sender: this.accountData.accountId,
