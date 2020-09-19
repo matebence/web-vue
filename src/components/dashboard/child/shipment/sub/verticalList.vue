@@ -180,10 +180,6 @@ export default {
     div#verticalList ul.shipments li ul.shipment ul li {
       margin-left: 0.5rem;
     }
-
-    div#verticalList ul.shipments li ul.shipment {
-      justify-content: end;
-    }
   }
 
   @media (max-width: 992px) {

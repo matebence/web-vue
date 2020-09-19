@@ -38,6 +38,18 @@ export default {
     }
   },
   beforeMount: function () {
+    let accountData = localStorage.getItem('accountData')
+    let browserData = localStorage.getItem('browserData')
+
+    if (!accountData || !browserData) return
+    this.components.appDashboard.data.account = JSON.parse(accountData)
+    this.components.appDashboard.data.browser = JSON.parse(browserData)
+
+    return this.$store.dispatch(types.ACTION_CONVERSATION_SEARCH, {'participants.accountId': this.components.appDashboard.data.account.accountId})
+      .then(result => { this.components.appDashboard.data.conversation.search = result })
+      .catch(err => console.warn(err.message))
+  },
+  mounted: function () {
     WebSocket.onInitialize(this.onConnected)
   },
   name: 'dashboard',
@@ -129,6 +141,16 @@ export default {
               ]
             }
           },
+          data: {
+            conversation: {
+              search: {
+              }
+            },
+            account: {
+            },
+            browser: {
+            }
+          },
           activeEl: {
           }
         }
@@ -141,30 +163,37 @@ export default {
   computed: {
     ...mapGetters({
       userProfile: types.GETTER_USER_DATA_GET,
-      allowedRoles: types.GETTER_SIGN_IN_GET_ROLE
+      allowedRoles: types.GETTER_SIGN_IN_GET_ROLE,
+      conversationData: types.GETTER_CONVERSATION_DATA
     })
   },
   methods: {
     onConnected: function () {
-      let accountData = localStorage.getItem('accountData')
-      let browserData = localStorage.getItem('browserData')
-
-      if (!accountData || !browserData) return
-      accountData = JSON.parse(accountData)
-      browserData = JSON.parse(browserData)
-
       WebSocket.data.stompClient.subscribe(`/status`, this.onPayload)
-      WebSocket.data.stompClient.send(`/websocket-service/state`, JSON.stringify({status: {userName: accountData.userName, state: process.env.APP_STATUS_ONLINE, token: browserData.browserId}, accessToken: {token: accountData.accessToken}}, {}))
+      WebSocket.data.stompClient.send(`/websocket-service/state`, JSON.stringify({status: {userName: this.components.appDashboard.data.account.userName, state: process.env.APP_STATUS_ONLINE, token: this.components.appDashboard.data.browser.browserId}, accessToken: {token: this.components.appDashboard.data.account.accessToken}}, {}))
     },
     onPayload: function (payload) {
-      let accountData = localStorage.getItem('accountData')
-
-      if (!accountData || !payload) return
+      if (!payload) return
       payload = JSON.parse(payload.body)
-      accountData = JSON.parse(accountData)
 
-      if (accountData.userName === payload.userName) {
-        localStorage.setItem('accountData', JSON.stringify({...accountData, status: payload.statusId}))
+      if (this.components.appDashboard.data.account.userName === payload.userName) {
+        localStorage.setItem('accountData', JSON.stringify({...this.components.appDashboard.data.account, status: payload.statusId}))
+      } else {
+        let userStatusChange = Object.values(this.components.appDashboard.data.conversation.search).filter(a => a.participants.filter(b => b.status.statusId === payload.statusId)).pop()
+        if (!userStatusChange) return
+
+        userStatusChange = {...userStatusChange, participants: userStatusChange.participants.map(e => ({...e, status: {...e.status, state: payload.state}}))}
+        let data = Object.values(this.components.appDashboard.data.conversation.search).filter(e => e.conversationId !== userStatusChange.conversationId)
+        data.push(userStatusChange)
+
+        this.$store.commit(types.MUTATION_CONVERSATION_DATA, {
+          data: {
+            ...this.conversationData,
+            search: {
+              ...data
+            }
+          }
+        })
       }
     }
   }

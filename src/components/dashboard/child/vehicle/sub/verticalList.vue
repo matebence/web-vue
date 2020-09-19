@@ -154,10 +154,6 @@ export default {
     div#verticalList ul.vehicles li ul.vehicle ul li {
       margin-left: 0.5rem;
     }
-
-    div#verticalList ul.vehicles li ul.vehicle {
-      justify-content: end;
-    }
   }
 
   @media (max-width: 992px) {

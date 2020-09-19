@@ -146,7 +146,6 @@ export default {
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
-    justify-content: end;
     text-align: center;
   }
 
@@ -204,10 +203,6 @@ export default {
 
     div#verticalList ul.clients li ul.client ul li {
       margin-left: 0.5rem;
-    }
-
-    div#verticalList ul.clients li ul.client {
-      justify-content: end;
     }
   }
 

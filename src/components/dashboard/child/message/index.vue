@@ -6,7 +6,6 @@
           :activeEl="components.appMessage.activeEl"
           :userData="components.appMessage.data.user"
           :accountData="components.appMessage.data.account"
-          :conversationData="components.appMessage.data.conversation"
           :appVerticalList="components.appMessage.sub.appVerticalList" />
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
@@ -17,8 +16,6 @@
 </template>
 
 <script>
-import * as types from '@/store/types'
-
 import message from '@/components/dashboard/child/message/sub/message'
 import verticalList from '@/components/dashboard/child/message/sub/verticalList'
 
@@ -27,13 +24,6 @@ export default {
     let accountData = localStorage.getItem('accountData')
     if (!accountData) return
     this.components.appMessage.data.account = JSON.parse(accountData)
-  },
-  beforeMount: function () {
-    return this.$store.dispatch(types.ACTION_CONVERSATION_SEARCH, {'participants.accountId': this.components.appMessage.data.account.accountId})
-      .then(result => {
-        this.components.appMessage.data.conversation.search = Object.values(result)
-      })
-      .catch(err => console.warn(err.message))
   },
   name: 'index',
   data: function () {
@@ -52,15 +42,11 @@ export default {
               search: {
               }
             },
-            conversation: {
-              search: {
-              }
-            },
             account: {
             }
           },
           activeEl: {
-            participentId: 0
+            conversationId: 0
           }
         }
       }

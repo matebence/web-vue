@@ -48,7 +48,9 @@
       v-show="appVerticalList.form.visible">
       <li
         :key="item.conversationId"
-        v-for="item in conversationData.search">
+        v-for="item in conversationSearch"
+        @click.prevent="onSelectedConversation(item)"
+        :class="{active: activeEl.conversationId === item.conversationId}">
         <ul class="participent">
           <li class="image">
             <font-awesome-icon :icon="['fas', 'user']"/>
@@ -64,7 +66,7 @@
       </li>
       <li
         class="empty-list"
-        v-if="(Object.keys(conversationData.search).length === 0)">
+        v-if="(Object.keys(conversationSearch).length === 0)">
         Zoznam je prázdny
       </li>
     </ul>
@@ -72,18 +74,24 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 import * as types from '@/store/types'
 
 export default {
   name: 'verticalList',
-  props: ['userData', 'accountData', 'conversationData', 'appVerticalList', 'activeEl'],
+  props: ['userData', 'accountData', 'appVerticalList', 'activeEl'],
   data: function () {
     return {
     }
   },
+  computed: {
+    ...mapGetters({
+      conversationSearch: types.GETTER_CONVERSATION_DATA_SEARCH
+    })
+  },
   methods: {
     onAutoCompleteParticipent: function ($event) {
-      this.activeEl.participentId = 0
+      this.activeEl.conversationId = 0
       this.appVerticalList.form.visible = false
       if ($event.length === 0) return this.onSearchParticipent({roles: this.onSearchParticipentCriteria()})
       if ($event.length < 3) return
@@ -92,10 +100,10 @@ export default {
     onSearchParticipent: function (obj) {
       return this.$store.dispatch(types.ACTION_USER_SEARCH, {roles: this.onSearchParticipentCriteria(), ...obj})
         .then(result => {
-          if (Object.keys(this.conversationData.search).length === 0) {
+          if (Object.keys(this.conversationSearch).length === 0) {
             this.userData.search = Object.values(result)
           } else {
-            const existingConversations = [].concat.apply([], this.conversationData.search.map(a => a.participants)).filter(b => b.accountId !== this.accountData.accountId).map(c => c.accountId)
+            const existingConversations = [].concat.apply([], Object.values(this.conversationSearch).map(a => a.participants)).filter(b => b.accountId !== this.accountData.accountId).map(c => c.accountId)
             this.userData.search = Object.values(result).filter(e => !existingConversations.includes(e.accountId))
           }
         })
@@ -106,9 +114,9 @@ export default {
         .then(result => {
           if (!result) return
           result = Object.values(result).pop()
-          return this.$store.dispatch(types.ACTION_CONVERSATION_CREATE, {participants: [{accountId: this.accountData.accountId, status: {statusId: this.accountData.status}, userName: this.accountData.userName, lastConversionId: null, lastReadedConversionId: null}, {accountId: el.accountId, status: {statusId: result.statusId}, userName: el.userName, lastConversionId: null, lastReadedConversionId: null}]})
+          return this.$store.dispatch(types.ACTION_CONVERSATION_CREATE, {participants: [{accountId: this.accountData.accountId, status: {statusId: this.accountData.status, userName: this.accountData.userName}, lastConversionId: null, lastReadedConversionId: null}, {accountId: el.accountId, status: {statusId: result.statusId, state: result.state, userName: el.userName}, lastConversionId: null, lastReadedConversionId: null}]})
         })
-        .then(result => console.log(result))
+        .then(result => { this.conversationSearch.push(result) })
         .catch(err => console.warn(err.message))
     },
     onClearParticipent: function () {
@@ -119,6 +127,9 @@ export default {
     },
     onSearchParticipentCriteria: function () {
       return this.accountData.authorities.find(e => true) === process.env.APP_ROLE_COURIER ? process.env.APP_ROLE_CLIENT : process.env.APP_ROLE_COURIER
+    },
+    onSelectedConversation: function (el) {
+      this.activeEl.conversationId = el.conversationId
     },
     formatUsername: function (userName) {
       return userName.filter(e => e.accountId !== this.accountData.accountId).find(e => true).status.userName
@@ -257,10 +268,6 @@ export default {
 
     div#verticalList ul.participents li ul.participent ul li {
       margin-left: 0.5rem;
-    }
-
-    div#verticalList ul.participents li ul.participent {
-      justify-content: end;
     }
   }
 
