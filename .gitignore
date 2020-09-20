@@ -12,3 +12,9 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
+
+#Profile
+/config/prod.env.js
+/config/dev.env.js
+/wait-for-it.sh
+/DockerFile
