@@ -38,8 +38,8 @@
 
   import * as types from '@/store/types'
 
-  import apply from '@/components/common/apply'
   import bleskMarker from '@/assets/img/blesk-marker.png'
+  import apply from '@/components/common/apply'
 
   export default {
     created: function () {

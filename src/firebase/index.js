@@ -20,14 +20,14 @@ messaging.requestPermission()
     return messaging.getToken()
   })
   .then(function (token) {
-    let data = localStorage.getItem('browserData')
+    let data = localStorage.getItem(process.env.LOCAL_STORAGE_BROWSER_DATA)
 
     if (!data) {
-      localStorage.setItem('browserData', JSON.stringify({browserId: token}))
+      localStorage.setItem(process.env.LOCAL_STORAGE_BROWSER_DATA, JSON.stringify({browserId: token}))
     } else {
       data = JSON.parse(data)
       if (data.browserId === undefined) {
-        localStorage.setItem('browserData', JSON.stringify({...data, browserId: token}))
+        localStorage.setItem(process.env.LOCAL_STORAGE_BROWSER_DATA, JSON.stringify({...data, browserId: token}))
       }
     }
   })

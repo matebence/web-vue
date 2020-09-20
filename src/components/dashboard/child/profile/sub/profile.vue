@@ -191,7 +191,7 @@
         return `${this.userProfile.firstName} ${this.userProfile.lastName}`
       },
       getAvatar: function () {
-        return JSON.parse(localStorage.getItem('accountData')).avatar
+        return JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE_ACCOUNT_DATA)).avatar
       },
       ...mapGetters({
         signIn: types.GETTER_SIGN_IN_DATA,

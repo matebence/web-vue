@@ -438,7 +438,7 @@ const actions = {
           'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
         }
       }
-    }).search({service: 'messaging-service'}, {pagination: {pageNumber: 0, pageSize: 10}, search: {...payload}})
+    }).search({service: 'messaging-service'}, {pagination: {pageNumber: 0, pageSize: 100}, search: {...payload}})
       .then(response => {
         return response.json()
       })
@@ -449,7 +449,7 @@ const actions = {
           data: {
             ...state.payload.communication.data,
             search: {
-              ...parsed.data
+              ...parsed._embedded.communicationsList
             }
           },
           done: true

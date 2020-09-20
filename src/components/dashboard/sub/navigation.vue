@@ -16,7 +16,7 @@
           <router-link
             :to="`${nav.route}`">
             <font-awesome-icon :icon="['fas', nav.optional.icon]"/>
-            <p>{{nav.value}}&nbsp; <span class="badge badge-pill badge-danger">{{nav.optional.badge}}</span></p>
+            <p>{{nav.value}}</p>
           </router-link>
         </li>
       </ul>
@@ -38,8 +38,8 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
   import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: 'navigation',
@@ -49,7 +49,7 @@
     },
     computed: {
       getAvatar: function () {
-        return JSON.parse(localStorage.getItem('accountData')).avatar
+        return JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE_ACCOUNT_DATA)).avatar
       },
       ...mapGetters({
         userProfile: types.GETTER_USER_DATA_GET,

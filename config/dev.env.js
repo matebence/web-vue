@@ -26,6 +26,23 @@ module.exports = merge(prodEnv, {
   APP_STATUS_ONLINE: '"ONLINE"',
   APP_STATUS_OFFLINE: '"OFFLINE"',
 
+  WEBSOCKET_PREFIX: '"/websocket-service"',
+
+  WEBSOCKET_STATUS_CHANEL_POSTFIX: '""',
+  WEBSOCKET_CONVERSATION_CHANEL_POSTFIX: '"/sendConversation"',
+  WEBSOCKET_COMMUNICATION_CHANEL_POSTFIX: '"/sendCommunication"',
+
+  WEBSOCKET_STATUS_ENDPOINT: '"/status"',
+  WEBSOCKET_CONVERSATION_ENDPOINT: '"/conversation"',
+  WEBSOCKET_COMMUNICATION_ENDPOINT: '"/communication"',
+
+  WEBSOCKET_STATUS_CHANEL: '"/state"',
+  WEBSOCKET_CONVERSATION_CHANEL: '"/conversation"',
+  WEBSOCKET_COMMUNICATION_CHANEL: '"/communication"',
+
+  LOCAL_STORAGE_ACCOUNT_DATA: '"accountData"',
+  LOCAL_STORAGE_BROWSER_DATA: '"browserData"',
+
   CLIENT_ID: '"8de4dc56-6e96-11ea-bc55-0242ac130003"',
   CLIENT_SECRET: '"04ed73c86f2d48e9789fa2d2bae6acf78bcd9b431d676e5f6d9c9c9a28de29a3"',
 

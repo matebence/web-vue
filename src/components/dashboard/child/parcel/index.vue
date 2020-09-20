@@ -24,9 +24,9 @@
 <script>
   import * as types from '@/store/types'
 
-  import manage from '@/components/dashboard/child/parcel/sub/manage'
-  import courier from '@/components/dashboard/child/parcel/sub/courier'
   import hereMap from '@/components/dashboard/child/parcel/sub/hereMap'
+  import courier from '@/components/dashboard/child/parcel/sub/courier'
+  import manage from '@/components/dashboard/child/parcel/sub/manage'
 
   export default {
     beforeMount: function () {

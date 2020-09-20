@@ -21,10 +21,10 @@
 <script>
   import * as types from '@/store/types'
 
-  import signUp from '@/components/auth/sub/signUp'
-  import signIn from '@/components/auth/sub/signIn'
-  import signOut from '@/components/auth/sub/signOut'
   import forgetPass from '@/components/auth/sub/forgetPass'
+  import signOut from '@/components/auth/sub/signOut'
+  import signIn from '@/components/auth/sub/signIn'
+  import signUp from '@/components/auth/sub/signUp'
 
   export default {
     created: function () {

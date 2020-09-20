@@ -147,8 +147,8 @@
 <script>
   import bootstrap from 'jquery'
 
-  import {mapGetters} from 'vuex'
   import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
 
   import modal from '@/components/common/modal'
 

@@ -19,12 +19,12 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
   import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
 
-  import manage from '@/components/dashboard/child/vehicle/sub/manage'
-  import options from '@/components/dashboard/child/vehicle/sub/options'
   import properties from '@/components/dashboard/child/vehicle/sub/properties'
+  import options from '@/components/dashboard/child/vehicle/sub/options'
+  import manage from '@/components/dashboard/child/vehicle/sub/manage'
 
   export default {
     name: 'index',

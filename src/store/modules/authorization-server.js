@@ -267,13 +267,13 @@ const actions = {
   },
 
   [types.ACTION_SETUP_AVATAR]: function ({commit, dispatch, state, rootState}, payload) {
-    let data = localStorage.getItem('accountData')
+    let data = localStorage.getItem(process.env.LOCAL_STORAGE_ACCOUNT_DATA)
 
     if (!data) return
     data = JSON.parse(data)
 
     if (data.avatar === undefined) {
-      localStorage.setItem('accountData', JSON.stringify({
+      localStorage.setItem(process.env.LOCAL_STORAGE_ACCOUNT_DATA, JSON.stringify({
         ...data,
         avatar: `${payload.firstName.substr(0, 1)}${payload.lastName.substr(0, 1)}`
       }))
@@ -304,13 +304,16 @@ const actions = {
   },
 
   [types.ACTION_CHECK_BALANCE]: function ({commit, dispatch, state, rootState}, payload) {
-    let data = localStorage.getItem('accountData')
+    let data = localStorage.getItem(process.env.LOCAL_STORAGE_ACCOUNT_DATA)
 
     if (!data) return
     data = JSON.parse(data)
 
     if (data.balance === undefined) {
-      localStorage.setItem('accountData', JSON.stringify({...data, balance: Number(payload.balance)}))
+      localStorage.setItem(process.env.LOCAL_STORAGE_ACCOUNT_DATA, JSON.stringify({
+        ...data,
+        balance: Number(payload.balance)
+      }))
     }
     return Number(payload.balance)
   },
@@ -324,7 +327,7 @@ const actions = {
   },
 
   [types.ACTION_AUTO_SIGN_IN]: function ({commit, dispatch, state, rootState}, payload) {
-    let data = localStorage.getItem('accountData')
+    let data = localStorage.getItem(process.env.LOCAL_STORAGE_ACCOUNT_DATA)
 
     if (!data) return
     data = JSON.parse(data)
@@ -421,7 +424,7 @@ const actions = {
           done: true
         })
 
-        localStorage.setItem('accountData', JSON.stringify({
+        localStorage.setItem(process.env.LOCAL_STORAGE_ACCOUNT_DATA, JSON.stringify({
           ...accountData,
           expirationDate: new Date(new Date().getTime() + parsed.expires_in * 1000)
         }))
@@ -484,7 +487,7 @@ const actions = {
           done: true
         })
 
-        localStorage.setItem('accountData', JSON.stringify({
+        localStorage.setItem(process.env.LOCAL_STORAGE_ACCOUNT_DATA, JSON.stringify({
           ...accountData,
           expirationDate: new Date(new Date().getTime() + parsed.expires_in * 1000)
         }))
@@ -568,7 +571,7 @@ const actions = {
         return response.json()
       })
       .then(parsed => {
-        localStorage.removeItem('accountData')
+        localStorage.removeItem(process.env.LOCAL_STORAGE_ACCOUNT_DATA)
         dispatch(types.CLEAR_APP_USEAGE_DATA)
 
         commit(types.MUTATION_SIGN_OUT_DATA, {

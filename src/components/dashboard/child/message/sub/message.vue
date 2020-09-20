@@ -6,48 +6,22 @@
           :class="{
             online: onSelectedParticipants.status.state === 'ONLINE',
             offline: onSelectedParticipants.status.state === 'OFFLINE'
-          }">
-        </span>
+          }"></span>
       </h1>
     </div>
-    <div id="message-panel" ref="messagePanel">
-      <div class="text">
-        <p class="sender">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      </div>
-      <div class="text">
-        <p class="receiver">Curabitur enim quam, placerat sed pulvinar ac, cursus eu massa.</p>
-      </div>
-      <div class="text">
-        <p class="sender">Etiam varius lacinia libero et venenatis.</p>
-      </div>
-      <div class="text">
-        <p class="receiver">
-          Sed tristique, nunc vitae eleifend efficitur, nisi sem convallis nibh, ac rutrum mi massa rhoncus massa. </p>
-      </div>
-      <div class="text">
-        <p class="sender">Proin ultrices lectus at malesuada efficitur. </p>
-      </div>
-      <div class="text">
-        <p class="receiver">Curabitur sodales mauris ligula, iaculis ullamcorper justo volutpat maximus.</p>
-      </div>
-      <div class="text">
-        <p class="sender">
-          Nullam commodo euismod eros. Aenean imperdiet arcu ut condimentum aliquet. Vivamus et sapien in risus sodales placerat. </p>
-      </div>
-      <div class="text">
-        <p class="sender">Morbi feugiat commodo tortor viverra pulvinar.</p>
-      </div>
-      <div class="text">
-        <p class="receiver"> Integer massa lacus, congue non nibh quis, porttitor mattis augue.</p>
-      </div>
-      <div class="text">
-        <p class="sender">Integer eget vulputate lorem. </p>
-      </div>
-      <div class="text">
-        <p class="receiver"> Vivamus et sapien in risus sodales placerat.</p>
-      </div>
-      <div class="text">
-        <p class="receiver"> Curabitur non gravida enim. </p>
+    <div
+      v-show="activeEl.conversationId !== 0"
+      id="message-panel"
+      ref="messagePanel">
+      <div
+        class="text"
+        :key="item.communicationId"
+        v-for="item in communicationSearch">
+        <p
+          :class="{
+            sender: accountData.accountId === item.sender,
+            receiver: accountData.accountId !== item.sender
+          }">{{item.content}}</p>
       </div>
     </div>
     <div id="message-form">
@@ -76,14 +50,13 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
-  import * as types from '@/store/types'
   import WebSocket from '@/websocket/index'
+  import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
 
   export default {
-    mounted: function () {
-      const messageDisplay = this.$refs.messagePanel
-      messageDisplay.scrollTop = messageDisplay.scrollHeight
+    beforeDestroy: function () {
+      this.activeEl.conversationId = 0
     },
     props: ['accountData', 'appMessage', 'activeEl'],
     name: 'message',
@@ -93,7 +66,13 @@
     watch: {
       'activeEl.conversationId': function (newValue, oldValue) {
         if (this.activeEl.conversationId === 0) return
-        return this.onSelectedParticipants
+        return this.$store.dispatch(types.ACTION_COMMUNICATION_SEARCH, {'conversations.conversationId': newValue})
+          .then(result => {
+            const messageDisplay = this.$refs.messagePanel
+            messageDisplay.scrollTop = messageDisplay.scrollHeight
+            return this.onSelectedParticipants
+          })
+          .catch(err => console.warn(err.message))
       }
     },
     computed: {
@@ -120,13 +99,14 @@
         return Object.values(this.conversationSearch).filter(a => a.conversationId === this.activeEl.conversationId).pop().participants.filter(b => b.accountId !== this.accountData.accountId).pop()
       },
       ...mapGetters({
-        conversationSearch: types.GETTER_CONVERSATION_DATA_SEARCH
+        conversationSearch: types.GETTER_CONVERSATION_DATA_SEARCH,
+        communicationSearch: types.GETTER_COMMUNICATION_DATA_SEARCH
       })
     },
     methods: {
       onSend: function () {
         if (this.appMessage.form.conversation.length < 3) return
-        WebSocket.data.stompClient.send(`/websocket-service/communication/${this.onSelectedConversation.conversationId}/sendCommunication`, JSON.stringify({
+        WebSocket.data.stompClient.send(`${process.env.WEBSOCKET_PREFIX}${process.env.WEBSOCKET_COMMUNICATION_CHANEL}/${this.onSelectedConversation.conversationId}${process.env.WEBSOCKET_COMMUNICATION_CHANEL_POSTFIX}`, JSON.stringify({
           communications: {
             userName: this.accountData.userName,
             sender: this.accountData.accountId,
@@ -152,6 +132,7 @@
             token: this.accountData.accessToken
           }
         }, {}))
+
         this.appMessage.form.conversation = ''
       }
     }
@@ -217,19 +198,19 @@
   }
 
   div#message div#message-panel div.text p.sender {
-    float: left;
-    border-top-left-radius: 1rem;
-    border-top-right-radius: 1rem;
-    border-bottom-right-radius: 1rem;
-    background-color: #176c9d;
-  }
-
-  div#message div#message-panel div.text p.receiver {
     float: right;
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
     border-bottom-left-radius: 1rem;
     background-color: #187fb1;
+  }
+
+  div#message div#message-panel div.text p.receiver {
+    float: left;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    background-color: #176c9d;
   }
 
   div#message div#message-form {

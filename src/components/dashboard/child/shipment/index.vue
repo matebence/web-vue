@@ -31,12 +31,12 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
   import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
 
-  import rating from '@/components/dashboard/child/shipment/sub/rating'
-  import properties from '@/components/dashboard/child/shipment/sub/properties'
   import verticalList from '@/components/dashboard/child/shipment/sub/verticalList'
+  import properties from '@/components/dashboard/child/shipment/sub/properties'
+  import rating from '@/components/dashboard/child/shipment/sub/rating'
 
   export default {
     created: function () {

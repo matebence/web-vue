@@ -21,9 +21,9 @@
 </template>
 
 <script>
-  import manage from '@/components/dashboard/child/client/sub/manage'
-  import hereMap from '@/components/dashboard/child/client/sub/hereMap'
   import horizontalList from '@/components/dashboard/child/client/sub/horizontalList'
+  import hereMap from '@/components/dashboard/child/client/sub/hereMap'
+  import manage from '@/components/dashboard/child/client/sub/manage'
 
   export default {
     name: 'index',

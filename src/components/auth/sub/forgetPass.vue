@@ -47,8 +47,8 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
   import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
 
   import alert from '@/components/common/alert'
 

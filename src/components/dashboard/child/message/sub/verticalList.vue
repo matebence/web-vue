@@ -74,10 +74,10 @@
 </template>
 
 <script>
-  import CryptoJS from 'crypto-js'
-  import {mapGetters} from 'vuex'
-  import * as types from '@/store/types'
   import WebSocket from '@/websocket/index'
+  import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
+  import CryptoJS from 'crypto-js'
 
   export default {
     name: 'verticalList',
@@ -132,7 +132,7 @@
           })
           .then(result => {
             let data = Object.values(this.conversationSearch)
-            WebSocket.data.stompClient.send(`/websocket-service/conversation/${CryptoJS.MD5(el.userName).toString()}/sendConversation`, JSON.stringify({
+            WebSocket.data.stompClient.send(`${process.env.WEBSOCKET_PREFIX}${process.env.WEBSOCKET_CONVERSATION_CHANEL}/${CryptoJS.MD5(el.userName).toString()}${process.env.WEBSOCKET_CONVERSATION_CHANEL_POSTFIX}`, JSON.stringify({
               chanel: {
                 from: this.accountData.userName,
                 to: el.userName,
@@ -152,6 +152,7 @@
                 }
               }
             })
+            return WebSocket.data.stompClient.subscribe(`${process.env.WEBSOCKET_COMMUNICATION_ENDPOINT}/${result.conversationId}`, WebSocket.onCommunicationListener)
           })
           .catch(err => console.warn(err.message))
       },

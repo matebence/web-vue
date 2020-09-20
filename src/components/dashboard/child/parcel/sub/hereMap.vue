@@ -89,12 +89,12 @@
   import 'here-js-api/scripts/mapsjs-service'
   import 'here-js-api/scripts/mapsjs-mapevents'
 
-  import {mapGetters} from 'vuex'
   import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
 
-  import modal from '@/components/common/modal'
-  import apply from '@/components/common/apply'
   import bleskMarker from '@/assets/img/blesk-marker.png'
+  import apply from '@/components/common/apply'
+  import modal from '@/components/common/modal'
 
   export default {
     created: function () {
@@ -212,7 +212,7 @@
         }
       },
       reverseGeoCode: function () {
-        const browserData = JSON.parse(localStorage.getItem('browserData'))
+        const browserData = JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE_BROWSER_DATA))
         if (browserData.position === undefined) return
         const searchService = this.here.platform.getSearchService()
         const reverseGeocodingParameters = {
@@ -349,7 +349,7 @@
       onCreate: function (applied) {
         if (this.appHereMap.summary.values.time === 0 || this.appHereMap.summary.values.length === 0) {
           return this.showAlertModal('Upozornenie', 'Dľžka cesty nie je známa.', 'Zatvoriť')
-        } else if (Number(parseFloat(this.appHereMap.summary.values.length / 1000 * this.appHereMap.profit.courier).toFixed(2)) > JSON.parse(localStorage.getItem('accountData')).balance) {
+        } else if (Number(parseFloat(this.appHereMap.summary.values.length / 1000 * this.appHereMap.profit.courier).toFixed(2)) > JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE_ACCOUNT_DATA)).balance) {
           return this.showAlertModal('Upozornenie', 'Nemáte dostatok penazí na účte.', 'Zatvoriť')
         } else {
           if (applied) {

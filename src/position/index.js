@@ -1,6 +1,6 @@
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(position => {
-    let data = localStorage.getItem('browserData')
+    let data = localStorage.getItem(process.env.LOCAL_STORAGE_BROWSER_DATA)
     const userPosition = {
       latitude: position.coords.latitude,
       longitude: position.coords.longitude,
@@ -8,11 +8,11 @@ if (navigator.geolocation) {
     }
 
     if (!data) {
-      localStorage.setItem('browserData', JSON.stringify({position: userPosition}))
+      localStorage.setItem(process.env.LOCAL_STORAGE_BROWSER_DATA, JSON.stringify({position: userPosition}))
     } else {
       data = JSON.parse(data)
       if (data.position === undefined) {
-        localStorage.setItem('browserData', JSON.stringify({...data, position: userPosition}))
+        localStorage.setItem(process.env.LOCAL_STORAGE_BROWSER_DATA, JSON.stringify({...data, position: userPosition}))
       }
     }
   })

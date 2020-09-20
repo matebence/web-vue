@@ -2,15 +2,6 @@
   <div id="index">
     <div class="row">
       <div class="col-lg-4 col-xl-3" id="content">
-        <div
-          v-show="isSelected"
-          id="modify">
-          <button
-            @click.prevent="components.appMessage.activeEl.conversationId = 0">
-            <font-awesome-icon
-              :icon="['fas', 'ban']"/>
-          </button>
-        </div>
         <app-vertical-list
           :activeEl="components.appMessage.activeEl"
           :userData="components.appMessage.data.user"
@@ -28,12 +19,12 @@
 </template>
 
 <script>
-  import message from '@/components/dashboard/child/message/sub/message'
   import verticalList from '@/components/dashboard/child/message/sub/verticalList'
+  import message from '@/components/dashboard/child/message/sub/message'
 
   export default {
     created: function () {
-      let accountData = localStorage.getItem('accountData')
+      let accountData = localStorage.getItem(process.env.LOCAL_STORAGE_ACCOUNT_DATA)
       if (!accountData) return
       this.components.appMessage.data.account = JSON.parse(accountData)
     },
@@ -70,50 +61,11 @@
     components: {
       appMessage: message,
       appVerticalList: verticalList
-    },
-    computed: {
-      isSelected: function () {
-        return this.components.appMessage.activeEl.conversationId !== 0
-      }
     }
   }
 </script>
 
 <style scoped>
-  div#index div#modify {
-    display: inline;
-    float: right;
-    margin-top: 1rem;
-  }
-
-  div#index div#modify button {
-    display: inline;
-    text-align: right;
-    margin-top: 1.3rem;
-    margin-right: 0.5rem;
-    background: #176c9d;
-    border: none;
-    border-radius: 50%;
-    width: 1.8rem;
-    height: 1.8rem;
-    line-height: 1.3rem;
-    text-align: center;
-    font-size: 0.9em;
-  }
-
-  div#index div#modify button:hover {
-    background: #187fb1;
-  }
-
-  div#index div#modify button:focus {
-    outline: 0;
-  }
-
-  div#index div#modify button svg {
-    font-size: 0.8em;
-    color: #ffffff;
-  }
-
   div#index div#main-content,
   div#index div#content {
     width: 100%;

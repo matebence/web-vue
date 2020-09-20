@@ -16,10 +16,9 @@
 </template>
 
 <script>
-  import CryptoJS from 'crypto-js'
-  import {mapGetters} from 'vuex'
-  import * as types from '@/store/types'
   import WebSocket from '@/websocket/index'
+  import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
 
   import navigation from '@/components/dashboard/sub/navigation'
 
@@ -39,18 +38,7 @@
       }
     },
     beforeMount: function () {
-      let accountData = localStorage.getItem('accountData')
-      let browserData = localStorage.getItem('browserData')
-
-      if (!accountData || !browserData) return
-      this.components.appDashboard.data.account = JSON.parse(accountData)
-      this.components.appDashboard.data.browser = JSON.parse(browserData)
-
-      return this.$store.dispatch(types.ACTION_CONVERSATION_SEARCH, {'participants.accountId': this.components.appDashboard.data.account.accountId})
-        .catch(err => console.warn(err.message))
-    },
-    mounted: function () {
-      WebSocket.onInitialize(this.onConnected)
+      return WebSocket.onInitialize()
     },
     name: 'dashboard',
     data: function () {
@@ -65,8 +53,7 @@
                     value: 'Balíky',
                     route: 'parcel',
                     optional: {
-                      icon: 'box-open',
-                      badge: ''
+                      icon: 'box-open'
                     },
                     isVisible: {
                       for: [process.env.APP_ROLE_CLIENT]
@@ -76,8 +63,7 @@
                     value: 'Zásielky',
                     route: 'shipment',
                     optional: {
-                      icon: 'shipping-fast',
-                      badge: ''
+                      icon: 'shipping-fast'
                     },
                     isVisible: {
                       for: [process.env.APP_ROLE_CLIENT]
@@ -87,8 +73,7 @@
                     value: 'Klienti',
                     route: 'client',
                     optional: {
-                      icon: 'users',
-                      badge: ''
+                      icon: 'users'
                     },
                     isVisible: {
                       for: [process.env.APP_ROLE_COURIER]
@@ -98,8 +83,7 @@
                     value: 'Vozidlá',
                     route: 'vehicle',
                     optional: {
-                      icon: 'car',
-                      badge: ''
+                      icon: 'car'
                     },
                     isVisible: {
                       for: [process.env.APP_ROLE_COURIER]
@@ -109,8 +93,7 @@
                     value: 'Správy',
                     route: 'message',
                     optional: {
-                      icon: 'comment-dots',
-                      badge: 'Nové'
+                      icon: 'comment-dots'
                     },
                     isVisible: {
                       for: [process.env.APP_ROLE_CLIENT, process.env.APP_ROLE_COURIER]
@@ -120,8 +103,7 @@
                     value: 'Nastavenia',
                     route: 'settings',
                     optional: {
-                      icon: 'cog',
-                      badge: ''
+                      icon: 'cog'
                     },
                     isVisible: {
                       for: [process.env.APP_ROLE_CLIENT, process.env.APP_ROLE_COURIER]
@@ -131,8 +113,7 @@
                     value: 'Odhlásiť sa',
                     route: '/sign-out',
                     optional: {
-                      icon: 'sign-out-alt',
-                      badge: ''
+                      icon: 'sign-out-alt'
                     },
                     isVisible: {
                       for: [process.env.APP_ROLE_CLIENT, process.env.APP_ROLE_COURIER]
@@ -140,10 +121,6 @@
                   }
                 ]
               }
-            },
-            data: {
-              account: {},
-              browser: {}
             },
             activeEl: {}
           }
@@ -156,77 +133,8 @@
     computed: {
       ...mapGetters({
         userProfile: types.GETTER_USER_DATA_GET,
-        allowedRoles: types.GETTER_SIGN_IN_GET_ROLE,
-        conversationData: types.GETTER_CONVERSATION_DATA,
-        conversationSearch: types.GETTER_CONVERSATION_DATA_SEARCH
+        allowedRoles: types.GETTER_SIGN_IN_GET_ROLE
       })
-    },
-    methods: {
-      onConnected: function () {
-        WebSocket.data.stompClient.subscribe(`/status`, this.onStateListener)
-        WebSocket.data.stompClient.subscribe(`/conversation/${CryptoJS.MD5(this.components.appDashboard.data.account.userName).toString()}`, this.onConversationListener)
-        WebSocket.data.stompClient.send(`/websocket-service/state`, JSON.stringify({
-          status: {
-            userName: this.components.appDashboard.data.account.userName,
-            state: process.env.APP_STATUS_ONLINE,
-            token: this.components.appDashboard.data.browser.browserId
-          },
-          accessToken: {token: this.components.appDashboard.data.account.accessToken}
-        }, {}))
-      },
-      onStateListener: function (payload) {
-        if (!payload) return
-        payload = JSON.parse(payload.body)
-
-        if (this.components.appDashboard.data.account.userName === payload.userName) {
-          localStorage.setItem('accountData', JSON.stringify({
-            ...this.components.appDashboard.data.account,
-            status: payload.statusId
-          }))
-          Object.values(this.conversationSearch).forEach(e => WebSocket.data.stompClient.subscribe(`/communication/${e.conversationId}`, this.onCommunicationListener))
-        } else {
-          let userStatusChange = Object.values(this.conversationSearch).filter(a => a.participants.filter(b => b.status.statusId === payload.statusId)).pop()
-          if (!userStatusChange) return
-
-          userStatusChange = {
-            ...userStatusChange,
-            participants: userStatusChange.participants.map(e => ({...e, status: {...e.status, state: payload.state}}))
-          }
-          let data = Object.values(this.conversationSearch).filter(e => e.conversationId !== userStatusChange.conversationId)
-          data.push(userStatusChange)
-
-          this.$store.commit(types.MUTATION_CONVERSATION_DATA, {
-            data: {
-              ...this.conversationData,
-              search: {
-                ...data
-              }
-            }
-          })
-        }
-      },
-      onConversationListener: function (payload) {
-        if (!payload) return
-        payload = JSON.parse(payload.body)
-
-        return this.$store.dispatch(types.ACTION_CONVERSATION_GET, payload.conversationId)
-          .then(result => {
-            let data = Object.values(this.conversationSearch)
-            data.push(result)
-            this.$store.commit(types.MUTATION_CONVERSATION_DATA, {
-              data: {
-                ...this.conversationData,
-                search: {
-                  ...data
-                }
-              }
-            })
-          })
-          .catch(err => console.warn(err.message))
-      },
-      onCommunicationListener: function (payload) {
-        console.log(payload)
-      }
     }
   }
 </script>

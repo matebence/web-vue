@@ -62,13 +62,13 @@
 <script>
   import bootstrap from 'jquery'
 
-  import {mapGetters} from 'vuex'
   import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
 
-  import modal from '@/components/common/modal'
-  import apply from '@/components/common/apply'
-  import crud from '@/components/dashboard/child/parcel/sub/crud'
   import verticalList from '@/components/dashboard/child/parcel/sub/verticalList'
+  import crud from '@/components/dashboard/child/parcel/sub/crud'
+  import apply from '@/components/common/apply'
+  import modal from '@/components/common/modal'
 
   export default {
     name: 'manage',

@@ -143,8 +143,8 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
   import * as types from '@/store/types'
+  import {mapGetters} from 'vuex'
 
   import {required, alphaNum, numeric} from 'vuelidate/lib/validators'
 
