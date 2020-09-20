@@ -124,7 +124,7 @@ const mutations = {
     }
   },
 
-  [types.MUTATIONS_CLEAR_CONVERSATION_DATA]: function (state, data) {
+  [types.MUTATIONS_CLEAR_CONVERSATION_ERRORS]: function (state, data) {
     state.payload.conversation = {
       ...state.payload.conversation,
       error: {
@@ -295,6 +295,48 @@ const actions = {
                 message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
                 from: 'create',
                 reason: parsed.reason
+              },
+              done: true
+            })
+            throw new Error(state.payload.conversation.error.message)
+          })
+      })
+  },
+
+  [types.ACTION_CONVERSATION_GET]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATION_CONVERSATION_DATA, {done: false})
+    return this._vm.$resource('{service}/api/conversations/{conversationId}', {}, {
+      get: {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${rootState.authorization.payload.signIn.data.accessToken}`
+        }
+      }
+    }).get({service: 'messaging-service', conversationId: payload})
+      .then(response => {
+        return response.json()
+      })
+      .then(parsed => {
+        commit(types.MUTATION_CONVERSATION_DATA, {
+          data: {
+            ...state.payload.conversation.data,
+            get: {
+              ...parsed
+            }
+          },
+          done: true
+        })
+        return state.payload.conversation.data.get
+      })
+      .catch(err => {
+        return err.json()
+          .then(parsed => {
+            commit(types.MUTATION_CONVERSATION_DATA, {
+              error: {
+                is: parsed.error,
+                message: parsed.message ? parsed.message : 'Ľutujeme, ale nastala chyba',
+                from: 'get',
+                reason: {}
               },
               done: true
             })

@@ -47,9 +47,6 @@
       this.components.appDashboard.data.browser = JSON.parse(browserData)
 
       return this.$store.dispatch(types.ACTION_CONVERSATION_SEARCH, {'participants.accountId': this.components.appDashboard.data.account.accountId})
-        .then(result => {
-          this.components.appDashboard.data.conversation.search = result
-        })
         .catch(err => console.warn(err.message))
     },
     mounted: function () {
@@ -145,9 +142,6 @@
               }
             },
             data: {
-              conversation: {
-                search: {}
-              },
               account: {},
               browser: {}
             },
@@ -163,7 +157,8 @@
       ...mapGetters({
         userProfile: types.GETTER_USER_DATA_GET,
         allowedRoles: types.GETTER_SIGN_IN_GET_ROLE,
-        conversationData: types.GETTER_CONVERSATION_DATA
+        conversationData: types.GETTER_CONVERSATION_DATA,
+        conversationSearch: types.GETTER_CONVERSATION_DATA_SEARCH
       })
     },
     methods: {
@@ -188,16 +183,16 @@
             ...this.components.appDashboard.data.account,
             status: payload.statusId
           }))
-          Object.values(this.components.appDashboard.data.conversation.search).forEach(e => WebSocket.data.stompClient.subscribe(`/communication/${e.conversationId}`, this.onCommunicationListener))
+          Object.values(this.conversationSearch).forEach(e => WebSocket.data.stompClient.subscribe(`/communication/${e.conversationId}`, this.onCommunicationListener))
         } else {
-          let userStatusChange = Object.values(this.components.appDashboard.data.conversation.search).filter(a => a.participants.filter(b => b.status.statusId === payload.statusId)).pop()
+          let userStatusChange = Object.values(this.conversationSearch).filter(a => a.participants.filter(b => b.status.statusId === payload.statusId)).pop()
           if (!userStatusChange) return
 
           userStatusChange = {
             ...userStatusChange,
             participants: userStatusChange.participants.map(e => ({...e, status: {...e.status, state: payload.state}}))
           }
-          let data = Object.values(this.components.appDashboard.data.conversation.search).filter(e => e.conversationId !== userStatusChange.conversationId)
+          let data = Object.values(this.conversationSearch).filter(e => e.conversationId !== userStatusChange.conversationId)
           data.push(userStatusChange)
 
           this.$store.commit(types.MUTATION_CONVERSATION_DATA, {
@@ -211,7 +206,23 @@
         }
       },
       onConversationListener: function (payload) {
-        console.log(payload)
+        if (!payload) return
+        payload = JSON.parse(payload.body)
+
+        return this.$store.dispatch(types.ACTION_CONVERSATION_GET, payload.conversationId)
+          .then(result => {
+            let data = Object.values(this.conversationSearch)
+            data.push(result)
+            this.$store.commit(types.MUTATION_CONVERSATION_DATA, {
+              data: {
+                ...this.conversationData,
+                search: {
+                  ...data
+                }
+              }
+            })
+          })
+          .catch(err => console.warn(err.message))
       },
       onCommunicationListener: function (payload) {
         console.log(payload)

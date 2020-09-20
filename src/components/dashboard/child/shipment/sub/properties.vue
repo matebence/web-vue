@@ -25,7 +25,7 @@
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <h2>Identifikačné číslo</h2>
-          <p>{{appProperties.form.values.id}}</p>
+          <p>{{appProperties.form.values._id}}</p>
         </div>
         <div class="col-sm-12 col-md-6">
           <h2>Faktúra</h2>
@@ -80,8 +80,8 @@
           to: this.shipmentData.to,
           courier: this.shipmentData.courier.userName,
           status: this.shipmentData.status.name,
-          id: this.shipmentData._id,
-          invoice: {name: this.shipmentData.invoice.invoice, id: this.shipmentData.invoice._id},
+          _id: this.shipmentData._id,
+          invoice: {name: this.shipmentData.invoice.invoice, _id: this.shipmentData.invoice._id},
           sender: this.shipmentData.sender.name,
           receiver: this.shipmentData.receiver.name
         }
@@ -90,7 +90,7 @@
     methods: {
       onDownload: function () {
         if (this.activeEl.shipmentId === 0) return this.showAlertModal('Upozornenie', 'Nemáte zvolenú zásielku.', 'Zatvoriť')
-        this.$store.dispatch(types.ACTION_INVOICE_DOWNLOAD, this.appProperties.form.values.invoice.id)
+        this.$store.dispatch(types.ACTION_INVOICE_DOWNLOAD, this.appProperties.form.values.invoice._id)
           .catch(err => this.showAlertModal('Informácia', err.message, 'Zatvoriť'))
       },
       showAlertModal: function (title, text, button) {

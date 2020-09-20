@@ -65,6 +65,7 @@
           <button
             type="submit"
             class="btn btn-primary"
+            :disabled="activeEl.conversationId === 0"
             @click.prevent="onSend">
             Poslať
           </button>

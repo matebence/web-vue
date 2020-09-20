@@ -298,10 +298,10 @@
         if (!this.appHereMap.summary.isSet) {
           const total = parseFloat(distance / 1000 * price) + profit
           return total > profit ? formatter.format(total) : formatter.format(0)
-        } else if (this.parcelData.parcel.price === undefined && this.appHereMap.summary.isSet) {
+        } else if (this.parcelData.parcel.search.price === undefined && this.appHereMap.summary.isSet) {
           return formatter.format(0)
         } else {
-          return formatter.format(this.parcelData.parcel.price)
+          return formatter.format(this.parcelData.parcel.search.price)
         }
       },
       formatDuration: function (duration) {

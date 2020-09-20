@@ -97,12 +97,12 @@
                     to: 'Mesto odovzdania zásielky',
                     courier: 'Meno kuriéra',
                     status: 'Stav zásielky',
-                    id: 'Identifikačné číslo zásielky',
+                    _id: 'Identifikačné číslo zásielky',
                     sender: 'Meno odosielatela',
                     receiver: 'Meno prijímatela',
                     invoice: {
                       name: 'Faktúra vo forme .pdf',
-                      id: null
+                      _id: null
                     }
                   }
                 },
