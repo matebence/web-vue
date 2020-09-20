@@ -9,7 +9,7 @@ module.exports = {
     proxyTable: {},
 
     host: 'localhost',
-    port: 4300,
+    port: process.env.PORT,
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
