@@ -131,10 +131,13 @@
             sender: this.accountData.accountId,
             content: this.appMessage.form.conversation,
             conversations: {
-              conversationsId: this.onSelectedConversation.conversationId,
+              conversationId: this.onSelectedConversation.conversationId,
               participants: [{
                 accountId: this.accountData.accountId,
-                status: {statusId: this.accountData.status, userName: this.accountData.userName}
+                status: {
+                  statusId: this.accountData.status,
+                  userName: this.accountData.userName
+                }
               }, {
                 accountId: this.onSelectedParticipants.accountId,
                 status: {
