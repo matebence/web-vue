@@ -14,23 +14,25 @@ const config = {
 
 firebase.initializeApp(config)
 
-const messaging = firebase.messaging()
-messaging.requestPermission()
-  .then(function () {
-    return messaging.getToken()
-  })
-  .then(function (token) {
-    let data = localStorage.getItem(process.env.LOCAL_STORAGE_BROWSER_DATA)
+if (firebase.messaging.isSupported()) {
+  const messaging = firebase.messaging()
+  messaging.requestPermission()
+    .then(function () {
+      return messaging.getToken()
+    })
+    .then(function (token) {
+      let data = localStorage.getItem(process.env.LOCAL_STORAGE_BROWSER_DATA)
 
-    if (!data) {
-      localStorage.setItem(process.env.LOCAL_STORAGE_BROWSER_DATA, JSON.stringify({browserId: token}))
-    } else {
-      data = JSON.parse(data)
-      if (data.browserId === undefined) {
-        localStorage.setItem(process.env.LOCAL_STORAGE_BROWSER_DATA, JSON.stringify({...data, browserId: token}))
+      if (!data) {
+        localStorage.setItem(process.env.LOCAL_STORAGE_BROWSER_DATA, JSON.stringify({browserId: token}))
+      } else {
+        data = JSON.parse(data)
+        if (data.browserId === undefined) {
+          localStorage.setItem(process.env.LOCAL_STORAGE_BROWSER_DATA, JSON.stringify({...data, browserId: token}))
+        }
       }
-    }
-  })
-  .catch(function (err) {
-    console.warn(err)
-  })
+    })
+    .catch(function (err) {
+      console.warn(err)
+    })
+}
