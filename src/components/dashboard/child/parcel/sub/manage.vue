@@ -4,7 +4,7 @@
       v-show="!isSelected"
       id="new">
       <button
-        @click.prevent="activeEl.component = manageComponenets()">
+        @click.prevent="activeEl.component = onManage()">
         <font-awesome-icon
           :icon="['fas', activeEl.icon]"/>
       </button>
@@ -18,12 +18,12 @@
           :icon="['fas', 'ban']"/>
       </button>
       <button
-        @click.prevent="editParcel()">
+        @click.prevent="onEdit()">
         <font-awesome-icon
           :icon="['fas', 'pen']"/>
       </button>
       <button
-        @click.prevent="removeParcel(false)">
+        @click.prevent="onRemove(false)">
         <font-awesome-icon
           :icon="['fas', 'trash']"/>
       </button>
@@ -49,7 +49,7 @@
     </div>
     <div class="apply-wrapper">
       <app-apply
-        @applied="removeParcel($event)"
+        @applied="onRemove($event)"
         :applyId="'parcelApply'"
         :text="appManage.apply.text"
         :title="appManage.apply.title"
@@ -93,7 +93,7 @@
       })
     },
     methods: {
-      manageComponenets: function () {
+      onManage: function () {
         if (this.activeEl.component === this.appManage.crud.name) {
           this.appManage.crud.form.values = {
             receiver: {name: null, accountId: null},
@@ -126,17 +126,17 @@
         this.appManage.apply.negativeButton = 'Zrušiť'
         return bootstrap('#parcelApply').modal('show')
       },
-      editParcel: function () {
+      onEdit: function () {
         if (this.activeEl.parcelId > 0) {
           return this.showAlertModal('Editovanie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné editovať.', 'Zatvoriť')
         } else {
           const data = this.parcelCreate.filter(e => e.id === this.activeEl.parcelId)
-          this.activeEl.component = this.manageComponenets()
+          this.activeEl.component = this.onManage()
           this.activeEl.parcelId = 0
           this.appManage.crud.form.values = data.pop()
         }
       },
-      removeParcel: function (applied) {
+      onRemove: function (applied) {
         if (this.activeEl.parcelId > 0) {
           return this.showAlertModal('Odstránenie', 'Ľutujeme, ale balíky pripravené na expedovanie nie je možné odstrániť.', 'Zatvoriť')
         } else {

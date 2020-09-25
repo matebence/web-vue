@@ -161,8 +161,6 @@
       appVerticalList: verticalList
     },
     methods: {
-      removeParcel: function (applied) {
-      },
       showAppliedModal: function () {
         return bootstrap('#parcelApply').modal('show')
       }

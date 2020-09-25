@@ -24,7 +24,7 @@
             <button
               id="positive"
               type="button"
-              @click.prevent="confirmed()">{{positiveButton}}
+              @click.prevent="onConfirmed()">{{positiveButton}}
             </button>
           </div>
         </div>
@@ -62,7 +62,7 @@
       })
     },
     methods: {
-      confirmed: function () {
+      onConfirmed: function () {
         return this.$store.dispatch(types.ACTION_CONFIRM_CHANGES, {
           grantType: process.env.GRANT_TYPE_PASSWORD,
           userName: this.signIn.userName,

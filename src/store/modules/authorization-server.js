@@ -266,21 +266,6 @@ const actions = {
     return timeout
   },
 
-  [types.ACTION_SETUP_AVATAR]: function ({commit, dispatch, state, rootState}, payload) {
-    let data = localStorage.getItem(process.env.LOCAL_STORAGE_ACCOUNT_DATA)
-
-    if (!data) return
-    data = JSON.parse(data)
-
-    if (data.avatar === undefined) {
-      localStorage.setItem(process.env.LOCAL_STORAGE_ACCOUNT_DATA, JSON.stringify({
-        ...data,
-        avatar: `${payload.firstName.substr(0, 1)}${payload.lastName.substr(0, 1)}`
-      }))
-    }
-    return `${payload.firstName.substr(0, 1)}${payload.lastName.substr(0, 1)}`
-  },
-
   [types.CLEAR_APP_USEAGE_DATA]: function ({commit, dispatch, state, rootState}, payload) {
     commit(types.MUTATIONS_CLEAR_PREFERENCE_DATA, {})
     commit(types.MUTATIONS_CLEAR_ACCOUNT_DATA, {})
@@ -320,7 +305,7 @@ const actions = {
 
   [types.ACTION_CHECK_PROFILE]: function ({commit, dispatch, state, rootState}, payload) {
     return dispatch(types.ACTION_USER_GET, rootState.authorization.payload.signIn.data.accountId).then(result => {
-      return Promise.all([dispatch(types.ACTION_SETUP_AVATAR, {...result}), dispatch(types.ACTION_CHECK_BALANCE, {...result})])
+      return dispatch(types.ACTION_CHECK_BALANCE, {...result})
     }).catch(err => {
       return new Error(err.message)
     })

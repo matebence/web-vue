@@ -41,8 +41,8 @@
             id="stayLoggedIn"
             v-model="appSignIn.form.values.stayLoggedIn">
           <a
-            href="#"
-            @click.prevent="onLoadComponent('forget-password')"
+            href="/forget-password"
+            @click.prevent="onLoadComponent({path: 'forget-password'})"
             id="forgetPassword">
             Zabudli ste heslo?
           </a>
@@ -66,8 +66,8 @@
       </p>
       <a
         class="text-center signup"
-        href="#"
-        @click.prevent="onLoadComponent('sign-up')">
+        href="/sign-up"
+        @click.prevent="onLoadComponent({path: 'sign-up'})">
         Zaregistrovať sa teraz
       </a>
       <div class="alert-wrapper">
@@ -132,7 +132,7 @@
         this.appSignIn.alert.text = text
       },
       onLoadComponent: function ($event) {
-        return this.$router.push({path: $event})
+        return this.$router.push($event)
       },
       onSubmit: function () {
         this.signInError.message = this.signOutError.message = null

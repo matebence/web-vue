@@ -102,8 +102,8 @@
             <option value='{"roleId": 4, "name": "ROLE_COURIER"}'>Kuriérom</option>
           </select>
           <a
-            href="#"
-            @click.prevent="onLoadComponent('sign-in')">
+            href="/sign-in"
+            @click.prevent="onLoadComponent({name: 'welcome', path: 'sign-in'})">
             Späť na prihlásenie
           </a>
         </div>
@@ -202,7 +202,7 @@
           .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
       },
       onLoadComponent: function ($event) {
-        return this.$router.push({path: $event})
+        return this.$router.push($event)
       },
       onSubmit: function () {
         this.signUpError.message = this.activationTokenError.message = null
@@ -216,7 +216,6 @@
           roles: JSON.parse(this.appSignUp.form.values.roles)
         })
           .then(result => {
-            console.log(result)
             this.showAlertModal([result !== null], ['alert-success'], [result.message])
           })
           .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))

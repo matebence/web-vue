@@ -18,8 +18,8 @@
             @input="$v.appForgetPassword.form.values.email.$touch()"
             :class="{valid: !$v.appForgetPassword.form.values.email.$error && $v.appForgetPassword.form.values.email.$dirty, invalid: $v.appForgetPassword.form.values.email.$error}">
           <a
-            href="#"
-            @click.prevent="onLoadComponent('sign-in')">
+            href="/sign-in"
+            @click.prevent="onLoadComponent({name: 'welcome', path: 'sign-in'})">
             Späť na prihlásenie
           </a>
         </div>
@@ -99,7 +99,7 @@
           .catch(err => this.showAlertModal([err !== null], ['alert-danger'], [err.message]))
       },
       onLoadComponent: function ($event) {
-        return this.$router.push({path: $event})
+        return this.$router.push($event)
       },
       onSubmit: function () {
         this.forgetPasswordError.message = null
