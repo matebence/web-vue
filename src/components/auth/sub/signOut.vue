@@ -10,7 +10,9 @@
 
   export default {
     created: function () {
-      if (this.signIn.accessToken === undefined || WebSocket.data.sockClient === null) return this.$router.push('/sign-in')
+      if (this.signIn.accessToken === undefined || WebSocket.data.sockClient === null) {
+        return this.$router.push({name: 'welcome', path: 'sign-in'})
+      }
 
       WebSocket.data.sockClient.close()
       WebSocket.data.sockClient = null

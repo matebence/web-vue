@@ -11,14 +11,15 @@
           </div>
         </div>
       </div>
-      <div class="row body">
+      <div
+        v-show="getUser !== 'Používateľ'"
+        class="row body">
         <div class="col-sm-12 col-md-6">
           <label for="username">Používateľské meno</label>
           <input
             disabled
             v-model="appProfile.form.values.userName"
             @input="$v.appProfile.form.values.userName.$touch()"
-            :class="{valid: !$v.appProfile.form.values.userName.$error && $v.appProfile.form.values.userName.$dirty, invalid: $v.appProfile.form.values.userName.$error}"
             autofocus
             autocomplete="off"
             type="text"
@@ -32,7 +33,6 @@
             disabled
             v-model="appProfile.form.values.email"
             @input="$v.appProfile.form.values.email.$touch()"
-            :class="{valid: !$v.appProfile.form.values.email.$error && $v.appProfile.form.values.email.$dirty, invalid: $v.appProfile.form.values.email.$error}"
             autocomplete="off"
             type="email"
             placeholder="Vaša emailová adresa"
@@ -120,7 +120,7 @@
 
 <script>
   import bootstrap from 'jquery'
-  import {required, email} from 'vuelidate/lib/validators'
+  import {required} from 'vuelidate/lib/validators'
 
   import {mapGetters} from 'vuex'
   import * as types from '@/store/types'
@@ -145,14 +145,6 @@
       appProfile: {
         form: {
           values: {
-            userName: {
-              required,
-              username: value => new RegExp(/^[a-z.]+$/).test(value)
-            },
-            email: {
-              required,
-              email
-            },
             firstName: {
               required,
               alpha: value => new RegExp(/^[\D ]+$/).test(value)
@@ -191,11 +183,12 @@
         return `${this.userProfile.firstName} ${this.userProfile.lastName}`
       },
       getAvatar: function () {
-        return JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE_ACCOUNT_DATA)).avatar
+        return (Object.keys(this.userProfile).length === 0) ? 'XX' : `${this.userProfile.firstName.substr(0, 1)}${this.userProfile.lastName.substr(0, 1)}`
       },
       ...mapGetters({
         signIn: types.GETTER_SIGN_IN_DATA,
         userError: types.GETTER_USER_ERROR,
+        userData: types.GETTER_USER_DATA,
         userProfile: types.GETTER_USER_DATA_GET,
         genders: types.GETTER_GENDER_DATA_GET_ALL
       })
@@ -215,31 +208,40 @@
       },
       onUpdate: function ($event) {
         if ($event) {
-          const data = {accountId: this.userProfile.accountId,
-            places: {
-              country: this.userProfile.places.country,
-              region: this.userProfile.places.region,
-              district: this.userProfile.places.district,
-              place: this.userProfile.places.place,
-              street: this.userProfile.places.street,
-              zip: this.userProfile.places.zip,
-              code: this.userProfile.places.code
-            },
+          let data = {
+            accountId: this.signIn.accountId,
             firstName: this.appProfile.form.values.firstName,
             lastName: this.appProfile.form.values.lastName,
             gender: this.appProfile.form.values.gender,
             balance: this.userProfile.balance,
             tel: this.appProfile.form.values.tel
           }
-          return this.$store.dispatch(types.ACTION_USER_UPDATE, data)
-            .then(result => {
-              this.showAlertModal([result !== null], ['alert-success'], ['Údaje sa úspešne aktualizovali'])
-              bootstrap('#profileConfirm').modal('hide')
-            })
-            .catch(err => {
-              this.showAlertModal([err !== null], ['alert-danger'], [err.message])
-              bootstrap('#profileConfirm').modal('hide')
-            })
+          if (this.userProfile.places !== undefined) {
+            data = {...data, places: {...this.userProfile.places}}
+            return this.$store.dispatch(types.ACTION_USER_UPDATE, data)
+              .then(result => {
+                this.showAlertModal([result !== null], ['alert-success'], ['Údaje sa úspešne aktualizovali'])
+                bootstrap('#profileConfirm').modal('hide')
+              })
+              .catch(err => {
+                this.showAlertModal([err !== null], ['alert-danger'], [err.message])
+                bootstrap('#profileConfirm').modal('hide')
+              })
+          } else {
+            return this.$store.dispatch(types.ACTION_USER_CREATE, data)
+              .then(result => {
+                return this.$store.dispatch(types.ACTION_USER_GET, this.signIn.accountId)
+              })
+              .then(result => {
+                this.appProfile.form.values = {...this.userProfile}
+                this.showAlertModal([result !== null], ['alert-success'], ['Údaje sa úspešne aktualizovali'])
+                bootstrap('#profileConfirm').modal('hide')
+              })
+              .catch(err => {
+                this.showAlertModal([err !== null], ['alert-danger'], [err.message])
+                bootstrap('#profileConfirm').modal('hide')
+              })
+          }
         }
         return this.showConfirmedModal('Potvrdenie', 'Pre uplatnenie zmien prosím zadajte Vaše heslo:')
       }

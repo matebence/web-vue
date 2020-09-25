@@ -15,7 +15,7 @@
               id="positive"
               type="button"
               data-dismiss="modal"
-              @click.prevent="applied()">{{positiveButton}}
+              @click.prevent="onApplied()">{{positiveButton}}
             </button>
           </div>
         </div>
@@ -36,7 +36,7 @@
       }
     },
     methods: {
-      applied: function () {
+      onApplied: function () {
         return this.$emit('applied', true)
       }
     }

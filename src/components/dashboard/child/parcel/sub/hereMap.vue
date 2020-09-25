@@ -39,7 +39,7 @@
           </div>
         </div>
         <button
-          @click.prevent="calculatePriceByDistance"
+          @click.prevent="onCalculate"
           type="submit"
           :disabled="(parcelData.parcel.search.parcelId > 0) || (appHereMap.form.from.value.length < 3 || appHereMap.form.to.value.length < 3)"
           class="btn btn-primary">Hľadať
@@ -123,7 +123,7 @@
         })
         .then(result => {
           new H.mapevents.Behavior(new H.mapevents.MapEvents(result))
-          return this.reverseGeoCode()
+          return this.onReverseGeoCode()
         })
         .catch(err => console.warn(err.message))
     },
@@ -177,18 +177,18 @@
     },
     watch: {
       'parcelData.parcel.search.parcelId': function (newValue, oldValue) {
-        if (newValue === undefined) return this.removePreviousRoutes()
+        if (newValue === undefined) return this.onRemoveRoutes()
 
         this.appHereMap.form.from.value = this.parcelData.parcel.search.from
         this.appHereMap.form.to.value = this.parcelData.parcel.search.to
         this.appHereMap.summary.isSet = true
-        return this.visualizeOnMap()
+        return this.onVisualize()
       },
       'activeEl.parcelId': function (newValue, oldValue) {
-        if (newValue === 0) return this.removePreviousRoutes()
+        if (newValue === 0) return this.onRemoveRoutes()
       },
       'activeEl.courierId': function (newValue, oldValue) {
-        if (newValue > 0 && !this.appHereMap.summary.isSet) return this.calculatePriceByDistance()
+        if (newValue > 0 && !this.appHereMap.summary.isSet) return this.onCalculate()
       }
     },
     computed: {
@@ -197,7 +197,7 @@
       })
     },
     methods: {
-      geoCode: function (coordinates) {
+      onGeoCode: function (coordinates) {
         const searchService = this.here.platform.getSearchService()
         let isLast = Object.keys(this.appHereMap.form).length
         for (const item in this.appHereMap.form) {
@@ -211,7 +211,7 @@
           })
         }
       },
-      reverseGeoCode: function () {
+      onReverseGeoCode: function () {
         const browserData = JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE_BROWSER_DATA))
         if (browserData.position === undefined) return
         const searchService = this.here.platform.getSearchService()
@@ -219,29 +219,29 @@
           at: `${browserData.position.latitude},${browserData.position.longitude},${browserData.position.accuracy}`,
           limit: '1'
         }
-        return searchService.reverseGeocode(reverseGeocodingParameters, onSuccess => {
+        return searchService.reverseonGeoCode(reverseGeocodingParameters, onSuccess => {
           const place = Object.values(onSuccess.items).pop()
           this.appHereMap.form.from.value = `${this.here.country.name}, ${place.address.city}`
         }, onError => {
           console.warn(onError)
         })
       },
-      visualizeOnMap: function () {
+      onVisualize: function () {
         if (this.appHereMap.form.from.value.length > 2 && this.appHereMap.form.to.value.length > 2) {
-          return this.geoCode(coordinates => {
+          return this.onGeoCode(coordinates => {
             this.here.routingConfiguration = {
               ...this.here.routingConfiguration,
               origin: `${coordinates.from.geo.lat},${coordinates.from.geo.lng}`,
               destination: `${coordinates.to.geo.lat},${coordinates.to.geo.lng}`
             }
             const router = this.here.platform.getRoutingService(null, 8)
-            router.calculateRoute(this.here.routingConfiguration, this.drawRoute, onError => {
+            router.calculateRoute(this.here.routingConfiguration, this.onDrawRoute, onError => {
               console.warn(onError)
             })
           })
         }
       },
-      drawRoute: function (result) {
+      onDrawRoute: function (result) {
         if (result.routes.length) {
           let travelSummary = null
           const group = new H.map.Group()
@@ -268,7 +268,7 @@
           return this.here.map.getViewModel().setLookAtData({bounds: group.getBoundingBox()}, true)
         }
       },
-      removePreviousRoutes: function () {
+      onRemoveRoutes: function () {
         this.appHereMap.summary.isSet = false
 
         this.appHereMap.summary.values.length = 0
@@ -280,7 +280,7 @@
 
         return this.here.map.getObjects().forEach(e => this.here.map.removeObject(e))
       },
-      calculatePriceByDistance: function () {
+      onCalculate: function () {
         if (this.activeEl.courierId === 0) return this.showAlertModal('Upozornenie', 'Nemáte zvolené kuriéra.', 'Zatvoriť')
         const courier = Object.values(this.parcelData.courier.search.user).filter(e => e.accountId === this.activeEl.courierId).pop()
         this.$store.dispatch(types.ACTION_PREFERENCE_SEARCH, {
@@ -289,7 +289,7 @@
         })
           .then(result => {
             this.appHereMap.profit.courier = Object.values(result).pop().value
-            return this.visualizeOnMap()
+            return this.onVisualize()
           })
           .catch(err => console.warn(err.message))
       },
