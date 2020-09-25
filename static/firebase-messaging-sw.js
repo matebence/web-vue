@@ -13,4 +13,6 @@ const config = {
 }
 
 firebase.initializeApp(config);
-firebase.messaging();
+if (firebase.messaging.isSupported()) {
+  const messaging = firebase.messaging()
+}
