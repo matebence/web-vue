@@ -112,17 +112,17 @@
     },
     watch: {
       'activeEl.shipmentId': function (newValue, oldValue) {
-        if (this.activeEl.itemId !== 2 || this.activeEl.shipmentId === 0) return this.removePreviousRoutes()
-        this.removePreviousRoutes()
+        if (this.activeEl.itemId !== 2 || this.activeEl.shipmentId === 0) return this.onRemoveRoutes()
+        this.onRemoveRoutes()
 
         const data = Object.values(this.shipmentData.search).filter(e => e._id === newValue).pop()
         this.appHereMap.summary.values.price = data.price
 
-        return this.visualizeOnMap({from: data.from, to: data.to})
+        return this.onVisualize({from: data.from, to: data.to})
       }
     },
     methods: {
-      geoCode: function (points, coordinates) {
+      onGeoCode: function (points, coordinates) {
         let isLast = Object.keys(points).length
         const searchService = this.here.platform.getSearchService()
         for (const item in points) {
@@ -136,26 +136,26 @@
           })
         }
       },
-      visualizeOnMap: function (points) {
-        return this.geoCode(points, coordinates => {
+      onVisualize: function (points) {
+        return this.onGeoCode(points, coordinates => {
           this.here.routingConfiguration = {
             ...this.here.routingConfiguration,
             origin: `${coordinates.from.geo.lat},${coordinates.from.geo.lng}`,
             destination: `${coordinates.to.geo.lat},${coordinates.to.geo.lng}`
           }
           const router = this.here.platform.getRoutingService(null, 8)
-          router.calculateRoute(this.here.routingConfiguration, this.drawRoute, onError => {
+          router.calculateRoute(this.here.routingConfiguration, this.onDrawRoute, onError => {
             console.warn(onError)
           })
         })
       },
-      removePreviousRoutes: function () {
+      onRemoveRoutes: function () {
         this.appHereMap.summary.values.time = null
         this.appHereMap.summary.values.price = null
         this.appHereMap.summary.values.length = null
         return this.here.map.getObjects().forEach(e => this.here.map.removeObject(e))
       },
-      drawRoute: function (result) {
+      onDrawRoute: function (result) {
         if (result.routes.length) {
           const group = new H.map.Group()
           const markerIcon = new H.map.Icon(bleskMarker)

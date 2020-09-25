@@ -11,7 +11,7 @@
           :key="nav.itemId"
           v-for="nav in appNavigation.items"
           @click.prevent="onSelectedNav(nav)"
-          v-if="userHasRole(nav.isVisible.for)"
+          v-if="hasUserRole(nav.isVisible.for)"
           :id="nav.route">
           <router-link
             :to="`${nav.route}`">
@@ -49,7 +49,7 @@
     },
     computed: {
       getAvatar: function () {
-        return JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE_ACCOUNT_DATA)).avatar
+        return (Object.keys(this.userProfile).length === 0) ? 'XX' : `${this.userProfile.firstName.substr(0, 1)}${this.userProfile.lastName.substr(0, 1)}`
       },
       ...mapGetters({
         userProfile: types.GETTER_USER_DATA_GET,
@@ -62,7 +62,7 @@
         this.activeEl.itemId = el.itemId
         this.activeEl.value = el.value
       },
-      userHasRole: function (role) {
+      hasUserRole: function (role) {
         return [...this.allowedRoles].some(e => role.includes(e))
       }
     }

@@ -4,7 +4,7 @@
       v-show="!isSelected"
       id="new">
       <button
-        @click.prevent="activeEl.component = manageComponenets()">
+        @click.prevent="activeEl.component = onManage()">
         <font-awesome-icon
           :icon="['fas', activeEl.icon]"/>
       </button>
@@ -18,12 +18,12 @@
           :icon="['fas', 'ban']"/>
       </button>
       <button
-        @click.prevent="editVehicle()">
+        @click.prevent="onEdit()">
         <font-awesome-icon
           :icon="['fas', 'pen']"/>
       </button>
       <button
-        @click.prevent="removeVehicle(false)">
+        @click.prevent="onRemove(false)">
         <font-awesome-icon
           :icon="['fas', 'trash']"/>
       </button>
@@ -46,7 +46,7 @@
     </div>
     <div class="apply-wrapper">
       <app-apply
-        @applied="removeVehicle($event)"
+        @applied="onRemove($event)"
         :applyId="'vehicleApply'"
         :text="appManage.apply.text"
         :title="appManage.apply.title"
@@ -92,7 +92,7 @@
       })
     },
     methods: {
-      manageComponenets: function () {
+      onManage: function () {
         if (this.activeEl.component === this.appManage.crud.name) {
           this.appManage.crud.form.values = {courier: null, name: null, type: null}
           this.activeEl.icon = this.appManage.list.icon
@@ -117,13 +117,13 @@
         this.appManage.apply.negativeButton = 'Zrušiť'
         return bootstrap('#vehicleApply').modal('show')
       },
-      editVehicle: function () {
+      onEdit: function () {
         const data = Object.values(this.vehicleData).filter(e => e._id === this.activeEl.vehicleId)
-        this.activeEl.component = this.manageComponenets()
+        this.activeEl.component = this.onManage()
         this.activeEl.vehicleId = 0
         this.appManage.crud.form.values = {...data.pop()}
       },
-      removeVehicle: function (applied) {
+      onRemove: function (applied) {
         if (applied) {
           const data = Object.values(this.vehicleData).filter(e => e._id !== this.activeEl.vehicleId)
           this.$store.dispatch(types.ACTION_VEHICLE_DELETE, {data: data, _id: this.activeEl.vehicleId})

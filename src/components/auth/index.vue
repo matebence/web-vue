@@ -28,7 +28,7 @@
 
   export default {
     created: function () {
-      return this.navigateContent(this.$route.params.component)
+      return this.onNavigateContent(this.$route.params.component)
     },
     beforeMount: function () {
       this.$store.commit(types.MUTATIONS_CLEAR_SIGN_UP_ERRORS, {})
@@ -115,11 +115,11 @@
     },
     watch: {
       '$route': function (to, from) {
-        return this.navigateContent(to.params.component)
+        return this.onNavigateContent(to.params.component)
       }
     },
     methods: {
-      navigateContent: function (componenet = 'sign-in') {
+      onNavigateContent: function (componenet = 'sign-in') {
         if (!['sign-in', 'sign-out', 'sign-up', 'forget-password'].includes(componenet)) {
           this.$router.push({name: 'error'})
           return

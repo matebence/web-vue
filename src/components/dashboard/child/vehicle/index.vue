@@ -9,7 +9,7 @@
       </div>
       <div class="col-lg-8 col-xl-9" id="main-content">
         <app-properties
-          :vehicleData="filteredVehicleData"
+          :vehicleData="getVehicleData"
           :activeEl="components.appVehicle.activeEl"
           :appProperties="components.appVehicle.sub.appProperties"/>
         <app-options/>
@@ -95,7 +95,7 @@
       appProperties: properties
     },
     computed: {
-      filteredVehicleData: function () {
+      getVehicleData: function () {
         if (this.components.appVehicle.activeEl.vehicleId === 0) return
         return Object.values(this.vehicleSearch).filter(e => e._id === this.components.appVehicle.activeEl.vehicleId).pop()
       },
