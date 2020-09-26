@@ -188,6 +188,10 @@
     border-bottom: 0.1rem solid #008000;
   }
 
+  div#forgetpass .spinner-border {
+    margin-bottom: 0.3rem;
+  }
+
   @media (max-width: 1200px) {
     div#forgetpass input[type="email"] {
       font-size: 1.2rem;

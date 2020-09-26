@@ -810,6 +810,10 @@
     margin-top: 3rem;
   }
 
+  div#money .card {
+    border: none;
+  }
+
   @media screen and (max-width: 1140px) {
     div#money .card-number-item {
       width: 0.9rem;

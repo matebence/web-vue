@@ -326,6 +326,10 @@
     border-bottom: 0.1rem solid #008000;
   }
 
+  div#signup .spinner-border {
+    margin-bottom: 0.3rem;
+  }
+
   @media (max-width: 1200px) {
     div#signup input[type="text"], div#signup input[type="password"], div#signup select {
       font-size: 1.2rem;
