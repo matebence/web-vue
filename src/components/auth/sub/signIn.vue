@@ -242,6 +242,10 @@
     margin-left: 0.3rem;
   }
 
+  div#signin .spinner-border {
+    margin-bottom: 0.3rem;
+  }
+
   @media (max-width: 1200px) {
     div#signin input[type="text"], div#signin input[type="password"] {
       font-size: 1.2rem;

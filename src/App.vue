@@ -5,10 +5,6 @@
 </template>
 
 <script>
-  import 'bootstrap/dist/css/bootstrap.min.css'
-  import '@/assets/fonts/fonts.css'
-  import '@/assets/css/reset.css'
-
   export default {
     name: 'App',
     data: function () {
@@ -18,19 +14,6 @@
 </script>
 
 <style>
-  ::-webkit-scrollbar {
-    width: 0.2rem;
-    height: 0.2rem;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #166085;
-  }
-
   html {
     scroll-behavior: smooth;
     -webkit-touch-callout: none;
@@ -71,15 +54,20 @@
     margin: 0;
   }
 
-  .card {
-    border: none;
-  }
-
-  .spinner-border {
-    margin-bottom: 0.3rem;
-  }
-
-  .H_copyright, .H_imprint {
+  div.H_imprint {
     display: none;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0.2rem;
+    height: 0.2rem;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #166085;
   }
 </style>

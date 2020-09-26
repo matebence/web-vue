@@ -6,21 +6,21 @@
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "start": "npm run dev",
     "lint": "eslint --ext .js,.vue src",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "start": "npm run dev"
   },
   "dependencies": {
     "@fortawesome/free-brands-svg-icons": "^5.13.1",
-    "@fortawesome/fontawesome-svg-core": "^1.2.29",
     "@fortawesome/free-solid-svg-icons": "^5.13.1",
+    "@fortawesome/fontawesome-svg-core": "^1.2.29",
     "@fortawesome/vue-fontawesome": "^0.1.10",
     "webstomp-client": "^1.2.6",
     "sockjs-client": "^1.5.0",
     "here-js-api": "^2.0.0",
+    "bootstrap": "^4.5.0",
     "popper.js": "^1.16.1",
     "crypto-js": "^4.0.0",
-    "bootstrap": "^4.5.0",
     "firebase": "^7.19.1",
     "jquery": "^3.5.1",
     "vue-jwt-decode": "^0.1.0",

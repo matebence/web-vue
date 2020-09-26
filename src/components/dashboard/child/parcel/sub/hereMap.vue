@@ -85,9 +85,6 @@
 
 <script>
   import bootstrap from 'jquery'
-  import 'here-js-api/scripts/mapsjs-core'
-  import 'here-js-api/scripts/mapsjs-service'
-  import 'here-js-api/scripts/mapsjs-mapevents'
 
   import * as types from '@/store/types'
   import {mapGetters} from 'vuex'
@@ -219,7 +216,7 @@
           at: `${browserData.position.latitude},${browserData.position.longitude},${browserData.position.accuracy}`,
           limit: '1'
         }
-        return searchService.reverseonGeoCode(reverseGeocodingParameters, onSuccess => {
+        return searchService.reverseGeocode(reverseGeocodingParameters, onSuccess => {
           const place = Object.values(onSuccess.items).pop()
           this.appHereMap.form.from.value = `${this.here.country.name}, ${place.address.city}`
         }, onError => {

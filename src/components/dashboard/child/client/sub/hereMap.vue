@@ -32,9 +32,6 @@
 
 <script>
   import bootstrap from 'jquery'
-  import 'here-js-api/scripts/mapsjs-core'
-  import 'here-js-api/scripts/mapsjs-service'
-  import 'here-js-api/scripts/mapsjs-mapevents'
 
   import * as types from '@/store/types'
 
