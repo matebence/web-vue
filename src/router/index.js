@@ -5,8 +5,8 @@ import Vue from 'vue'
 Vue.use(VueRouter)
 
 const dashboard = resolve => {
-  require.ensure(['@/components/dashboard/dashboard'], () => {
-    resolve(require('@/components/dashboard/dashboard'))
+  require.ensure(['@/components/dashboard/index'], () => {
+    resolve(require('@/components/dashboard/index'))
   }, 'dashboard')
 }
 
