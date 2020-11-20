@@ -1,8 +1,8 @@
 <template>
   <div id="crud">
     <br/><br/>
-    <h1 v-if="form.values.id === undefined">Nový balíky</h1>
-    <h1 v-else>Aktualizovať balíky</h1>
+    <h1 v-if="form.values.id === undefined">Nový balík</h1>
+    <h1 v-else>Aktualizovať balík</h1>
     <form>
       <div class="form-group">
         <label
@@ -252,7 +252,7 @@
           const data = this.parcelCreate.filter(e => e.id !== this.form.values.id)
           this.$store.commit(types.MUTATION_PARCEL_DATA, {
             data: {
-              create: [...data, this.form.values]
+              create: [...data, {id: Date.now() * -1, ...this.form.values}]
             }
           })
           return this.$emit('crud', {component: 'app-vertical-list', icon: 'plus', nav: {id: 2, value: 'Nepridelené'}})
