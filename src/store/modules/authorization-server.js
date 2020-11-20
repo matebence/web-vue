@@ -567,7 +567,7 @@ const actions = {
           },
           done: true
         })
-        window.location.href = '/sign-in'
+        window.location.href = '/desktop/sign-in'
         return state.payload.signOut.data
       })
       .catch(err => {
