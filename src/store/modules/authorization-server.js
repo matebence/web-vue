@@ -267,6 +267,7 @@ const actions = {
   },
 
   [types.CLEAR_APP_USEAGE_DATA]: function ({commit, dispatch, state, rootState}, payload) {
+    commit(types.MUTATIONS_CLEAR_SIGN_IN_DATA, {})
     commit(types.MUTATIONS_CLEAR_PREFERENCE_DATA, {})
     commit(types.MUTATIONS_CLEAR_ACCOUNT_DATA, {})
     commit(types.MUTATIONS_CLEAR_LOCATION_DATA, {})
@@ -566,7 +567,7 @@ const actions = {
           },
           done: true
         })
-        router.push({path: '/sign-in'})
+        window.location.href = '/sign-in'
         return state.payload.signOut.data
       })
       .catch(err => {
